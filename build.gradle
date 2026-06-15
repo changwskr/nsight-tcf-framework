@@ -1,0 +1,147 @@
+plugins {
+    id 'java-library'
+    id 'org.springframework.boot' version '3.3.5' apply false
+    id 'io.spring.dependency-management' version '1.1.6' apply false
+}
+
+allprojects {
+    group = 'com.nh.nsight'
+    version = '1.0.0-SNAPSHOT'
+}
+
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'io.spring.dependency-management'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom 'org.springframework.boot:spring-boot-dependencies:3.3.5'
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+        options.compilerArgs.add('-parameters')
+    }
+
+    tasks.withType(Test).configureEach {
+        useJUnitPlatform()
+    }
+
+    dependencies {
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+}
+
+project(':tcf-util') {
+    dependencies {
+        // Utility module intentionally has no Spring dependency.
+    }
+}
+
+project(':tcf-core') {
+    dependencies {
+        api project(':tcf-util')
+        api 'com.fasterxml.jackson.core:jackson-annotations'
+        api 'org.springframework.boot:spring-boot-starter'
+        api 'org.springframework.boot:spring-boot-starter-validation'
+    }
+}
+
+project(':tcf-web') {
+    dependencies {
+        api project(':tcf-core')
+        api project(':tcf-util')
+        api 'org.springframework.boot:spring-boot-starter-web'
+        api 'org.springframework.boot:spring-boot-starter-validation'
+        api 'org.springframework.boot:spring-boot-starter-actuator'
+        api 'org.springframework.boot:spring-boot-starter-aop'
+        api 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+        compileOnly 'jakarta.servlet:jakarta.servlet-api'
+    }
+}
+
+project(':common-etc') {
+    dependencies {
+        api project(':tcf-core')
+        api 'org.springframework.boot:spring-boot-starter-jdbc'
+        api 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+    }
+}
+
+project(':common-updownload') {
+    dependencies {
+        api project(':tcf-core')
+        api 'org.springframework.boot:spring-boot-starter-web'
+        api 'org.springframework.boot:spring-boot-starter-validation'
+    }
+}
+
+project(':tcf-ui') {
+    apply plugin: 'org.springframework.boot'
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+    bootJar {
+        archiveFileName = 'tcf-ui.jar'
+    }
+}
+
+ext.businessModules = [
+    'cc-service',
+    'ic-service',
+    'pc-service',
+    'bc-service',
+    'ms-service',
+    'sv-service',
+    'pd-service',
+    'cm-service',
+    'eb-service',
+    'ep-service',
+    'bp-service',
+    'bd-service',
+    'ss-service',
+    'cs-service',
+    'ct-service',
+    'mg-service',
+    'om-service'
+
+]
+
+configure(businessModules.collect { project(":${it}") }) {
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'war'
+
+    dependencies {
+        implementation project(':tcf-core')
+        implementation project(':tcf-web')
+        implementation project(':common-etc')
+        implementation project(':common-updownload')
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+        implementation 'org.springframework.boot:spring-boot-starter-aop'
+        implementation 'org.springframework.session:spring-session-jdbc'
+        implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+        runtimeOnly 'com.h2database:h2'
+        providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    }
+
+    bootWar {
+        archiveFileName = "${project.name}.war"
+    }
+}
+
+tasks.register('buildBusinessWars') {
+    group = 'build'
+    description = 'Build all 17 NSIGHT business WAR files.'
+    dependsOn businessModules.collect { ":${it}:bootWar" }
+}
