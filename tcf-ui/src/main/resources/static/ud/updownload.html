@@ -353,6 +353,13 @@
         return;
       }
 
+      if (payload.result && (payload.result.resultCode === 'E0001' || payload.result.status === 'ERROR')) {
+        const msg = payload.result.resultMessage || payload.result.errorMessage || '목록 조회 실패';
+        fileTableBodyEl.innerHTML = `<tr><td colspan="7" class="empty">${msg}</td></tr>`;
+        listStatusEl.innerHTML = `<span class="badge fail">ERROR</span> ${payload.result.errorDetail || msg}`;
+        return;
+      }
+
       if (payload.body?.error) {
         fileTableBodyEl.innerHTML = `<tr><td colspan="7" class="empty">${payload.body.hint || payload.body.error}</td></tr>`;
         listStatusEl.innerHTML = `<span class="badge fail">연결 실패</span> ${payload.body.targetUrl || ''}`;

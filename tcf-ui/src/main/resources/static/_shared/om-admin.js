@@ -1,6 +1,6 @@
 /**
  * NSIGHT OM 운영관리 포털 공통 유틸 (tcf-ui)
- * om-service(8097) API를 /api/relay/OM/online 으로 호출합니다.
+ * tcf-om(8097) API를 /api/relay/OM/online 으로 호출합니다.
  */
 window.OmAdmin = (function () {
   const BUSINESS_CODE = 'OM';
@@ -150,7 +150,7 @@ window.OmAdmin = (function () {
     if (relay.httpStatus >= 400) {
       let msg = payload.result?.message || payload.error;
       if (!msg && relay.httpStatus === 502) {
-        msg = 'om-service(8097)에 연결할 수 없습니다. om-service를 먼저 실행하세요.';
+        msg = 'tcf-om(8097)에 연결할 수 없습니다. tcf-om을 먼저 실행하세요.';
       }
       throw new Error(msg || `HTTP ${relay.httpStatus}`);
     }
@@ -237,7 +237,7 @@ window.OmAdmin = (function () {
           <header class="om-topbar">
             <h2>${title}</h2>
             <div class="om-topbar-meta">
-              <span id="omTargetUrl" title="om-service URL">${targetUrl}</span>
+              <span id="omTargetUrl" title="tcf-om URL">${targetUrl}</span>
             </div>
           </header>
           <div class="om-content" id="omContent">
@@ -278,7 +278,7 @@ window.OmAdmin = (function () {
   function showError(container, message) {
     const hint = targetUrl && targetUrl !== '-'
       ? `릴레이 대상: <code>${targetUrl}</code>`
-      : 'om-service(포트 8097)와 tcf-ui(8099)를 함께 기동했는지 확인하세요.';
+      : 'tcf-om(포트 8097)와 tcf-ui(8099)를 함께 기동했는지 확인하세요.';
     container.innerHTML = `<div class="om-alert error">${message}<br><small>${hint}</small></div>`;
   }
 
@@ -290,7 +290,7 @@ window.OmAdmin = (function () {
       : '';
     const banner = document.createElement('div');
     banner.className = 'om-alert error om-load-error';
-    banner.innerHTML = `${message}<br><small>om-service 재빌드 후 OmApplication을 재시작하세요.${hint}</small>`;
+    banner.innerHTML = `${message}<br><small>tcf-om을 재빌드 후 NsightTcfOmApplication을 재시작하세요.${hint}</small>`;
     container.prepend(banner);
   }
 
@@ -313,7 +313,7 @@ window.OmAdmin = (function () {
     const container = renderShell(pageId, title);
     const ok = await pingBackend();
     if (!ok) {
-      showError(container, 'tcf-ui → om-service 릴레이 URL을 확인할 수 없습니다.');
+      showError(container, 'tcf-ui → tcf-om 릴레이 URL을 확인할 수 없습니다.');
       return;
     }
     try {

@@ -283,6 +283,216 @@
     }
   },
   {
+    "label": "공통코드 조회",
+    "sampleRequest": {
+      "header": {
+        "systemId": "NSIGHT-MP",
+        "businessCode": "OM",
+        "serviceId": "OM.CommonCode.inquiry",
+        "transactionCode": "OM-CDC-0001",
+        "processingType": "INQUIRY",
+        "channelId": "WEBTOP",
+        "userId": "admin01",
+        "branchId": "000001",
+        "requestTime": "2026-06-14T10:30:00+09:00",
+        "transactionIntime": "2026-06-14T10:30:00+09:00",
+        "systemDate": "20260614",
+        "bizDate": "20260614",
+        "clientIp": "10.10.10.10"
+      },
+      "body": { "codeGroup": "BUSINESS_CODE", "useYn": "Y" }
+    }
+  },
+  {
+    "label": "공통코드 저장",
+    "sampleRequest": {
+      "header": {
+        "systemId": "NSIGHT-MP",
+        "businessCode": "OM",
+        "serviceId": "OM.CommonCode.save",
+        "transactionCode": "OM-CDC-0002",
+        "processingType": "UPDATE",
+        "channelId": "WEBTOP",
+        "userId": "admin01",
+        "branchId": "000001",
+        "requestTime": "2026-06-14T10:30:00+09:00",
+        "transactionIntime": "2026-06-14T10:30:00+09:00",
+        "systemDate": "20260614",
+        "bizDate": "20260614",
+        "clientIp": "10.10.10.10"
+      },
+      "body": {
+        "codeGroup": "BUSINESS_CODE",
+        "code": "SV",
+        "codeName": "Single View",
+        "sortOrder": 1,
+        "useYn": "Y",
+        "description": "통합고객 조회",
+        "changeReason": "표준명칭 정비"
+      }
+    }
+  },
+  {
+    "label": "오류코드 저장",
+    "sampleRequest": {
+      "header": {
+        "systemId": "NSIGHT-MP",
+        "businessCode": "OM",
+        "serviceId": "OM.ErrorCode.save",
+        "transactionCode": "OM-ERR-0002",
+        "processingType": "UPDATE",
+        "channelId": "WEBTOP",
+        "userId": "admin01",
+        "branchId": "000001",
+        "requestTime": "2026-06-14T10:30:00+09:00",
+        "transactionIntime": "2026-06-14T10:30:00+09:00",
+        "systemDate": "20260614",
+        "bizDate": "20260614",
+        "clientIp": "10.10.10.10"
+      },
+      "body": {
+        "errorCode": "E-OM-VAL-0001",
+        "errorCategory": "VALIDATION",
+        "errorMessage": "입력값이 올바르지 않습니다.",
+        "useYn": "Y",
+        "changeReason": "사용자 메시지 표준화"
+      }
+    }
+  },
+  {
+    "label": "배치 실행",
+    "sampleRequest": {
+      "header": {
+        "systemId": "NSIGHT-MP",
+        "businessCode": "OM",
+        "serviceId": "OM.Batch.execute",
+        "transactionCode": "OM-BAT-0002",
+        "processingType": "EXECUTE",
+        "channelId": "WEBTOP",
+        "userId": "admin01",
+        "branchId": "000001",
+        "requestTime": "2026-06-14T10:30:00+09:00",
+        "transactionIntime": "2026-06-14T10:30:00+09:00",
+        "systemDate": "20260614",
+        "bizDate": "20260614",
+        "clientIp": "10.10.10.10"
+      },
+      "body": {
+        "jobId": "BAT-OM-001",
+        "executeReason": "Health 스냅샷 수동 재실행"
+      }
+    }
+  },
+  {
+    "label": "기능권한 조회",
+    "sampleRequest": {
+      "header": {
+        "systemId": "NSIGHT-MP",
+        "businessCode": "OM",
+        "serviceId": "OM.FunctionAuth.inquiry",
+        "transactionCode": "OM-FAU-0001",
+        "processingType": "INQUIRY",
+        "channelId": "WEBTOP",
+        "userId": "admin01",
+        "branchId": "000001",
+        "requestTime": "2026-06-14T10:30:00+09:00",
+        "transactionIntime": "2026-06-14T10:30:00+09:00",
+        "systemDate": "20260614",
+        "bizDate": "20260614",
+        "clientIp": "10.10.10.10"
+      },
+      "body": { "authGroupId": "ROLE_ADMIN" }
+    }
+  },
+  {
+    "label": "데이터권한 조회",
+    "sampleRequest": {
+      "header": {
+        "systemId": "NSIGHT-MP",
+        "businessCode": "OM",
+        "serviceId": "OM.DataAuth.inquiry",
+        "transactionCode": "OM-DAU-0001",
+        "processingType": "INQUIRY",
+        "channelId": "WEBTOP",
+        "userId": "admin01",
+        "branchId": "000001",
+        "requestTime": "2026-06-14T10:30:00+09:00",
+        "transactionIntime": "2026-06-14T10:30:00+09:00",
+        "systemDate": "20260614",
+        "bizDate": "20260614",
+        "clientIp": "10.10.10.10"
+      },
+      "body": { "authGroupId": "ROLE_OPERATOR" }
+    }
+  },
+  {
+    "label": "권한이력 조회",
+    "sampleRequest": {
+      "header": {
+        "systemId": "NSIGHT-MP",
+        "businessCode": "OM",
+        "serviceId": "OM.AuthHistory.inquiry",
+        "transactionCode": "OM-AHT-0001",
+        "processingType": "INQUIRY",
+        "channelId": "WEBTOP",
+        "userId": "admin01",
+        "branchId": "000001",
+        "requestTime": "2026-06-14T10:30:00+09:00",
+        "transactionIntime": "2026-06-14T10:30:00+09:00",
+        "systemDate": "20260614",
+        "bizDate": "20260614",
+        "clientIp": "10.10.10.10"
+      },
+      "body": { "targetType": "USER_AUTH", "pageNo": 1, "pageSize": 20 }
+    }
+  },
+  {
+    "label": "Cache 조회",
+    "sampleRequest": {
+      "header": {
+        "systemId": "NSIGHT-MP",
+        "businessCode": "OM",
+        "serviceId": "OM.Cache.inquiry",
+        "transactionCode": "OM-CCH-0001",
+        "processingType": "INQUIRY",
+        "channelId": "WEBTOP",
+        "userId": "admin01",
+        "branchId": "000001",
+        "requestTime": "2026-06-14T10:30:00+09:00",
+        "transactionIntime": "2026-06-14T10:30:00+09:00",
+        "systemDate": "20260614",
+        "bizDate": "20260614",
+        "clientIp": "10.10.10.10"
+      },
+      "body": { "cacheName": "serviceCatalog" }
+    }
+  },
+  {
+    "label": "Cache 삭제",
+    "sampleRequest": {
+      "header": {
+        "systemId": "NSIGHT-MP",
+        "businessCode": "OM",
+        "serviceId": "OM.Cache.delete",
+        "transactionCode": "OM-CCH-0002",
+        "processingType": "DELETE",
+        "channelId": "WEBTOP",
+        "userId": "admin01",
+        "branchId": "000001",
+        "requestTime": "2026-06-14T10:30:00+09:00",
+        "transactionIntime": "2026-06-14T10:30:00+09:00",
+        "systemDate": "20260614",
+        "bizDate": "20260614",
+        "clientIp": "10.10.10.10"
+      },
+      "body": {
+        "cacheName": "commonCode",
+        "cacheKey": "BUSINESS_CODE",
+        "deleteReason": "기준정보 변경 후 캐시 무효화"
+      }
+    }
+  },
+  {
     "label": "Sample Inquiry (legacy)",
     "sampleFile": "om-sample-inquiry.json"
   }

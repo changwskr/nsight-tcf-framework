@@ -1,0 +1,38 @@
+server:
+  port: 8097
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: nsight-common-updownload
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:file:./data/updownload/ud-meta;MODE=Oracle;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE
+    username: sa
+    password:
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 55MB
+  session:
+    store-type: none
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+nsight:
+  tcf:
+    session-validation-enabled: false
+    authorization-validation-enabled: false
+    idempotency-enabled: false
+    audit-enabled: false
+  file:
+    storage-root: ./data/updownload

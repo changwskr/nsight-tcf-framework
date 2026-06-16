@@ -35,6 +35,7 @@ run-tcf-ui.bat      # Windows
 
 ```bash
 gradle :sv-service:bootRun   # 예: SV (포트 8086)
+gradle :tcf-om:bootRun       # OM 운영관리 (포트 8097)
 ```
 
 ## 패키지 구조
@@ -77,4 +78,4 @@ nsight:
 | `/index.html` | 업무 허브 |
 | `/{code}/index.html` | 단일 거래 테스트 |
 | `/{code}/index-multi.html` | 다중 거래 테스트 |
-| `/om/admin/dashboard.html` | OM 운영관리 포털 |
+| `/om/admin/dashboard.html` | OM 운영관리 포털 (tcf-om 연동) |

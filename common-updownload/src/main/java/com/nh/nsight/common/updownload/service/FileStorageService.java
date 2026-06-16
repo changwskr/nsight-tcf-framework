@@ -1,6 +1,7 @@
 package com.nh.nsight.common.updownload.service;
 
 import com.nh.nsight.common.updownload.model.UploadFileMeta;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -19,18 +20,31 @@ public class FileStorageService {
     }
 
     public UploadFileMeta store(MultipartFile file) throws IOException {
+        return store(
+                file.getOriginalFilename(),
+                file.getContentType(),
+                file.getInputStream(),
+                file.getSize()
+        );
+    }
+
+    public UploadFileMeta store(String originalFilename, String contentType, byte[] content) throws IOException {
+        return store(originalFilename, contentType, new ByteArrayInputStream(content), content.length);
+    }
+
+    private UploadFileMeta store(String originalFilename, String contentType, InputStream in, long size) throws IOException {
         Files.createDirectories(storageRoot);
         String fileId = UUID.randomUUID().toString();
         Path target = storageRoot.resolve(fileId + ".bin");
-        try (InputStream in = file.getInputStream()) {
-            Files.copy(in, target);
+        try (InputStream input = in) {
+            Files.copy(input, target);
         }
         UploadFileMeta meta = new UploadFileMeta();
         meta.setFileId(fileId);
-        meta.setOriginalFilename(file.getOriginalFilename());
+        meta.setOriginalFilename(originalFilename);
         meta.setStoredPath(target.toString());
-        meta.setSize(file.getSize());
-        meta.setContentType(file.getContentType());
+        meta.setSize(size);
+        meta.setContentType(contentType);
         return meta;
     }
 
