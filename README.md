@@ -1,112 +1,78 @@
-# NSIGHT TCF Framework - tcf-core / tcf-web / tcf-util 재구성본
+# NSIGHT TCF Framework
 
-본 프로젝트는 NSIGHT HTTP/JSON 표준 전문 처리 구조를 **TCF 중심 프레임워크**로 구성한 전체 소스입니다.
+NSIGHT HTTP/JSON 표준 전문 처리 구조를 **TCF(Transaction Control Framework)** 중심으로 구성한 멀티 모듈 Gradle 프로젝트입니다.
 
-## 1. 핵심 변경 사항
-
-| 기존 모듈 | 변경 모듈 | 설명 |
-|---|---|---|
-| `common-core` | `tcf-core` | 표준 전문, 거래 Context, 공통 예외 |
-| `common-web` | `tcf-web` | TCF/STF/ETF, Dispatcher, Controller, Filter |
-| 신규 | `tcf-util` | `tcf-core`, `tcf-web`에서 사용하는 공통 Util |
-
-## 2. 전체 모듈 구조
+## 모듈 구조
 
 ```text
-nsight-tcf-framework-tcfmodules
-├─ tcf-util
-├─ tcf-core
-├─ tcf-web
-├─ common-etc
-├─ common-updownload
-├─ tcf-ui
-├─ cc-service
-├─ ic-service
-├─ pc-service
-├─ bc-service
-├─ ms-service
-├─ sv-service
-├─ pd-service
-├─ cm-service
-├─ eb-service
-├─ ep-service
-├─ bp-service
-├─ bd-service
-├─ ss-service
-├─ cs-service
-├─ ct-service
-├─ mg-service
-├─ om-service
-├─ deploy/apache
-├─ docs
-└─ scripts
+nsight-tcf-framework
+├─ tcf-util              공통 유틸 (Spring 없음)
+├─ tcf-core              TCF 엔진 (STF/TCF/ETF, Dispatcher)
+├─ tcf-web               HTTP 레이어 (/online, TcfGateway)
+├─ common-etc            공통 ETC 라이브러리 (ET)
+├─ common-updownload     파일 업·다운로드 (UD, bootRun)
+├─ tcf-om                운영관리 TCF 서비스 (OM, bootRun)
+├─ tcf-ui                거래 테스트 UI (Relay, 8099)
+├─ tcf-scripts           빌드·실행 스크립트
+├─ cc-service … mg-service   17개 업무 WAR
+└─ om-service            레거시 OM WAR
 ```
 
-## 3. TCF 처리 흐름
+각 모듈 상세는 해당 디렉터리의 `README.md`를 참고하세요.
+
+## TCF 처리 흐름
 
 ```text
-Client / WebTopSuite
+Client / tcf-ui / REST API
    ↓
-OnlineTransactionController
+OnlineTransactionController / TcfGateway
    ↓
 TCF.process()
-   ├─ STF.preProcess()
-   │   ├─ Header 검증
-   │   ├─ GUID / TraceId 생성
-   │   ├─ Session / Authorization 검증
-   │   ├─ Idempotency 확인
-   │   └─ 거래 시작 로그
-   ├─ TransactionDispatcher.dispatch()
-   │   └─ serviceId 기준 TransactionHandler 선택
-   └─ ETF.success() / ETF.businessFail() / ETF.systemError()
-       ├─ 표준 응답 조립
-       ├─ 거래 종료 로그
-       ├─ 감사 로그
-       └─ 메트릭 기록
+   ├─ STF.preProcess()           Header 검증, GUID, 세션·권한, 멱등성
+   ├─ TransactionDispatcher      serviceId → TransactionHandler
+   └─ ETF.success/fail/error     표준 응답, 감사·메트릭
 ```
 
-## 4. 먼저 볼 소스
+## 의존 방향
 
-| 순서 | 파일 |
-|---:|---|
-| 1 | `tcf-core/src/main/java/com/nh/nsight/tcf/core/message/StandardRequest.java` |
-| 2 | `tcf-core/src/main/java/com/nh/nsight/tcf/core/message/StandardResponse.java` |
-| 3 | `tcf-web/src/main/java/com/nh/nsight/tcf/web/processor/TCF.java` |
-| 4 | `tcf-web/src/main/java/com/nh/nsight/tcf/web/processor/STF.java` |
-| 5 | `tcf-web/src/main/java/com/nh/nsight/tcf/web/processor/ETF.java` |
-| 6 | `tcf-web/src/main/java/com/nh/nsight/tcf/web/dispatch/TransactionDispatcher.java` |
-| 7 | `sv-service/src/main/java/com/nh/nsight/marketing/sv/handler/SvSampleInquiryHandler.java` |
-
-## 5. 빌드
-
-```bash
-gradle clean buildBusinessWars
+```text
+tcf-util → tcf-core → tcf-web → 업무 서비스 / common-updownload / tcf-om
 ```
 
-## 6. SV 업무 단독 실행
+## 빠른 시작
 
 ```bash
+# SV 업무 단독 실행
 gradle :sv-service:bootRun
+
+# 테스트 UI
+gradle :tcf-ui:bootRun
+
+# 17개 WAR 일괄 빌드
+gradle buildBusinessWars
+
+# 스크립트 사용 (Windows)
+tcf-scripts\run-local.bat sv
+tcf-scripts\run-local.bat ui
 ```
 
-## 7. 샘플 호출
+## 포트 요약
+
+| 포트 | 모듈 |
+|------|------|
+| 8081–8096 | cc ~ mg (*-service) |
+| 8097 | tcf-om / common-updownload / om-service (동시 기동 불가) |
+| 8099 | tcf-ui |
+
+## 샘플 호출
 
 ```bash
 curl -X POST http://localhost:8086/sv/online \
-  -H 'Content-Type: application/json' \
+  -H "Content-Type: application/json" \
   -d @docs/sample-requests/sv-sample-inquiry.json
 ```
 
-## 8. 의존성 기준
+## 요구 사항
 
-```text
-tcf-util
-   ↑
-tcf-core
-   ↑
-tcf-web
-   ↑
-17개 업무 서비스
-```
-
-`tcf-util`은 Spring 의존성이 없는 순수 유틸리티 모듈로 유지합니다.
+- Java 21
+- Gradle 8.x

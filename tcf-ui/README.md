@@ -78,4 +78,6 @@ nsight:
 | `/index.html` | 업무 허브 |
 | `/{code}/index.html` | 단일 거래 테스트 |
 | `/{code}/index-multi.html` | 다중 거래 테스트 |
+| `/ud/updownload.html` | UD 파일 관리 (common-updownload 연동) |
+| `/et/transaction-log.html` | ET 거래 IO 로그 |
 | `/om/admin/dashboard.html` | OM 운영관리 포털 (tcf-om 연동) |

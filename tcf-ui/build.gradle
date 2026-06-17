@@ -1,1 +1,17 @@
-// Module build settings are inherited from root build.gradle.
+// TCF 테스트 UI (독립 실행 bootJar, 포트 8099)
+// 빌드: gradle :tcf-ui:bootJar
+// 실행: gradle :tcf-ui:bootRun
+// 또는: tcf-ui\scripts\build.bat / run-local.bat
+
+plugins {
+    id 'org.springframework.boot'
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+bootJar {
+    archiveFileName = 'tcf-ui.jar'
+}
