@@ -24,11 +24,12 @@ public class OmTransactionLogService {
         rule.validateOperation(context);
         Map<String, Object> criteria = new HashMap<>(OmBodySupport.searchCriteria(body));
         rule.normalizePaging(criteria);
-        copyIfPresent(body, criteria, "guid", "traceId", "serviceId", "transactionCode",
+        copyIfPresent(body, criteria, "businessCode", "guid", "traceId", "serviceId", "transactionCode",
                 "userId", "branchId", "resultStatus", "errorCode", "fromDate", "toDate");
 
         List<Map<String, Object>> rows = dao.searchTransactionLogs(criteria);
         int totalCount = dao.countTransactionLogs(criteria);
+        Map<String, Object> summary = dao.summarizeTransactionLogs(criteria);
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("businessCode", "OM");
@@ -36,6 +37,7 @@ public class OmTransactionLogService {
         result.put("pageNo", criteria.get("pageNo"));
         result.put("pageSize", criteria.get("pageSize"));
         result.put("totalCount", totalCount);
+        result.put("summary", summary);
         result.put("rows", rows);
         return result;
     }

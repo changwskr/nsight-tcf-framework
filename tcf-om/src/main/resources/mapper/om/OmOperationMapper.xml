@@ -7,7 +7,7 @@
                SUM(CASE WHEN RESULT_STATUS = 'FAIL' OR RESULT_STATUS = 'ERROR' THEN 1 ELSE 0 END) AS "errorCount",
                SUM(CASE WHEN ELAPSED_TIME_MS &gt;= 5000 THEN 1 ELSE 0 END) AS "timeoutCount",
                COALESCE(AVG(ELAPSED_TIME_MS), 0) AS "avgElapsedMs"
-          FROM OM_TX_LOG
+          FROM TCF_TX_LOG
          WHERE 1 = 1
         <if test="baseDate != null and baseDate != ''">
            AND TX_TIME LIKE #{baseDate} || '%'
@@ -18,7 +18,7 @@
         SELECT SERVICE_ID AS "serviceId",
                ERROR_CODE AS "errorCode",
                COUNT(*) AS "errorCount"
-          FROM OM_TX_LOG
+          FROM TCF_TX_LOG
          WHERE (RESULT_STATUS = 'FAIL' OR RESULT_STATUS = 'ERROR')
         <if test="baseDate != null and baseDate != ''">
            AND TX_TIME LIKE #{baseDate} || '%'
@@ -55,6 +55,9 @@
     </select>
 
     <sql id="txLogSearchWhere">
+        <if test="businessCode != null and businessCode != ''">
+            AND BUSINESS_CODE = #{businessCode}
+        </if>
         <if test="guid != null and guid != ''">
             AND GUID = #{guid}
         </if>
@@ -93,7 +96,7 @@
                GUID AS "guid", TRACE_ID AS "traceId", USER_ID AS "userId", BRANCH_ID AS "branchId",
                RESULT_STATUS AS "resultStatus", RESULT_CODE AS "resultCode", ERROR_CODE AS "errorCode",
                ELAPSED_TIME_MS AS "elapsedTimeMs"
-          FROM OM_TX_LOG
+          FROM TCF_TX_LOG
          WHERE 1 = 1
         <include refid="txLogSearchWhere"/>
          ORDER BY TX_TIME DESC
@@ -101,7 +104,18 @@
     </select>
 
     <select id="countTransactionLogs" parameterType="map" resultType="int">
-        SELECT COUNT(*) FROM OM_TX_LOG WHERE 1 = 1
+        SELECT COUNT(*) FROM TCF_TX_LOG WHERE 1 = 1
+        <include refid="txLogSearchWhere"/>
+    </select>
+
+    <select id="summarizeTransactionLogs" parameterType="map" resultType="map">
+        SELECT COUNT(*) AS "totalCount",
+               SUM(CASE WHEN RESULT_STATUS = 'SUCCESS' THEN 1 ELSE 0 END) AS "successCount",
+               SUM(CASE WHEN RESULT_STATUS = 'FAIL' OR RESULT_STATUS = 'ERROR' THEN 1 ELSE 0 END) AS "errorCount",
+               SUM(CASE WHEN ELAPSED_TIME_MS &gt;= 5000 THEN 1 ELSE 0 END) AS "timeoutCount",
+               COALESCE(AVG(ELAPSED_TIME_MS), 0) AS "avgElapsedMs"
+          FROM TCF_TX_LOG
+         WHERE 1 = 1
         <include refid="txLogSearchWhere"/>
     </select>
 

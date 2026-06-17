@@ -50,6 +50,18 @@ subprojects {
     }
 }
 
+// bootRun 시 작업 디렉터리·트랜잭션 로그 DB 경로 통일 (SV·tcf-om 동일 H2 파일)
+def nsightTxlogPath = layout.projectDirectory.dir('data/nsight-txlog').asFile.absolutePath.replace('\\', '/')
+
+subprojects { sub ->
+    sub.plugins.withId('org.springframework.boot') {
+        sub.tasks.withType(org.springframework.boot.gradle.tasks.run.BootRun).configureEach {
+            workingDir = rootProject.projectDir
+            systemProperty 'nsight.txlog.path', nsightTxlogPath
+        }
+    }
+}
+
 // -----------------------------------------------------------------------------
 // TCF 프레임워크 라이브러리 모듈
 // 의존 방향: tcf-util → tcf-core → tcf-web → *-service

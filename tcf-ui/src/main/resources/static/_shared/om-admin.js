@@ -248,7 +248,7 @@ window.OmAdmin = (function () {
     return document.getElementById('omContent');
   }
 
-  function renderPagination(container, pageNo, pageSize, totalCount, onPage) {
+  function renderPagination(container, pageNo, pageSize, totalCount, onPage, prevNextOnly) {
     const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
     if (totalCount === 0) {
       container.innerHTML = '';
@@ -257,8 +257,10 @@ window.OmAdmin = (function () {
     }
     container.hidden = false;
     let nums = '';
-    for (let i = 1; i <= totalPages; i += 1) {
-      nums += `<button type="button" class="om-page-btn ${i === pageNo ? 'active' : ''}" data-page="${i}">${i}</button>`;
+    if (!prevNextOnly) {
+      for (let i = 1; i <= totalPages; i += 1) {
+        nums += `<button type="button" class="om-page-btn ${i === pageNo ? 'active' : ''}" data-page="${i}">${i}</button>`;
+      }
     }
     container.innerHTML = `
       <button type="button" class="om-page-btn" data-page="prev" ${pageNo <= 1 ? 'disabled' : ''}>PREV</button>

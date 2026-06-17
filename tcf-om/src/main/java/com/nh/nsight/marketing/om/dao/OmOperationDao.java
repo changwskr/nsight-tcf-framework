@@ -51,6 +51,11 @@ public class OmOperationDao {
         return mapper.countTransactionLogs(criteria);
     }
 
+    public Map<String, Object> summarizeTransactionLogs(Map<String, Object> criteria) {
+        Map<String, Object> summary = mapper.summarizeTransactionLogs(criteria);
+        return summary == null ? Map.of() : summary;
+    }
+
     public List<Map<String, Object>> searchServiceCatalog(Map<String, Object> criteria) {
         return mapper.searchServiceCatalog(criteria);
     }

@@ -16,3 +16,7 @@ logs/
 .vscode/
 .DS_Store
 upload-data/
+data/nsight-txlog/
+**/data/updownload/
+sv-service/data/
+tcf-om/data/

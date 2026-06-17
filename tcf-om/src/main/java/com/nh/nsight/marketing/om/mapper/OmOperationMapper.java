@@ -22,6 +22,8 @@ public interface OmOperationMapper {
 
     int countTransactionLogs(Map<String, Object> params);
 
+    Map<String, Object> summarizeTransactionLogs(Map<String, Object> params);
+
     List<Map<String, Object>> searchServiceCatalog(Map<String, Object> params);
 
     List<Map<String, Object>> searchUsers(Map<String, Object> params);
