@@ -1,17 +1,16 @@
-# bp-service — Behavior Processing (실시간)
+﻿# bp-service — Business Process
 
 | 항목 | 값 |
 |------|-----|
 | Gradle 모듈 | `bp-service` |
 | 업무코드 | `BP` |
-| 메인 클래스 | `com.nh.nsight.marketing.bp.NsightBpServiceApplication` |
 | bootRun 포트 | **8091** |
-| WAR | `bp-service.war` |
+| WAR (bootWar) | `bp.war` |
 | Tomcat context | `/bp` |
 
 ## 개요
 
-NSIGHT 마케팅 플랫폼 **Behavior Processing (BP)** 업무 서비스입니다.
+NSIGHT 마케팅 플랫폼 **Business Process (BP)** 업무 서비스입니다. 모든 거래는 TCF 파이프라인(`POST /online` 또는 `POST /bp/online`)을 통해 처리됩니다.
 
 ## 샘플 거래
 
@@ -29,15 +28,25 @@ tcf-scripts/run-local.bat bp
 ## API
 
 ```bash
+# bootRun
 curl -X POST http://localhost:8091/bp/online \
+  -H "Content-Type: application/json" \
+  -d @tcf-ui/src/main/resources/sample-requests/bp-sample-inquiry.json
+
+# ztomcat
+curl -X POST http://localhost:8080/bp/online \
   -H "Content-Type: application/json" \
   -d @tcf-ui/src/main/resources/sample-requests/bp-sample-inquiry.json
 ```
 
+배포: `ztomcat/deploy-wars.bat bp` — [ztomcat/README.md](../ztomcat/README.md)
+
 ## tcf-ui
 
-- http://localhost:8099/bp/index.html
-- http://localhost:8099/bp/index-multi.html
+| 모드 | URL |
+|------|-----|
+| bootRun | http://localhost:8099/bp/index.html |
+| ztomcat | http://localhost:8080/ui/bp/index.html |
 
 ## 의존성
 

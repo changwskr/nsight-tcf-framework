@@ -16,13 +16,11 @@ tcf-scripts/run-local.sh <target>
 |------|-----------|
 | `sv`, `sv-service` | sv-service |
 | `tcf-ui`, `ui` | tcf-ui (8099) |
-| `tcf-om`, `om` | tcf-om (8097) |
-| `ud`, `common-updownload` | tcf-om (8097, UD API 내장 별칭) |
-| `all` | 17개 *-service 일괄 기동 (각각 새 창) |
+| `tcf-om`, `om`, `ud` | tcf-om (8097, UD API 내장) |
+| `batch`, `tcf-batch` | tcf-batch (8098) |
+| `all` | 16개 *-service + tcf-om 일괄 기동 (각각 새 창) |
 
 단일 인자: 포그라운드 실행. 복수 인자: 백그라운드(새 창) 실행.
-
-> `et` / `common-etc` 별칭은 레거시입니다. `common-etc` 모듈은 저장소에서 제거되었습니다.
 
 ## build — 모듈 빌드
 
@@ -33,11 +31,12 @@ tcf-scripts/build.sh <target>
 
 | 인자 | 설명 |
 |------|------|
-| `all` | clean + 17개 WAR 일괄 빌드 |
-| `wars` | `buildBusinessWars` |
+| `all` | clean + 업무 WAR 일괄 빌드 |
+| `wars` | `buildBusinessWars` (17 WAR: 16 *-service + tcf-om) |
+| `ztomcat` | `gradle buildZtomcatWars` (19 WAR — Gradle 직접 호출) |
 | `tcf` | tcf-util, tcf-core, tcf-web |
 | `ui` | tcf-ui bootJar |
-| `services` | 17개 *-service build |
+| `batch` | tcf-batch bootJar |
 | `sv`, `tcf-om`, … | 개별 모듈 build |
 
 ## curl-sample — 샘플 거래 호출
@@ -51,22 +50,25 @@ tcf-scripts/curl-sample.sh sv
 
 ## deploy — Tomcat webapps 배포
 
-WAR 빌드 후 Tomcat `webapps`로 복사합니다.
+WAR 빌드 후 [ztomcat](../ztomcat/README.md) `webapps`로 복사합니다.
 
 ```bash
-tcf-scripts\deploy.bat sv cc
-tcf-scripts/deploy.sh sv cc
+tcf-scripts\deploy.bat sv cc om
+tcf-scripts/deploy.sh sv cc om
 ```
 
 | 인자 | 설명 |
 |------|------|
-| (없음) / `all` | 17개 업무 WAR + tcf-om 일괄 |
+| (없음) / `all` | 업무 WAR + tcf-om 일괄 |
 | `sv`, `cc`, … | 선택 업무만 |
-| `ud`, `tcf-om` | tcf-om (`ud.war` / `om.war` 별칭) |
+| `ud`, `tcf-om`, `om` | tcf-om (`om.war`) |
+| `batch`, `ui` | tcf-batch, tcf-ui |
 
 환경 변수: `TOMCAT_WEBAPPS`, `GRADLE_HOME` / `GRADLE_HOME_OVERRIDE`
 
-## 포트 참고
+> 전체 Tomcat 배포·검증은 `ztomcat/deploy-wars.bat`, `ztomcat/verify-deploy.ps1` 사용을 권장합니다.
+
+## 포트 참고 (bootRun)
 
 | 모듈 | 포트 |
 |------|------|
@@ -87,12 +89,17 @@ tcf-scripts/deploy.sh sv cc
 | ct-service | 8095 |
 | mg-service | 8096 |
 | tcf-om | 8097 |
+| tcf-batch | 8098 |
 | tcf-ui | 8099 |
+
+Tomcat(ztomcat) 모드: 모든 context **8080** — `/cc` … `/mg`, `/om`, `/batch`, `/ui`
 
 ## Gradle 직접 호출
 
 ```bash
-gradle buildBusinessWars          # 17개 WAR
+gradle buildBusinessWars     # 17 WAR
+gradle buildZtomcatWars      # 19 WAR
 gradle :tcf-om:bootRun
+gradle :tcf-batch:bootRun
 gradle :tcf-ui:bootRun
 ```

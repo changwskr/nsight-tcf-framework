@@ -8,7 +8,7 @@
 | 업무코드 | `OM` (UD: `UD`) |
 | 메인 클래스 | `com.nh.nsight.marketing.om.NsightTcfOmApplication` |
 | bootRun 포트 | **8097** |
-| WAR | `tcf-om.war` |
+| WAR (bootWar) | `tcf-om.war` → ztomcat `om.war` (`/om`) |
 
 > `om-service`와 동일 포트(8097)를 사용합니다. 동시 기동 시 포트 충돌이 발생하므로 **tcf-om 하나만** 실행하세요.
 
@@ -19,6 +19,8 @@
 - 마스터 CRUD: 사용자, ServiceId, 공통코드, 오류코드
 - EhCache 공통코드 캐싱 (`tcf-cache` 연동)
 - 거래로그·감사로그·Health Check·배치·Cache 관리
+- 운영 대시보드 (tcf-batch 수집 데이터 조회)
+- 환경설정 (Tomcat/bootRun 배포 모드별 런타임 값 표시)
 - 파일 업·다운로드 REST (`/ud/files`, TcfGateway 경유)
 
 ## TCF Handler 예시
@@ -27,6 +29,7 @@
 |-----------|------|
 | `OM.Auth.login` | OM 로그인 |
 | `OM.Dashboard.inquiry` | 운영 대시보드 |
+| `OM.SystemConfig.inquiry` | 환경설정 조회 |
 | `OM.User.inquiry` / `.save` / `.update` / `.delete` | 사용자 CRUD |
 | `OM.ServiceCatalog.inquiry` ~ `.delete` | ServiceId CRUD |
 | `OM.CommonCode.inquiry` ~ `.delete` | 공통코드 CRUD |
@@ -39,21 +42,43 @@
 ## 실행
 
 ```bash
+# bootRun
 gradle :tcf-om:bootRun
-
-# 또는
 tcf-scripts/run-local.bat tcf-om
-tcf-scripts/run-local.bat om
-tcf-om/scripts/run-local.bat
+
+# ztomcat
+ztomcat/deploy-wars.bat om
 ```
+
+Tomcat WAR: `spring.profiles.active=local,tomcat` — `application-tomcat.yml`
 
 ## API
 
 ```bash
+# bootRun
 curl -X POST http://localhost:8097/om/online \
   -H "Content-Type: application/json" \
   -d @tcf-ui/src/main/resources/sample-requests/om-sample-inquiry.json
+
+# ztomcat
+curl -X POST http://localhost:8080/om/online \
+  -H "Content-Type: application/json" \
+  -d @tcf-ui/src/main/resources/sample-requests/om-sample-inquiry.json
 ```
+
+## tcf-batch 연동
+
+| 모드 | `nsight.om.batch-service-url` |
+|------|-------------------------------|
+| bootRun | `http://127.0.0.1:8098` |
+| ztomcat | `http://127.0.0.1:8080/batch` |
+
+## tcf-ui 연동
+
+| 모드 | OM Admin URL |
+|------|--------------|
+| bootRun | http://localhost:8099/om/admin/login.html |
+| ztomcat | http://localhost:8080/ui/om/admin/login.html |
 
 ## 패키지 구조
 
@@ -65,23 +90,17 @@ com.nh.nsight.marketing.om
 ├── dao/           JDBC/MyBatis DAO
 ├── mapper/        MyBatis Mapper 인터페이스
 ├── rule/          업무 규칙 검증
-├── support/       DB 마이그레이션, 세션, Health
+├── support/       DB 마이그레이션, 세션, Health, OmSystemConfigRuntimeSupport
 ├── updownload/    UD 파일 API (tcf-om 내장)
 └── config/        Spring Session, 스케줄, 비밀번호
 ```
-
-## tcf-ui 연동
-
-- OM 관리 포털: http://localhost:8099/om/admin/login.html
-- JSON 거래 테스트: http://localhost:8099/om/index-multi.html
-- 파일 관리: http://localhost:8099/om/admin/file-management.html
 
 ## om-service와의 관계
 
 | 모듈 | 설명 |
 |------|------|
 | `tcf-om` | TCF 마이그레이션 완료본 (**권장**) |
-| `om-service` | 17개 업무 WAR 세트에 포함된 레거시 OM 모듈 |
+| `om-service` | 레거시 WAR — `buildBusinessWars`·`deploy-wars`에 **미포함** |
 
 ## 의존성
 

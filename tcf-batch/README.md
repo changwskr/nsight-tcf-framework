@@ -1,128 +1,91 @@
 # tcf-batch — OM 대시보드 데이터 수집 배치
 
-OM 운영 대시보드(`http://localhost:8099/om/admin/dashboard.html`)에 표시되는 **AP/DB/세션/배포 상태**를 수집해 `OM_AP_STATUS`, `OM_DB_STATUS`, `OM_SESSION_STATUS`, `OM_DEPLOY_STATUS` 테이블에 적재하는 배치 모듈입니다.
+OM 운영 대시보드에 표시되는 **AP/DB/세션/배포 상태**를 수집해 `OM_AP_STATUS`, `OM_DB_STATUS`, `OM_SESSION_STATUS`, `OM_DEPLOY_STATUS` 테이블에 적재하는 배치 모듈입니다.
 
 | 항목 | 값 |
 |------|-----|
 | Gradle 모듈 | `tcf-batch` |
 | 메인 클래스 | `com.nh.nsight.tcf.batch.NsightTcfBatchApplication` |
-| bootRun 포트 | **8098** |
-| Job ID | `BAT-BATCH-001` |
+| bootRun 포트 | **8098** (`spring.profiles.active=bootrun`) |
+| WAR (bootWar) | `tcf-batch.war` → ztomcat `/batch` |
+| 공유 DB | `data/nsight-txlog/nsight_om` (tcf-om과 동일 H2) |
 
 ## Job 목록
 
 | Job ID | 설명 | 저장 테이블 |
 |--------|------|-------------|
-| `BAT-BATCH-001` | AP 상태 수집 (Actuator) | `OM_AP_STATUS` |
+| `BAT-BATCH-001` | AP 상태 수집 (Actuator CPU/Heap/Thread) | `OM_AP_STATUS` |
 | `BAT-BATCH-002` | DB 상태 수집 (Actuator/JDBC) | `OM_DB_STATUS` |
-| `BAT-BATCH-003` | 세션 현황 수집 (Spring Session/Actuator) | `OM_SESSION_STATUS` |
-| `BAT-BATCH-004` | 배포 현황 수집 (Actuator/HTTP) | `OM_DEPLOY_STATUS` |
+| `BAT-BATCH-003` | 세션 현황 (Spring Session + Tomcat Session) | `OM_SESSION_STATUS` |
+| `BAT-BATCH-004` | 배포 현황 (Actuator health·기동 시각) | `OM_DEPLOY_STATUS` |
 
-## 배포 현황 (`BAT-BATCH-004`)
+## 프로파일
 
-```text
-tcf-batch
-  ├─ actuator: /actuator/health, /actuator/info, process.start.time
-  ├─ http: UI 등 Actuator 미노출 대상 HTTP 200 확인
-  └─ OM_DEPLOY_STATUS MERGE
-         ↓
-dashboard.html 배포 현황 패널
-```
+| 프로파일 | 용도 | 수집 대상 base-url |
+|----------|------|-------------------|
+| `bootrun` (기본) | 로컬 bootRun | `http://127.0.0.1:8097` 등 개별 포트 |
+| `tomcat` | ztomcat WAR | `http://127.0.0.1:8080/{context}` 게이트웨이 |
 
-```bash
-curl -X POST http://localhost:8098/batch/jobs/deploy-status/run
-```
+설정 파일:
 
-설정: `nsight.batch.deploy-status.targets` — `source-type: actuator | http`
+- `application.yml` — 공통·bootrun 기본
+- `application-bootrun.yml` — bootRun 수집 대상
+- `application-tomcat.yml` — 19 context 전체 수집 (AP/DB/세션/배포 각 19~20건)
 
-## 세션 현황 (`BAT-BATCH-003`)
-
-```text
-tcf-batch
-  ├─ spring-session: SPRING_SESSION 집계 (활성/만료/사용자)
-  ├─ actuator: tomcat.sessions.active.current
-  └─ OM_SESSION_STATUS MERGE
-         ↓
-dashboard.html 세션 현황 패널
-```
-
-```bash
-curl -X POST http://localhost:8098/batch/jobs/session-status/run
-```
-
-설정: `nsight.batch.session-status.targets` — `source-type: spring-session | actuator`
-
-## DB 상태 (`BAT-BATCH-002`)
-
-```text
-tcf-batch
-  ├─ actuator: /actuator/health (db) + hikaricp pool metrics
-  ├─ jdbc: SELECT 1 ping
-  └─ OM_DB_STATUS MERGE
-         ↓
-dashboard.html DB 상태 패널
-```
-
-```bash
-curl -X POST http://localhost:8098/batch/jobs/db-status/run
-```
-
-설정: `nsight.batch.db-status.targets` — `source-type: actuator | jdbc`
-
-## AP 상태 (`BAT-BATCH-001`) — 동작
-
-```text
-tcf-batch (8098)
-  ├─ 각 AP /actuator/health, /actuator/metrics 호출
-  ├─ CPU / Heap / Thread / Health 산출
-  └─ OM H2 OM_AP_STATUS · OM_BATCH_HISTORY MERGE/INSERT
-         ↓
-OM.Dashboard.inquiry → dashboard.html AP 상태 패널
-```
+Tomcat WAR 배포 시: `spring.profiles.active=local,tomcat`
 
 ## 실행
 
 ```bash
+# bootRun
 gradle :tcf-batch:bootRun
 tcf-batch/scripts/run-local.bat
+
+# ztomcat (batch.war → /batch)
+ztomcat/deploy-wars.bat batch
 ```
 
-**사전 조건:** tcf-om과 동일 H2(`data/nsight-txlog/nsight_om`) 사용. 수집 대상 AP는 Actuator(`health`, `metrics`) 노출 필요.
+**사전 조건:** tcf-om과 동일 H2. 수집 대상은 Actuator `health`, `metrics` 노출 필요.
 
 ## 수동 실행 API
 
 ```bash
+# bootRun
 curl -X POST http://localhost:8098/batch/jobs/ap-status/run
-curl -X POST http://localhost:8098/batch/jobs/db-status/run
-curl -X POST http://localhost:8098/batch/jobs/session-status/run
-curl -X POST http://localhost:8098/batch/jobs/deploy-status/run
+
+# ztomcat
+curl -X POST http://localhost:8080/batch/jobs/ap-status/run
 ```
 
-## OM 배치 화면 연동
+| 엔드포인트 | 설명 |
+|------------|------|
+| `POST .../jobs/ap-status/run` | AP 상태 |
+| `POST .../jobs/db-status/run` | DB 상태 |
+| `POST .../jobs/session-status/run` | 세션 현황 |
+| `POST .../jobs/deploy-status/run` | 배포 현황 |
 
-- Job: `BAT-BATCH-001` ~ `BAT-BATCH-004` — OM 배치 관리 화면에서 수동 재실행 가능
-- tcf-om 설정: `nsight.om.batch-service-url: http://127.0.0.1:8098`
+## OM 연동
 
-## AP 대상 설정
+- tcf-om 설정 (Tomcat): `nsight.om.batch-service-url: http://127.0.0.1:8080/batch`
+- tcf-om 설정 (bootRun): `nsight.om.batch-service-url: http://127.0.0.1:8098`
+- OM 배치 관리 화면에서 Job `BAT-BATCH-001` ~ `004` 수동 재실행 가능
 
-`src/main/resources/application.yml` → `nsight.batch.ap-status.targets`
+## 세션 수집 참고 (Tomcat)
 
-```yaml
-nsight:
-  batch:
-    ap-status:
-      cron: "0 */5 * * * *"
-      targets:
-        - ap-id: om-ap
-          ap-name: tcf-om (:8097)
-          base-url: http://127.0.0.1:8097
-          enabled: true
-```
+- **OM 운영 포털**: `OM-PORTAL` — Spring Session JDBC (`SPRING_SESSION`)만 수집
+- **업무 WAR**: 각 context의 `tomcat.sessions.active.current` (HTTP Session)
+- OM의 Tomcat HTTP Session(`OM-AP`)은 Spring Session과 중복이므로 **수집 대상에서 제외**
 
-## 로컬 검증 순서
+## 로컬 검증 (bootRun)
 
 1. `gradle :tcf-om:bootRun` (8097)
-2. `gradle :sv-service:bootRun` (8086) 등 대상 AP 기동
+2. `gradle :sv-service:bootRun` (8086) 등 대상 AP
 3. `gradle :tcf-batch:bootRun` (8098)
 4. `curl -X POST http://localhost:8098/batch/jobs/ap-status/run`
-5. http://localhost:8099/om/admin/dashboard.html 에서 AP 상태 확인
+5. http://localhost:8099/om/admin/dashboard.html
+
+## 로컬 검증 (ztomcat)
+
+1. `ztomcat/deploy-wars.bat all` + `start.bat`
+2. `curl -X POST http://localhost:8080/batch/jobs/ap-status/run`
+3. http://localhost:8080/ui/om/admin/dashboard.html

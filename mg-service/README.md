@@ -1,17 +1,16 @@
-# mg-service — Message (지원)
+﻿# mg-service — Marketing Gateway
 
 | 항목 | 값 |
 |------|-----|
 | Gradle 모듈 | `mg-service` |
 | 업무코드 | `MG` |
-| 메인 클래스 | `com.nh.nsight.marketing.mg.NsightMgServiceApplication` |
 | bootRun 포트 | **8096** |
-| WAR | `mg-service.war` |
+| WAR (bootWar) | `mg.war` |
 | Tomcat context | `/mg` |
 
 ## 개요
 
-NSIGHT 마케팅 플랫폼 **Message (MG)** 업무 서비스입니다.
+NSIGHT 마케팅 플랫폼 **Marketing Gateway (MG)** 업무 서비스입니다. 모든 거래는 TCF 파이프라인(`POST /online` 또는 `POST /mg/online`)을 통해 처리됩니다.
 
 ## 샘플 거래
 
@@ -29,15 +28,25 @@ tcf-scripts/run-local.bat mg
 ## API
 
 ```bash
+# bootRun
 curl -X POST http://localhost:8096/mg/online \
+  -H "Content-Type: application/json" \
+  -d @tcf-ui/src/main/resources/sample-requests/mg-sample-inquiry.json
+
+# ztomcat
+curl -X POST http://localhost:8080/mg/online \
   -H "Content-Type: application/json" \
   -d @tcf-ui/src/main/resources/sample-requests/mg-sample-inquiry.json
 ```
 
+배포: `ztomcat/deploy-wars.bat mg` — [ztomcat/README.md](../ztomcat/README.md)
+
 ## tcf-ui
 
-- http://localhost:8099/mg/index.html
-- http://localhost:8099/mg/index-multi.html
+| 모드 | URL |
+|------|-----|
+| bootRun | http://localhost:8099/mg/index.html |
+| ztomcat | http://localhost:8080/ui/mg/index.html |
 
 ## 의존성
 

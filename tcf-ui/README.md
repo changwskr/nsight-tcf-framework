@@ -6,47 +6,55 @@ WebTopSuite/Client 없이 브라우저에서 표준 HTTP/JSON 전문을 작성·
 |------|-----|
 | Gradle 모듈 | `tcf-ui` |
 | 메인 클래스 | `com.nh.nsight.tcf.ui.NsightTcfUiApplication` |
-| 산출물 | `tcf-ui.jar` |
-| 포트 | **8099** |
+| bootRun 산출물 | `tcf-ui.jar` (포트 **8099**) |
+| WAR (bootWar) | `tcf-ui.war` → ztomcat `ui.war` (`/ui`) |
 
 `tcf-ui`는 **Relay 서버** 역할을 합니다.
 
 ```text
-브라우저 → tcf-ui API → 업무 WAS (/{code}/online)
+브라우저 → tcf-ui (/api/relay, /api/updownload) → 업무 WAS / tcf-om
 ```
+
+## 배포 모드
+
+| 모드 | 설정 | OM Admin URL |
+|------|------|--------------|
+| **bootrun** | `deployment-mode: bootrun` | http://localhost:8099/om/admin/login.html |
+| **tomcat** | `deployment-mode: tomcat` (WAR `/ui`) | http://localhost:8080/ui/om/admin/login.html |
+
+Tomcat WAR 프로파일: `application-tomcat.yml` — `tomcat-gateway-url: http://localhost:8080`
 
 ## 실행
 
 ```bash
-# 프로젝트 루트
+# bootRun
 gradle :tcf-ui:bootRun
-
-# 또는
 tcf-scripts/run-local.bat ui
-tcf-ui/scripts/run-local.bat
-```
 
-브라우저: http://localhost:8099
+# ztomcat
+ztomcat/deploy-wars.bat ui
+```
 
 ## 사전 조건
 
-테스트 대상 업무 WAS가 기동되어 있어야 합니다.
+테스트 대상 업무 WAS·tcf-om이 기동되어 있어야 합니다.
 
 ```bash
-gradle :sv-service:bootRun   # 예: SV (포트 8086)
-gradle :tcf-om:bootRun       # OM 운영관리 (포트 8097)
+gradle :sv-service:bootRun   # bootRun: SV 8086
+gradle :tcf-om:bootRun       # bootRun: OM 8097
+# 또는 ztomcat/deploy-wars.bat all
 ```
 
 ## 패키지 구조
 
 ```text
 com.nh.nsight.tcf.ui
-├── NsightTcfUiApplication      # 메인
-├── catalog/                    # BusinessModuleDefinitions (업무·포트)
-├── config/                     # TcfUiProperties, TcfUiConfiguration
-├── controller/                 # TcfApiController, UpdownloadApiController, EtcApiController
-├── service/                    # Relay·카탈로그 서비스
-└── model/                      # API 응답 모델
+├── NsightTcfUiApplication
+├── catalog/                    BusinessModuleDefinitions
+├── controller/                 TcfApiController, UpdownloadApiController, EtcApiController
+├── service/                    Relay·카탈로그
+├── web/                        UiTomcatHtmlRewriteFilter (/ui context HTML 보정)
+└── model/
 ```
 
 ## 설정
@@ -56,9 +64,15 @@ com.nh.nsight.tcf.ui
 ```yaml
 nsight:
   tcf-ui:
-    deployment-mode: bootrun
+    deployment-mode: bootrun      # tomcat WAR 시 application-tomcat.yml
     tomcat-gateway-url: http://localhost:8080
     bootrun-host: http://127.0.0.1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics   # 대시보드 AP/배포 수집용
 ```
 
 ## 주요 API
@@ -71,33 +85,42 @@ nsight:
 | `GET /api/config` | UI 설정 조회 |
 | `POST /api/updownload/upload` | 파일 업로드 Relay (tcf-om) |
 
+## 정적 리소스·공통 JS
+
+| 파일 | 설명 |
+|------|------|
+| `static/_shared/ui-context.js` | bootRun/Tomcat context path (`/ui`) 자동 보정 |
+| `static/_shared/om-admin.js` | OM Admin API Relay (`uiPath()`, `relayFetch()`) |
+
+Tomcat `/ui` 배포 시 API·정적 경로에 `/ui` 접두가 자동 적용됩니다.
+
 ## 거래 테스트 화면
 
-| URL | 설명 |
-|-----|------|
-| `/index.html` | 업무 허브 |
-| `/{code}/index.html` | 단일 거래 테스트 |
-| `/{code}/index-multi.html` | 다중 거래 테스트 |
-| `/ud/updownload.html` | UD 파일 관리 (tcf-om 연동) |
+| URL (bootRun) | URL (ztomcat) | 설명 |
+|---------------|---------------|------|
+| `/index.html` | `/ui/index.html` | 업무 허브 |
+| `/{code}/index.html` | `/ui/{code}/index.html` | 단일 거래 |
+| `/ud/updownload.html` | `/ui/ud/updownload.html` | UD 파일 관리 |
 
 ## OM 운영관리 포털
 
-로그인: http://localhost:8099/om/admin/login.html (`admin01` / `nsight01!`)
+로그인: `admin01` / `nsight01!`
 
-| URL | 설명 |
-|-----|------|
-| `/om/admin/dashboard.html` | 운영 대시보드 |
-| `/om/admin/transaction-log.html` | 거래로그 조회 |
-| `/om/admin/service-catalog.html` | ServiceId CRUD |
-| `/om/admin/user-auth.html` | 사용자 / 권한 / 메뉴 |
-| `/om/admin/common-code.html` | 공통코드 CRUD |
-| `/om/admin/error-code.html` | 오류코드 CRUD |
-| `/om/admin/cache.html` | EhCache 관리 |
-| `/om/admin/session.html` | 세션 관리 |
-| `/om/admin/file-management.html` | 파일 업·다운로드 |
-| `/om/admin/message-composer.html` | 공통 전문 조립 |
+| 화면 | 경로 |
+|------|------|
+| 대시보드 | `/om/admin/dashboard.html` |
+| 거래로그 | `/om/admin/transaction-log.html` |
+| ServiceId | `/om/admin/service-catalog.html` |
+| 사용자/권한 | `/om/admin/user-auth.html` |
+| 공통코드 | `/om/admin/common-code.html` |
+| 오류코드 | `/om/admin/error-code.html` |
+| Cache | `/om/admin/cache.html` |
+| 세션 | `/om/admin/session.html` |
+| 파일 관리 | `/om/admin/file-management.html` |
+| 환경설정 | `/om/admin/system-config.html` |
+| 전문 조립 | `/om/admin/message-composer.html` |
 
-공통 JS: `static/_shared/om-admin.js` — tcf-om(8097) API Relay
+대시보드 AP/DB/세션/배포 패널은 **tcf-batch** 수집 결과를 tcf-om이 조회합니다.
 
 ## 샘플 JSON
 

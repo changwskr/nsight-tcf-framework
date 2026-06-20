@@ -1,12 +1,11 @@
-# cc-service — Common (공통)
+﻿# cc-service — Common (공통)
 
 | 항목 | 값 |
 |------|-----|
 | Gradle 모듈 | `cc-service` |
 | 업무코드 | `CC` |
-| 메인 클래스 | `com.nh.nsight.marketing.cc.NsightCcServiceApplication` |
 | bootRun 포트 | **8081** |
-| WAR | `cc-service.war` |
+| WAR (bootWar) | `cc.war` |
 | Tomcat context | `/cc` |
 
 ## 개요
@@ -29,15 +28,25 @@ tcf-scripts/run-local.bat cc
 ## API
 
 ```bash
+# bootRun
 curl -X POST http://localhost:8081/cc/online \
+  -H "Content-Type: application/json" \
+  -d @tcf-ui/src/main/resources/sample-requests/cc-sample-inquiry.json
+
+# ztomcat
+curl -X POST http://localhost:8080/cc/online \
   -H "Content-Type: application/json" \
   -d @tcf-ui/src/main/resources/sample-requests/cc-sample-inquiry.json
 ```
 
+배포: `ztomcat/deploy-wars.bat cc` — [ztomcat/README.md](../ztomcat/README.md)
+
 ## tcf-ui
 
-- http://localhost:8099/cc/index.html
-- http://localhost:8099/cc/index-multi.html
+| 모드 | URL |
+|------|-----|
+| bootRun | http://localhost:8099/cc/index.html |
+| ztomcat | http://localhost:8080/ui/cc/index.html |
 
 ## 의존성
 

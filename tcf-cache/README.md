@@ -64,7 +64,10 @@ public void save(...) { ... }
 
 프로그램 방식 제어: `TcfCacheSupport.evict()`, `evictAll()`, `snapshotEntries()`
 
-OM Cache 관리 화면: http://localhost:8099/om/admin/cache.html
+OM Cache 관리 화면:
+
+- bootRun: http://localhost:8099/om/admin/cache.html
+- ztomcat: http://localhost:8080/ui/om/admin/cache.html
 
 ## 빌드
 

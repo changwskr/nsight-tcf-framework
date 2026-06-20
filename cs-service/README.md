@@ -1,17 +1,16 @@
-# cs-service — Common Service (지원)
+﻿# cs-service — Customer Service
 
 | 항목 | 값 |
 |------|-----|
 | Gradle 모듈 | `cs-service` |
 | 업무코드 | `CS` |
-| 메인 클래스 | `com.nh.nsight.marketing.cs.NsightCsServiceApplication` |
 | bootRun 포트 | **8094** |
-| WAR | `cs-service.war` |
+| WAR (bootWar) | `cs.war` |
 | Tomcat context | `/cs` |
 
 ## 개요
 
-NSIGHT 마케팅 플랫폼 **Common Service (CS)** 업무 서비스입니다.
+NSIGHT 마케팅 플랫폼 **Customer Service (CS)** 업무 서비스입니다. 모든 거래는 TCF 파이프라인(`POST /online` 또는 `POST /cs/online`)을 통해 처리됩니다.
 
 ## 샘플 거래
 
@@ -29,15 +28,25 @@ tcf-scripts/run-local.bat cs
 ## API
 
 ```bash
+# bootRun
 curl -X POST http://localhost:8094/cs/online \
+  -H "Content-Type: application/json" \
+  -d @tcf-ui/src/main/resources/sample-requests/cs-sample-inquiry.json
+
+# ztomcat
+curl -X POST http://localhost:8080/cs/online \
   -H "Content-Type: application/json" \
   -d @tcf-ui/src/main/resources/sample-requests/cs-sample-inquiry.json
 ```
 
+배포: `ztomcat/deploy-wars.bat cs` — [ztomcat/README.md](../ztomcat/README.md)
+
 ## tcf-ui
 
-- http://localhost:8099/cs/index.html
-- http://localhost:8099/cs/index-multi.html
+| 모드 | URL |
+|------|-----|
+| bootRun | http://localhost:8099/cs/index.html |
+| ztomcat | http://localhost:8080/ui/cs/index.html |
 
 ## 의존성
 

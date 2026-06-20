@@ -1,17 +1,16 @@
-# ss-service — Sales Support (지원)
+﻿# ss-service — Self Service
 
 | 항목 | 값 |
 |------|-----|
 | Gradle 모듈 | `ss-service` |
 | 업무코드 | `SS` |
-| 메인 클래스 | `com.nh.nsight.marketing.ss.NsightSsServiceApplication` |
 | bootRun 포트 | **8093** |
-| WAR | `ss-service.war` |
+| WAR (bootWar) | `ss.war` |
 | Tomcat context | `/ss` |
 
 ## 개요
 
-NSIGHT 마케팅 플랫폼 **Sales Support (SS)** 업무 서비스입니다.
+NSIGHT 마케팅 플랫폼 **Self Service (SS)** 업무 서비스입니다. 모든 거래는 TCF 파이프라인(`POST /online` 또는 `POST /ss/online`)을 통해 처리됩니다.
 
 ## 샘플 거래
 
@@ -29,15 +28,25 @@ tcf-scripts/run-local.bat ss
 ## API
 
 ```bash
+# bootRun
 curl -X POST http://localhost:8093/ss/online \
+  -H "Content-Type: application/json" \
+  -d @tcf-ui/src/main/resources/sample-requests/ss-sample-inquiry.json
+
+# ztomcat
+curl -X POST http://localhost:8080/ss/online \
   -H "Content-Type: application/json" \
   -d @tcf-ui/src/main/resources/sample-requests/ss-sample-inquiry.json
 ```
 
+배포: `ztomcat/deploy-wars.bat ss` — [ztomcat/README.md](../ztomcat/README.md)
+
 ## tcf-ui
 
-- http://localhost:8099/ss/index.html
-- http://localhost:8099/ss/index-multi.html
+| 모드 | URL |
+|------|-----|
+| bootRun | http://localhost:8099/ss/index.html |
+| ztomcat | http://localhost:8080/ui/ss/index.html |
 
 ## 의존성
 
