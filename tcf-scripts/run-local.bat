@@ -35,12 +35,14 @@ echo [run-local] started %TARGET_COUNT% service(s)
 exit /b 0
 
 :start_all
-echo [run-local] starting all business services...
-for %%C in (cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om) do (
+echo [run-local] starting all business services + tcf-om...
+for %%C in (cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg) do (
   echo [run-local] start %%C-service
   start "%%C-service" cmd /k "cd /d "%CD%" && gradle :%%C-service:bootRun"
 )
-echo [run-local] started 17 service(s)
+echo [run-local] start tcf-om
+start "tcf-om" cmd /k "cd /d "%CD%" && gradle :tcf-om:bootRun"
+echo [run-local] started 16 service(s) + tcf-om
 exit /b 0
 
 :queue_target
@@ -72,14 +74,11 @@ if /i "%TARGET%"=="ud" (
 if /i "%TARGET%"=="common-updownload" (
   set "TARGET=tcf-om"
 )
-if /i "%TARGET%"=="et" (
-  set "TARGET=common-etc"
-)
-if /i "%TARGET%"=="common-etc" (
-  set "TARGET=common-etc"
+if /i "%TARGET%"=="om" (
+  set "TARGET=tcf-om"
 )
 if /i not "%TARGET:~-8%"=="-service" (
-  if /i not "%TARGET%"=="tcf-ui" if /i not "%TARGET%"=="tcf-om" if /i not "%TARGET%"=="tcf-batch" if /i not "%TARGET%"=="common-etc" set "TARGET=%TARGET%-service"
+  if /i not "%TARGET%"=="tcf-ui" if /i not "%TARGET%"=="tcf-om" if /i not "%TARGET%"=="tcf-batch" set "TARGET=%TARGET%-service"
 )
 
 if %TARGET_COUNT%==1 set "RUN_FOREGROUND=%TARGET%"
@@ -93,11 +92,10 @@ echo.
 echo Targets:
 echo   sv ic     service code (ex: sv -^> sv-service bootRun)
 echo   ui        tcf-ui bootRun (port 8099)
-echo   tcf-om    tcf-om bootRun
+echo   om        tcf-om bootRun (port 8097)
 echo   batch     tcf-batch bootRun (port 8098)
 echo   ud        tcf-om bootRun (파일 업·다운로드 내장)
-echo   et        common-etc bootRun
-echo   all       start all 17 *-service in new windows
+echo   all       start 16 *-service + tcf-om in new windows
 echo.
 echo Examples:
 echo   run-local.bat sv

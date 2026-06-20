@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <script src="/_shared/ui-context.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OM 로그인</title>
@@ -29,7 +30,7 @@
       <p class="om-login-footer"><a href="/index.html">← TCF UI 홈</a></p>
     </div>
   </div>
-  <script src="/_shared/om-admin.js"></script>
+  <script src="/_shared/om-admin.js?v=20260620c"></script>
   <script>
     (async function () {
       await OmAdmin.loadConfig();
@@ -44,7 +45,7 @@
             authGroupName: body.authGroupName,
             sessionId: body.sessionId
           });
-          location.href = '/om/admin/session.html';
+          location.href = OmAdmin.uiPath('/om/admin/session.html');
           return;
         }
       } catch (e) {
@@ -64,7 +65,7 @@
           const userId = document.getElementById('userId').value.trim();
           const password = document.getElementById('password').value;
           await OmAdmin.login(userId, password);
-          location.href = '/om/admin/session.html';
+          location.href = OmAdmin.uiPath('/om/admin/session.html');
         } catch (err) {
           errorEl.textContent = err.message || '로그인에 실패했습니다.';
           errorEl.hidden = false;

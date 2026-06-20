@@ -37,7 +37,7 @@ public class UpdownloadRelayService {
     public String resolveBaseUrl(RelayOptions options) {
         BusinessModuleInfo module = catalog.findByCode(BUSINESS_CODE);
         if (resolveMode(options) == TcfUiProperties.DeploymentMode.tomcat) {
-            return trimTrailingSlash(resolveTomcatGateway(options)) + module.contextPath();
+            return trimTrailingSlash(resolveTomcatGateway(options)) + "/om";
         }
         return trimTrailingSlash(resolveBootrunHost(options)) + ":" + module.localPort();
     }

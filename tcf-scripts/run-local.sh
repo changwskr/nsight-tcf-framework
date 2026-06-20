@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-SERVICE_CODES=(cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om)
+SERVICE_CODES=(cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg)
 
 usage() {
   cat <<'EOF'
@@ -12,9 +12,10 @@ Usage: run-local.sh <target> [target2 ...]
 Targets:
   sv ic     service code (ex: sv -> sv-service bootRun)
   ui        tcf-ui bootRun (port 8099)
+  om        tcf-om bootRun (port 8097)
+  batch     tcf-batch bootRun (port 8098)
   ud        tcf-om bootRun (파일 업·다운로드 내장)
-  et        common-etc bootRun
-  all       start all 17 *-service in background
+  all       start 16 *-service + tcf-om in background
 
 Examples:
   ./run-local.sh sv
@@ -31,19 +32,11 @@ resolve_service() {
   target="$(echo "$1" | tr '[:upper:]' '[:lower:]')"
   case "$target" in
     ui|tcf-ui) echo "tcf-ui" ;;
-    ud|common-updownload|tcf-om) echo "tcf-om" ;;
-    et|common-etc) echo "common-etc" ;;
+    om|tcf-om|ud|common-updownload) echo "tcf-om" ;;
+    batch|tcf-batch) echo "tcf-batch" ;;
     *-service) echo "$target" ;;
     *) echo "${target}-service" ;;
   esac
-}
-
-is_service_code() {
-  local code="$1"
-  for c in "${SERVICE_CODES[@]}"; do
-    [[ "$c" == "$code" ]] && return 0
-  done
-  return 1
 }
 
 [[ $# -eq 0 ]] && usage
@@ -53,6 +46,8 @@ if [[ $# -eq 1 && "$(echo "$1" | tr '[:upper:]' '[:lower:]')" == "all" ]]; then
     echo "[run-local] start ${code}-service"
     gradle ":${code}-service:bootRun" &
   done
+  echo "[run-local] start tcf-om"
+  gradle ":tcf-om:bootRun" &
   wait
   exit 0
 fi

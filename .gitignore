@@ -20,3 +20,6 @@ data/nsight-txlog/
 **/data/updownload/
 sv-service/data/
 tcf-om/data/
+ztomcat/apache-tomcat-10.1.34/
+ztomcat/_war_bak/
+ztomcat/data/

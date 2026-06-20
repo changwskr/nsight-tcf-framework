@@ -108,7 +108,7 @@ ext.businessModules = [
     'cs-service',
     'ct-service',
     'mg-service',
-    'om-service'
+    'tcf-om'
 
 ]
 
@@ -134,13 +134,24 @@ configure(sharedBusinessModules.collect { project(":${it}") }) {
     }
 
     bootWar {
-        archiveFileName = "${project.name}.war"
+        archiveFileName = 'pc.war'
+    }
+
+    war {
+        archiveFileName = 'pc.war'
     }
 }
 
 // 17개 업무 WAR 일괄 빌드: gradle buildBusinessWars
 tasks.register('buildBusinessWars') {
     group = 'build'
-    description = 'Build all 17 NSIGHT business WAR files.'
+    description = 'Build all 17 NSIGHT business WAR files (16 services + tcf-om).'
     dependsOn businessModules.collect { ":${it}:bootWar" }
+}
+
+// ztomcat 전체 WAR (업무 17 + batch + ui): gradle buildZtomcatWars
+tasks.register('buildZtomcatWars') {
+    group = 'build'
+    description = 'Build all WAR files for ztomcat (19 modules: business + tcf-batch + tcf-ui).'
+    dependsOn 'buildBusinessWars', ':tcf-batch:bootWar', ':tcf-ui:bootWar'
 }

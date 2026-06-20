@@ -1,6 +1,6 @@
 /**
  * NSIGHT OM 운영관리 포털 공통 유틸 (tcf-ui)
- * tcf-om(8097) API를 /api/relay/OM/online 으로 호출합니다.
+ * tcf-om API를 /api/relay/OM/online 으로 호출합니다.
  */
 window.OmAdmin = (function () {
   const BUSINESS_CODE = 'OM';
@@ -107,11 +107,56 @@ window.OmAdmin = (function () {
   }
 
   function buildRelayQuery() {
+    const mode = isTomcatUiDeployment() ? 'tomcat' : (config.deploymentMode || 'bootrun');
     return new URLSearchParams({
-      deploymentMode: config.deploymentMode,
+      deploymentMode: mode,
       bootrunHost: config.bootrunHost,
-      tomcatGatewayUrl: config.tomcatGatewayUrl
+      tomcatGatewayUrl: config.tomcatGatewayUrl || 'http://localhost:8080'
     }).toString();
+  }
+
+  function uiContextPrefix() {
+    if (window.__NSIGHT_UI_CTX__) {
+      return window.__NSIGHT_UI_CTX__;
+    }
+    if (location.pathname.startsWith('/ui/') || location.pathname === '/ui') {
+      return '/ui';
+    }
+    return '';
+  }
+
+  function uiPath(path) {
+    if (typeof window.nsightUiUrl === 'function') {
+      return window.nsightUiUrl(path);
+    }
+    const normalized = path.startsWith('/') ? path : '/' + path;
+    const prefix = uiContextPrefix();
+    if (prefix && (normalized === prefix || normalized.startsWith(prefix + '/'))) {
+      return normalized;
+    }
+    return prefix + normalized;
+  }
+
+  function relayFetch(path, init) {
+    return fetch(uiPath(path), init);
+  }
+
+  async function parseRelayResponse(res) {
+    const text = await res.text();
+    let relay;
+    try {
+      relay = text ? JSON.parse(text) : {};
+    } catch (e) {
+      throw new Error(`릴레이 응답 파싱 실패 (HTTP ${res.status})`);
+    }
+    if (relay.responseBody == null || relay.responseBody === '') {
+      const status = relay.httpStatus != null ? relay.httpStatus : (relay.status != null ? relay.status : res.status);
+      if (status === 404 || relay.error === 'Not Found') {
+        throw new Error('tcf-ui API(/ui/api/relay)를 찾을 수 없습니다. Tomcat /ui 배포와 ui-context.js 로드를 확인하세요.');
+      }
+      throw new Error(relay.errorMessage || relay.message || `HTTP ${status}: 응답 없음`);
+    }
+    return relay;
   }
 
   function getSession() {
@@ -162,7 +207,7 @@ window.OmAdmin = (function () {
       /* 서버 세션 없음 */
     }
     clearSession();
-    location.href = '/om/admin/login.html';
+    location.href = uiPath('/om/admin/login.html');
     return null;
   }
 
@@ -173,7 +218,7 @@ window.OmAdmin = (function () {
       /* ignore */
     } finally {
       clearSession();
-      location.href = '/om/admin/login.html';
+      location.href = uiPath('/om/admin/login.html');
     }
   }
 
@@ -211,15 +256,46 @@ window.OmAdmin = (function () {
     });
   }
 
+  function apiUrl(path) {
+    return typeof window.nsightUiUrl === 'function' ? window.nsightUiUrl(path) : path;
+  }
+
+  function isTomcatUiDeployment() {
+    return config.deploymentMode === 'tomcat'
+        || location.pathname.startsWith('/ui/') || location.pathname === '/ui';
+  }
+
+  function resolveBatchServiceUrl() {
+    if (isTomcatUiDeployment()) {
+      const gateway = (config.tomcatGatewayUrl || 'http://localhost:8080').replace(/\/$/, '');
+      return `${gateway}/batch`;
+    }
+    const host = (config.bootrunHost || 'http://127.0.0.1').replace(/\/$/, '');
+    return `${host}:8098/batch`;
+  }
+
+  function resolveBatchLabel() {
+    if (isTomcatUiDeployment()) {
+      try {
+        const u = new URL((config.tomcatGatewayUrl || 'http://localhost:8080').replace(/\/$/, ''));
+        const port = u.port || (u.protocol === 'https:' ? '443' : '80');
+        return `Tomcat /batch (${port})`;
+      } catch (e) {
+        return 'Tomcat /batch (8080)';
+      }
+    }
+    return 'tcf-batch (:8098)';
+  }
+
   async function loadConfig() {
-    const res = await fetch('/api/config');
+    const res = await fetch(uiPath('/api/config'));
     if (res.ok) {
       const data = await res.json();
       config.deploymentMode = data.deploymentMode || config.deploymentMode;
       config.bootrunHost = data.bootrunHost || config.bootrunHost;
       config.tomcatGatewayUrl = data.tomcatGatewayUrl || config.tomcatGatewayUrl;
     }
-    const urlRes = await fetch(`/api/business-modules/${BUSINESS_CODE}/target-url?${buildRelayQuery()}`);
+    const urlRes = await fetch(uiPath(`/api/business-modules/${BUSINESS_CODE}/target-url?${buildRelayQuery()}`));
     if (urlRes.ok) {
       const data = await urlRes.json();
       targetUrl = data.targetUrl || targetUrl;
@@ -233,24 +309,30 @@ window.OmAdmin = (function () {
       header: { ...buildHeader(tx, 'EXECUTE'), userId: userId || 'GUEST', branchId: '' },
       body: { userId, password }
     };
-    const res = await fetch(`/api/relay/${BUSINESS_CODE}/online?${buildRelayQuery()}`, {
+    const res = await relayFetch(`/api/relay/${BUSINESS_CODE}/online?${buildRelayQuery()}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       body: JSON.stringify(request)
     });
-    const relay = await res.json();
-    if (!relay.responseBody) {
-      throw new Error(relay.errorMessage || `HTTP ${relay.httpStatus}: 응답 없음`);
-    }
+    const relay = await parseRelayResponse(res);
     let payload;
     try {
       payload = JSON.parse(relay.responseBody);
     } catch (e) {
       throw new Error('응답 JSON 파싱 실패');
     }
-    if (relay.httpStatus >= 400 || (payload.result && payload.result.status === 'ERROR')) {
-      throw new Error(payload.result?.message || payload.result?.errorMessage || '로그인에 실패했습니다.');
+    if (relay.httpStatus >= 400) {
+      let msg = payload.result?.errorMessage || payload.result?.message || payload.error;
+      if (!msg && relay.httpStatus === 502) {
+        msg = isTomcatUiDeployment()
+          ? 'tcf-om(/om)에 연결할 수 없습니다. Tomcat 기동 상태를 확인하세요.'
+          : 'tcf-om(8097)에 연결할 수 없습니다. tcf-om을 먼저 실행하세요.';
+      }
+      throw new Error(msg || `HTTP ${relay.httpStatus}`);
+    }
+    if (payload.result && payload.result.resultCode && payload.result.resultCode !== 'S0000') {
+      throw new Error(payload.result.errorMessage || payload.result.resultMessage || '로그인에 실패했습니다.');
     }
     const body = payload.body || {};
     if (!body.loggedIn) {
@@ -262,13 +344,13 @@ window.OmAdmin = (function () {
 
   async function relayMessage(businessCode, request) {
     const code = (businessCode || BUSINESS_CODE).toUpperCase();
-    const res = await fetch(`/api/relay/${code}/online?${buildRelayQuery()}`, {
+    const res = await relayFetch(`/api/relay/${code}/online?${buildRelayQuery()}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       body: JSON.stringify(request)
     });
-    const relay = await res.json();
+    const relay = await parseRelayResponse(res);
     let payload = null;
     if (relay.responseBody) {
       try {
@@ -283,16 +365,13 @@ window.OmAdmin = (function () {
   async function call(txKey, body, processingType) {
     const tx = typeof txKey === 'string' ? TX[txKey] : txKey;
     const request = { header: buildHeader(tx, processingType), body: body || {} };
-    const res = await fetch(`/api/relay/${BUSINESS_CODE}/online?${buildRelayQuery()}`, {
+    const res = await relayFetch(`/api/relay/${BUSINESS_CODE}/online?${buildRelayQuery()}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       body: JSON.stringify(request)
     });
-    const relay = await res.json();
-    if (!relay.responseBody) {
-      throw new Error(relay.errorMessage || `HTTP ${relay.httpStatus}: 응답 없음`);
-    }
+    const relay = await parseRelayResponse(res);
     let payload;
     try {
       payload = JSON.parse(relay.responseBody);
@@ -300,14 +379,17 @@ window.OmAdmin = (function () {
       throw new Error('응답 JSON 파싱 실패');
     }
     if (relay.httpStatus >= 400) {
-      let msg = payload.result?.message || payload.error;
+      let msg = payload.result?.errorMessage || payload.result?.message || payload.error;
       if (!msg && relay.httpStatus === 502) {
-        msg = 'tcf-om(8097)에 연결할 수 없습니다. tcf-om을 먼저 실행하세요.';
+        msg = isTomcatUiDeployment()
+          ? 'tcf-om(/om)에 연결할 수 없습니다. Tomcat 기동 상태를 확인하세요.'
+          : 'tcf-om(8097)에 연결할 수 없습니다. tcf-om을 먼저 실행하세요.';
       }
       throw new Error(msg || `HTTP ${relay.httpStatus}`);
     }
-    if (payload.result && payload.result.status === 'ERROR') {
-      throw new Error(payload.result.message || payload.result.errorMessage || '거래 오류');
+    if (payload.result && payload.result.resultCode && payload.result.resultCode !== 'S0000') {
+      const detail = payload.result.errorDetail ? ` (${payload.result.errorDetail})` : '';
+      throw new Error((payload.result.errorMessage || payload.result.resultMessage || '거래 오류') + detail);
     }
     return { payload, relay, body: payload.body || {} };
   }
@@ -354,7 +436,7 @@ window.OmAdmin = (function () {
 
   function renderNavSection(items, pageId) {
     return items.map(item =>
-      `<a href="${item.href}" class="${item.id === pageId ? 'active' : ''}">${item.label}</a>`
+      `<a href="${uiPath(item.href)}" class="${item.id === pageId ? 'active' : ''}">${item.label}</a>`
     ).join('');
   }
 
@@ -385,8 +467,8 @@ window.OmAdmin = (function () {
             </div>
           </nav>
           <div class="om-nav-footer">
-            <a href="/om/index-multi.html">↗ API 거래 테스트</a>
-            <a href="/index.html">← TCF UI 홈</a>
+            <a href="${uiPath('/om/index-multi.html')}">↗ API 거래 테스트</a>
+            <a href="${uiPath('/index.html')}">← TCF UI 홈</a>
           </div>
         </aside>
         <main class="om-main">
@@ -442,6 +524,8 @@ window.OmAdmin = (function () {
   function showError(container, message) {
     const hint = targetUrl && targetUrl !== '-'
       ? `릴레이 대상: <code>${targetUrl}</code>`
+      : config.deploymentMode === 'tomcat'
+      ? 'Tomcat(8080)에서 /om, /ui WAR 배포를 확인하세요.'
       : 'tcf-om(포트 8097)와 tcf-ui(8099)를 함께 기동했는지 확인하세요.';
     container.innerHTML = `<div class="om-alert error">${message}<br><small>${hint}</small></div>`;
   }
@@ -460,7 +544,7 @@ window.OmAdmin = (function () {
 
   async function pingBackend() {
     try {
-      const res = await fetch(`/api/business-modules/${BUSINESS_CODE}/target-url?${buildRelayQuery()}`);
+      const res = await fetch(uiPath(`/api/business-modules/${BUSINESS_CODE}/target-url?${buildRelayQuery()}`));
       if (!res.ok) return false;
       const data = await res.json();
       targetUrl = data.targetUrl || targetUrl;
@@ -474,9 +558,9 @@ window.OmAdmin = (function () {
 
   function updownloadQuery(extra) {
     const params = new URLSearchParams({
-      deploymentMode: config.deploymentMode,
+      deploymentMode: isTomcatUiDeployment() ? 'tomcat' : (config.deploymentMode || 'bootrun'),
       bootrunHost: config.bootrunHost,
-      tomcatGatewayUrl: config.tomcatGatewayUrl
+      tomcatGatewayUrl: config.tomcatGatewayUrl || 'http://localhost:8080'
     });
     if (extra) {
       Object.entries(extra).forEach(([k, v]) => {
@@ -487,13 +571,13 @@ window.OmAdmin = (function () {
   }
 
   async function updownloadBaseUrl() {
-    const res = await fetch(`/api/updownload/base-url?${updownloadQuery()}`);
+    const res = await fetch(uiPath(`/api/updownload/base-url?${updownloadQuery()}`));
     if (!res.ok) throw new Error('UD 서비스 URL을 확인할 수 없습니다.');
     return res.json();
   }
 
   async function updownloadList(filters) {
-    const res = await fetch(`/api/updownload/files?${updownloadQuery(filters)}`);
+    const res = await fetch(uiPath(`/api/updownload/files?${updownloadQuery(filters)}`));
     const text = await res.text();
     let payload;
     try {
@@ -517,7 +601,7 @@ window.OmAdmin = (function () {
     formData.append('userId', session && session.userId ? session.userId : 'GUEST');
     if (description) formData.append('description', description);
     if (businessCode) formData.append('businessCode', businessCode);
-    const res = await fetch(`/api/updownload/upload?${updownloadQuery()}`, { method: 'POST', body: formData });
+    const res = await fetch(uiPath(`/api/updownload/upload?${updownloadQuery()}`), { method: 'POST', body: formData });
     const text = await res.text();
     let payload;
     try {
@@ -535,7 +619,7 @@ window.OmAdmin = (function () {
   }
 
   async function updownloadDelete(fileId) {
-    const res = await fetch(`/api/updownload/files/${encodeURIComponent(fileId)}?${updownloadQuery()}`, { method: 'DELETE' });
+    const res = await fetch(uiPath(`/api/updownload/files/${encodeURIComponent(fileId)}?${updownloadQuery()}`), { method: 'DELETE' });
     const payload = await res.json();
     if (!payload.body || !payload.body.deleted) {
       throw new Error(payload.result?.resultMessage || '삭제 실패');
@@ -546,11 +630,11 @@ window.OmAdmin = (function () {
   function updownloadDownloadUrl(fileId) {
     const session = getSession();
     const userId = session && session.userId ? session.userId : 'GUEST';
-    return `/api/updownload/files/${encodeURIComponent(fileId)}/download?${updownloadQuery({ userId })}`;
+    return uiPath(`/api/updownload/files/${encodeURIComponent(fileId)}/download?${updownloadQuery({ userId })}`);
   }
 
   async function updownloadDetail(fileId) {
-    const res = await fetch(`/api/updownload/files/${encodeURIComponent(fileId)}?${updownloadQuery()}`);
+    const res = await fetch(uiPath(`/api/updownload/files/${encodeURIComponent(fileId)}?${updownloadQuery()}`));
     const payload = await res.json();
     if (payload.body && payload.body.error) {
       throw new Error(payload.body.error);
@@ -566,7 +650,7 @@ window.OmAdmin = (function () {
 
   async function updownloadUpdate(fileId, description) {
     const res = await fetch(
-      `/api/updownload/files/${encodeURIComponent(fileId)}?${updownloadQuery({ description: description || '' })}`,
+      uiPath(`/api/updownload/files/${encodeURIComponent(fileId)}?${updownloadQuery({ description: description || '' })}`),
       { method: 'PUT' }
     );
     const payload = await res.json();
@@ -721,11 +805,12 @@ window.OmAdmin = (function () {
 
   return {
     NAV, TX, config, targetUrl, SESSION_KEY,
-    todayIsoDate, todaySystemDate, newGuid, nowIsoKst, field,
+    todayIsoDate, todaySystemDate, newGuid, nowIsoKst, field, uiPath,
     buildStandardHeader, relayMessage,
     chipForHealth, chipForResult,
     getSession, setSession, clearSession, requireAuth, logout, login,
     inquiry, mutate, call, initPage, renderPagination, showError, showErrorBanner, loadConfig,
+    resolveBatchServiceUrl, resolveBatchLabel,
     updownloadQuery, updownloadBaseUrl, updownloadList, updownloadUpload, updownloadDelete, updownloadDownloadUrl,
     updownloadDetail, updownloadUpdate,
     loadCommonCodes, loadCodeGroups, fillCodeSelect, formatCodeLabel,

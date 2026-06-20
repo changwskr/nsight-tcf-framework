@@ -278,6 +278,19 @@
     const listStatusEl = document.getElementById('listStatus');
     const paginationEl = document.getElementById('pagination');
 
+    function uiUrl(path) {
+      if (typeof window.nsightUiUrl === 'function') {
+        return window.nsightUiUrl(path);
+      }
+      const prefix = window.__NSIGHT_UI_CTX__
+          || ((location.pathname.startsWith('/ui/') || location.pathname === '/ui') ? '/ui' : '');
+      const normalized = path.startsWith('/') ? path : '/' + path;
+      if (prefix && (normalized === prefix || normalized.startsWith(prefix + '/'))) {
+        return normalized;
+      }
+      return prefix + normalized;
+    }
+
     function buildRelayQuery(extra) {
       const params = new URLSearchParams();
       params.set('deploymentMode', deploymentModeEl.value);
@@ -412,7 +425,7 @@
     }
 
     function downloadFile(fileId) {
-      window.open(`/api/updownload/files/${encodeURIComponent(fileId)}/download?${buildRelayQuery()}`, '_blank');
+      window.open(uiUrl(`/api/updownload/files/${encodeURIComponent(fileId)}/download?${buildRelayQuery()}`), '_blank');
     }
 
     async function showDetail(fileId) {

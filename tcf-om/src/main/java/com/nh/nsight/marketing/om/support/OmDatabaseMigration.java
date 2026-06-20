@@ -58,6 +58,7 @@ public class OmDatabaseMigration implements ApplicationRunner {
         ensureSessionStatusTable();
         removeLegacyApSeedApStatus();
         removeEmptySessionStatus();
+        removeDuplicateOmSessionStatus();
         removeEmptyDbStatus();
         removeEmptyDeployStatus();
         jdbcTemplate.update("""
@@ -244,10 +245,6 @@ public class OmDatabaseMigration implements ApplicationRunner {
         int deleted = jdbcTemplate.update("""
                 DELETE FROM OM_DB_STATUS
                  WHERE DB_ID IN ('RDW', 'ADW', 'SESSIONDB')
-                    OR (
-                        HEALTH_STATUS IN ('FAIL', 'DOWN')
-                        AND COALESCE(POOL_USAGE_PCT, 0) = 0
-                    )
                 """);
         if (deleted > 0) {
             log.info("Removed empty or legacy DB status rows: {}", deleted);
@@ -257,22 +254,27 @@ public class OmDatabaseMigration implements ApplicationRunner {
     private void removeEmptyDeployStatus() {
         int deleted = jdbcTemplate.update("""
                 DELETE FROM OM_DEPLOY_STATUS
-                 WHERE HEALTH_STATUS IN ('FAIL', 'DOWN')
-                    OR BUSINESS_CODE = 'ET'
+                 WHERE BUSINESS_CODE = 'ET'
                 """);
         if (deleted > 0) {
             log.info("Removed empty or legacy deploy status rows: {}", deleted);
         }
     }
 
+    private void removeDuplicateOmSessionStatus() {
+        int deleted = jdbcTemplate.update("""
+                DELETE FROM OM_SESSION_STATUS
+                 WHERE SCOPE_ID = 'OM-AP'
+                """);
+        if (deleted > 0) {
+            log.info("Removed duplicate OM HTTP session row (OM-PORTAL Spring Session only): {}", deleted);
+        }
+    }
+
     private void removeEmptySessionStatus() {
         int deleted = jdbcTemplate.update("""
                 DELETE FROM OM_SESSION_STATUS
-                 WHERE HEALTH_STATUS IN ('FAIL', 'DOWN')
-                   AND COALESCE(ACTIVE_COUNT, 0) = 0
-                   AND COALESCE(EXPIRED_COUNT, 0) = 0
-                   AND COALESCE(TOTAL_COUNT, 0) = 0
-                   AND COALESCE(UNIQUE_USER_COUNT, 0) = 0
+                 WHERE SCOPE_ID IN ('legacy-session')
                 """);
         if (deleted > 0) {
             log.info("Removed empty session status rows: {}", deleted);
@@ -283,12 +285,6 @@ public class OmDatabaseMigration implements ApplicationRunner {
         int deleted = jdbcTemplate.update("""
                 DELETE FROM OM_AP_STATUS
                  WHERE AP_ID IN ('ap01', 'ap02', 'om-local')
-                    OR (
-                        HEALTH_STATUS IN ('FAIL', 'DOWN')
-                        AND COALESCE(CPU_USAGE_PCT, 0) = 0
-                        AND COALESCE(HEAP_USAGE_PCT, 0) = 0
-                        AND COALESCE(THREAD_COUNT, 0) = 0
-                    )
                 """);
         if (deleted > 0) {
             log.info("Removed empty or legacy AP status rows: {}", deleted);

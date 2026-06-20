@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/_shared/om-admin.css">
 </head>
 <body>
-  <script src="/_shared/om-admin.js"></script>
+  <script src="/_shared/om-admin.js?v=20260616"></script>
   <script>
     OmAdmin.initPage('dashboard', '운영 대시보드', async (el) => {
       const REFRESH_MS = 60_000;
@@ -28,8 +28,9 @@
         const statusLabel = body.overallStatus === 'WARN' ? '주의' : body.overallStatus === 'CRITICAL' ? '장애' : '정상';
         const summary = body.transactionSummary || {};
         const batchAt = formatCheckedAt(body.batchLastCollectedAt);
+        const batchLabel = OmAdmin.resolveBatchLabel();
         const staleHint = body.batchDataStale
-          ? '<span class="om-stat-pill" style="background:#fff3cd;color:#856404">배치 미수집 · tcf-batch(8098) 기동 확인</span>'
+          ? `<span class="om-stat-pill" style="background:#fff3cd;color:#856404">배치 미수집 · ${batchLabel} 기동 확인</span>`
           : `<span class="om-stat-pill">배치 수집 ${batchAt}</span>`;
 
         const apRows = (body.apStatus || []).map(r => `
@@ -39,7 +40,7 @@
             <td>${OmAdmin.field(r, 'cpuUsagePct')}%</td>
             <td>${OmAdmin.field(r, 'heapUsagePct')}%</td>
             <td>${OmAdmin.field(r, 'threadCount')}</td>
-          </tr>`).join('') || '<tr><td colspan="5" class="om-empty">데이터 없음 · tcf-batch(8098) 기동 후 5분 이내 자동 수집</td></tr>';
+          </tr>`).join('') || `<tr><td colspan="5" class="om-empty">데이터 없음 · ${batchLabel} 기동 후 5분 이내 자동 수집</td></tr>`;
 
         const dbRows = (body.dbStatus || []).map(r => `
           <tr>
@@ -100,7 +101,7 @@
           </tr>`).join('') || '<tr><td colspan="5" class="om-empty">배치 수집 전 · tcf-batch BAT-BATCH-004 실행 필요</td></tr>';
 
         el.innerHTML = `
-          <div class="om-alert info">기준일 <strong>${body.baseDate || baseDate}</strong> · 60초마다 자동 갱신 · tcf-batch(8098) 5분 주기 수집</div>
+          <div class="om-alert info">기준일 <strong>${body.baseDate || baseDate}</strong> · 60초마다 자동 갱신 · ${batchLabel} 5분 주기 수집</div>
           <section class="om-status-banner ${statusClass}">
             <div class="om-status-main ${statusClass}">전체 상태: ${statusLabel}</div>
             ${staleHint}

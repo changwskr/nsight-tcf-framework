@@ -1,0 +1,98 @@
+# bootRun (:8098) — 각 모듈 개별 포트에서 수집
+spring:
+  config:
+    activate:
+      on-profile: bootrun
+  servlet:
+    context-path: /batch
+
+nsight:
+  gateway:
+    mode: bootrun
+  batch:
+    ap-status:
+      targets:
+        - ap-id: om-ap
+          ap-name: tcf-om (:8097)
+          base-url: http://127.0.0.1:8097
+          enabled: true
+        - ap-id: sv-ap
+          ap-name: sv-service (:8086)
+          base-url: http://127.0.0.1:8086
+          enabled: true
+        - ap-id: cc-ap
+          ap-name: cc-service (:8081)
+          base-url: http://127.0.0.1:8081
+          enabled: true
+        - ap-id: mg-ap
+          ap-name: mg-service (:8096)
+          base-url: http://127.0.0.1:8096
+          enabled: true
+    db-status:
+      targets:
+        - db-id: OM-DS
+          db-name: nsight_om (tcf-om :8097)
+          source-type: actuator
+          base-url: http://127.0.0.1:8097
+          enabled: true
+        - db-id: LOGDB
+          db-name: nsight_om H2 (JDBC ping)
+          source-type: jdbc
+          jdbc-url: jdbc:h2:file:${nsight.txlog.path:./data/nsight-txlog}/nsight_om;MODE=Oracle;AUTO_SERVER=TRUE;DATABASE_TO_UPPER=false
+          jdbc-user: sa
+          jdbc-password: ""
+          enabled: true
+        - db-id: SV-DS
+          db-name: nsight_sv (sv-service :8086)
+          source-type: actuator
+          base-url: http://127.0.0.1:8086
+          enabled: true
+        - db-id: CC-DS
+          db-name: nsight_cc (cc-service :8081)
+          source-type: actuator
+          base-url: http://127.0.0.1:8081
+          enabled: true
+    session-status:
+      targets:
+        - scope-id: OM-PORTAL
+          scope-name: OM 운영 포털 (Spring Session)
+          source-type: spring-session
+          enabled: true
+        - scope-id: SV-AP
+          scope-name: sv-service Tomcat Session
+          source-type: actuator
+          base-url: http://127.0.0.1:8086
+          metric-name: tomcat.sessions.active.current
+          enabled: true
+    deploy-status:
+      targets:
+        - business-code: OM
+          war-name: tcf-om.war
+          base-url: http://127.0.0.1:8097
+          source-type: actuator
+          enabled: true
+        - business-code: SV
+          war-name: sv.war
+          base-url: http://127.0.0.1:8086
+          source-type: actuator
+          enabled: true
+        - business-code: CC
+          war-name: cc.war
+          base-url: http://127.0.0.1:8081
+          source-type: actuator
+          enabled: true
+        - business-code: MG
+          war-name: mg.war
+          base-url: http://127.0.0.1:8096
+          source-type: actuator
+          enabled: true
+        - business-code: UI
+          war-name: tcf-ui.war
+          base-url: http://127.0.0.1:8099
+          source-type: actuator
+          enabled: true
+        - business-code: BATCH
+          war-name: tcf-batch.war
+          base-url: http://127.0.0.1:8098/batch
+          source-type: actuator
+          enabled: true

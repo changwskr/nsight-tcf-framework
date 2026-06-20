@@ -24,9 +24,6 @@
       grid.innerHTML = modules.map(module => {
         const code = module.code;
         const lower = code.toLowerCase();
-        const transactionLogLink = code === 'ET'
-          ? `<a href="/${lower}/transaction-log.html">트랜잭션 로그 조회</a>`
-          : '';
         const omAdminLink = code === 'OM'
           ? `<a href="/${lower}/admin/dashboard.html">운영관리 포털</a>`
           : '';
@@ -40,7 +37,6 @@
             <div class="links">
               <a href="/${lower}/index.html">단일 서비스 테스트</a>
               <a href="/${lower}/index-multi.html">다중 서비스 테스트</a>
-              ${transactionLogLink}
               ${omAdminLink}
               ${updownloadLink}
             </div>

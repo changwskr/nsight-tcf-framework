@@ -21,41 +21,94 @@ public class BatchDatabaseMigration implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+        ensureApStatusTable();
+        ensureDbStatusTable();
         ensureSessionStatusTable();
         ensureDeployStatusTable();
+        ensureBatchHistoryTable();
         removeEmptySessionStatus();
+        removeDuplicateOmSessionStatus();
         removeEmptyDeployStatus();
         removeEmptyDbStatus();
     }
 
+    private boolean tableExists(String tableName) {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE UPPER(TABLE_NAME) = UPPER(?)",
+                Integer.class,
+                tableName);
+        return count != null && count > 0;
+    }
+
     private void removeEmptyDbStatus() {
+        if (!tableExists("OM_DB_STATUS")) {
+            log.info("Skip OM_DB_STATUS cleanup — table not found yet");
+            return;
+        }
         jdbcTemplate.update("""
                 DELETE FROM OM_DB_STATUS
                  WHERE DB_ID IN ('RDW', 'ADW', 'SESSIONDB')
-                    OR (
-                        HEALTH_STATUS IN ('FAIL', 'DOWN')
-                        AND COALESCE(POOL_USAGE_PCT, 0) = 0
-                    )
                 """);
     }
 
     private void removeEmptyDeployStatus() {
+        if (!tableExists("OM_DEPLOY_STATUS")) {
+            return;
+        }
         jdbcTemplate.update("""
                 DELETE FROM OM_DEPLOY_STATUS
-                 WHERE HEALTH_STATUS IN ('FAIL', 'DOWN')
-                    OR BUSINESS_CODE = 'ET'
+                 WHERE BUSINESS_CODE = 'ET'
+                """);
+    }
+
+    private void removeDuplicateOmSessionStatus() {
+        if (!tableExists("OM_SESSION_STATUS")) {
+            return;
+        }
+        jdbcTemplate.update("""
+                DELETE FROM OM_SESSION_STATUS
+                 WHERE SCOPE_ID = 'OM-AP'
                 """);
     }
 
     private void removeEmptySessionStatus() {
+        if (!tableExists("OM_SESSION_STATUS")) {
+            return;
+        }
         jdbcTemplate.update("""
                 DELETE FROM OM_SESSION_STATUS
-                 WHERE HEALTH_STATUS IN ('FAIL', 'DOWN')
-                   AND COALESCE(ACTIVE_COUNT, 0) = 0
-                   AND COALESCE(EXPIRED_COUNT, 0) = 0
-                   AND COALESCE(TOTAL_COUNT, 0) = 0
-                   AND COALESCE(UNIQUE_USER_COUNT, 0) = 0
+                 WHERE SCOPE_ID IN ('legacy-session')
                 """);
+    }
+
+    private void ensureApStatusTable() {
+        jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS OM_AP_STATUS (
+                    AP_ID VARCHAR(50) NOT NULL,
+                    AP_NAME VARCHAR(100),
+                    HEALTH_STATUS VARCHAR(20),
+                    CPU_USAGE_PCT DECIMAL(5,2),
+                    HEAP_USAGE_PCT DECIMAL(5,2),
+                    THREAD_COUNT INT,
+                    CHECKED_AT VARCHAR(40),
+                    PRIMARY KEY (AP_ID)
+                )
+                """);
+        log.info("OM_AP_STATUS table ensured");
+    }
+
+    private void ensureDbStatusTable() {
+        jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS OM_DB_STATUS (
+                    DB_ID VARCHAR(50) NOT NULL,
+                    DB_NAME VARCHAR(100),
+                    HEALTH_STATUS VARCHAR(20),
+                    POOL_USAGE_PCT DECIMAL(5,2),
+                    CHECKED_AT VARCHAR(40),
+                    PRIMARY KEY (DB_ID)
+                )
+                """);
+        log.info("OM_DB_STATUS table ensured");
     }
 
     private void ensureDeployStatusTable() {
@@ -87,5 +140,23 @@ public class BatchDatabaseMigration implements ApplicationRunner {
                 )
                 """);
         log.info("OM_SESSION_STATUS table ensured");
+    }
+
+    private void ensureBatchHistoryTable() {
+        jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS OM_BATCH_HISTORY (
+                    HISTORY_ID VARCHAR(64) NOT NULL,
+                    JOB_ID VARCHAR(50) NOT NULL,
+                    RUN_TIME VARCHAR(40) NOT NULL,
+                    RUN_STATUS VARCHAR(20),
+                    DURATION_MS BIGINT,
+                    RESULT_MESSAGE VARCHAR(500),
+                    PRIMARY KEY (HISTORY_ID)
+                )
+                """);
+        jdbcTemplate.execute("""
+                CREATE INDEX IF NOT EXISTS IDX_OM_BATCH_HIST ON OM_BATCH_HISTORY (JOB_ID, RUN_TIME DESC)
+                """);
+        log.info("OM_BATCH_HISTORY table ensured");
     }
 }

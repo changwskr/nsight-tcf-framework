@@ -7,8 +7,8 @@ PROJECT_HOME="$(cd "${SCRIPT_DIR}/.." && pwd)"
 # Tomcat webapps (override: export TOMCAT_WEBAPPS=/path/to/webapps)
 if [[ -n "${TOMCAT_WEBAPPS:-}" ]]; then
   WEBAPPS="${TOMCAT_WEBAPPS}"
-elif [[ -d "${PROJECT_HOME}/../nsight-httpjson-standard/ztomcat/apache-tomcat-10.1.34/webapps" ]]; then
-  WEBAPPS="$(cd "${PROJECT_HOME}/../nsight-httpjson-standard/ztomcat/apache-tomcat-10.1.34/webapps" && pwd)"
+elif [[ -d "${PROJECT_HOME}/ztomcat/apache-tomcat-10.1.34/webapps" ]]; then
+  WEBAPPS="$(cd "${PROJECT_HOME}/ztomcat/apache-tomcat-10.1.34/webapps" && pwd)"
 else
   WEBAPPS="${TOMCAT_WEBAPPS:-/opt/tomcat/webapps}"
 fi
@@ -30,8 +30,7 @@ ALL_MODULES=(
   cs-service:cs.war:cs.war:cs
   ct-service:ct.war:ct.war:ct
   mg-service:mg.war:mg.war:mg
-  om-service:om.war:om.war:om
-  tcf-om:tcf-om.war:ud.war:ud
+  tcf-om:tcf-om.war:om.war:om
 )
 
 usage() {
@@ -50,7 +49,7 @@ Gradle:
   export GRADLE_HOME=/path/to/gradle-8.10.1
   or export GRADLE_HOME_OVERRIDE=...
 
-Codes: cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om ud tcf-om
+Codes: cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om tcf-om
 EOF
 }
 
@@ -62,10 +61,6 @@ resolve_entry() {
     echo "tcf-om:tcf-om.war:om.war:om"
     return 0
   fi
-  if [[ "${code}" == "common-updownload" || "${code}" == "ud" ]]; then
-    echo "tcf-om:tcf-om.war:ud.war:ud"
-    return 0
-  fi
   for entry in "${ALL_MODULES[@]}"; do
     IFS=':' read -r module _src _dest ctx <<< "${entry}"
     if [[ "${ctx}" == "${code}" ]]; then
@@ -74,7 +69,7 @@ resolve_entry() {
     fi
   done
   echo "[deploy] Unknown code: ${1}" >&2
-  echo "[deploy] Codes: cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om ud tcf-om" >&2
+  echo "[deploy] Codes: cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om tcf-om" >&2
   return 1
 }
 
@@ -134,7 +129,7 @@ fi
 
 if [[ "${deploy_all}" -eq 1 ]]; then
   selected=("${ALL_MODULES[@]}")
-  gradle_tasks=(buildBusinessWars :tcf-om:bootWar)
+  gradle_tasks=(buildBusinessWars)
   echo "[deploy] Building all WAR files ..."
 else
   for local_code in "$@"; do

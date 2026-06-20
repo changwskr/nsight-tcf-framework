@@ -1,4 +1,5 @@
 com.nh.nsight.tcf.web.config.TcfAutoConfiguration
+com.nh.nsight.tcf.web.config.TcfPrimaryDataSourceAutoConfiguration
 com.nh.nsight.tcf.web.config.TcfMyBatisAutoConfiguration
 com.nh.nsight.tcf.web.config.TcfTransactionLogDataSourceConfiguration
 com.nh.nsight.tcf.web.config.TcfTransactionLogConfiguration

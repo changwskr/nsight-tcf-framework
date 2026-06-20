@@ -3,7 +3,7 @@ setlocal enabledelayedexpansion
 
 set "PROJECT_HOME=%~dp0.."
 for %%I in ("!PROJECT_HOME!") do set "PROJECT_HOME=%%~fI"
-set "WEBAPPS=C:\Programming(23-08-15)\nsight-httpjson-standard\ztomcat\apache-tomcat-10.1.34\webapps"
+set "WEBAPPS=!PROJECT_HOME!\ztomcat\apache-tomcat-10.1.34\webapps"
 set "GRADLE_HOME=C:\Programming(23-08-15)\gradle-8.10.1"
 set "GRADLE=!GRADLE_HOME!\bin\gradle.bat"
 
@@ -57,9 +57,9 @@ goto :run_build
 
 :build_all
 echo [deploy] Building all WAR files ...
-set "GRADLE_TASKS=buildBusinessWars :tcf-om:bootWar"
-set "DEPLOY_ENTRIES=cc-service:cc.war:cc.war:cc ic-service:ic.war:ic.war:ic pc-service:pc-service.war:pc.war:pc bc-service:bc.war:bc.war:bc ms-service:ms.war:ms.war:ms sv-service:sv.war:sv.war:sv pd-service:pd.war:pd.war:pd cm-service:cm.war:cm.war:cm eb-service:eb.war:eb.war:eb ep-service:ep.war:ep.war:ep bp-service:bp.war:bp.war:bp bd-service:bd.war:bd.war:bd ss-service:ss.war:ss.war:ss cs-service:cs.war:cs.war:cs ct-service:ct.war:ct.war:ct mg-service:mg.war:mg.war:mg om-service:om.war:om.war:om tcf-om:tcf-om.war:ud.war:ud"
-set "CLEAN_CTX=cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om ud"
+set "GRADLE_TASKS=buildBusinessWars"
+set "DEPLOY_ENTRIES=cc-service:cc.war:cc.war:cc ic-service:ic.war:ic.war:ic pc-service:pc-service.war:pc.war:pc bc-service:bc.war:bc.war:bc ms-service:ms.war:ms.war:ms sv-service:sv.war:sv.war:sv pd-service:pd.war:pd.war:pd cm-service:cm.war:cm.war:cm eb-service:eb.war:eb.war:eb ep-service:ep.war:ep.war:ep bp-service:bp.war:bp.war:bp bd-service:bd.war:bd.war:bd ss-service:ss.war:ss.war:ss cs-service:cs.war:cs.war:cs ct-service:ct.war:ct.war:ct mg-service:mg.war:mg.war:mg tcf-om:tcf-om.war:om.war:om"
+set "CLEAN_CTX=cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om"
 goto :run_build
 
 :run_build
@@ -138,7 +138,7 @@ echo Target webapps:
 echo   !WEBAPPS!
 echo   ^(override: set TOMCAT_WEBAPPS=...^)
 echo.
-echo Codes: cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om ud tcf-om
+echo Codes: cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om tcf-om
 exit /b 0
 
 :resolve_code
@@ -159,12 +159,10 @@ if /i "!CODE!"=="ss" call :add_entry ss-service ss.war ss.war ss & exit /b 0
 if /i "!CODE!"=="cs" call :add_entry cs-service cs.war cs.war cs & exit /b 0
 if /i "!CODE!"=="ct" call :add_entry ct-service ct.war ct.war ct & exit /b 0
 if /i "!CODE!"=="mg" call :add_entry mg-service mg.war mg.war mg & exit /b 0
-if /i "!CODE!"=="om" call :add_entry om-service om.war om.war om & exit /b 0
+if /i "!CODE!"=="om" call :add_entry tcf-om tcf-om.war om.war om & exit /b 0
 if /i "!CODE!"=="tcf-om" call :add_entry tcf-om tcf-om.war om.war om & exit /b 0
-if /i "!CODE!"=="ud" call :add_entry tcf-om tcf-om.war ud.war ud & exit /b 0
-if /i "!CODE!"=="common-updownload" call :add_entry tcf-om tcf-om.war ud.war ud & exit /b 0
 echo [deploy] Unknown code: !CODE!
-echo [deploy] Codes: cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om ud tcf-om
+echo [deploy] Codes: cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om tcf-om
 exit /b 1
 
 :add_entry

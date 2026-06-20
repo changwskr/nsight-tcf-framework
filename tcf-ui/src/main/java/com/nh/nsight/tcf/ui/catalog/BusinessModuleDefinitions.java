@@ -23,8 +23,7 @@ public final class BusinessModuleDefinitions {
             new ModuleDefinition("CT", "Contents", "지원", 8095),
             new ModuleDefinition("MG", "Message", "지원", 8096),
             new ModuleDefinition("OM", "Operation Management (tcf-om)", "운영", 8097),
-            new ModuleDefinition("UD", "Common UpDownload", "공통", 8097),
-            new ModuleDefinition("ET", "Common ETC", "공통", 8098)
+            new ModuleDefinition("UD", "Common UpDownload (tcf-om)", "공통", 8097)
     );
 
     public record ModuleDefinition(String code, String name, String group, int localPort) {}

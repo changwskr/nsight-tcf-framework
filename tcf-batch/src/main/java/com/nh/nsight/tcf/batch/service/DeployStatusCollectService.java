@@ -48,7 +48,7 @@ public class DeployStatusCollectService {
                 repository.upsertDeploy(snapshot);
                 successCount++;
             } else {
-                repository.deleteDeploy(snapshot.businessCode());
+                repository.upsertDeploy(snapshot);
                 failCount++;
             }
             log.info("Deploy status collected businessCode={} health={} version={} deployedAt={}",

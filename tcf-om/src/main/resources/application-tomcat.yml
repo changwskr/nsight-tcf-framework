@@ -1,0 +1,6 @@
+# ztomcat(8080) WAR 배포 — om.war → /om
+nsight:
+  gateway:
+    base-url: http://127.0.0.1:8080
+  om:
+    batch-service-url: http://127.0.0.1:8080/batch

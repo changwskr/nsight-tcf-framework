@@ -10,6 +10,7 @@ import java.time.ZoneId;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,10 +21,13 @@ public class OmDashboardService {
 
     private final OmOperationRule rule;
     private final OmOperationDao dao;
+    private final String batchServiceUrl;
 
-    public OmDashboardService(OmOperationRule rule, OmOperationDao dao) {
+    public OmDashboardService(OmOperationRule rule, OmOperationDao dao,
+                              @Value("${nsight.om.batch-service-url:http://127.0.0.1:8098/batch}") String batchServiceUrl) {
         this.rule = rule;
         this.dao = dao;
+        this.batchServiceUrl = batchServiceUrl;
     }
 
     public Map<String, Object> inquiry(Map<String, Object> body, TransactionContext context) {
@@ -53,11 +57,12 @@ public class OmDashboardService {
         List<Map<String, Object>> dbStatus = dao.selectDbStatus();
         List<Map<String, Object>> deployStatus = dao.selectDeployStatus();
         List<Map<String, Object>> sessionStatus = dao.selectSessionStatus();
-        String batchLastCollectedAt = resolveLatestCheckedAt(apStatus, dbStatus, sessionStatus);
+        String batchLastCollectedAt = resolveLatestCollectedAt(apStatus, dbStatus, sessionStatus, deployStatus);
         result.put("apStatus", apStatus);
         result.put("dbStatus", dbStatus);
         result.put("deployStatus", deployStatus);
         result.put("sessionStatus", sessionStatus);
+        result.put("batchServiceUrl", batchServiceUrl);
         result.put("batchLastCollectedAt", batchLastCollectedAt);
         result.put("batchDataStale", isBatchDataStale(batchLastCollectedAt));
         int activeFromBatch = dao.sumSessionStatusActiveCount();
@@ -83,26 +88,38 @@ public class OmDashboardService {
         return Long.parseLong(String.valueOf(value));
     }
 
-    @SafeVarargs
-    private String resolveLatestCheckedAt(List<Map<String, Object>>... statusLists) {
+    private String resolveLatestCollectedAt(List<Map<String, Object>> apStatus,
+                                          List<Map<String, Object>> dbStatus,
+                                          List<Map<String, Object>> sessionStatus,
+                                          List<Map<String, Object>> deployStatus) {
         OffsetDateTime latest = null;
-        for (List<Map<String, Object>> rows : statusLists) {
-            for (Map<String, Object> row : rows) {
-                Object raw = row.get("checkedAt");
-                if (raw == null) {
-                    continue;
+        latest = maxCheckedAt(latest, apStatus, "checkedAt");
+        latest = maxCheckedAt(latest, dbStatus, "checkedAt");
+        latest = maxCheckedAt(latest, sessionStatus, "checkedAt");
+        latest = maxCheckedAt(latest, deployStatus, "deployedAt");
+        return latest == null ? null : latest.toString();
+    }
+
+    private OffsetDateTime maxCheckedAt(OffsetDateTime latest, List<Map<String, Object>> rows, String field) {
+        for (Map<String, Object> row : rows) {
+            Object raw = row.get(field);
+            if (raw == null) {
+                continue;
+            }
+            String value = String.valueOf(raw);
+            if (value.isBlank() || "-".equals(value)) {
+                continue;
+            }
+            try {
+                OffsetDateTime parsed = OffsetDateTime.parse(value);
+                if (latest == null || parsed.isAfter(latest)) {
+                    latest = parsed;
                 }
-                try {
-                    OffsetDateTime checkedAt = OffsetDateTime.parse(String.valueOf(raw));
-                    if (latest == null || checkedAt.isAfter(latest)) {
-                        latest = checkedAt;
-                    }
-                } catch (Exception ignored) {
-                    // skip unparsable timestamps
-                }
+            } catch (Exception ignored) {
+                // skip unparsable timestamps
             }
         }
-        return latest == null ? null : latest.toString();
+        return latest;
     }
 
     private boolean isBatchDataStale(String batchLastCollectedAt) {

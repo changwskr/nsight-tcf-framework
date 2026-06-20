@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/batch/jobs/db-status")
+@RequestMapping("/jobs/db-status")
 public class DbStatusBatchController {
     private final DbStatusCollectService collectService;
 

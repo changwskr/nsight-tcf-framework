@@ -46,7 +46,7 @@ public class ApStatusCollectService {
                 repository.upsertAp(snapshot);
                 successCount++;
             } else {
-                repository.deleteAp(snapshot.apId());
+                repository.upsertAp(snapshot);
                 failCount++;
             }
             log.info("AP status collected apId={} health={} cpu={}% heap={}% threads={}",

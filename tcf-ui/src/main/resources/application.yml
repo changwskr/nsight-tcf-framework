@@ -10,6 +10,12 @@ spring:
   application:
     name: nsight-tcf-ui
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
 nsight:
   tcf-ui:
     deployment-mode: bootrun

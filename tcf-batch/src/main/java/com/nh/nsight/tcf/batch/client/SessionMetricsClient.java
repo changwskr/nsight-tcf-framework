@@ -45,8 +45,12 @@ public class SessionMetricsClient {
             if (health == null || !"UP".equalsIgnoreCase(health.path("status").asText("DOWN"))) {
                 return SessionCounts.unreachable();
             }
-            double active = metricValue(baseUrl, target.getMetricName());
-            int activeCount = (int) Math.round(active);
+            int activeCount = 0;
+            try {
+                activeCount = (int) Math.round(metricValue(baseUrl, target.getMetricName()));
+            } catch (Exception ignored) {
+                // 외부 Tomcat WAR는 tomcat.sessions.* 미터릭이 없을 수 있음 → health UP이면 0으로 수집
+            }
             return new SessionCounts(activeCount, 0, activeCount, 0, true);
         } catch (Exception e) {
             return SessionCounts.unreachable();
@@ -69,7 +73,7 @@ public class SessionMetricsClient {
     private double metricValue(String baseUrl, String metricName) {
         JsonNode body = restTemplate.getForObject(baseUrl + "/actuator/metrics/" + metricName, JsonNode.class);
         if (body == null) {
-            return 0;
+            throw new IllegalStateException("metric body empty: " + metricName);
         }
         JsonNode measurements = body.path("measurements");
         if (!measurements.isArray() || measurements.isEmpty()) {

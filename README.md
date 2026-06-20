@@ -50,7 +50,7 @@ gradle :tcf-om:bootRun
 # 테스트 UI · OM 관리 포털
 gradle :tcf-ui:bootRun
 
-# 17개 WAR 일괄 빌드 (om-service 포함)
+# 17개 WAR 일괄 빌드 (tcf-om 포함)
 gradle buildBusinessWars
 
 # 스크립트 (Windows, 프로젝트 루트)
@@ -64,7 +64,7 @@ tcf-scripts\run-local.bat ui
 | 포트 | 모듈 | 비고 |
 |------|------|------|
 | 8081–8096 | cc ~ mg (*-service) | 업무별 bootRun |
-| 8097 | **tcf-om** / om-service | 동시 기동 불가, UD API tcf-om 내장 |
+| 8097 | **tcf-om** | Tomcat `/om` 또는 bootRun, UD API 내장 |
 | 8099 | tcf-ui | Relay · OM admin UI |
 
 ## OM 관리 포털 (tcf-ui + tcf-om)

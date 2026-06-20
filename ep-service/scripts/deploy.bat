@@ -3,7 +3,7 @@ setlocal enabledelayedexpansion
 
 set "PROJECT_HOME=%~dp0..\.."
 for %%I in ("!PROJECT_HOME!") do set "PROJECT_HOME=%%~fI"
-set "WEBAPPS=C:\Programming(23-08-15)\nsight-httpjson-standard\ztomcat\apache-tomcat-10.1.34\webapps"
+set "WEBAPPS=!PROJECT_HOME!\ztomcat\apache-tomcat-10.1.34\webapps"
 set "GRADLE_HOME=C:\Programming(23-08-15)\gradle-8.10.1"
 set "GRADLE=!GRADLE_HOME!\bin\gradle.bat"
 set "MODULE=ep-service"

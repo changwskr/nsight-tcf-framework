@@ -86,7 +86,7 @@ tcf-scripts/deploy.sh sv cc
 | cs-service | 8094 |
 | ct-service | 8095 |
 | mg-service | 8096 |
-| tcf-om / om-service | 8097 |
+| tcf-om | 8097 |
 | tcf-ui | 8099 |
 
 ## Gradle 직접 호출

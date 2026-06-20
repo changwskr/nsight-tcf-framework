@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-SERVICE_CODES=(cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om)
+SERVICE_CODES=(cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg)
 
 usage() {
   cat <<'EOF'
@@ -13,9 +13,9 @@ Targets:
   all       clean + buildBusinessWars
   wars      buildBusinessWars only
   tcf       tcf-util, tcf-core, tcf-web
-  common    common-etc
+  common    (removed — use tcf-om)
   ui        tcf-ui bootJar
-  services  all *-service modules
+  services  all *-service modules + tcf-om bootWar
   sv ic     service code (ex: sv -> sv-service)
 
 Examples:
@@ -58,13 +58,15 @@ resolve_target() {
       append :tcf-web:build
       ;;
     common)
-      append :common-etc:build
+      echo "[build] common-etc module was removed. Use tcf-om for shared features." >&2
+      exit 1
       ;;
     ui|tcf-ui) append :tcf-ui:bootJar ;;
     services)
       for code in "${SERVICE_CODES[@]}"; do
         append ":${code}-service:build"
       done
+      append :tcf-om:bootWar
       ;;
     *-service)
       append ":${target}:build"

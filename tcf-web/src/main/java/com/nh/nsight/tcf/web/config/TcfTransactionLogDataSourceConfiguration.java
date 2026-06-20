@@ -1,6 +1,7 @@
 package com.nh.nsight.tcf.web.config;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
+import com.nh.nsight.tcf.core.logging.TcfTransactionLogConstants;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -24,9 +25,13 @@ public class TcfTransactionLogDataSourceConfiguration {
 
         @Bean(name = "transactionLogDataSource")
         public DataSource transactionLogDataSource(TcfProperties properties, Environment environment) {
-            TcfProperties.TransactionLogDataSource cfg = properties.getTransactionLogDatasource();
-            String url = environment.resolvePlaceholders(cfg.getUrl());
+            String configured = environment.getProperty("nsight.tcf.transaction-log-datasource.url");
+            String rawUrl = (configured != null && !configured.isBlank())
+                    ? configured
+                    : TcfTransactionLogConstants.DEFAULT_DATASOURCE_URL_TEMPLATE;
+            String url = environment.resolveRequiredPlaceholders(rawUrl);
             log.info("Transaction log datasource url={}", url);
+            TcfProperties.TransactionLogDataSource cfg = properties.getTransactionLogDatasource();
             return DataSourceBuilder.create()
                     .driverClassName(cfg.getDriverClassName())
                     .url(url)

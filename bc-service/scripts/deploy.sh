@@ -10,8 +10,8 @@ CTX="bc"
 
 if [[ -n "${TOMCAT_WEBAPPS:-}" ]]; then
   WEBAPPS="${TOMCAT_WEBAPPS}"
-elif [[ -d "${PROJECT_HOME}/../nsight-httpjson-standard/ztomcat/apache-tomcat-10.1.34/webapps" ]]; then
-  WEBAPPS="$(cd "${PROJECT_HOME}/../nsight-httpjson-standard/ztomcat/apache-tomcat-10.1.34/webapps" && pwd)"
+elif [[ -d "${PROJECT_HOME}/ztomcat/apache-tomcat-10.1.34/webapps" ]]; then
+  WEBAPPS="$(cd "${PROJECT_HOME}/ztomcat/apache-tomcat-10.1.34/webapps" && pwd)"
 else
   WEBAPPS="/opt/tomcat/webapps"
 fi

@@ -1,15 +1,15 @@
 package com.nh.nsight.tcf.core.support;
 
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class TcfConsoleLog {
-    private static final PrintStream OUT = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+    private static final Logger LOG = LoggerFactory.getLogger("tcf.console");
 
     private TcfConsoleLog() {
     }
 
     public static void println(String message) {
-        OUT.println(message);
+        LOG.info("{}", message);
     }
 }

@@ -30,7 +30,7 @@ public class OmBatchRemoteClient {
     public Map<String, Object> runDeployStatusCollect() {
         try {
             Map<String, Object> response = restTemplate.postForObject(
-                    batchServiceUrl + "/batch/jobs/deploy-status/run",
+                    batchServiceUrl + "/jobs/deploy-status/run",
                     null,
                     Map.class);
             return response != null ? response : Map.of();
@@ -44,7 +44,7 @@ public class OmBatchRemoteClient {
     public Map<String, Object> runSessionStatusCollect() {
         try {
             Map<String, Object> response = restTemplate.postForObject(
-                    batchServiceUrl + "/batch/jobs/session-status/run",
+                    batchServiceUrl + "/jobs/session-status/run",
                     null,
                     Map.class);
             return response != null ? response : Map.of();
@@ -58,7 +58,7 @@ public class OmBatchRemoteClient {
     public Map<String, Object> runDbStatusCollect() {
         try {
             Map<String, Object> response = restTemplate.postForObject(
-                    batchServiceUrl + "/batch/jobs/db-status/run",
+                    batchServiceUrl + "/jobs/db-status/run",
                     null,
                     Map.class);
             return response != null ? response : Map.of();
@@ -72,7 +72,7 @@ public class OmBatchRemoteClient {
     public Map<String, Object> runApStatusCollect() {
         try {
             Map<String, Object> response = restTemplate.postForObject(
-                    batchServiceUrl + "/batch/jobs/ap-status/run",
+                    batchServiceUrl + "/jobs/ap-status/run",
                     null,
                     Map.class);
             return response != null ? response : Map.of();

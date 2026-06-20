@@ -55,7 +55,7 @@ public class SessionStatusCollectService {
                 totalExpired += snapshot.expiredCount();
                 totalUniqueUsers += snapshot.uniqueUserCount();
             } else {
-                repository.deleteSession(snapshot.scopeId());
+                repository.upsertSession(snapshot);
                 failCount++;
             }
             log.info("Session status collected scopeId={} active={} expired={} users={}",

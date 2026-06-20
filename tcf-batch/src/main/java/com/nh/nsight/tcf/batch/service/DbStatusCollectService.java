@@ -52,7 +52,7 @@ public class DbStatusCollectService {
                 repository.upsertDb(snapshot);
                 successCount++;
             } else {
-                repository.deleteDb(snapshot.dbId());
+                repository.upsertDb(snapshot);
                 failCount++;
             }
             log.info("DB status collected dbId={} health={} pool={}%",
