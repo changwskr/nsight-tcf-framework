@@ -6,6 +6,7 @@ import com.nh.nsight.tcf.util.DateTimeUtil;
 import com.nh.nsight.marketing.om.dao.OmOperationDao;
 import com.nh.nsight.marketing.om.rule.OmOperationRule;
 import com.nh.nsight.marketing.om.support.OmBodySupport;
+import com.nh.nsight.marketing.om.support.OmBatchRemoteClient;
 import com.nh.nsight.marketing.om.support.OmChangeRecorder;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -15,17 +16,25 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class OmBatchService {
+    public static final String AP_STATUS_JOB_ID = "BAT-BATCH-001";
+    public static final String DB_STATUS_JOB_ID = "BAT-BATCH-002";
+    public static final String SESSION_STATUS_JOB_ID = "BAT-BATCH-003";
+    public static final String DEPLOY_STATUS_JOB_ID = "BAT-BATCH-004";
+
     private final OmOperationRule rule;
     private final OmOperationDao dao;
     private final OmChangeRecorder recorder;
     private final OmSessionCleanupService sessionCleanupService;
+    private final OmBatchRemoteClient batchRemoteClient;
 
     public OmBatchService(OmOperationRule rule, OmOperationDao dao, OmChangeRecorder recorder,
-                          OmSessionCleanupService sessionCleanupService) {
+                          OmSessionCleanupService sessionCleanupService,
+                          OmBatchRemoteClient batchRemoteClient) {
         this.rule = rule;
         this.dao = dao;
         this.recorder = recorder;
         this.sessionCleanupService = sessionCleanupService;
+        this.batchRemoteClient = batchRemoteClient;
     }
 
     public Map<String, Object> inquiry(Map<String, Object> body, TransactionContext context) {
@@ -73,6 +82,34 @@ public class OmBatchService {
             result.put("activeCount", cleanup.activeCount());
             result.put("durationMs", cleanup.durationMs());
             return result;
+        }
+        if (AP_STATUS_JOB_ID.equals(jobId)) {
+            Map<String, Object> remote = batchRemoteClient.runApStatusCollect();
+            recorder.recordAdminAudit(context, "BATCH_EXECUTE", "배치 재실행", reason,
+                    String.valueOf(remote.getOrDefault("runStatus", "SUCCESS")));
+            recorder.recordAuthHistory(context, "BATCH", jobId, "scheduled", "manual-execute", reason);
+            return batchRemoteClient.toExecuteResult(jobId, remote);
+        }
+        if (DB_STATUS_JOB_ID.equals(jobId)) {
+            Map<String, Object> remote = batchRemoteClient.runDbStatusCollect();
+            recorder.recordAdminAudit(context, "BATCH_EXECUTE", "배치 재실행", reason,
+                    String.valueOf(remote.getOrDefault("runStatus", "SUCCESS")));
+            recorder.recordAuthHistory(context, "BATCH", jobId, "scheduled", "manual-execute", reason);
+            return batchRemoteClient.toExecuteResult(jobId, remote);
+        }
+        if (SESSION_STATUS_JOB_ID.equals(jobId)) {
+            Map<String, Object> remote = batchRemoteClient.runSessionStatusCollect();
+            recorder.recordAdminAudit(context, "BATCH_EXECUTE", "배치 재실행", reason,
+                    String.valueOf(remote.getOrDefault("runStatus", "SUCCESS")));
+            recorder.recordAuthHistory(context, "BATCH", jobId, "scheduled", "manual-execute", reason);
+            return batchRemoteClient.toExecuteResult(jobId, remote);
+        }
+        if (DEPLOY_STATUS_JOB_ID.equals(jobId)) {
+            Map<String, Object> remote = batchRemoteClient.runDeployStatusCollect();
+            recorder.recordAdminAudit(context, "BATCH_EXECUTE", "배치 재실행", reason,
+                    String.valueOf(remote.getOrDefault("runStatus", "SUCCESS")));
+            recorder.recordAuthHistory(context, "BATCH", jobId, "scheduled", "manual-execute", reason);
+            return batchRemoteClient.toExecuteResult(jobId, remote);
         }
 
         long start = System.currentTimeMillis();

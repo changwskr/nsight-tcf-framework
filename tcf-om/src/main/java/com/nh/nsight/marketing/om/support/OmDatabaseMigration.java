@@ -31,7 +31,35 @@ public class OmDatabaseMigration implements ApplicationRunner {
                 """,
                 "BAT-OM-002", "OM 세션 정리", "OM", "*/10 * * * * *", "Y",
                 "SPRING_SESSION 만료 세션 10초 주기 정리");
-        seedHealthStatusIfEmpty();
+        jdbcTemplate.update("""
+                MERGE INTO OM_BATCH_JOB (JOB_ID, JOB_NAME, BUSINESS_CODE, CRON_EXPR, USE_YN, DESCRIPTION) KEY (JOB_ID)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                "BAT-BATCH-001", "대시보드 AP 상태 수집", "BATCH", "0 */5 * * * *", "Y",
+                "Actuator AP CPU/Heap/Thread → OM_AP_STATUS (tcf-batch)");
+        jdbcTemplate.update("""
+                MERGE INTO OM_BATCH_JOB (JOB_ID, JOB_NAME, BUSINESS_CODE, CRON_EXPR, USE_YN, DESCRIPTION) KEY (JOB_ID)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                "BAT-BATCH-002", "대시보드 DB 상태 수집", "BATCH", "30 */5 * * * *", "Y",
+                "Actuator/JDBC DB Pool → OM_DB_STATUS (tcf-batch)");
+        jdbcTemplate.update("""
+                MERGE INTO OM_BATCH_JOB (JOB_ID, JOB_NAME, BUSINESS_CODE, CRON_EXPR, USE_YN, DESCRIPTION) KEY (JOB_ID)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                "BAT-BATCH-003", "대시보드 세션 현황 수집", "BATCH", "45 */5 * * * *", "Y",
+                "Spring Session/Actuator → OM_SESSION_STATUS (tcf-batch)");
+        jdbcTemplate.update("""
+                MERGE INTO OM_BATCH_JOB (JOB_ID, JOB_NAME, BUSINESS_CODE, CRON_EXPR, USE_YN, DESCRIPTION) KEY (JOB_ID)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                "BAT-BATCH-004", "대시보드 배포 현황 수집", "BATCH", "55 */5 * * * *", "Y",
+                "Actuator/HTTP 배포 상태 → OM_DEPLOY_STATUS (tcf-batch)");
+        ensureSessionStatusTable();
+        removeLegacyApSeedApStatus();
+        removeEmptySessionStatus();
+        removeEmptyDbStatus();
+        removeEmptyDeployStatus();
         jdbcTemplate.update("""
                 MERGE INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN) KEY (MENU_ID)
                 VALUES (?, ?, ?, NULL, ?, ?)
@@ -176,6 +204,22 @@ public class OmDatabaseMigration implements ApplicationRunner {
                 handlerClass, "ROLE_OM_SVC", "Y", 5, "Y", description);
     }
 
+    private void ensureSessionStatusTable() {
+        jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS OM_SESSION_STATUS (
+                    SCOPE_ID VARCHAR(50) NOT NULL,
+                    SCOPE_NAME VARCHAR(100),
+                    ACTIVE_COUNT INT,
+                    EXPIRED_COUNT INT,
+                    TOTAL_COUNT INT,
+                    UNIQUE_USER_COUNT INT,
+                    HEALTH_STATUS VARCHAR(20),
+                    CHECKED_AT VARCHAR(40),
+                    PRIMARY KEY (SCOPE_ID)
+                )
+                """);
+    }
+
     private void ensureUdFileMetaTable() {
         jdbcTemplate.execute("""
                 CREATE TABLE IF NOT EXISTS UD_FILE_META (
@@ -196,32 +240,59 @@ public class OmDatabaseMigration implements ApplicationRunner {
         jdbcTemplate.execute("CREATE INDEX IF NOT EXISTS UD_FILE_META_IX3 ON UD_FILE_META (ORIGINAL_NAME)");
     }
 
-    private void seedHealthStatusIfEmpty() {
-        Integer apCount = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM OM_AP_STATUS", Integer.class);
-        if (apCount != null && apCount == 0) {
-            jdbcTemplate.update("""
-                    INSERT INTO OM_AP_STATUS (AP_ID, AP_NAME, HEALTH_STATUS, CPU_USAGE_PCT, HEAP_USAGE_PCT,
-                                              THREAD_COUNT, CHECKED_AT)
-                    VALUES ('ap01', 'OM-AP-01', 'NORMAL', 0, 0, 0, ?),
-                           ('ap02', 'OM-AP-02', 'NORMAL', 0, 0, 0, ?)
-                    """, DateTimeUtil.nowKst(), DateTimeUtil.nowKst());
-        }
-        Integer dbCount = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM OM_DB_STATUS", Integer.class);
-        if (dbCount != null && dbCount == 0) {
-            jdbcTemplate.update("""
-                    INSERT INTO OM_DB_STATUS (DB_ID, DB_NAME, HEALTH_STATUS, POOL_USAGE_PCT, CHECKED_AT)
-                    VALUES ('RDW', 'RDW', 'NORMAL', 0, ?),
-                           ('ADW', 'ADW', 'NORMAL', 0, ?),
-                           ('LOGDB', 'LOGDB', 'NORMAL', 0, ?)
-                    """, DateTimeUtil.nowKst(), DateTimeUtil.nowKst(), DateTimeUtil.nowKst());
-        }
-        Integer deployCount = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM OM_DEPLOY_STATUS", Integer.class);
-        if (deployCount != null && deployCount == 0) {
-            jdbcTemplate.update("""
-                    INSERT INTO OM_DEPLOY_STATUS (BUSINESS_CODE, WAR_NAME, WAR_VERSION, DEPLOYED_AT, HEALTH_STATUS)
-                    VALUES ('OM', 'tcf-om.war', '0.1.0-SNAPSHOT', ?, 'UP'),
-                           ('SV', 'sv.war', '0.1.0-SNAPSHOT', ?, 'UP')
-                    """, DateTimeUtil.nowKst(), DateTimeUtil.nowKst());
+    private void removeEmptyDbStatus() {
+        int deleted = jdbcTemplate.update("""
+                DELETE FROM OM_DB_STATUS
+                 WHERE DB_ID IN ('RDW', 'ADW', 'SESSIONDB')
+                    OR (
+                        HEALTH_STATUS IN ('FAIL', 'DOWN')
+                        AND COALESCE(POOL_USAGE_PCT, 0) = 0
+                    )
+                """);
+        if (deleted > 0) {
+            log.info("Removed empty or legacy DB status rows: {}", deleted);
         }
     }
+
+    private void removeEmptyDeployStatus() {
+        int deleted = jdbcTemplate.update("""
+                DELETE FROM OM_DEPLOY_STATUS
+                 WHERE HEALTH_STATUS IN ('FAIL', 'DOWN')
+                    OR BUSINESS_CODE = 'ET'
+                """);
+        if (deleted > 0) {
+            log.info("Removed empty or legacy deploy status rows: {}", deleted);
+        }
+    }
+
+    private void removeEmptySessionStatus() {
+        int deleted = jdbcTemplate.update("""
+                DELETE FROM OM_SESSION_STATUS
+                 WHERE HEALTH_STATUS IN ('FAIL', 'DOWN')
+                   AND COALESCE(ACTIVE_COUNT, 0) = 0
+                   AND COALESCE(EXPIRED_COUNT, 0) = 0
+                   AND COALESCE(TOTAL_COUNT, 0) = 0
+                   AND COALESCE(UNIQUE_USER_COUNT, 0) = 0
+                """);
+        if (deleted > 0) {
+            log.info("Removed empty session status rows: {}", deleted);
+        }
+    }
+
+    private void removeLegacyApSeedApStatus() {
+        int deleted = jdbcTemplate.update("""
+                DELETE FROM OM_AP_STATUS
+                 WHERE AP_ID IN ('ap01', 'ap02', 'om-local')
+                    OR (
+                        HEALTH_STATUS IN ('FAIL', 'DOWN')
+                        AND COALESCE(CPU_USAGE_PCT, 0) = 0
+                        AND COALESCE(HEAP_USAGE_PCT, 0) = 0
+                        AND COALESCE(THREAD_COUNT, 0) = 0
+                    )
+                """);
+        if (deleted > 0) {
+            log.info("Removed empty or legacy AP status rows: {}", deleted);
+        }
+    }
+
 }

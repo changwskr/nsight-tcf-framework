@@ -20,10 +20,20 @@ public class OmOperationDao {
         return mapper.selectTxSummary(params);
     }
 
-    public List<Map<String, Object>> selectErrorTop(String baseDate) {
+    public List<Map<String, Object>> selectErrorTop(String fromTime, String toTime, int limit) {
         Map<String, Object> params = new HashMap<>();
-        params.put("baseDate", baseDate);
+        params.put("fromTime", fromTime);
+        params.put("toTime", toTime);
+        params.put("limit", limit);
         return mapper.selectErrorTop(params);
+    }
+
+    public List<Map<String, Object>> selectSlowTransactionsTop(String fromTime, String toTime, int limit) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("fromTime", fromTime);
+        params.put("toTime", toTime);
+        params.put("limit", limit);
+        return mapper.selectSlowTransactionsTop(params);
     }
 
     public List<Map<String, Object>> selectApStatus() {
@@ -32,6 +42,22 @@ public class OmOperationDao {
 
     public List<Map<String, Object>> selectDbStatus() {
         return mapper.selectDbStatus();
+    }
+
+    public List<Map<String, Object>> selectSessionStatus() {
+        return mapper.selectSessionStatus();
+    }
+
+    public int sumSessionStatusActiveCount() {
+        return mapper.sumSessionStatusActiveCount();
+    }
+
+    public int sumSessionStatusExpiredCount() {
+        return mapper.sumSessionStatusExpiredCount();
+    }
+
+    public int sumSessionStatusUniqueUsers() {
+        return mapper.sumSessionStatusUniqueUsers();
     }
 
     public List<Map<String, Object>> selectDeployStatus() {

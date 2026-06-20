@@ -20,11 +20,15 @@ public class OmSampleService {
 
     public Map<String, Object> inquiry(Map<String, Object> body, TransactionContext context) {
         String serviceId = context.getHeader().getServiceId();
-        TcfConsoleLog.println("\n ======================================================================[OmSampleService.inquiry] start serviceId=" + serviceId);
+        TcfConsoleLog.println(
+                "\n ======================================================================[OmSampleService.inquiry] start serviceId="
+                        + serviceId);
         try {
-            TcfConsoleLog.println(" ======================================================================[OmSampleService.inquiry] rule.validateInquiry");
+            TcfConsoleLog.println(
+                    " ======================================================================[OmSampleService.inquiry] rule.validateInquiry");
             rule.validateInquiry(body, context);
-            TcfConsoleLog.println(" ======================================================================[OmSampleService.inquiry] dao.selectSample");
+            TcfConsoleLog.println(
+                    " ======================================================================[OmSampleService.inquiry] dao.selectSample");
             Map<String, Object> data = dao.selectSample(body, context);
             Map<String, Object> result = new LinkedHashMap<>();
             result.put("businessCode", "OM");
@@ -34,10 +38,14 @@ public class OmSampleService {
             result.put("serviceId", serviceId);
             result.put("transactionCode", context.getHeader().getTransactionCode());
             result.put("data", data);
-            TcfConsoleLog.println(" ======================================================================[OmSampleService.inquiry] end (success) serviceId=" + serviceId);
+            TcfConsoleLog.println(
+                    " ======================================================================[OmSampleService.inquiry] end (success) serviceId="
+                            + serviceId);
             return result;
         } catch (RuntimeException e) {
-            TcfConsoleLog.println(" ======================================================================[OmSampleService.inquiry] end (error) serviceId=" + serviceId);
+            TcfConsoleLog.println(
+                    " ======================================================================[OmSampleService.inquiry] end (error) serviceId="
+                            + serviceId);
             throw e;
         }
     }

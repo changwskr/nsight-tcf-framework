@@ -20,12 +20,23 @@
                COUNT(*) AS "errorCount"
           FROM TCF_TX_LOG
          WHERE (RESULT_STATUS = 'FAIL' OR RESULT_STATUS = 'ERROR')
-        <if test="baseDate != null and baseDate != ''">
-           AND TX_TIME LIKE #{baseDate} || '%'
-        </if>
+           AND TX_TIME &gt;= #{fromTime}
+           AND TX_TIME &lt;= #{toTime}
          GROUP BY SERVICE_ID, ERROR_CODE
          ORDER BY COUNT(*) DESC
-         FETCH FIRST 10 ROWS ONLY
+         FETCH FIRST #{limit} ROWS ONLY
+    </select>
+
+    <select id="selectSlowTransactionsTop" parameterType="map" resultType="map">
+        SELECT TX_TIME AS "txTime", BUSINESS_CODE AS "businessCode",
+               SERVICE_ID AS "serviceId", TRANSACTION_CODE AS "transactionCode",
+               GUID AS "guid", USER_ID AS "userId", RESULT_STATUS AS "resultStatus",
+               ELAPSED_TIME_MS AS "elapsedTimeMs"
+          FROM TCF_TX_LOG
+         WHERE TX_TIME &gt;= #{fromTime}
+           AND TX_TIME &lt;= #{toTime}
+         ORDER BY ELAPSED_TIME_MS DESC, TX_TIME DESC
+         FETCH FIRST #{limit} ROWS ONLY
     </select>
 
     <select id="selectApStatus" resultType="map">
@@ -33,6 +44,13 @@
                CPU_USAGE_PCT AS "cpuUsagePct", HEAP_USAGE_PCT AS "heapUsagePct",
                THREAD_COUNT AS "threadCount", CHECKED_AT AS "checkedAt"
           FROM OM_AP_STATUS
+         WHERE AP_ID NOT IN ('ap01', 'ap02', 'om-local')
+           AND NOT (
+               HEALTH_STATUS IN ('FAIL', 'DOWN')
+               AND COALESCE(CPU_USAGE_PCT, 0) = 0
+               AND COALESCE(HEAP_USAGE_PCT, 0) = 0
+               AND COALESCE(THREAD_COUNT, 0) = 0
+           )
          ORDER BY AP_ID
     </select>
 
@@ -40,13 +58,60 @@
         SELECT DB_ID AS "dbId", DB_NAME AS "dbName", HEALTH_STATUS AS "healthStatus",
                POOL_USAGE_PCT AS "poolUsagePct", CHECKED_AT AS "checkedAt"
           FROM OM_DB_STATUS
+         WHERE DB_ID NOT IN ('RDW', 'ADW', 'SESSIONDB')
+           AND NOT (
+               HEALTH_STATUS IN ('FAIL', 'DOWN')
+               AND COALESCE(POOL_USAGE_PCT, 0) = 0
+           )
          ORDER BY DB_ID
+    </select>
+
+    <select id="selectSessionStatus" resultType="map">
+        SELECT SCOPE_ID AS "scopeId", SCOPE_NAME AS "scopeName",
+               ACTIVE_COUNT AS "activeCount", EXPIRED_COUNT AS "expiredCount",
+               TOTAL_COUNT AS "totalCount", UNIQUE_USER_COUNT AS "uniqueUserCount",
+               HEALTH_STATUS AS "healthStatus", CHECKED_AT AS "checkedAt"
+          FROM OM_SESSION_STATUS
+         WHERE NOT (
+               HEALTH_STATUS IN ('FAIL', 'DOWN')
+               AND COALESCE(ACTIVE_COUNT, 0) = 0
+               AND COALESCE(EXPIRED_COUNT, 0) = 0
+               AND COALESCE(TOTAL_COUNT, 0) = 0
+               AND COALESCE(UNIQUE_USER_COUNT, 0) = 0
+           )
+         ORDER BY SCOPE_ID
+    </select>
+
+    <sql id="sessionStatusWithMetricsWhere">
+        WHERE NOT (
+               HEALTH_STATUS IN ('FAIL', 'DOWN')
+               AND COALESCE(ACTIVE_COUNT, 0) = 0
+               AND COALESCE(EXPIRED_COUNT, 0) = 0
+               AND COALESCE(TOTAL_COUNT, 0) = 0
+               AND COALESCE(UNIQUE_USER_COUNT, 0) = 0
+           )
+    </sql>
+
+    <select id="sumSessionStatusActiveCount" resultType="int">
+        SELECT COALESCE(SUM(ACTIVE_COUNT), 0) FROM OM_SESSION_STATUS
+        <include refid="sessionStatusWithMetricsWhere"/>
+    </select>
+
+    <select id="sumSessionStatusExpiredCount" resultType="int">
+        SELECT COALESCE(SUM(EXPIRED_COUNT), 0) FROM OM_SESSION_STATUS
+        <include refid="sessionStatusWithMetricsWhere"/>
+    </select>
+
+    <select id="sumSessionStatusUniqueUsers" resultType="int">
+        SELECT COALESCE(SUM(UNIQUE_USER_COUNT), 0) FROM OM_SESSION_STATUS
+        <include refid="sessionStatusWithMetricsWhere"/>
     </select>
 
     <select id="selectDeployStatus" resultType="map">
         SELECT BUSINESS_CODE AS "businessCode", WAR_NAME AS "warName", WAR_VERSION AS "warVersion",
                DEPLOYED_AT AS "deployedAt", HEALTH_STATUS AS "healthStatus"
           FROM OM_DEPLOY_STATUS
+         WHERE HEALTH_STATUS NOT IN ('FAIL', 'DOWN')
          ORDER BY BUSINESS_CODE
     </select>
 

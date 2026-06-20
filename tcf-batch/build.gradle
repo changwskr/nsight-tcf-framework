@@ -1,0 +1,18 @@
+// TCF Batch — OM 대시보드 데이터 수집 배치 (bootRun 포트 8098)
+// 실행: gradle :tcf-batch:bootRun
+
+plugins {
+    id 'org.springframework.boot'
+}
+
+dependencies {
+    implementation project(':tcf-core')
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    runtimeOnly 'com.h2database:h2'
+}
+
+bootJar {
+    archiveFileName = 'tcf-batch.jar'
+}

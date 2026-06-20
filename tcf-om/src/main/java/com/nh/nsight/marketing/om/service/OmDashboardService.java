@@ -5,6 +5,8 @@ import com.nh.nsight.tcf.util.DateTimeUtil;
 import com.nh.nsight.marketing.om.dao.OmOperationDao;
 import com.nh.nsight.marketing.om.rule.OmOperationRule;
 import com.nh.nsight.marketing.om.support.OmBodySupport;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +14,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class OmDashboardService {
+    private static final ZoneId KST = ZoneId.of("Asia/Seoul");
+    private static final int RECENT_WINDOW_MINUTES = 15;
+    private static final int RECENT_TOP_LIMIT = 10;
+
     private final OmOperationRule rule;
     private final OmOperationDao dao;
 
@@ -43,11 +49,29 @@ public class OmDashboardService {
         result.put("errorRatePct", Math.round(errorRate * 10) / 10.0);
         result.put("timeoutCount", txSummary.get("timeoutCount"));
         result.put("avgElapsedMs", txSummary.get("avgElapsedMs"));
-        result.put("apStatus", dao.selectApStatus());
-        result.put("dbStatus", dao.selectDbStatus());
-        result.put("deployStatus", dao.selectDeployStatus());
-        result.put("activeSessionCount", dao.selectActiveSessionCount());
-        result.put("errorTop", dao.selectErrorTop(baseDate));
+        List<Map<String, Object>> apStatus = dao.selectApStatus();
+        List<Map<String, Object>> dbStatus = dao.selectDbStatus();
+        List<Map<String, Object>> deployStatus = dao.selectDeployStatus();
+        List<Map<String, Object>> sessionStatus = dao.selectSessionStatus();
+        String batchLastCollectedAt = resolveLatestCheckedAt(apStatus, dbStatus, sessionStatus);
+        result.put("apStatus", apStatus);
+        result.put("dbStatus", dbStatus);
+        result.put("deployStatus", deployStatus);
+        result.put("sessionStatus", sessionStatus);
+        result.put("batchLastCollectedAt", batchLastCollectedAt);
+        result.put("batchDataStale", isBatchDataStale(batchLastCollectedAt));
+        int activeFromBatch = dao.sumSessionStatusActiveCount();
+        result.put("activeSessionCount", sessionStatus.isEmpty()
+                ? dao.selectActiveSessionCount() : activeFromBatch);
+        result.put("expiredSessionCount", dao.sumSessionStatusExpiredCount());
+        result.put("uniqueUserCount", dao.sumSessionStatusUniqueUsers());
+        String toTime = DateTimeUtil.nowKst();
+        String fromTime = OffsetDateTime.now(KST).minusMinutes(RECENT_WINDOW_MINUTES).toString();
+        result.put("recentWindowMinutes", RECENT_WINDOW_MINUTES);
+        result.put("errorTop", dao.selectErrorTop(fromTime, toTime, RECENT_TOP_LIMIT));
+        result.put("slowTransactionFromTime", fromTime);
+        result.put("slowTransactionToTime", toTime);
+        result.put("slowTransactionTop", dao.selectSlowTransactionsTop(fromTime, toTime, RECENT_TOP_LIMIT));
         result.put("transactionSummary", txSummary);
         return result;
     }
@@ -57,6 +81,40 @@ public class OmDashboardService {
             return 0L;
         }
         return Long.parseLong(String.valueOf(value));
+    }
+
+    @SafeVarargs
+    private String resolveLatestCheckedAt(List<Map<String, Object>>... statusLists) {
+        OffsetDateTime latest = null;
+        for (List<Map<String, Object>> rows : statusLists) {
+            for (Map<String, Object> row : rows) {
+                Object raw = row.get("checkedAt");
+                if (raw == null) {
+                    continue;
+                }
+                try {
+                    OffsetDateTime checkedAt = OffsetDateTime.parse(String.valueOf(raw));
+                    if (latest == null || checkedAt.isAfter(latest)) {
+                        latest = checkedAt;
+                    }
+                } catch (Exception ignored) {
+                    // skip unparsable timestamps
+                }
+            }
+        }
+        return latest == null ? null : latest.toString();
+    }
+
+    private boolean isBatchDataStale(String batchLastCollectedAt) {
+        if (batchLastCollectedAt == null || batchLastCollectedAt.isBlank()) {
+            return true;
+        }
+        try {
+            OffsetDateTime collectedAt = OffsetDateTime.parse(batchLastCollectedAt);
+            return collectedAt.isBefore(OffsetDateTime.now(KST).minusMinutes(6));
+        } catch (Exception e) {
+            return true;
+        }
     }
 }
 

@@ -25,7 +25,8 @@ public class BcSampleFacade {
 
         Map<String, Object> result = service.inquiry(body, context);
 
-        System.out.println(" ==============================================[BcSampleFacade.inquiry] resultKeys=" + result.keySet());
+        System.out.println(" ==============================================[BcSampleFacade.inquiry] resultKeys="
+                + result.keySet());
         System.out.println(" ==============================================[BcSampleFacade.inquiry] end");
         return result;
     }

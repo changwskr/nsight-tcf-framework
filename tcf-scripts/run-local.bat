@@ -60,6 +60,12 @@ if /i "%TARGET%"=="tcf-ui" (
 if /i "%TARGET%"=="tcf-om" (
   set "TARGET=tcf-om"
 )
+if /i "%TARGET%"=="batch" (
+  set "TARGET=tcf-batch"
+)
+if /i "%TARGET%"=="tcf-batch" (
+  set "TARGET=tcf-batch"
+)
 if /i "%TARGET%"=="ud" (
   set "TARGET=tcf-om"
 )
@@ -73,7 +79,7 @@ if /i "%TARGET%"=="common-etc" (
   set "TARGET=common-etc"
 )
 if /i not "%TARGET:~-8%"=="-service" (
-  if /i not "%TARGET%"=="tcf-ui" if /i not "%TARGET%"=="tcf-om" if /i not "%TARGET%"=="common-etc" set "TARGET=%TARGET%-service"
+  if /i not "%TARGET%"=="tcf-ui" if /i not "%TARGET%"=="tcf-om" if /i not "%TARGET%"=="tcf-batch" if /i not "%TARGET%"=="common-etc" set "TARGET=%TARGET%-service"
 )
 
 if %TARGET_COUNT%==1 set "RUN_FOREGROUND=%TARGET%"
@@ -88,6 +94,7 @@ echo Targets:
 echo   sv ic     service code (ex: sv -^> sv-service bootRun)
 echo   ui        tcf-ui bootRun (port 8099)
 echo   tcf-om    tcf-om bootRun
+echo   batch     tcf-batch bootRun (port 8098)
 echo   ud        tcf-om bootRun (파일 업·다운로드 내장)
 echo   et        common-etc bootRun
 echo   all       start all 17 *-service in new windows

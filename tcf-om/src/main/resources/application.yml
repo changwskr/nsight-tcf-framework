@@ -109,6 +109,7 @@ nsight:
     online-transaction-seconds: 5
     db-query-seconds: 3
   om:
+    batch-service-url: http://127.0.0.1:8098
     session-cleanup:
       fixed-rate-ms: 10000
   updownload:

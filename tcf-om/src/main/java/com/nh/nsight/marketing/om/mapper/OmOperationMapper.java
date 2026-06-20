@@ -10,9 +10,19 @@ public interface OmOperationMapper {
 
     List<Map<String, Object>> selectErrorTop(Map<String, Object> params);
 
+    List<Map<String, Object>> selectSlowTransactionsTop(Map<String, Object> params);
+
     List<Map<String, Object>> selectApStatus();
 
     List<Map<String, Object>> selectDbStatus();
+
+    List<Map<String, Object>> selectSessionStatus();
+
+    int sumSessionStatusActiveCount();
+
+    int sumSessionStatusExpiredCount();
+
+    int sumSessionStatusUniqueUsers();
 
     List<Map<String, Object>> selectDeployStatus();
 

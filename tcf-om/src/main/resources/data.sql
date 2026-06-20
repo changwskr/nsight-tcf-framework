@@ -1,21 +1,5 @@
 -- OM seed data (local)
 
-INSERT INTO OM_AP_STATUS (AP_ID, AP_NAME, HEALTH_STATUS, CPU_USAGE_PCT, HEAP_USAGE_PCT, THREAD_COUNT, CHECKED_AT) VALUES
-('ap01', 'OM-AP-01', 'NORMAL', 32.5, 58.0, 120, '2026-06-14T10:00:00+09:00'),
-('ap02', 'OM-AP-02', 'NORMAL', 28.1, 52.3, 98, '2026-06-14T10:00:00+09:00');
-
-INSERT INTO OM_DB_STATUS (DB_ID, DB_NAME, HEALTH_STATUS, POOL_USAGE_PCT, CHECKED_AT) VALUES
-('RDW', 'RDW', 'NORMAL', 41.2, '2026-06-14T10:00:00+09:00'),
-('ADW', 'ADW', 'WARN', 78.5, '2026-06-14T10:00:00+09:00'),
-('SESSIONDB', 'SESSIONDB', 'NORMAL', 35.0, '2026-06-14T10:00:00+09:00'),
-('LOGDB', 'LOGDB', 'NORMAL', 44.8, '2026-06-14T10:00:00+09:00');
-
-INSERT INTO OM_DEPLOY_STATUS (BUSINESS_CODE, WAR_NAME, WAR_VERSION, DEPLOYED_AT, HEALTH_STATUS) VALUES
-('SV', 'sv.war', '0.1.0-SNAPSHOT', '2026-06-14T09:30:00+09:00', 'UP'),
-('CC', 'cc.war', '0.1.0-SNAPSHOT', '2026-06-14T09:30:00+09:00', 'UP'),
-('OM', 'om.war', '0.1.0-SNAPSHOT', '2026-06-14T09:30:00+09:00', 'UP'),
-('ET', 'et.war', '0.1.0-SNAPSHOT', '2026-06-14T09:30:00+09:00', 'UP');
-
 INSERT INTO OM_AUTH_GROUP (AUTH_GROUP_ID, AUTH_GROUP_NAME, DESCRIPTION, USE_YN) VALUES
 ('ROLE_ADMIN', '시스템관리자', 'OM 전체 관리', 'Y'),
 ('ROLE_OPERATOR', '운영담당자', '거래로그/모니터링', 'Y'),
@@ -117,8 +101,12 @@ INSERT INTO OM_BATCH_JOB (JOB_ID, JOB_NAME, BUSINESS_CODE, CRON_EXPR, USE_YN, DE
 ('BAT-SV-001', 'SV 일별 집계', 'SV', '0 2 * * *', 'Y', '통합고객 일별 집계'),
 ('BAT-CM-001', 'CM 캠페인 반응 집계', 'CM', '0 3 * * *', 'Y', '캠페인 반응률 집계'),
 ('BAT-LOG-001', '거래로그 아카이빙', 'ET', '0 4 * * 0', 'Y', 'LOGDB → 아카이브 이관'),
-('BAT-OM-001', 'OM Health 스냅샷', 'OM', '0 */10 * * *', 'Y', 'AP/DB 상태 스냅샷'),
-('BAT-OM-002', 'OM 세션 정리', 'OM', '*/10 * * * * *', 'Y', 'SPRING_SESSION 만료 세션 10초 주기 정리');
+('BAT-OM-001', 'OM Health 스냅샷', 'OM', '0 */10 * * * *', 'Y', 'AP/DB 상태 스냅샷'),
+('BAT-OM-002', 'OM 세션 정리', 'OM', '*/10 * * * * *', 'Y', 'SPRING_SESSION 만료 세션 10초 주기 정리'),
+('BAT-BATCH-001', '대시보드 AP 상태 수집', 'BATCH', '0 */5 * * * *', 'Y', 'Actuator AP CPU/Heap/Thread → OM_AP_STATUS'),
+('BAT-BATCH-002', '대시보드 DB 상태 수집', 'BATCH', '30 */5 * * * *', 'Y', 'Actuator/JDBC DB Pool → OM_DB_STATUS'),
+('BAT-BATCH-003', '대시보드 세션 현황 수집', 'BATCH', '45 */5 * * * *', 'Y', 'Spring Session/Actuator → OM_SESSION_STATUS'),
+('BAT-BATCH-004', '대시보드 배포 현황 수집', 'BATCH', '55 */5 * * * *', 'Y', 'Actuator/HTTP 배포 상태 → OM_DEPLOY_STATUS');
 
 INSERT INTO OM_BATCH_HISTORY (HISTORY_ID, JOB_ID, RUN_TIME, RUN_STATUS, DURATION_MS, RESULT_MESSAGE) VALUES
 ('BH-001', 'BAT-SV-001', '2026-06-14T02:00:15+09:00', 'SUCCESS', 45200, '집계 완료 12,340건'),

@@ -26,10 +26,10 @@ public class TCF {
 
     public StandardResponse<Object> process(StandardRequest<Map<String, Object>> request) {
         TransactionContext context = null;
-         TcfConsoleLog.println("\n ===================================================[TCF.process] start");
+        TcfConsoleLog.println("\n ===================================================[TCF.process] start");
         try {
             logClientRequest(request);
-            
+
             TcfConsoleLog.println(" ================[TCF.process] STF START");
             context = stf.preProcess(request);
             TcfConsoleLog.println(" ================[TCF.process] STF END");
