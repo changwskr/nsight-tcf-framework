@@ -1,36 +1,40 @@
 # tcf-om — 운영관리 (OM) TCF 서비스
 
-기존 `om-service`를 TCF 프레임워크(`TransactionHandler`, `tcf-core`) 기반으로 마이그레이션한 운영관리 독립 실행 모듈입니다.
+기존 `om-service`를 TCF 프레임워크(`TransactionHandler`, `tcf-core`) 기반으로 마이그레이션한 운영관리 독립 실행 모듈입니다. **파일 업·다운로드(UD)** API도 내장합니다.
 
 | 항목 | 값 |
 |------|-----|
 | Gradle 모듈 | `tcf-om` |
-| 업무코드 | `OM` |
+| 업무코드 | `OM` (UD: `UD`) |
 | 메인 클래스 | `com.nh.nsight.marketing.om.NsightTcfOmApplication` |
 | bootRun 포트 | **8097** |
 | WAR | `tcf-om.war` |
 
-> `om-service`와 동일 포트(8097)를 사용합니다. 파일 업·다운로드(UD, `/ud/files`) 기능이 tcf-om에 내장되어 있습니다. 동시 기동 시 포트 충돌이 발생하므로 하나만 실행하세요.
+> `om-service`와 동일 포트(8097)를 사용합니다. 동시 기동 시 포트 충돌이 발생하므로 **tcf-om 하나만** 실행하세요.
 
-## TCF Handler (25개)
+## 주요 기능
 
-사용자·메뉴·권한·공통코드·배치·캐시·감사로그·대시보드·헬스체크 등 OM 운영 기능을 `OM.*` serviceId로 제공합니다.
+- OM 운영 Handler **40개** (`OM.*` serviceId)
+- 로그인·세션·권한 (`OM.Auth.*`, `OM.Session.*`)
+- 마스터 CRUD: 사용자, ServiceId, 공통코드, 오류코드
+- EhCache 공통코드 캐싱 (`tcf-cache` 연동)
+- 거래로그·감사로그·Health Check·배치·Cache 관리
+- 파일 업·다운로드 REST (`/ud/files`, TcfGateway 경유)
 
-예시:
+## TCF Handler 예시
 
 | serviceId | 설명 |
 |-----------|------|
-| `OM.Sample.inquiry` | 샘플 조회 |
-| `OM.User.inquiry` | 사용자 조회 |
-| `OM.Menu.inquiry` | 메뉴 조회 |
-| `OM.CommonCode.inquiry` | 공통코드 목록 조회 |
-| `OM.CommonCode.detail` | 공통코드 단건 조회 |
-| `OM.CommonCode.save` | 공통코드 등록 |
-| `OM.CommonCode.update` | 공통코드 수정 |
-| `OM.CommonCode.delete` | 공통코드 삭제(USE_YN=N) |
+| `OM.Auth.login` | OM 로그인 |
+| `OM.Dashboard.inquiry` | 운영 대시보드 |
+| `OM.User.inquiry` / `.save` / `.update` / `.delete` | 사용자 CRUD |
+| `OM.ServiceCatalog.inquiry` ~ `.delete` | ServiceId CRUD |
+| `OM.CommonCode.inquiry` ~ `.delete` | 공통코드 CRUD |
+| `OM.ErrorCode.inquiry` ~ `.delete` | 오류코드 CRUD |
+| `OM.Cache.inquiry` / `.delete` | EhCache 조회·삭제 |
 | `OM.Batch.execute` | 배치 실행 |
 
-전체 목록은 `tcf-ui/src/main/resources/sample-requests/om-transactions.json` 참고.
+전체 목록: `tcf-ui/src/main/resources/sample-requests/om-transactions.json`
 
 ## 실행
 
@@ -40,12 +44,13 @@ gradle :tcf-om:bootRun
 # 또는
 tcf-scripts/run-local.bat tcf-om
 tcf-scripts/run-local.bat om
+tcf-om/scripts/run-local.bat
 ```
 
 ## API
 
 ```bash
-curl -X POST http://localhost:8097/online \
+curl -X POST http://localhost:8097/om/online \
   -H "Content-Type: application/json" \
   -d @tcf-ui/src/main/resources/sample-requests/om-sample-inquiry.json
 ```
@@ -54,22 +59,30 @@ curl -X POST http://localhost:8097/online \
 
 ```text
 com.nh.nsight.marketing.om
-├── handler/    TransactionHandler (serviceId 등록)
-├── facade/     업무 Facade
-├── service/    업무 Service
-├── dao/        JDBC/MyBatis DAO
-├── mapper/     MyBatis Mapper 인터페이스
-└── rule/       업무 규칙 검증
+├── handler/       TransactionHandler (serviceId 등록)
+├── facade/        업무 Facade
+├── service/       업무 Service (+ OmCommonCodeCacheService)
+├── dao/           JDBC/MyBatis DAO
+├── mapper/        MyBatis Mapper 인터페이스
+├── rule/          업무 규칙 검증
+├── support/       DB 마이그레이션, 세션, Health
+├── updownload/    UD 파일 API (tcf-om 내장)
+└── config/        Spring Session, 스케줄, 비밀번호
 ```
 
 ## tcf-ui 연동
 
-- OM 관리 포털: http://localhost:8099/om/admin/dashboard.html
+- OM 관리 포털: http://localhost:8099/om/admin/login.html
 - JSON 거래 테스트: http://localhost:8099/om/index-multi.html
+- 파일 관리: http://localhost:8099/om/admin/file-management.html
 
 ## om-service와의 관계
 
 | 모듈 | 설명 |
 |------|------|
-| `tcf-om` | TCF 마이그레이션 완료본 (권장) |
+| `tcf-om` | TCF 마이그레이션 완료본 (**권장**) |
 | `om-service` | 17개 업무 WAR 세트에 포함된 레거시 OM 모듈 |
+
+## 의존성
+
+`tcf-core`, `tcf-web`, `tcf-cache`, Spring Session JDBC, MyBatis, H2

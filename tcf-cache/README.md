@@ -1,6 +1,12 @@
 # tcf-cache — TCF 공통 EhCache 모듈
 
-Spring Cache + EhCache 3(JCache) 기반 캐시 환경을 제공합니다.
+Spring Cache + EhCache 3(JCache) 기반 캐시 환경을 제공합니다. `tcf-om` 공통코드 캐싱 등에서 사용합니다.
+
+| 항목 | 값 |
+|------|-----|
+| Gradle 모듈 | `tcf-cache` |
+| 패키지 | `com.nh.nsight.tcf.cache` |
+| 산출물 | JAR (라이브러리) |
 
 ## 의존성 추가
 
@@ -56,4 +62,12 @@ public List<Map<String, Object>> findByGroup(String codeGroup) { ... }
 public void save(...) { ... }
 ```
 
-프로그램 방식 제어: `TcfCacheSupport.evict()`, `evictAll()`, `snapshot()`
+프로그램 방식 제어: `TcfCacheSupport.evict()`, `evictAll()`, `snapshotEntries()`
+
+OM Cache 관리 화면: http://localhost:8099/om/admin/cache.html
+
+## 빌드
+
+```bash
+gradle :tcf-cache:build
+```

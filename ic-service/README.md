@@ -11,7 +11,13 @@
 
 ## 개요
 
-**통합 고객(IC)** 업무 서비스입니다. TCF `TransactionHandler` 기반으로 거래를 처리합니다.
+NSIGHT 마케팅 플랫폼 **Integration Customer (IC)** 업무 서비스입니다.
+
+## 샘플 거래
+
+| serviceId | 설명 |
+|-----------|------|
+| `IC.Sample.inquiry` | 샘플 조회 |
 
 ## 실행
 
@@ -22,9 +28,11 @@ tcf-scripts/run-local.bat ic
 
 ## API
 
-| Method | Path |
-|--------|------|
-| POST | `/online`, `/ic/online` |
+```bash
+curl -X POST http://localhost:8082/ic/online \
+  -H "Content-Type: application/json" \
+  -d @tcf-ui/src/main/resources/sample-requests/ic-sample-inquiry.json
+```
 
 ## tcf-ui
 
@@ -33,4 +41,4 @@ tcf-scripts/run-local.bat ic
 
 ## 의존성
 
-`tcf-core`, `tcf-web`, `common-etc`
+`tcf-util`, `tcf-core`, `tcf-web`

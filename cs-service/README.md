@@ -11,7 +11,13 @@
 
 ## 개요
 
-**공통 서비스(CS)** 지원 업무 서비스입니다.
+NSIGHT 마케팅 플랫폼 **Common Service (CS)** 업무 서비스입니다.
+
+## 샘플 거래
+
+| serviceId | 설명 |
+|-----------|------|
+| `CS.Sample.inquiry` | 샘플 조회 |
 
 ## 실행
 
@@ -22,9 +28,11 @@ tcf-scripts/run-local.bat cs
 
 ## API
 
-| Method | Path |
-|--------|------|
-| POST | `/online`, `/cs/online` |
+```bash
+curl -X POST http://localhost:8094/cs/online \
+  -H "Content-Type: application/json" \
+  -d @tcf-ui/src/main/resources/sample-requests/cs-sample-inquiry.json
+```
 
 ## tcf-ui
 
@@ -33,4 +41,4 @@ tcf-scripts/run-local.bat cs
 
 ## 의존성
 
-`tcf-core`, `tcf-web`, `common-etc`
+`tcf-util`, `tcf-core`, `tcf-web`

@@ -1,6 +1,6 @@
 # tcf-ui — NSIGHT 온라인 거래 테스트 UI
 
-WebTopSuite/Client 없이 브라우저에서 표준 HTTP/JSON 전문을 작성·전송·응답 확인하기 위한 Spring Boot 애플리케이션입니다.
+WebTopSuite/Client 없이 브라우저에서 표준 HTTP/JSON 전문을 작성·전송·응답 확인하기 위한 Spring Boot 애플리케이션입니다. **OM 운영관리 포털**도 이 모듈에서 제공합니다.
 
 | 항목 | 값 |
 |------|-----|
@@ -22,9 +22,8 @@ WebTopSuite/Client 없이 브라우저에서 표준 HTTP/JSON 전문을 작성·
 gradle :tcf-ui:bootRun
 
 # 또는
-cd tcf-ui
-run-tcf-ui.bat      # Windows
-./run-tcf-ui.sh     # Linux/macOS
+tcf-scripts/run-local.bat ui
+tcf-ui/scripts/run-local.bat
 ```
 
 브라우저: http://localhost:8099
@@ -43,8 +42,8 @@ gradle :tcf-om:bootRun       # OM 운영관리 (포트 8097)
 ```text
 com.nh.nsight.tcf.ui
 ├── NsightTcfUiApplication      # 메인
+├── catalog/                    # BusinessModuleDefinitions (업무·포트)
 ├── config/                     # TcfUiProperties, TcfUiConfiguration
-├── catalog/                    # BusinessModuleDefinitions (업무·포트 정의)
 ├── controller/                 # TcfApiController, UpdownloadApiController, EtcApiController
 ├── service/                    # Relay·카탈로그 서비스
 └── model/                      # API 응답 모델
@@ -70,8 +69,9 @@ nsight:
 | `GET /api/business-modules/{code}/target-url` | Relay 대상 URL |
 | `POST /api/relay/{code}/online` | 온라인 거래 Relay |
 | `GET /api/config` | UI 설정 조회 |
+| `POST /api/updownload/upload` | 파일 업로드 Relay (tcf-om) |
 
-## 화면
+## 거래 테스트 화면
 
 | URL | 설명 |
 |-----|------|
@@ -79,5 +79,26 @@ nsight:
 | `/{code}/index.html` | 단일 거래 테스트 |
 | `/{code}/index-multi.html` | 다중 거래 테스트 |
 | `/ud/updownload.html` | UD 파일 관리 (tcf-om 연동) |
-| `/et/transaction-log.html` | ET 거래 IO 로그 |
-| `/om/admin/dashboard.html` | OM 운영관리 포털 (tcf-om 연동) |
+
+## OM 운영관리 포털
+
+로그인: http://localhost:8099/om/admin/login.html (`admin01` / `nsight01!`)
+
+| URL | 설명 |
+|-----|------|
+| `/om/admin/dashboard.html` | 운영 대시보드 |
+| `/om/admin/transaction-log.html` | 거래로그 조회 |
+| `/om/admin/service-catalog.html` | ServiceId CRUD |
+| `/om/admin/user-auth.html` | 사용자 / 권한 / 메뉴 |
+| `/om/admin/common-code.html` | 공통코드 CRUD |
+| `/om/admin/error-code.html` | 오류코드 CRUD |
+| `/om/admin/cache.html` | EhCache 관리 |
+| `/om/admin/session.html` | 세션 관리 |
+| `/om/admin/file-management.html` | 파일 업·다운로드 |
+| `/om/admin/message-composer.html` | 공통 전문 조립 |
+
+공통 JS: `static/_shared/om-admin.js` — tcf-om(8097) API Relay
+
+## 샘플 JSON
+
+`tcf-ui/src/main/resources/sample-requests/` — 업무별 inquiry·transactions JSON

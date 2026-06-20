@@ -11,7 +11,13 @@
 
 ## 개요
 
-**상품(PD)** 마케팅 업무 서비스입니다.
+NSIGHT 마케팅 플랫폼 **Product (PD)** 업무 서비스입니다.
+
+## 샘플 거래
+
+| serviceId | 설명 |
+|-----------|------|
+| `PD.Sample.inquiry` | 샘플 조회 |
 
 ## 실행
 
@@ -22,9 +28,11 @@ tcf-scripts/run-local.bat pd
 
 ## API
 
-| Method | Path |
-|--------|------|
-| POST | `/online`, `/pd/online` |
+```bash
+curl -X POST http://localhost:8087/pd/online \
+  -H "Content-Type: application/json" \
+  -d @tcf-ui/src/main/resources/sample-requests/pd-sample-inquiry.json
+```
 
 ## tcf-ui
 
@@ -33,4 +41,4 @@ tcf-scripts/run-local.bat pd
 
 ## 의존성
 
-`tcf-core`, `tcf-web`, `common-etc`
+`tcf-util`, `tcf-core`, `tcf-web`

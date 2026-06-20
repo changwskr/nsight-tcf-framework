@@ -31,6 +31,7 @@ TCF.process(request)
 | `idempotency` | `IdempotencyChecker` |
 | `logging` | `TransactionLogService`, `AuditLogService` |
 | `error` | `BusinessException`, `ErrorCode` |
+| `support` | `TcfConsoleLog` (UTF-8 콘솔 로그) |
 
 ## Handler 구현 규약
 

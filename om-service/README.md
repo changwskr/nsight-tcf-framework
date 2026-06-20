@@ -1,4 +1,4 @@
-# om-service — Operation Management (운영)
+# om-service — Operation Management (운영, 레거시)
 
 | 항목 | 값 |
 |------|-----|
@@ -11,9 +11,9 @@
 
 ## 개요
 
-**운영관리(OM)** 업무 서비스입니다. 17개 업무 WAR 세트에 포함된 레거시 모듈이며, TCF 마이그레이션 완료본은 **`tcf-om`** 모듈을 사용하세요.
+**운영관리(OM)** 업무 WAR 모듈입니다. 17개 업무 WAR 일괄 빌드(`buildBusinessWars`)에 포함되며, TCF 마이그레이션 완료본은 **`tcf-om`** 모듈을 사용하세요.
 
-> `tcf-om`과 동일 포트(8097)를 사용합니다. 파일 업·다운로드(UD)는 tcf-om에 내장되어 있습니다. 동시 기동 불가.
+> `tcf-om`과 동일 포트(8097)를 사용합니다. UD·OM admin 기능은 **tcf-om**에 통합되어 있습니다. 동시 기동 불가.
 
 ## 실행
 
@@ -37,9 +37,9 @@ tcf-scripts/run-local.bat om-service
 
 | 모듈 | 설명 |
 |------|------|
-| `tcf-om` | TCF 마이그레이션 완료본 (권장) |
-| `om-service` | 17개 WAR 빌드 세트용 레거시 모듈 |
+| `tcf-om` | TCF 마이그레이션 완료본 (**권장**) |
+| `om-service` | WAR 배포 세트용 레거시 모듈 |
 
 ## 의존성
 
-`tcf-core`, `tcf-web`, `common-etc`
+`tcf-util`, `tcf-core`, `tcf-web`

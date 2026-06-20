@@ -11,7 +11,7 @@
 
 ## 개요
 
-**싱글뷰(SV)** 마케팅 업무 서비스입니다. TCF 프레임워크 샘플 Handler(`SV.Sample.inquiry`)가 포함되어 있습니다.
+NSIGHT 마케팅 플랫폼 **Single View (SV)** 업무 서비스입니다. TCF 샘플 Handler가 포함되어 있으며, 모든 거래는 TCF 파이프라인(`POST /online` 또는 `POST /sv/online`)을 통해 처리됩니다.
 
 ## 샘플 거래
 
@@ -31,13 +31,24 @@ tcf-scripts/run-local.bat sv
 ```bash
 curl -X POST http://localhost:8086/sv/online \
   -H "Content-Type: application/json" \
-  -d @docs/sample-requests/sv-sample-inquiry.json
+  -d @tcf-ui/src/main/resources/sample-requests/sv-sample-inquiry.json
+```
+
+## 패키지 구조
+
+```text
+com.nh.nsight.marketing.sv
+├── handler/    TransactionHandler (serviceId 등록)
+├── facade/     업무 Facade
+├── service/    업무 Service
+├── dao/        DAO
+└── rule/       업무 규칙
 ```
 
 ## tcf-ui
 
-- http://localhost:8099/sv/index.html
-- http://localhost:8099/sv/index-multi.html
+- 단일 거래: http://localhost:8099/sv/index.html
+- 다중 거래: http://localhost:8099/sv/index-multi.html
 
 ## 참고 소스
 
@@ -45,4 +56,4 @@ curl -X POST http://localhost:8086/sv/online \
 
 ## 의존성
 
-`tcf-core`, `tcf-web`, `common-etc`
+`tcf-util`, `tcf-core`, `tcf-web`

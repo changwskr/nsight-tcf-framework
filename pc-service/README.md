@@ -11,7 +11,13 @@
 
 ## 개요
 
-**개인 고객(PC)** 업무 서비스입니다.
+NSIGHT 마케팅 플랫폼 **Private Customer (PC)** 업무 서비스입니다.
+
+## 샘플 거래
+
+| serviceId | 설명 |
+|-----------|------|
+| `PC.Sample.inquiry` | 샘플 조회 |
 
 ## 실행
 
@@ -22,9 +28,11 @@ tcf-scripts/run-local.bat pc
 
 ## API
 
-| Method | Path |
-|--------|------|
-| POST | `/online`, `/pc/online` |
+```bash
+curl -X POST http://localhost:8083/pc/online \
+  -H "Content-Type: application/json" \
+  -d @tcf-ui/src/main/resources/sample-requests/pc-sample-inquiry.json
+```
 
 ## tcf-ui
 
@@ -33,4 +41,4 @@ tcf-scripts/run-local.bat pc
 
 ## 의존성
 
-`tcf-core`, `tcf-web`, `common-etc`
+`tcf-util`, `tcf-core`, `tcf-web`

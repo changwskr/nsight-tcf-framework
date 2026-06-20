@@ -11,7 +11,13 @@
 
 ## 개요
 
-**이벤트 처리(EP)** 실시간 업무 서비스입니다.
+NSIGHT 마케팅 플랫폼 **Event Processing (EP)** 업무 서비스입니다.
+
+## 샘플 거래
+
+| serviceId | 설명 |
+|-----------|------|
+| `EP.Sample.inquiry` | 샘플 조회 |
 
 ## 실행
 
@@ -22,9 +28,11 @@ tcf-scripts/run-local.bat ep
 
 ## API
 
-| Method | Path |
-|--------|------|
-| POST | `/online`, `/ep/online` |
+```bash
+curl -X POST http://localhost:8090/ep/online \
+  -H "Content-Type: application/json" \
+  -d @tcf-ui/src/main/resources/sample-requests/ep-sample-inquiry.json
+```
 
 ## tcf-ui
 
@@ -33,4 +41,4 @@ tcf-scripts/run-local.bat ep
 
 ## 의존성
 
-`tcf-core`, `tcf-web`, `common-etc`
+`tcf-util`, `tcf-core`, `tcf-web`

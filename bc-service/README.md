@@ -6,63 +6,39 @@
 | 업무코드 | `BC` |
 | 메인 클래스 | `com.nh.nsight.marketing.bc.NsightBcServiceApplication` |
 | bootRun 포트 | **8084** |
-| WAR | `bc.war` |
+| WAR | `bc-service.war` |
 | Tomcat context | `/bc` |
 
 ## 개요
 
-**기업 고객(BC)** 업무 서비스입니다. TCF 프레임워크(`tcf-util`, `tcf-core`, `tcf-web`)만 의존합니다.
+NSIGHT 마케팅 플랫폼 **Business Customer (BC)** 업무 서비스입니다.
 
-## 의존성
+## 샘플 거래
 
-| 모듈 | 필수 |
-|------|------|
-| `tcf-util` | O |
-| `tcf-core` | O |
-| `tcf-web` | O |
-| `common-etc` | X |
+| serviceId | 설명 |
+|-----------|------|
+| `BC.Sample.inquiry` | 샘플 조회 |
 
-## 빌드·실행·배포
-
-### 모듈 전용 스크립트 (`bc-service/scripts/`)
+## 실행
 
 ```bash
-# Windows
-bc-service\scripts\build.bat          # tcf + bc.war 빌드
-bc-service\scripts\build.bat clean
-bc-service\scripts\build.bat run       # bootRun
-bc-service\scripts\run-local.bat      # bootRun (8084)
-bc-service\scripts\deploy.bat         # Tomcat webapps 배포
-
-# Linux / macOS
-chmod +x bc-service/scripts/*.sh
-bc-service/scripts/build.sh
-bc-service/scripts/run-local.sh
-bc-service/scripts/deploy.sh
-```
-
-### 프로젝트 공통 스크립트 (`tcf-scripts/`)
-
-```bash
-tcf-scripts\build.bat bc
-tcf-scripts\run-local.bat bc
-tcf-scripts\deploy.bat bc
-```
-
-### Gradle 직접 호출 (프로젝트 루트)
-
-```bash
-gradle :bc-service:bootWar
 gradle :bc-service:bootRun
+tcf-scripts/run-local.bat bc
 ```
 
 ## API
 
-| Method | Path |
-|--------|------|
-| POST | `/online`, `/bc/online` |
+```bash
+curl -X POST http://localhost:8084/bc/online \
+  -H "Content-Type: application/json" \
+  -d @tcf-ui/src/main/resources/sample-requests/bc-sample-inquiry.json
+```
 
 ## tcf-ui
 
 - http://localhost:8099/bc/index.html
 - http://localhost:8099/bc/index-multi.html
+
+## 의존성
+
+`tcf-util`, `tcf-core`, `tcf-web`

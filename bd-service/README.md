@@ -11,7 +11,13 @@
 
 ## 개요
 
-**행동 데이터(BD)** 데이터 업무 서비스입니다.
+NSIGHT 마케팅 플랫폼 **Behavior Data (BD)** 업무 서비스입니다.
+
+## 샘플 거래
+
+| serviceId | 설명 |
+|-----------|------|
+| `BD.Sample.inquiry` | 샘플 조회 |
 
 ## 실행
 
@@ -22,9 +28,11 @@ tcf-scripts/run-local.bat bd
 
 ## API
 
-| Method | Path |
-|--------|------|
-| POST | `/online`, `/bd/online` |
+```bash
+curl -X POST http://localhost:8092/bd/online \
+  -H "Content-Type: application/json" \
+  -d @tcf-ui/src/main/resources/sample-requests/bd-sample-inquiry.json
+```
 
 ## tcf-ui
 
@@ -33,4 +41,4 @@ tcf-scripts/run-local.bat bd
 
 ## 의존성
 
-`tcf-core`, `tcf-web`, `common-etc`
+`tcf-util`, `tcf-core`, `tcf-web`

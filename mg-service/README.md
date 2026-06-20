@@ -11,7 +11,13 @@
 
 ## 개요
 
-**메시지(MG)** 지원 업무 서비스입니다.
+NSIGHT 마케팅 플랫폼 **Message (MG)** 업무 서비스입니다.
+
+## 샘플 거래
+
+| serviceId | 설명 |
+|-----------|------|
+| `MG.Sample.inquiry` | 샘플 조회 |
 
 ## 실행
 
@@ -22,9 +28,11 @@ tcf-scripts/run-local.bat mg
 
 ## API
 
-| Method | Path |
-|--------|------|
-| POST | `/online`, `/mg/online` |
+```bash
+curl -X POST http://localhost:8096/mg/online \
+  -H "Content-Type: application/json" \
+  -d @tcf-ui/src/main/resources/sample-requests/mg-sample-inquiry.json
+```
 
 ## tcf-ui
 
@@ -33,4 +41,4 @@ tcf-scripts/run-local.bat mg
 
 ## 의존성
 
-`tcf-core`, `tcf-web`, `common-etc`
+`tcf-util`, `tcf-core`, `tcf-web`

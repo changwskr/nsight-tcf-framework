@@ -1,6 +1,6 @@
 # tcf-web — TCF HTTP 레이어
 
-`TCF.process()`를 HTTP 엔드포인트로 노출하고, REST 어댑터·필터·전역 예외 처리를 제공합니다.
+`TCF.process()`를 HTTP 엔드포인트로 노출하고, REST 어댑터·필터·전역 예외 처리·거래로그 DB 연동을 제공합니다.
 
 | 항목 | 값 |
 |------|-----|
@@ -17,6 +17,8 @@
 | `GuidMdcCleanupFilter` | 요청 종료 시 MDC·Context 정리 |
 | `GlobalStandardExceptionHandler` | 표준 오류 응답 변환 |
 | `TcfAutoConfiguration` | Spring Boot 자동 구성 |
+| `TcfTransactionLogConfiguration` | H2 기반 공유 거래로그 DB |
+| `TcfMyBatisAutoConfiguration` | 다중 DataSource 환경 MyBatis 보조 |
 
 ## API 엔드포인트
 
@@ -38,6 +40,10 @@ StandardResponse<Object> response = tcfGateway.invoke(
         .build()
 );
 ```
+
+## 거래로그 DB
+
+bootRun 시 프로젝트 루트 `data/nsight-txlog/` H2 파일을 공유합니다. (`nsight.txlog.path` 시스템 프로퍼티)
 
 ## 의존 관계
 
