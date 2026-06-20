@@ -16,8 +16,15 @@ public class OmSampleFacade {
 
     @Transactional(readOnly = true, timeout = 5)
     public Map<String, Object> inquiry(Map<String, Object> body, TransactionContext context) {
-        return service.inquiry(body, context);
+        System.out.println("\n =============================================[OmSampleFacade.inquiry] start");
+        try {
+            System.out.println(" ===========================================[OmSampleFacade.inquiry] service.inquiry");
+            Map<String, Object> result = service.inquiry(body, context);
+            System.out.println(" ===========================================[OmSampleFacade.inquiry] end");
+            return result;
+        } catch (RuntimeException e) {
+            System.out.println(" ===========================================[OmSampleFacade.inquiry] end (error)");
+            throw e;
+        }
     }
 }
-
-

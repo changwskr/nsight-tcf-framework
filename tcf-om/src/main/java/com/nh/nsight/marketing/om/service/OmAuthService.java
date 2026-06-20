@@ -1,0 +1,82 @@
+package com.nh.nsight.marketing.om.service;
+
+import com.nh.nsight.marketing.om.dao.OmOperationDao;
+import com.nh.nsight.marketing.om.rule.OmOperationRule;
+import com.nh.nsight.marketing.om.support.OmAuthSessionSupport;
+import com.nh.nsight.marketing.om.support.OmBodySupport;
+import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.tcf.core.error.BusinessException;
+import com.nh.nsight.tcf.util.DateTimeUtil;
+import jakarta.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+public class OmAuthService {
+    private final OmOperationRule rule;
+    private final OmOperationDao dao;
+    private final PasswordEncoder passwordEncoder;
+    private final OmAuthSessionSupport sessionSupport;
+
+    public OmAuthService(OmOperationRule rule, OmOperationDao dao, PasswordEncoder passwordEncoder,
+                         OmAuthSessionSupport sessionSupport) {
+        this.rule = rule;
+        this.dao = dao;
+        this.passwordEncoder = passwordEncoder;
+        this.sessionSupport = sessionSupport;
+    }
+
+    public Map<String, Object> login(Map<String, Object> body, TransactionContext context) {
+        rule.validateOperation(context);
+        rule.requireField(body, "userId");
+        rule.requireField(body, "password");
+
+        String userId = OmBodySupport.stringValue(body, "userId");
+        String password = OmBodySupport.stringValue(body, "password");
+
+        Map<String, Object> user = dao.selectUserForLogin(userId);
+        if (user == null || !"Y".equalsIgnoreCase(String.valueOf(user.get("useYn")))) {
+            throw new BusinessException("E-OM-AUTH-0001", "아이디 또는 비밀번호가 올바르지 않습니다.");
+        }
+
+        String passwordHash = OmBodySupport.stringValue(user, "passwordHash");
+        if (passwordHash == null || !passwordEncoder.matches(password, passwordHash)) {
+            throw new BusinessException("E-OM-AUTH-0001", "아이디 또는 비밀번호가 올바르지 않습니다.");
+        }
+
+        String now = DateTimeUtil.nowKst();
+        Map<String, Object> update = new HashMap<>();
+        update.put("userId", userId);
+        update.put("lastLoginTime", now);
+        dao.updateUserLastLoginTime(update);
+
+        HttpSession session = sessionSupport.createSession(user);
+        user.put("lastLoginTime", now);
+
+        Map<String, Object> result = new LinkedHashMap<>(sessionSupport.toSessionBody(
+                sessionSupport.currentUser().orElse(null), true));
+        result.put("screen", "OM 로그인");
+        result.put("sessionId", session.getId());
+        return result;
+    }
+
+    public Map<String, Object> logout(TransactionContext context) {
+        rule.validateOperation(context);
+        sessionSupport.invalidateSession();
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("businessCode", "OM");
+        result.put("screen", "OM 로그아웃");
+        result.put("loggedIn", false);
+        result.put("loggedOut", true);
+        return result;
+    }
+
+    public Map<String, Object> session(TransactionContext context) {
+        rule.validateOperation(context);
+        return sessionSupport.toSessionBody(sessionSupport.currentUser().orElse(null),
+                sessionSupport.currentUser().isPresent());
+    }
+}

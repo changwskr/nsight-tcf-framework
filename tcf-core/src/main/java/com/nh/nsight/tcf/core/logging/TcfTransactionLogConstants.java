@@ -9,7 +9,7 @@ public final class TcfTransactionLogConstants {
     public static final String TABLE_NAME = "TCF_TX_LOG";
 
     public static final String DEFAULT_DATASOURCE_URL =
-            "jdbc:h2:file:${nsight.txlog.path:./data/nsight-txlog}/nsight_om;MODE=Oracle;AUTO_SERVER=TRUE;DATABASE_TO_UPPER=false";
+            "jdbc:h2:file:./data/nsight-txlog/nsight_om;MODE=Oracle;AUTO_SERVER=TRUE;DATABASE_TO_UPPER=false";
 
     private TcfTransactionLogConstants() {
     }

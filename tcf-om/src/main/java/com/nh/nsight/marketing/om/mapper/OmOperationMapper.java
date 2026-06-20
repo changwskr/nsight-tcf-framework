@@ -24,9 +24,35 @@ public interface OmOperationMapper {
 
     Map<String, Object> summarizeTransactionLogs(Map<String, Object> params);
 
+    int deleteAllTransactionLogs();
+
     List<Map<String, Object>> searchServiceCatalog(Map<String, Object> params);
 
+    int countServiceCatalog(Map<String, Object> params);
+
+    Map<String, Object> selectServiceCatalogByKey(Map<String, Object> params);
+
+    Map<String, Object> selectServiceCatalogByServiceId(String serviceId);
+
+    int insertServiceCatalog(Map<String, Object> params);
+
+    int updateServiceCatalog(Map<String, Object> params);
+
+    int disableServiceCatalog(Map<String, Object> params);
+
     List<Map<String, Object>> searchUsers(Map<String, Object> params);
+
+    int countUsers(Map<String, Object> params);
+
+    Map<String, Object> selectUserById(String userId);
+
+    int insertUser(Map<String, Object> params);
+
+    int updateUser(Map<String, Object> params);
+
+    int updateUserWithPassword(Map<String, Object> params);
+
+    int disableUser(Map<String, Object> params);
 
     List<Map<String, Object>> searchMenus(Map<String, Object> params);
 
@@ -37,6 +63,8 @@ public interface OmOperationMapper {
     int countAuditLogs(Map<String, Object> params);
 
     List<Map<String, Object>> searchErrorCodes(Map<String, Object> params);
+
+    int countErrorCodes(Map<String, Object> params);
 
     List<Map<String, Object>> searchBatchJobs(Map<String, Object> params);
 
@@ -50,9 +78,21 @@ public interface OmOperationMapper {
 
     int countFileDownloadLogs(Map<String, Object> params);
 
+    int insertFileDownloadLog(Map<String, Object> params);
+
     List<Map<String, Object>> searchCommonCodes(Map<String, Object> params);
 
-    int mergeCommonCode(Map<String, Object> params);
+    int countCommonCodes(Map<String, Object> params);
+
+    List<String> selectDistinctCodeGroups();
+
+    Map<String, Object> selectCommonCodeByKey(Map<String, Object> params);
+
+    int insertCommonCode(Map<String, Object> params);
+
+    int updateCommonCode(Map<String, Object> params);
+
+    int disableCommonCode(Map<String, Object> params);
 
     List<Map<String, Object>> searchFunctionAuths(Map<String, Object> params);
 
@@ -68,6 +108,12 @@ public interface OmOperationMapper {
 
     int mergeErrorCode(Map<String, Object> params);
 
+    int insertErrorCode(Map<String, Object> params);
+
+    int updateErrorCode(Map<String, Object> params);
+
+    int disableErrorCode(Map<String, Object> params);
+
     Map<String, Object> selectBatchJobById(String jobId);
 
     int insertBatchHistory(Map<String, Object> params);
@@ -77,5 +123,27 @@ public interface OmOperationMapper {
     int deleteCache(Map<String, Object> params);
 
     int insertAuditLog(Map<String, Object> params);
+
+    Map<String, Object> selectUserForLogin(String userId);
+
+    int updateUserLastLoginTime(Map<String, Object> params);
+
+    List<Map<String, Object>> selectUsersWithoutPasswordHash();
+
+    int updateUserPasswordHash(Map<String, Object> params);
+
+    List<Map<String, Object>> searchSpringSessions(Map<String, Object> params);
+
+    int countSpringSessions(Map<String, Object> params);
+
+    int countActiveSpringSessions(long now);
+
+    Map<String, Object> selectSpringSessionById(String sessionId);
+
+    int deleteSpringSession(String sessionId);
+
+    int countExpiredSpringSessions(long now);
+
+    int deleteExpiredSpringSessions(long now);
 }
 

@@ -9,6 +9,8 @@ import com.nh.nsight.tcf.ui.service.BusinessModuleCatalog;
 import com.nh.nsight.tcf.ui.service.BusinessTransactionCatalog;
 import com.nh.nsight.tcf.ui.service.TransactionRelayService;
 import com.nh.nsight.tcf.ui.service.TransactionRelayService.RelayOptions;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,9 +81,13 @@ public class TcfApiController {
             @RequestBody String requestBody,
             @RequestParam(value = "deploymentMode", required = false) String deploymentMode,
             @RequestParam(value = "bootrunHost", required = false) String bootrunHost,
-            @RequestParam(value = "tomcatGatewayUrl", required = false) String tomcatGatewayUrl) {
+            @RequestParam(value = "tomcatGatewayUrl", required = false) String tomcatGatewayUrl,
+            HttpServletRequest request,
+            HttpServletResponse response) {
         RelayOptions options = new RelayOptions(deploymentMode, bootrunHost, tomcatGatewayUrl);
-        return relayService.relay(code, requestBody, options);
+        RelayResult result = relayService.relay(code, requestBody, options, request.getHeader("Cookie"));
+        applySetCookies(response, result);
+        return result;
     }
 
     @GetMapping("/config")
@@ -109,8 +115,21 @@ public class TcfApiController {
             @RequestBody String requestBody,
             @RequestParam(value = "deploymentMode", required = false) String deploymentMode,
             @RequestParam(value = "bootrunHost", required = false) String bootrunHost,
-            @RequestParam(value = "tomcatGatewayUrl", required = false) String tomcatGatewayUrl) {
+            @RequestParam(value = "tomcatGatewayUrl", required = false) String tomcatGatewayUrl,
+            HttpServletRequest request,
+            HttpServletResponse response) {
         RelayOptions options = new RelayOptions(deploymentMode, bootrunHost, tomcatGatewayUrl);
-        return relayService.relay(code, requestBody, options);
+        RelayResult result = relayService.relay(code, requestBody, options, request.getHeader("Cookie"));
+        applySetCookies(response, result);
+        return result;
+    }
+
+    private void applySetCookies(HttpServletResponse response, RelayResult result) {
+        if (result.setCookies() == null) {
+            return;
+        }
+        for (String setCookie : result.setCookies()) {
+            response.addHeader("Set-Cookie", setCookie);
+        }
     }
 }

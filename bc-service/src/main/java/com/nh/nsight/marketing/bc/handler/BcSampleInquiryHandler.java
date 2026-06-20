@@ -22,6 +22,21 @@ public class BcSampleInquiryHandler implements TransactionHandler {
 
     @Override
     public Object doHandle(StandardRequest<Map<String, Object>> request, TransactionContext context) {
-        return facade.inquiry(request.getBody(), context);
+        System.out.println("\n ==============================================[BcSampleInquiryHandler.doHandle] start");
+        System.out.println(" ==============================================[BcSampleInquiryHandler.doHandle] serviceId="
+                + context.getHeader().getServiceId());
+        System.out.println(" ==============================================[BcSampleInquiryHandler.doHandle] guid="
+                + context.getHeader().getGuid());
+        System.out.println(" ==============================================[BcSampleInquiryHandler.doHandle] traceId="
+                + context.getHeader().getTraceId());
+        System.out.println(" ==============================================[BcSampleInquiryHandler.doHandle] userId="
+                + context.getHeader().getUserId());
+        System.out.println(" ==============================================[BcSampleInquiryHandler.doHandle] body="
+                + request.getBody());
+
+        Object result = facade.inquiry(request.getBody(), context);
+
+        System.out.println(" ==============================================[BcSampleInquiryHandler.doHandle] end");
+        return result;
     }
 }

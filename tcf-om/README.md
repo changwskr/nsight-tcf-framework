@@ -10,9 +10,9 @@
 | bootRun 포트 | **8097** |
 | WAR | `tcf-om.war` |
 
-> `common-updownload`, `om-service`와 동일 포트(8097)를 사용합니다. 동시 기동 시 포트 충돌이 발생하므로 하나만 실행하세요.
+> `om-service`와 동일 포트(8097)를 사용합니다. 파일 업·다운로드(UD, `/ud/files`) 기능이 tcf-om에 내장되어 있습니다. 동시 기동 시 포트 충돌이 발생하므로 하나만 실행하세요.
 
-## TCF Handler (22개)
+## TCF Handler (25개)
 
 사용자·메뉴·권한·공통코드·배치·캐시·감사로그·대시보드·헬스체크 등 OM 운영 기능을 `OM.*` serviceId로 제공합니다.
 
@@ -23,7 +23,11 @@
 | `OM.Sample.inquiry` | 샘플 조회 |
 | `OM.User.inquiry` | 사용자 조회 |
 | `OM.Menu.inquiry` | 메뉴 조회 |
-| `OM.CommonCode.inquiry` | 공통코드 조회 |
+| `OM.CommonCode.inquiry` | 공통코드 목록 조회 |
+| `OM.CommonCode.detail` | 공통코드 단건 조회 |
+| `OM.CommonCode.save` | 공통코드 등록 |
+| `OM.CommonCode.update` | 공통코드 수정 |
+| `OM.CommonCode.delete` | 공통코드 삭제(USE_YN=N) |
 | `OM.Batch.execute` | 배치 실행 |
 
 전체 목록은 `tcf-ui/src/main/resources/sample-requests/om-transactions.json` 참고.

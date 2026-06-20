@@ -57,8 +57,8 @@ goto :run_build
 
 :build_all
 echo [deploy] Building all WAR files ...
-set "GRADLE_TASKS=buildBusinessWars :common-updownload:bootWar"
-set "DEPLOY_ENTRIES=cc-service:cc.war:cc.war:cc ic-service:ic.war:ic.war:ic pc-service:pc-service.war:pc.war:pc bc-service:bc.war:bc.war:bc ms-service:ms.war:ms.war:ms sv-service:sv.war:sv.war:sv pd-service:pd.war:pd.war:pd cm-service:cm.war:cm.war:cm eb-service:eb.war:eb.war:eb ep-service:ep.war:ep.war:ep bp-service:bp.war:bp.war:bp bd-service:bd.war:bd.war:bd ss-service:ss.war:ss.war:ss cs-service:cs.war:cs.war:cs ct-service:ct.war:ct.war:ct mg-service:mg.war:mg.war:mg om-service:om.war:om.war:om common-updownload:ud.war:ud.war:ud"
+set "GRADLE_TASKS=buildBusinessWars :tcf-om:bootWar"
+set "DEPLOY_ENTRIES=cc-service:cc.war:cc.war:cc ic-service:ic.war:ic.war:ic pc-service:pc-service.war:pc.war:pc bc-service:bc.war:bc.war:bc ms-service:ms.war:ms.war:ms sv-service:sv.war:sv.war:sv pd-service:pd.war:pd.war:pd cm-service:cm.war:cm.war:cm eb-service:eb.war:eb.war:eb ep-service:ep.war:ep.war:ep bp-service:bp.war:bp.war:bp bd-service:bd.war:bd.war:bd ss-service:ss.war:ss.war:ss cs-service:cs.war:cs.war:cs ct-service:ct.war:ct.war:ct mg-service:mg.war:mg.war:mg om-service:om.war:om.war:om tcf-om:tcf-om.war:ud.war:ud"
 set "CLEAN_CTX=cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om ud"
 goto :run_build
 
@@ -161,8 +161,8 @@ if /i "!CODE!"=="ct" call :add_entry ct-service ct.war ct.war ct & exit /b 0
 if /i "!CODE!"=="mg" call :add_entry mg-service mg.war mg.war mg & exit /b 0
 if /i "!CODE!"=="om" call :add_entry om-service om.war om.war om & exit /b 0
 if /i "!CODE!"=="tcf-om" call :add_entry tcf-om tcf-om.war om.war om & exit /b 0
-if /i "!CODE!"=="ud" call :add_entry common-updownload ud.war ud.war ud & exit /b 0
-if /i "!CODE!"=="common-updownload" call :add_entry common-updownload ud.war ud.war ud & exit /b 0
+if /i "!CODE!"=="ud" call :add_entry tcf-om tcf-om.war ud.war ud & exit /b 0
+if /i "!CODE!"=="common-updownload" call :add_entry tcf-om tcf-om.war ud.war ud & exit /b 0
 echo [deploy] Unknown code: !CODE!
 echo [deploy] Codes: cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om ud tcf-om
 exit /b 1

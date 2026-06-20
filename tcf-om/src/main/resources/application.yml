@@ -21,6 +21,12 @@ spring:
     name: nsight-tcf-om
   profiles:
     active: local
+  cache:
+    type: jcache
+    jcache:
+      config: classpath:ehcache.xml
+  autoconfigure:
+    exclude: []
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:file:${nsight.txlog.path:./data/nsight-txlog}/nsight_om;MODE=Oracle;AUTO_SERVER=TRUE;DATABASE_TO_UPPER=false
@@ -35,7 +41,7 @@ spring:
       idle-timeout: 600000
       max-lifetime: 1800000
       keepalive-time: 300000
-      auto-commit: false
+      auto-commit: true
   h2:
     console:
       enabled: true
@@ -43,12 +49,21 @@ spring:
     init:
       mode: embedded
       continue-on-error: true
+      encoding: UTF-8
       schema-locations: classpath:schema.sql
       data-locations: classpath:data.sql
   session:
-    store-type: none
+    store-type: jdbc
+    timeout: 60m
+    jdbc:
+      initialize-schema: always
+      table-name: SPRING_SESSION
   transaction:
     default-timeout: 5
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 mybatis:
   mapper-locations:
@@ -75,6 +90,9 @@ nsight:
   system-id: NSIGHT-MP
   domain: nh.marketing.com
   tcf:
+    cache:
+      enabled: true
+      config-location: classpath:ehcache.xml
     session-validation-enabled: false
     authorization-validation-enabled: false
     idempotency-enabled: false
@@ -82,6 +100,7 @@ nsight:
     transaction-log-enabled: true
     transaction-log-schema-auto-init: false
     transaction-log-datasource:
+      separate: false
       url: jdbc:h2:file:${nsight.txlog.path:./data/nsight-txlog}/nsight_om;MODE=Oracle;AUTO_SERVER=TRUE;DATABASE_TO_UPPER=false
       username: sa
       password:
@@ -89,3 +108,9 @@ nsight:
   timeout:
     online-transaction-seconds: 5
     db-query-seconds: 3
+  om:
+    session-cleanup:
+      fixed-rate-ms: 10000
+  updownload:
+    storage-path: ./data/updownload
+    max-file-size-bytes: 52428800

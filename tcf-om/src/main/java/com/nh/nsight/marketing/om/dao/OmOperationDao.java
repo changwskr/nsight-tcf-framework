@@ -56,12 +56,64 @@ public class OmOperationDao {
         return summary == null ? Map.of() : summary;
     }
 
+    public int deleteAllTransactionLogs() {
+        return mapper.deleteAllTransactionLogs();
+    }
+
     public List<Map<String, Object>> searchServiceCatalog(Map<String, Object> criteria) {
         return mapper.searchServiceCatalog(criteria);
     }
 
+    public int countServiceCatalog(Map<String, Object> criteria) {
+        return mapper.countServiceCatalog(criteria);
+    }
+
+    public Map<String, Object> selectServiceCatalogByKey(Map<String, Object> key) {
+        return mapper.selectServiceCatalogByKey(key);
+    }
+
+    public Map<String, Object> selectServiceCatalogByServiceId(String serviceId) {
+        return mapper.selectServiceCatalogByServiceId(serviceId);
+    }
+
+    public int insertServiceCatalog(Map<String, Object> row) {
+        return mapper.insertServiceCatalog(row);
+    }
+
+    public int updateServiceCatalog(Map<String, Object> row) {
+        return mapper.updateServiceCatalog(row);
+    }
+
+    public int disableServiceCatalog(Map<String, Object> row) {
+        return mapper.disableServiceCatalog(row);
+    }
+
     public List<Map<String, Object>> searchUsers(Map<String, Object> criteria) {
         return mapper.searchUsers(criteria);
+    }
+
+    public int countUsers(Map<String, Object> criteria) {
+        return mapper.countUsers(criteria);
+    }
+
+    public Map<String, Object> selectUserById(String userId) {
+        return mapper.selectUserById(userId);
+    }
+
+    public int insertUser(Map<String, Object> row) {
+        return mapper.insertUser(row);
+    }
+
+    public int updateUser(Map<String, Object> row) {
+        return mapper.updateUser(row);
+    }
+
+    public int updateUserWithPassword(Map<String, Object> row) {
+        return mapper.updateUserWithPassword(row);
+    }
+
+    public int disableUser(Map<String, Object> row) {
+        return mapper.disableUser(row);
     }
 
     public List<Map<String, Object>> searchMenus(Map<String, Object> criteria) {
@@ -82,6 +134,10 @@ public class OmOperationDao {
 
     public List<Map<String, Object>> searchErrorCodes(Map<String, Object> criteria) {
         return mapper.searchErrorCodes(criteria);
+    }
+
+    public int countErrorCodes(Map<String, Object> criteria) {
+        return mapper.countErrorCodes(criteria);
     }
 
     public List<Map<String, Object>> searchBatchJobs(Map<String, Object> criteria) {
@@ -108,12 +164,36 @@ public class OmOperationDao {
         return mapper.countFileDownloadLogs(criteria);
     }
 
+    public int insertFileDownloadLog(Map<String, Object> row) {
+        return mapper.insertFileDownloadLog(row);
+    }
+
     public List<Map<String, Object>> searchCommonCodes(Map<String, Object> criteria) {
         return mapper.searchCommonCodes(criteria);
     }
 
-    public int mergeCommonCode(Map<String, Object> row) {
-        return mapper.mergeCommonCode(row);
+    public int countCommonCodes(Map<String, Object> criteria) {
+        return mapper.countCommonCodes(criteria);
+    }
+
+    public List<String> selectDistinctCodeGroups() {
+        return mapper.selectDistinctCodeGroups();
+    }
+
+    public Map<String, Object> selectCommonCodeByKey(Map<String, Object> key) {
+        return mapper.selectCommonCodeByKey(key);
+    }
+
+    public int insertCommonCode(Map<String, Object> row) {
+        return mapper.insertCommonCode(row);
+    }
+
+    public int updateCommonCode(Map<String, Object> row) {
+        return mapper.updateCommonCode(row);
+    }
+
+    public int disableCommonCode(Map<String, Object> row) {
+        return mapper.disableCommonCode(row);
     }
 
     public List<Map<String, Object>> searchFunctionAuths(Map<String, Object> criteria) {
@@ -144,6 +224,18 @@ public class OmOperationDao {
         return mapper.mergeErrorCode(row);
     }
 
+    public int insertErrorCode(Map<String, Object> row) {
+        return mapper.insertErrorCode(row);
+    }
+
+    public int updateErrorCode(Map<String, Object> row) {
+        return mapper.updateErrorCode(row);
+    }
+
+    public int disableErrorCode(Map<String, Object> row) {
+        return mapper.disableErrorCode(row);
+    }
+
     public Map<String, Object> selectBatchJobById(String jobId) {
         return mapper.selectBatchJobById(jobId);
     }
@@ -162,6 +254,50 @@ public class OmOperationDao {
 
     public int insertAuditLog(Map<String, Object> row) {
         return mapper.insertAuditLog(row);
+    }
+
+    public Map<String, Object> selectUserForLogin(String userId) {
+        return mapper.selectUserForLogin(userId);
+    }
+
+    public int updateUserLastLoginTime(Map<String, Object> row) {
+        return mapper.updateUserLastLoginTime(row);
+    }
+
+    public List<Map<String, Object>> selectUsersWithoutPasswordHash() {
+        return mapper.selectUsersWithoutPasswordHash();
+    }
+
+    public int updateUserPasswordHash(Map<String, Object> row) {
+        return mapper.updateUserPasswordHash(row);
+    }
+
+    public List<Map<String, Object>> searchSpringSessions(Map<String, Object> criteria) {
+        return mapper.searchSpringSessions(criteria);
+    }
+
+    public int countSpringSessions(Map<String, Object> criteria) {
+        return mapper.countSpringSessions(criteria);
+    }
+
+    public int countActiveSpringSessions(long now) {
+        return mapper.countActiveSpringSessions(now);
+    }
+
+    public Map<String, Object> selectSpringSessionById(String sessionId) {
+        return mapper.selectSpringSessionById(sessionId);
+    }
+
+    public int deleteSpringSession(String sessionId) {
+        return mapper.deleteSpringSession(sessionId);
+    }
+
+    public int countExpiredSpringSessions(long now) {
+        return mapper.countExpiredSpringSessions(now);
+    }
+
+    public int deleteExpiredSpringSessions(long now) {
+        return mapper.deleteExpiredSpringSessions(now);
     }
 }
 

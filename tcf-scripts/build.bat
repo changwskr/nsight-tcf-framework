@@ -37,7 +37,6 @@ if /i "%TARGET%"=="tcf" (
 )
 if /i "%TARGET%"=="common" (
   call :append_task :common-etc:build
-  call :append_task :common-updownload:build
   goto :eof
 )
 if /i "%TARGET%"=="ui" (call :append_task :tcf-ui:bootJar & goto :eof)
@@ -80,7 +79,7 @@ echo Targets:
 echo   all      clean + buildBusinessWars
 echo   wars     buildBusinessWars only
 echo   tcf      tcf-util, tcf-core, tcf-web
-echo   common   common-etc, common-updownload
+echo   common   common-etc
 echo   ui       tcf-ui bootJar
 echo   services all *-service modules
 echo   sv ic    service code (ex: sv -> sv-service)

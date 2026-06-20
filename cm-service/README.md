@@ -33,4 +33,4 @@ tcf-scripts/run-local.bat cm
 
 ## 의존성
 
-`tcf-core`, `tcf-web`, `common-etc`, `common-updownload`
+`tcf-core`, `tcf-web`, `common-etc`

@@ -22,7 +22,16 @@ public class OmSampleInquiryHandler implements TransactionHandler {
 
     @Override
     public Object doHandle(StandardRequest<Map<String, Object>> request, TransactionContext context) {
-        return facade.inquiry(request.getBody(), context);
+        System.out.println("\n ======================================================================[OmSampleInquiryHandler.doHandle] start serviceId=" + serviceId());
+        try {
+            System.out.println(" ======================================================================[OmSampleInquiryHandler.doHandle] facade.inquiry");
+            Object result = facade.inquiry(request.getBody(), context);
+            System.out.println(" ======================================================================[OmSampleInquiryHandler.doHandle] end serviceId=" + serviceId());
+            return result;
+        } catch (RuntimeException e) {
+            System.out.println(" ======================================================================[OmSampleInquiryHandler.doHandle] end (error) serviceId=" + serviceId());
+            throw e;
+        }
     }
 }
 

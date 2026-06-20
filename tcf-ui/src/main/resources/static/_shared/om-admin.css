@@ -429,3 +429,225 @@
   .om-tx-grid { grid-template-columns: 1fr; }
   .om-tx-grid .om-detail-panel { position: static; }
 }
+
+.om-login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top, rgba(56, 189, 248, 0.12), transparent 55%),
+    radial-gradient(circle at bottom, rgba(129, 140, 248, 0.12), transparent 50%),
+    var(--bg);
+}
+
+.om-login-wrap {
+  width: min(420px, calc(100vw - 32px));
+}
+
+.om-login-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 28px 28px 22px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.25);
+}
+
+.om-login-brand h1 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.om-login-brand p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.om-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.om-login-form label {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.om-login-form input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.om-login-btn {
+  margin-top: 16px;
+  width: 100%;
+  padding: 12px;
+}
+
+.om-login-hint {
+  margin: 16px 0 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.om-login-footer {
+  margin: 14px 0 0;
+  font-size: 0.85rem;
+}
+
+.om-user-badge {
+  color: var(--text);
+  font-size: 0.85rem;
+  margin-right: 10px;
+}
+
+.om-logout-btn {
+  margin-right: 12px;
+  padding: 6px 12px;
+  font-size: 0.82rem;
+}
+
+.om-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.om-stat-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+
+.om-stat-card .label {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.om-stat-card .value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.om-session-my-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px 20px;
+}
+
+.om-session-my-grid .label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.om-filter-check {
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 10px;
+}
+
+.om-filter-check label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.om-session-table th,
+.om-session-table td {
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.om-msg-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 16px;
+}
+
+.om-msg-toolbar .field {
+  min-width: 160px;
+}
+
+.om-msg-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.om-msg-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.om-json-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 260px;
+}
+
+.om-json-panel-head {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.om-json-panel-head .om-muted {
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.om-json-panel textarea {
+  flex: 1;
+  min-height: 220px;
+  width: 100%;
+  border: none;
+  border-radius: 0;
+  background: #0b1220;
+  color: #e2e8f0;
+  padding: 14px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+.om-json-panel textarea[readonly] {
+  color: #cbd5e1;
+}
+
+.om-result-ok { color: var(--success, #34d399); }
+.om-result-fail { color: #f87171; }
+
+@media (max-width: 1100px) {
+  .om-msg-layout { grid-template-columns: 1fr; }
+}

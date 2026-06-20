@@ -21,10 +21,11 @@ INSERT INTO OM_AUTH_GROUP (AUTH_GROUP_ID, AUTH_GROUP_NAME, DESCRIPTION, USE_YN) 
 ('ROLE_OPERATOR', '운영담당자', '거래로그/모니터링', 'Y'),
 ('ROLE_VIEWER', '조회자', '조회 전용', 'Y');
 
-INSERT INTO OM_USER (USER_ID, USER_NAME, BRANCH_ID, AUTH_GROUP_ID, USE_YN, LAST_LOGIN_TIME) VALUES
-('admin01', '운영관리자', '000001', 'ROLE_ADMIN', 'Y', '2026-06-14T09:15:00+09:00'),
-('op01', '김운영', '001234', 'ROLE_OPERATOR', 'Y', '2026-06-14T08:50:00+09:00'),
-('view01', '이조회', '001234', 'ROLE_VIEWER', 'Y', '2026-06-13T17:20:00+09:00');
+-- 초기 비밀번호: nsight01! (기동 시 OmUserPasswordInitializer 가 BCrypt 해시 설정)
+INSERT INTO OM_USER (USER_ID, USER_NAME, PASSWORD_HASH, BRANCH_ID, AUTH_GROUP_ID, USE_YN, LAST_LOGIN_TIME) VALUES
+('admin01', '운영관리자', NULL, '000001', 'ROLE_ADMIN', 'Y', '2026-06-14T09:15:00+09:00'),
+('op01', '김운영', NULL, '001234', 'ROLE_OPERATOR', 'Y', '2026-06-14T08:50:00+09:00'),
+('view01', '이조회', NULL, '001234', 'ROLE_VIEWER', 'Y', '2026-06-13T17:20:00+09:00');
 
 INSERT INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN) VALUES
 ('OM_DASH', '운영 대시보드', '/om/admin/dashboard.html', NULL, 1, 'Y'),
@@ -36,12 +37,13 @@ INSERT INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, U
 ('OM_BAT', '배치 관리', '/om/admin/batch.html', NULL, 7, 'Y'),
 ('OM_HLT', 'Health Check', '/om/admin/health-check.html', NULL, 8, 'Y'),
 ('OM_CFG', '환경설정 조회', '/om/admin/system-config.html', NULL, 9, 'Y'),
-('OM_FIL', '다운로드 이력', '/om/admin/file-download.html', NULL, 10, 'Y'),
+('OM_FIL', '파일 관리', '/om/admin/file-management.html', NULL, 10, 'Y'),
 ('OM_CDC', '공통코드 관리', '/om/admin/common-code.html', NULL, 11, 'Y'),
 ('OM_FAU', '기능권한', '/om/admin/function-auth.html', NULL, 12, 'Y'),
 ('OM_DAU', '데이터권한', '/om/admin/data-auth.html', NULL, 13, 'Y'),
 ('OM_AHT', '권한이력', '/om/admin/auth-history.html', NULL, 14, 'Y'),
-('OM_CCH', 'Cache 관리', '/om/admin/cache.html', NULL, 15, 'Y');
+('OM_CCH', 'Cache 관리', '/om/admin/cache.html', NULL, 15, 'Y'),
+('OM_SES', '세션 관리', '/om/admin/session.html', NULL, 16, 'Y');
 
 INSERT INTO OM_SERVICE_CATALOG (CATALOG_ID, BUSINESS_CODE, SERVICE_ID, TRANSACTION_CODE, PROCESSING_TYPE, HANDLER_CLASS, AUTH_CODE, AUDIT_YN, TIMEOUT_SEC, USE_YN, DESCRIPTION) VALUES
 ('CAT-001', 'SV', 'SV.Sample.inquiry', 'SV-INQ-0001', 'INQUIRY', 'SvSampleInquiryHandler', 'ROLE_SV_INQ', 'N', 5, 'Y', 'SV 샘플 조회'),
@@ -58,15 +60,35 @@ INSERT INTO OM_SERVICE_CATALOG (CATALOG_ID, BUSINESS_CODE, SERVICE_ID, TRANSACTI
 ('CAT-012', 'OM', 'OM.HealthCheck.inquiry', 'OM-HLT-0001', 'INQUIRY', 'OmHealthCheckInquiryHandler', 'ROLE_OM_HLT', 'N', 5, 'Y', 'Health Check 조회'),
 ('CAT-013', 'OM', 'OM.SystemConfig.inquiry', 'OM-CFG-0001', 'INQUIRY', 'OmSystemConfigInquiryHandler', 'ROLE_OM_CFG', 'N', 5, 'Y', '환경설정 조회'),
 ('CAT-014', 'OM', 'OM.FileDownload.inquiry', 'OM-FIL-0001', 'INQUIRY', 'OmFileDownloadInquiryHandler', 'ROLE_OM_FIL', 'Y', 10, 'Y', '파일 다운로드 이력'),
-('CAT-015', 'OM', 'OM.CommonCode.inquiry', 'OM-CDC-0001', 'INQUIRY', 'OmCommonCodeInquiryHandler', 'ROLE_OM_CDC', 'N', 5, 'Y', '공통코드 조회'),
-('CAT-016', 'OM', 'OM.CommonCode.save', 'OM-CDC-0002', 'UPDATE', 'OmCommonCodeSaveHandler', 'ROLE_OM_CDC', 'Y', 5, 'Y', '공통코드 저장'),
-('CAT-017', 'OM', 'OM.ErrorCode.save', 'OM-ERR-0002', 'UPDATE', 'OmErrorCodeSaveHandler', 'ROLE_OM_ERR', 'Y', 5, 'Y', '오류코드 저장'),
-('CAT-018', 'OM', 'OM.Batch.execute', 'OM-BAT-0002', 'EXECUTE', 'OmBatchExecuteHandler', 'ROLE_OM_BAT', 'Y', 30, 'Y', '배치 재실행'),
-('CAT-019', 'OM', 'OM.FunctionAuth.inquiry', 'OM-FAU-0001', 'INQUIRY', 'OmFunctionAuthInquiryHandler', 'ROLE_OM_AUTH', 'N', 5, 'Y', '기능권한 조회'),
-('CAT-020', 'OM', 'OM.DataAuth.inquiry', 'OM-DAU-0001', 'INQUIRY', 'OmDataAuthInquiryHandler', 'ROLE_OM_AUTH', 'N', 5, 'Y', '데이터권한 조회'),
-('CAT-021', 'OM', 'OM.AuthHistory.inquiry', 'OM-AHT-0001', 'INQUIRY', 'OmAuthHistoryInquiryHandler', 'ROLE_OM_AUTH', 'Y', 10, 'Y', '권한이력 조회'),
-('CAT-022', 'OM', 'OM.Cache.inquiry', 'OM-CCH-0001', 'INQUIRY', 'OmCacheInquiryHandler', 'ROLE_OM_CACHE', 'N', 5, 'Y', 'Cache 조회'),
-('CAT-023', 'OM', 'OM.Cache.delete', 'OM-CCH-0002', 'DELETE', 'OmCacheDeleteHandler', 'ROLE_OM_CACHE', 'Y', 10, 'Y', 'Cache 삭제');
+('CAT-015', 'OM', 'OM.CommonCode.inquiry', 'OM-CDC-0001', 'INQUIRY', 'OmCommonCodeInquiryHandler', 'ROLE_OM_CDC', 'N', 5, 'Y', '공통코드 목록 조회'),
+('CAT-016', 'OM', 'OM.CommonCode.save', 'OM-CDC-0002', 'UPDATE', 'OmCommonCodeSaveHandler', 'ROLE_OM_CDC', 'Y', 5, 'Y', '공통코드 등록'),
+('CAT-017', 'OM', 'OM.CommonCode.detail', 'OM-CDC-0003', 'INQUIRY', 'OmCommonCodeDetailHandler', 'ROLE_OM_CDC', 'N', 5, 'Y', '공통코드 단건 조회'),
+('CAT-018', 'OM', 'OM.CommonCode.update', 'OM-CDC-0004', 'UPDATE', 'OmCommonCodeUpdateHandler', 'ROLE_OM_CDC', 'Y', 5, 'Y', '공통코드 수정'),
+('CAT-019', 'OM', 'OM.CommonCode.delete', 'OM-CDC-0005', 'DELETE', 'OmCommonCodeDeleteHandler', 'ROLE_OM_CDC', 'Y', 5, 'Y', '공통코드 삭제'),
+('CAT-020', 'OM', 'OM.ErrorCode.save', 'OM-ERR-0002', 'UPDATE', 'OmErrorCodeSaveHandler', 'ROLE_OM_ERR', 'Y', 5, 'Y', '오류코드 등록'),
+('CAT-021', 'OM', 'OM.Batch.execute', 'OM-BAT-0002', 'EXECUTE', 'OmBatchExecuteHandler', 'ROLE_OM_BAT', 'Y', 30, 'Y', '배치 재실행'),
+('CAT-022', 'OM', 'OM.FunctionAuth.inquiry', 'OM-FAU-0001', 'INQUIRY', 'OmFunctionAuthInquiryHandler', 'ROLE_OM_AUTH', 'N', 5, 'Y', '기능권한 조회'),
+('CAT-023', 'OM', 'OM.DataAuth.inquiry', 'OM-DAU-0001', 'INQUIRY', 'OmDataAuthInquiryHandler', 'ROLE_OM_AUTH', 'N', 5, 'Y', '데이터권한 조회'),
+('CAT-024', 'OM', 'OM.AuthHistory.inquiry', 'OM-AHT-0001', 'INQUIRY', 'OmAuthHistoryInquiryHandler', 'ROLE_OM_AUTH', 'Y', 10, 'Y', '권한이력 조회'),
+('CAT-025', 'OM', 'OM.Cache.inquiry', 'OM-CCH-0001', 'INQUIRY', 'OmCacheInquiryHandler', 'ROLE_OM_CACHE', 'N', 5, 'Y', 'Cache 조회'),
+('CAT-026', 'OM', 'OM.Cache.delete', 'OM-CCH-0002', 'DELETE', 'OmCacheDeleteHandler', 'ROLE_OM_CACHE', 'Y', 10, 'Y', 'Cache 삭제'),
+('CAT-027', 'OM', 'OM.Auth.login', 'OM-AUT-0002', 'EXECUTE', 'OmAuthLoginHandler', 'ROLE_OM_AUTH', 'Y', 5, 'Y', 'OM 로그인'),
+('CAT-028', 'OM', 'OM.Auth.logout', 'OM-AUT-0003', 'EXECUTE', 'OmAuthLogoutHandler', 'ROLE_OM_AUTH', 'Y', 5, 'Y', 'OM 로그아웃'),
+('CAT-029', 'OM', 'OM.Auth.session', 'OM-AUT-0004', 'INQUIRY', 'OmAuthSessionInquiryHandler', 'ROLE_OM_AUTH', 'N', 5, 'Y', 'OM 세션 조회'),
+('CAT-030', 'OM', 'OM.Session.inquiry', 'OM-SES-0001', 'INQUIRY', 'OmSessionInquiryHandler', 'ROLE_OM_AUTH', 'Y', 10, 'Y', '세션 목록 조회'),
+('CAT-031', 'OM', 'OM.Session.delete', 'OM-SES-0002', 'DELETE', 'OmSessionDeleteHandler', 'ROLE_OM_AUTH', 'Y', 5, 'Y', '세션 강제 종료'),
+('CAT-032', 'OM', 'OM.User.detail', 'OM-USR-0002', 'INQUIRY', 'OmUserDetailHandler', 'ROLE_OM_AUTH', 'N', 5, 'Y', '사용자 상세'),
+('CAT-033', 'OM', 'OM.User.save', 'OM-USR-0003', 'UPDATE', 'OmUserSaveHandler', 'ROLE_OM_AUTH', 'Y', 5, 'Y', '사용자 등록'),
+('CAT-034', 'OM', 'OM.User.update', 'OM-USR-0004', 'UPDATE', 'OmUserUpdateHandler', 'ROLE_OM_AUTH', 'Y', 5, 'Y', '사용자 수정'),
+('CAT-035', 'OM', 'OM.User.delete', 'OM-USR-0005', 'DELETE', 'OmUserDeleteHandler', 'ROLE_OM_AUTH', 'Y', 5, 'Y', '사용자 삭제'),
+('CAT-036', 'OM', 'OM.TransactionLog.deleteAll', 'OM-TXL-0002', 'DELETE', 'OmTransactionLogDeleteAllHandler', 'ROLE_OM_TXL', 'Y', 30, 'Y', '거래로그 전체 삭제'),
+('CAT-037', 'OM', 'OM.ServiceCatalog.save', 'OM-SVC-0002', 'UPDATE', 'OmServiceCatalogSaveHandler', 'ROLE_OM_SVC', 'Y', 5, 'Y', 'ServiceId 등록'),
+('CAT-038', 'OM', 'OM.ServiceCatalog.detail', 'OM-SVC-0003', 'INQUIRY', 'OmServiceCatalogDetailHandler', 'ROLE_OM_SVC', 'N', 5, 'Y', 'ServiceId 상세'),
+('CAT-039', 'OM', 'OM.ServiceCatalog.update', 'OM-SVC-0004', 'UPDATE', 'OmServiceCatalogUpdateHandler', 'ROLE_OM_SVC', 'Y', 5, 'Y', 'ServiceId 수정'),
+('CAT-040', 'OM', 'OM.ServiceCatalog.delete', 'OM-SVC-0005', 'DELETE', 'OmServiceCatalogDeleteHandler', 'ROLE_OM_SVC', 'Y', 5, 'Y', 'ServiceId 삭제'),
+('CAT-041', 'OM', 'OM.ErrorCode.detail', 'OM-ERR-0003', 'INQUIRY', 'OmErrorCodeDetailHandler', 'ROLE_OM_ERR', 'N', 5, 'Y', '오류코드 상세'),
+('CAT-042', 'OM', 'OM.ErrorCode.update', 'OM-ERR-0004', 'UPDATE', 'OmErrorCodeUpdateHandler', 'ROLE_OM_ERR', 'Y', 5, 'Y', '오류코드 수정'),
+('CAT-043', 'OM', 'OM.ErrorCode.delete', 'OM-ERR-0005', 'DELETE', 'OmErrorCodeDeleteHandler', 'ROLE_OM_ERR', 'Y', 5, 'Y', '오류코드 삭제');
 
 INSERT INTO TCF_TX_LOG (LOG_ID, TX_TIME, BUSINESS_CODE, SERVICE_ID, TRANSACTION_CODE, GUID, TRACE_ID, USER_ID, BRANCH_ID, RESULT_STATUS, RESULT_CODE, ERROR_CODE, ELAPSED_TIME_MS) VALUES
 ('TX-001', '2026-06-14T10:31:22+09:00', 'SV', 'SV.Customer.selectSummary', 'SV-INQ-0002', '7f9c1111-e29b-41d4-a716-446655440001', 'trc-7f9c1111', 'U001', '001234', 'FAIL', 'E0001', 'E-SV-DB-0001', 3210),
@@ -95,7 +117,8 @@ INSERT INTO OM_BATCH_JOB (JOB_ID, JOB_NAME, BUSINESS_CODE, CRON_EXPR, USE_YN, DE
 ('BAT-SV-001', 'SV 일별 집계', 'SV', '0 2 * * *', 'Y', '통합고객 일별 집계'),
 ('BAT-CM-001', 'CM 캠페인 반응 집계', 'CM', '0 3 * * *', 'Y', '캠페인 반응률 집계'),
 ('BAT-LOG-001', '거래로그 아카이빙', 'ET', '0 4 * * 0', 'Y', 'LOGDB → 아카이브 이관'),
-('BAT-OM-001', 'OM Health 스냅샷', 'OM', '0 */10 * * *', 'Y', 'AP/DB 상태 스냅샷');
+('BAT-OM-001', 'OM Health 스냅샷', 'OM', '0 */10 * * *', 'Y', 'AP/DB 상태 스냅샷'),
+('BAT-OM-002', 'OM 세션 정리', 'OM', '*/10 * * * * *', 'Y', 'SPRING_SESSION 만료 세션 10초 주기 정리');
 
 INSERT INTO OM_BATCH_HISTORY (HISTORY_ID, JOB_ID, RUN_TIME, RUN_STATUS, DURATION_MS, RESULT_MESSAGE) VALUES
 ('BH-001', 'BAT-SV-001', '2026-06-14T02:00:15+09:00', 'SUCCESS', 45200, '집계 완료 12,340건'),
@@ -116,13 +139,57 @@ INSERT INTO OM_FILE_DOWNLOAD_LOG (LOG_ID, DOWNLOAD_TIME, USER_ID, FILE_NAME, FIL
 ('FDL-002', '2026-06-14T10:45:00+09:00', 'op01', 'tx_log_export.csv', 512000, 'OM', 'SUCCESS', '10.10.10.12'),
 ('FDL-003', '2026-06-13T16:30:00+09:00', 'view01', 'customer_list.pdf', 0, 'SV', 'FAIL', '10.10.10.11');
 
-INSERT INTO OM_COMMON_CODE (CODE_GROUP, CODE, CODE_NAME, SORT_ORDER, USE_YN, DESCRIPTION) VALUES
-('BUSINESS_CODE', 'SV', 'Single View', 1, 'Y', '통합고객 조회'),
-('BUSINESS_CODE', 'CM', 'Campaign', 2, 'Y', '캠페인'),
-('BUSINESS_CODE', 'OM', 'Operation Mgmt', 3, 'Y', '운영관리'),
-('CHANNEL_CODE', 'WEBTOP', '웹탑', 1, 'Y', '웹 채널'),
-('CHANNEL_CODE', 'MOBILE', '모바일', 2, 'Y', '모바일 채널'),
-('CENTER_CODE', 'DC1', '데이터센터1', 1, 'Y', '주 DC');
+INSERT INTO OM_COMMON_CODE (CODE_GROUP, CODE, CODE_NAME, SORT_ORDER, USE_YN, DESCRIPTION, CREATED_AT, UPDATED_AT) VALUES
+-- 업무코드
+('BUSINESS_CODE', 'SV', 'Single View', 1, 'Y', '통합고객 조회', '2026-06-14T09:00:00+09:00', '2026-06-14T09:00:00+09:00'),
+('BUSINESS_CODE', 'CM', 'Campaign', 2, 'Y', '캠페인', '2026-06-14T09:00:00+09:00', '2026-06-14T09:00:00+09:00'),
+('BUSINESS_CODE', 'OM', 'Operation Mgmt', 3, 'Y', '운영관리', '2026-06-14T09:00:00+09:00', '2026-06-14T09:00:00+09:00'),
+('BUSINESS_CODE', 'BC', 'Business Customer', 4, 'Y', '기업고객', '2026-06-14T09:00:00+09:00', '2026-06-14T09:00:00+09:00'),
+('BUSINESS_CODE', 'BD', 'Business Data', 5, 'Y', '마케팅 데이터', '2026-06-14T09:00:00+09:00', '2026-06-14T09:00:00+09:00'),
+('BUSINESS_CODE', 'CC', 'Contact Center', 6, 'Y', '컨택센터', '2026-06-14T09:00:00+09:00', '2026-06-14T09:00:00+09:00'),
+('BUSINESS_CODE', 'MG', 'Message', 7, 'Y', '메시지 발송', '2026-06-14T09:00:00+09:00', '2026-06-14T09:00:00+09:00'),
+('BUSINESS_CODE', 'ET', 'Enterprise', 8, 'N', '엔터프라이즈(미사용)', '2026-06-14T09:00:00+09:00', '2026-06-13T18:00:00+09:00'),
+-- 채널코드
+('CHANNEL_CODE', 'WEBTOP', '웹탑', 1, 'Y', '웹 채널', '2026-06-14T09:00:00+09:00', '2026-06-14T09:00:00+09:00'),
+('CHANNEL_CODE', 'MOBILE', '모바일', 2, 'Y', '모바일 채널', '2026-06-14T09:00:00+09:00', '2026-06-14T09:00:00+09:00'),
+('CHANNEL_CODE', 'BRANCH', '창구', 3, 'Y', '영업점 창구', '2026-06-14T09:00:00+09:00', '2026-06-14T09:00:00+09:00'),
+('CHANNEL_CODE', 'CALL', '콜센터', 4, 'Y', '전화 상담', '2026-06-14T09:00:00+09:00', '2026-06-14T09:00:00+09:00'),
+-- 센터코드
+('CENTER_CODE', 'DC1', '데이터센터1', 1, 'Y', '주 DC', '2026-06-14T09:00:00+09:00', '2026-06-14T09:00:00+09:00'),
+('CENTER_CODE', 'DC2', '데이터센터2', 2, 'Y', 'DR DC', '2026-06-14T09:00:00+09:00', '2026-06-14T09:00:00+09:00'),
+-- 고객유형 (문서 샘플)
+('CUSTOMER_TYPE', '01', '개인고객', 1, 'Y', '개인 고객 유형', '2026-06-18T10:00:00+09:00', '2026-06-18T10:00:00+09:00'),
+('CUSTOMER_TYPE', '02', '법인고객', 2, 'Y', '법인 고객 유형', '2026-06-18T10:00:00+09:00', '2026-06-18T10:00:00+09:00'),
+('CUSTOMER_TYPE', '03', '개인사업자', 3, 'Y', '개인사업자 고객 유형', '2026-06-18T10:00:00+09:00', '2026-06-18T10:00:00+09:00'),
+-- 사용여부 (문서 샘플)
+('USE_YN', 'Y', '사용', 1, 'Y', '사용 여부', '2026-06-18T10:00:00+09:00', '2026-06-18T10:00:00+09:00'),
+('USE_YN', 'N', '미사용', 2, 'Y', '사용 여부', '2026-06-18T10:00:00+09:00', '2026-06-18T10:00:00+09:00'),
+-- 거래결과
+('RESULT_STATUS', 'SUCCESS', '성공', 1, 'Y', '정상 처리', '2026-06-18T10:00:00+09:00', '2026-06-18T10:00:00+09:00'),
+('RESULT_STATUS', 'FAIL', '실패', 2, 'Y', '업무 실패', '2026-06-18T10:00:00+09:00', '2026-06-18T10:00:00+09:00'),
+('RESULT_STATUS', 'ERROR', '오류', 3, 'Y', '시스템 오류', '2026-06-18T10:00:00+09:00', '2026-06-18T10:00:00+09:00'),
+-- 지점구분
+('BRANCH_TYPE', 'HQ', '본부', 1, 'Y', '본부 지점', '2026-06-18T10:00:00+09:00', '2026-06-18T10:00:00+09:00'),
+('BRANCH_TYPE', 'BR', '일반지점', 2, 'Y', '일반 영업점', '2026-06-18T10:00:00+09:00', '2026-06-18T10:00:00+09:00'),
+('BRANCH_TYPE', 'VT', '가상지점', 3, 'Y', '비대면 채널 지점', '2026-06-18T10:00:00+09:00', '2026-06-18T10:00:00+09:00'),
+-- 권한코드 (ServiceId 카탈로그 AUTH_CODE)
+('AUTH_CODE', 'ROLE_OM_AUTH', 'OM 인증/권한', 1, 'Y', '사용자·메뉴·세션·권한', '2026-06-20T10:00:00+09:00', '2026-06-20T10:00:00+09:00'),
+('AUTH_CODE', 'ROLE_OM_SVC', 'ServiceId 관리', 2, 'Y', '서비스 카탈로그', '2026-06-20T10:00:00+09:00', '2026-06-20T10:00:00+09:00'),
+('AUTH_CODE', 'ROLE_OM_DSH', '운영 대시보드', 3, 'Y', '대시보드 조회', '2026-06-20T10:00:00+09:00', '2026-06-20T10:00:00+09:00'),
+('AUTH_CODE', 'ROLE_OM_TXL', '거래로그', 4, 'Y', '거래로그 조회/삭제', '2026-06-20T10:00:00+09:00', '2026-06-20T10:00:00+09:00'),
+('AUTH_CODE', 'ROLE_OM_AUD', '감사로그', 5, 'Y', '감사로그 조회', '2026-06-20T10:00:00+09:00', '2026-06-20T10:00:00+09:00'),
+('AUTH_CODE', 'ROLE_OM_ERR', '오류코드', 6, 'Y', '오류코드 관리', '2026-06-20T10:00:00+09:00', '2026-06-20T10:00:00+09:00'),
+('AUTH_CODE', 'ROLE_OM_BAT', '배치', 7, 'Y', '배치/스케줄', '2026-06-20T10:00:00+09:00', '2026-06-20T10:00:00+09:00'),
+('AUTH_CODE', 'ROLE_OM_HLT', 'Health Check', 8, 'Y', 'AP/DB 헬스', '2026-06-20T10:00:00+09:00', '2026-06-20T10:00:00+09:00'),
+('AUTH_CODE', 'ROLE_OM_CFG', '환경설정', 9, 'Y', '시스템 설정 조회', '2026-06-20T10:00:00+09:00', '2026-06-20T10:00:00+09:00'),
+('AUTH_CODE', 'ROLE_OM_FIL', '파일', 10, 'Y', '파일 다운로드 이력', '2026-06-20T10:00:00+09:00', '2026-06-20T10:00:00+09:00'),
+('AUTH_CODE', 'ROLE_OM_CDC', '공통코드', 11, 'Y', '공통코드 CRUD', '2026-06-20T10:00:00+09:00', '2026-06-20T10:00:00+09:00'),
+('AUTH_CODE', 'ROLE_OM_CACHE', 'Cache', 12, 'Y', '캐시 조회/삭제', '2026-06-20T10:00:00+09:00', '2026-06-20T10:00:00+09:00'),
+('AUTH_CODE', 'ROLE_SV_INQ', 'SV 조회', 13, 'Y', 'Single View 조회', '2026-06-20T10:00:00+09:00', '2026-06-20T10:00:00+09:00'),
+-- Cache명 (Cache 관리 화면)
+('CACHE_NAME', 'commonCode', '공통코드', 1, 'Y', '공통코드 Cache (키=코드그룹)', '2026-06-20T10:00:00+09:00', '2026-06-20T10:00:00+09:00'),
+('CACHE_NAME', 'serviceCatalog', 'ServiceId 카탈로그', 2, 'Y', 'ServiceId 카탈로그 Cache', '2026-06-20T10:00:00+09:00', '2026-06-20T10:00:00+09:00'),
+('CACHE_NAME', 'sessionRegion', '세션 영역', 3, 'Y', '세션 Cache', '2026-06-20T10:00:00+09:00', '2026-06-20T10:00:00+09:00');
 
 INSERT INTO OM_FUNCTION_AUTH (AUTH_ID, AUTH_GROUP_ID, MENU_ID, CAN_INQUIRY, CAN_REGISTER, CAN_UPDATE, CAN_DELETE, CAN_DOWNLOAD) VALUES
 ('FA-001', 'ROLE_ADMIN', 'OM_DASH', 'Y', 'Y', 'Y', 'Y', 'Y'),
@@ -140,6 +207,7 @@ INSERT INTO OM_AUTH_HISTORY (HISTORY_ID, CHANGED_AT, CHANGED_BY, TARGET_TYPE, TA
 ('AH-002', '2026-06-12T11:30:00+09:00', 'admin01', 'ERROR_CODE', 'E-SV-BIZ-0001', '조회 결과 없음', '조회 결과가 없습니다.', '사용자 메시지 표준화');
 
 INSERT INTO OM_CACHE_STATUS (CACHE_NAME, CACHE_KEY, ENTRY_COUNT, LAST_UPDATED, TTL_SEC) VALUES
-('serviceCatalog', '*', 14, '2026-06-14T10:00:00+09:00', 3600),
-('commonCode', 'BUSINESS_CODE', 3, '2026-06-14T09:00:00+09:00', 1800),
+('serviceCatalog', '*', 26, '2026-06-14T10:00:00+09:00', 3600),
+('commonCode', 'BUSINESS_CODE', 8, '2026-06-18T10:00:00+09:00', 1800),
+('commonCode', 'CUSTOMER_TYPE', 3, '2026-06-18T10:00:00+09:00', 1800),
 ('sessionRegion', 'DC1', 120, '2026-06-14T10:30:00+09:00', 600);

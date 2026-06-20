@@ -18,11 +18,14 @@ public class OmBatchService {
     private final OmOperationRule rule;
     private final OmOperationDao dao;
     private final OmChangeRecorder recorder;
+    private final OmSessionCleanupService sessionCleanupService;
 
-    public OmBatchService(OmOperationRule rule, OmOperationDao dao, OmChangeRecorder recorder) {
+    public OmBatchService(OmOperationRule rule, OmOperationDao dao, OmChangeRecorder recorder,
+                          OmSessionCleanupService sessionCleanupService) {
         this.rule = rule;
         this.dao = dao;
         this.recorder = recorder;
+        this.sessionCleanupService = sessionCleanupService;
     }
 
     public Map<String, Object> inquiry(Map<String, Object> body, TransactionContext context) {
@@ -57,6 +60,21 @@ public class OmBatchService {
         }
 
         String reason = OmBodySupport.stringValue(body, "executeReason");
+        if (OmSessionCleanupService.JOB_ID.equals(jobId)) {
+            OmSessionCleanupService.OmSessionCleanupResult cleanup = sessionCleanupService.runManual(context, reason);
+            Map<String, Object> result = new LinkedHashMap<>();
+            result.put("businessCode", "OM");
+            result.put("screen", "배치 재실행");
+            result.put("executed", true);
+            result.put("jobId", jobId);
+            result.put("runStatus", "SUCCESS");
+            result.put("expiredCount", cleanup.expiredCount());
+            result.put("deletedCount", cleanup.deletedCount());
+            result.put("activeCount", cleanup.activeCount());
+            result.put("durationMs", cleanup.durationMs());
+            return result;
+        }
+
         long start = System.currentTimeMillis();
         String runStatus = "SUCCESS";
         String message = "수동 재실행 완료: " + job.get("jobName");

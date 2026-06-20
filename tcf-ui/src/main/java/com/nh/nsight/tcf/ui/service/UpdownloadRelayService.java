@@ -42,7 +42,8 @@ public class UpdownloadRelayService {
         return trimTrailingSlash(resolveBootrunHost(options)) + ":" + module.localPort();
     }
 
-    public String relayUpload(MultipartFile file, String userId, String description, RelayOptions options) {
+    public String relayUpload(MultipartFile file, String userId, String description, String businessCode,
+                              RelayOptions options) {
         String targetUrl = resolveBaseUrl(options) + "/ud/files/upload";
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("file", file.getResource());
@@ -51,6 +52,9 @@ public class UpdownloadRelayService {
         }
         if (StringUtils.hasText(description)) {
             body.add("description", description);
+        }
+        if (StringUtils.hasText(businessCode)) {
+            body.add("businessCode", businessCode);
         }
         return exchangePostMultipart(targetUrl, body);
     }
@@ -79,8 +83,7 @@ public class UpdownloadRelayService {
 
     public String relayList(RelayOptions options, Map<String, String> query) {
         UriComponentsBuilder builder = UriComponentsBuilder
-                .fromUriString(resolveBaseUrl(options) + "/ud/files")
-                .queryParam("businessCode", "UD");
+                .fromUriString(resolveBaseUrl(options) + "/ud/files");
         if (query != null) {
             query.forEach((key, value) -> {
                 if (StringUtils.hasText(value)) {
@@ -169,7 +172,7 @@ public class UpdownloadRelayService {
                   "body": {
                     "error": "%s",
                     "targetUrl": "%s",
-                    "hint": "common-updownload 모듈이 포함된 업무 WAS를 기동했는지 확인하세요.",
+                    "hint": "tcf-om(8097)을 기동했는지 확인하세요.",
                     "files": [],
                     "totalCount": 0
                   }

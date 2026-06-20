@@ -39,11 +39,12 @@ public class UpdownloadApiController {
             @RequestParam("file") MultipartFile file,
             @RequestParam(value = "userId", required = false, defaultValue = "U123456") String userId,
             @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "businessCode", required = false) String businessCode,
             @RequestParam(value = "deploymentMode", required = false) String deploymentMode,
             @RequestParam(value = "bootrunHost", required = false) String bootrunHost,
             @RequestParam(value = "tomcatGatewayUrl", required = false) String tomcatGatewayUrl) {
         RelayOptions options = new RelayOptions(deploymentMode, bootrunHost, tomcatGatewayUrl);
-        return relayService.relayUpload(file, userId, description, options);
+        return relayService.relayUpload(file, userId, description, businessCode, options);
     }
 
     @GetMapping("/files")

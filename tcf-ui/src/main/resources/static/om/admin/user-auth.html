@@ -10,91 +10,230 @@
 <body>
   <script src="/_shared/om-admin.js"></script>
   <script>
-    let activeTab = 'users';
+    let userPage = 1;
+    const USER_PAGE_SIZE = 10;
+    let userEditMode = false;
+    let authGroupOptions = [];
 
-    async function loadUsers() {
-      const tbody = document.getElementById('tabBody');
-      tbody.innerHTML = '<tr><td colspan="6" class="om-empty">조회 중...</td></tr>';
-      const { body } = await OmAdmin.inquiry('user', {});
-      const rows = body.rows || body.users || [];
-      if (!rows.length) {
-        tbody.innerHTML = '<tr><td colspan="6" class="om-empty">사용자 없음</td></tr>';
-        return;
-      }
-      tbody.innerHTML = rows.map(r => `
-        <tr>
-          <td>${OmAdmin.field(r, 'userId')}</td>
-          <td>${OmAdmin.field(r, 'userName')}</td>
-          <td>${OmAdmin.field(r, 'branchId')}</td>
-          <td>${OmAdmin.field(r, 'authGroupName')}</td>
-          <td>${OmAdmin.field(r, 'useYn') === 'Y' ? '<span class="om-chip ok">Y</span>' : '<span class="om-chip muted">N</span>'}</td>
-          <td>${OmAdmin.field(r, 'lastLoginTime')}</td>
-        </tr>`).join('');
+    async function loadAuthGroupOptions() {
+      const { body } = await OmAdmin.inquiry('authGroup', {});
+      authGroupOptions = body.rows || body.authGroups || [];
+      ['filterAuthGroup', 'fAuthGroup'].forEach(id => {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+        const current = sel.value;
+        const isFilter = id === 'filterAuthGroup';
+        sel.innerHTML = isFilter ? '<option value="">전체</option>' : '';
+        authGroupOptions.forEach(g => {
+          const gid = OmAdmin.field(g, 'authGroupId');
+          const name = OmAdmin.field(g, 'authGroupName');
+          sel.innerHTML += `<option value="${gid}">${name} (${gid})</option>`;
+        });
+        if (current) sel.value = current;
+      });
     }
 
-    async function loadAuthGroups() {
+    function readUserFilters() {
+      const v = id => document.getElementById(id).value.trim();
+      const f = { pageNo: userPage, pageSize: USER_PAGE_SIZE };
+      if (v('filterUserId')) f.userId = v('filterUserId');
+      if (v('filterUserName')) f.userName = v('filterUserName');
+      if (v('filterBranchId')) f.branchId = v('filterBranchId');
+      if (v('filterAuthGroup')) f.authGroupId = v('filterAuthGroup');
+      if (v('filterUseYn')) f.useYn = v('filterUseYn');
+      return f;
+    }
+
+    function clearUserForm() {
+      userEditMode = false;
+      document.getElementById('fUserId').readOnly = false;
+      ['fUserId', 'fUserName', 'fBranchId', 'fPassword', 'fReason'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('fUseYn').value = 'Y';
+      if (authGroupOptions.length) {
+        document.getElementById('fAuthGroup').value = OmAdmin.field(authGroupOptions[0], 'authGroupId');
+      }
+      document.getElementById('userFormMode').textContent = '신규 등록';
+      document.getElementById('fPasswordHint').textContent = '등록 시 필수';
+    }
+
+    function fillUserForm(row) {
+      userEditMode = true;
+      document.getElementById('fUserId').value = OmAdmin.field(row, 'userId', '');
+      document.getElementById('fUserName').value = OmAdmin.field(row, 'userName', '');
+      document.getElementById('fBranchId').value = OmAdmin.field(row, 'branchId', '');
+      document.getElementById('fAuthGroup').value = OmAdmin.field(row, 'authGroupId', '');
+      document.getElementById('fUseYn').value = OmAdmin.field(row, 'useYn', 'Y');
+      document.getElementById('fPassword').value = '';
+      document.getElementById('fUserId').readOnly = true;
+      document.getElementById('userFormMode').textContent = '수정 / 삭제';
+      document.getElementById('fPasswordHint').textContent = '변경 시에만 입력';
+    }
+
+    function userFormPayload() {
+      return {
+        userId: document.getElementById('fUserId').value.trim(),
+        userName: document.getElementById('fUserName').value.trim(),
+        branchId: document.getElementById('fBranchId').value.trim(),
+        authGroupId: document.getElementById('fAuthGroup').value,
+        useYn: document.getElementById('fUseYn').value,
+        password: document.getElementById('fPassword').value,
+        changeReason: document.getElementById('fReason').value.trim()
+      };
+    }
+
+    async function loadUsers(el) {
+      const tbody = document.getElementById('tabBody');
+      const statusEl = document.getElementById('userListStatus');
+      tbody.innerHTML = '<tr><td colspan="6" class="om-empty">조회 중...</td></tr>';
+      statusEl.textContent = '조회 중...';
+
+      const { body } = await OmAdmin.inquiry('user', readUserFilters());
+      const rows = body.rows || [];
+      statusEl.textContent = `페이지 ${body.pageNo || userPage} · 총 ${body.totalCount ?? 0}건`;
+
+      if (!rows.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="om-empty">사용자 없음</td></tr>';
+      } else {
+        tbody.innerHTML = rows.map(r => `
+          <tr class="om-row-selectable" data-user-id="${OmAdmin.field(r, 'userId')}">
+            <td class="om-mono">${OmAdmin.field(r, 'userId')}</td>
+            <td>${OmAdmin.field(r, 'userName')}</td>
+            <td>${OmAdmin.field(r, 'branchId')}</td>
+            <td>${OmAdmin.field(r, 'authGroupName', OmAdmin.field(r, 'authGroupId'))}</td>
+            <td>${OmAdmin.field(r, 'useYn') === 'Y' ? '<span class="om-chip ok">Y</span>' : '<span class="om-chip muted">N</span>'}</td>
+            <td class="om-mono">${OmAdmin.field(r, 'lastLoginTime')}</td>
+          </tr>`).join('');
+        tbody.querySelectorAll('tr.om-row-selectable').forEach(tr => {
+          tr.addEventListener('click', async () => {
+            tbody.querySelectorAll('tr.om-row-selected').forEach(r => r.classList.remove('om-row-selected'));
+            tr.classList.add('om-row-selected');
+            try {
+              const { body: detail } = await OmAdmin.inquiry('userDetail', { userId: tr.dataset.userId });
+              fillUserForm(detail.row || {});
+            } catch (e) {
+              OmAdmin.showErrorBanner(el, e.message);
+            }
+          });
+        });
+      }
+
+      OmAdmin.renderPagination(
+        document.getElementById('userPagination'),
+        body.pageNo || userPage,
+        body.pageSize || USER_PAGE_SIZE,
+        body.totalCount || 0,
+        p => {
+          userPage = p;
+          loadUsers(el).catch(e => OmAdmin.showErrorBanner(el, e.message));
+        },
+        true
+      );
+    }
+
+    async function loadAuthGroups(el) {
       const tbody = document.getElementById('tabBody');
       tbody.innerHTML = '<tr><td colspan="4" class="om-empty">조회 중...</td></tr>';
+      document.getElementById('userPagination').hidden = true;
       const { body } = await OmAdmin.inquiry('authGroup', {});
       const rows = body.rows || body.authGroups || [];
-      if (!rows.length) {
-        tbody.innerHTML = '<tr><td colspan="4" class="om-empty">권한그룹 없음</td></tr>';
-        return;
-      }
-      tbody.innerHTML = rows.map(r => `
+      tbody.innerHTML = rows.length ? rows.map(r => `
         <tr>
           <td class="om-mono">${OmAdmin.field(r, 'authGroupId')}</td>
           <td>${OmAdmin.field(r, 'authGroupName')}</td>
           <td>${OmAdmin.field(r, 'description')}</td>
           <td>${OmAdmin.field(r, 'useYn') === 'Y' ? '<span class="om-chip ok">Y</span>' : '<span class="om-chip muted">N</span>'}</td>
-        </tr>`).join('');
+        </tr>`).join('') : '<tr><td colspan="4" class="om-empty">권한그룹 없음</td></tr>';
     }
 
-    async function loadMenus() {
+    async function loadMenus(el) {
       const tbody = document.getElementById('tabBody');
       tbody.innerHTML = '<tr><td colspan="5" class="om-empty">조회 중...</td></tr>';
+      document.getElementById('userPagination').hidden = true;
       const { body } = await OmAdmin.inquiry('menu', { useYn: 'Y' });
       const rows = body.rows || body.menus || [];
-      if (!rows.length) {
-        tbody.innerHTML = '<tr><td colspan="5" class="om-empty">메뉴 없음</td></tr>';
-        return;
-      }
-      tbody.innerHTML = rows.map(r => `
+      tbody.innerHTML = rows.length ? rows.map(r => `
         <tr>
           <td>${OmAdmin.field(r, 'menuId')}</td>
           <td>${OmAdmin.field(r, 'menuName')}</td>
           <td class="om-mono">${OmAdmin.field(r, 'menuUrl')}</td>
           <td>${OmAdmin.field(r, 'parentMenuId', '-')}</td>
           <td>${OmAdmin.field(r, 'sortOrder')}</td>
-        </tr>`).join('');
+        </tr>`).join('') : '<tr><td colspan="5" class="om-empty">메뉴 없음</td></tr>';
     }
 
     function setTab(tab, el) {
-      activeTab = tab;
       document.querySelectorAll('.om-tab').forEach(t => {
         t.classList.toggle('active', t.dataset.tab === tab);
       });
+      const usersPanel = document.getElementById('usersPanel');
       const head = document.getElementById('tableHead');
+      const title = document.getElementById('tabTitle');
+
       if (tab === 'users') {
+        usersPanel.hidden = false;
+        title.textContent = '사용자 목록';
         head.innerHTML = '<tr><th>사용자ID</th><th>이름</th><th>지점</th><th>권한그룹</th><th>사용</th><th>최종로그인</th></tr>';
-        loadUsers().catch(e => OmAdmin.showError(el, e.message));
-      } else if (tab === 'auth') {
-        head.innerHTML = '<tr><th>그룹ID</th><th>그룹명</th><th>설명</th><th>사용</th></tr>';
-        loadAuthGroups().catch(e => OmAdmin.showError(el, e.message));
+        loadUsers(el).catch(e => OmAdmin.showError(el, e.message));
       } else {
-        head.innerHTML = '<tr><th>메뉴ID</th><th>메뉴명</th><th>URL</th><th>상위메뉴</th><th>정렬</th></tr>';
-        loadMenus().catch(e => OmAdmin.showError(el, e.message));
+        usersPanel.hidden = true;
+        if (tab === 'auth') {
+          title.textContent = '권한그룹 목록';
+          head.innerHTML = '<tr><th>그룹ID</th><th>그룹명</th><th>설명</th><th>사용</th></tr>';
+          loadAuthGroups(el).catch(e => OmAdmin.showError(el, e.message));
+        } else {
+          title.textContent = '메뉴 목록';
+          head.innerHTML = '<tr><th>메뉴ID</th><th>메뉴명</th><th>URL</th><th>상위메뉴</th><th>정렬</th></tr>';
+          loadMenus(el).catch(e => OmAdmin.showError(el, e.message));
+        }
       }
     }
 
     OmAdmin.initPage('user-auth', '사용자 / 권한 / 메뉴 관리', async (el) => {
       el.innerHTML = `
-        <div class="om-alert info">관리자 기능의 기본 화면입니다. 기능권한·데이터권한·권한이력은 2차 범위입니다.</div>
+        <div class="om-alert info">사용자 탭에서 등록·수정·삭제(USE_YN=N)가 가능합니다. 행 클릭 시 상세 조회 후 폼에 반영됩니다.</div>
         <div class="om-tabs">
           <button type="button" class="om-tab active" data-tab="users">사용자 관리</button>
           <button type="button" class="om-tab" data-tab="auth">권한그룹</button>
           <button type="button" class="om-tab" data-tab="menu">메뉴 관리</button>
         </div>
+
+        <div id="usersPanel">
+          <section class="om-filter-bar">
+            <div class="field"><label for="filterUserId">사용자 ID</label><input id="filterUserId" type="text" placeholder="부분 검색"></div>
+            <div class="field"><label for="filterUserName">이름</label><input id="filterUserName" type="text" placeholder="부분 검색"></div>
+            <div class="field"><label for="filterBranchId">지점</label><input id="filterBranchId" type="text"></div>
+            <div class="field"><label for="filterAuthGroup">권한그룹</label><select id="filterAuthGroup"><option value="">전체</option></select></div>
+            <div class="field"><label for="filterUseYn">사용</label><select id="filterUseYn"><option value="">전체</option><option>Y</option><option>N</option></select></div>
+            <div class="actions" style="display:flex;gap:8px;align-items:end">
+              <button class="btn-primary" id="userSearchBtn" type="button">조회</button>
+              <button class="btn-secondary" id="userResetBtn" type="button">초기화</button>
+            </div>
+          </section>
+
+          <div class="om-form-panel">
+            <h3 id="userFormMode">신규 등록</h3>
+            <div class="om-form-grid">
+              <div class="field"><label for="fUserId">사용자 ID</label><input id="fUserId" type="text" placeholder="user01"></div>
+              <div class="field"><label for="fUserName">이름</label><input id="fUserName" type="text"></div>
+              <div class="field"><label for="fBranchId">지점</label><input id="fBranchId" type="text" placeholder="001234"></div>
+              <div class="field"><label for="fAuthGroup">권한그룹</label><select id="fAuthGroup"></select></div>
+              <div class="field"><label for="fUseYn">사용</label><select id="fUseYn"><option>Y</option><option>N</option></select></div>
+              <div class="field"><label for="fPassword">비밀번호 <span id="fPasswordHint" style="color:var(--muted);font-weight:normal">등록 시 필수</span></label>
+                <input id="fPassword" type="password" autocomplete="new-password"></div>
+              <div class="field field-wide"><label for="fReason">변경 사유 (5자+)</label><input id="fReason" type="text" placeholder="승인 후 반영"></div>
+            </div>
+            <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn-secondary" id="userNewBtn" type="button">신규</button>
+              <button class="btn-primary" id="userSaveBtn" type="button">등록</button>
+              <button class="btn-primary" id="userUpdateBtn" type="button">수정</button>
+              <button class="btn-secondary" id="userDeleteBtn" type="button">삭제(USE_YN=N)</button>
+            </div>
+          </div>
+          <div style="margin-bottom:10px;color:var(--muted);font-size:0.85rem" id="userListStatus">-</div>
+        </div>
+
         <div class="om-card">
           <div class="om-card-head" id="tabTitle">사용자 목록</div>
           <div class="om-card-body om-table-wrap">
@@ -102,20 +241,67 @@
               <thead id="tableHead"></thead>
               <tbody id="tabBody"></tbody>
             </table>
+            <div class="om-pagination" id="userPagination" hidden></div>
           </div>
         </div>`;
 
-      el.querySelectorAll('.om-tab').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const tab = btn.dataset.tab;
-          document.getElementById('tabTitle').textContent =
-            tab === 'users' ? '사용자 목록' : tab === 'auth' ? '권한그룹 목록' : '메뉴 목록';
-          setTab(tab, el);
+      await loadAuthGroupOptions();
+      clearUserForm();
+
+      document.getElementById('userSearchBtn').addEventListener('click', () => {
+        userPage = 1;
+        loadUsers(el).catch(e => OmAdmin.showErrorBanner(el, e.message));
+      });
+      document.getElementById('userResetBtn').addEventListener('click', () => {
+        ['filterUserId', 'filterUserName', 'filterBranchId'].forEach(id => {
+          document.getElementById(id).value = '';
         });
+        document.getElementById('filterAuthGroup').value = '';
+        document.getElementById('filterUseYn').value = '';
+      });
+      document.getElementById('userNewBtn').addEventListener('click', clearUserForm);
+      document.getElementById('userSaveBtn').addEventListener('click', async () => {
+        try {
+          const payload = userFormPayload();
+          if (!payload.password) throw new Error('등록 시 비밀번호는 필수입니다.');
+          const { body } = await OmAdmin.mutate('userSave', payload, 'UPDATE');
+          alert(`등록 완료: ${body.userId}`);
+          clearUserForm();
+          userPage = 1;
+          await loadUsers(el);
+        } catch (e) { alert(e.message); }
+      });
+      document.getElementById('userUpdateBtn').addEventListener('click', async () => {
+        if (!userEditMode) { alert('수정할 사용자를 목록에서 선택하세요.'); return; }
+        try {
+          const payload = userFormPayload();
+          if (!payload.password) delete payload.password;
+          const { body } = await OmAdmin.mutate('userUpdate', payload, 'UPDATE');
+          alert(`수정 완료: ${body.userId}`);
+          await loadUsers(el);
+        } catch (e) { alert(e.message); }
+      });
+      document.getElementById('userDeleteBtn').addEventListener('click', async () => {
+        if (!userEditMode) { alert('삭제할 사용자를 목록에서 선택하세요.'); return; }
+        if (!confirm('USE_YN=N 으로 비활성화합니다. 계속할까요?')) return;
+        try {
+          const payload = userFormPayload();
+          await OmAdmin.mutate('userDelete', {
+            userId: payload.userId,
+            changeReason: payload.changeReason
+          }, 'DELETE');
+          alert('삭제(비활성화) 완료');
+          clearUserForm();
+          await loadUsers(el);
+        } catch (e) { alert(e.message); }
+      });
+
+      el.querySelectorAll('.om-tab').forEach(btn => {
+        btn.addEventListener('click', () => setTab(btn.dataset.tab, el));
       });
 
       setTab('users', el);
-    }).catch(err => alert(err.message));
+    });
   </script>
 </body>
 </html>

@@ -45,4 +45,4 @@ curl -X POST http://localhost:8086/sv/online \
 
 ## 의존성
 
-`tcf-core`, `tcf-web`, `common-etc`, `common-updownload`
+`tcf-core`, `tcf-web`, `common-etc`

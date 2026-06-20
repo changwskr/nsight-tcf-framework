@@ -4,8 +4,12 @@ import com.nh.nsight.tcf.ui.config.TcfUiProperties;
 import com.nh.nsight.tcf.ui.model.BusinessModuleInfo;
 import com.nh.nsight.tcf.ui.model.RelayResult;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
@@ -20,17 +24,14 @@ public class TransactionRelayService {
         this.properties = properties;
         this.catalog = catalog;
         this.restClient = RestClient.builder()
-                .defaultHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader("Accept", MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+                .defaultHeader("Accept", MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
                 .build();
     }
 
     public String resolveTargetUrl(String businessCode, RelayOptions options) {
         BusinessModuleInfo module = catalog.findByCode(businessCode);
         String baseUrl = resolveBaseUrl(module, options);
-        if (resolveMode(options) == TcfUiProperties.DeploymentMode.bootrun) {
-            return baseUrl + "/online";
-        }
         return baseUrl + module.contextPath() + "/online";
     }
 
@@ -42,29 +43,45 @@ public class TransactionRelayService {
     }
 
     public RelayResult relay(String businessCode, String requestBody, RelayOptions options) {
+        return relay(businessCode, requestBody, options, null);
+    }
+
+    public RelayResult relay(String businessCode, String requestBody, RelayOptions options, String cookieHeader) {
         BusinessModuleInfo module = catalog.findByCode(businessCode);
         String targetUrl = resolveTargetUrl(businessCode, options);
         long started = System.currentTimeMillis();
         try {
-            String responseBody = restClient.post()
+            return restClient.post()
                     .uri(URI.create(targetUrl))
+                    .headers(headers -> {
+                        if (StringUtils.hasText(cookieHeader)) {
+                            headers.set(HttpHeaders.COOKIE, cookieHeader);
+                        }
+                    })
                     .body(requestBody)
-                    .retrieve()
-                    .body(String.class);
-            return new RelayResult(
-                    businessCode.toUpperCase(),
-                    targetUrl,
-                    200,
-                    System.currentTimeMillis() - started,
-                    responseBody == null ? "" : responseBody
-            );
+                    .exchange((request, response) -> {
+                        String responseBody = StreamUtils.copyToString(response.getBody(), StandardCharsets.UTF_8);
+                        List<String> setCookies = response.getHeaders().getOrEmpty(HttpHeaders.SET_COOKIE);
+                        return new RelayResult(
+                                businessCode.toUpperCase(),
+                                targetUrl,
+                                response.getStatusCode().value(),
+                                System.currentTimeMillis() - started,
+                                responseBody == null ? "" : responseBody,
+                                setCookies
+                        );
+                    });
         } catch (RestClientResponseException e) {
+            List<String> setCookies = e.getResponseHeaders() == null
+                    ? List.of()
+                    : e.getResponseHeaders().getOrEmpty(HttpHeaders.SET_COOKIE);
             return new RelayResult(
                     businessCode.toUpperCase(),
                     targetUrl,
                     e.getStatusCode().value(),
                     System.currentTimeMillis() - started,
-                    e.getResponseBodyAsString()
+                    e.getResponseBodyAsString(),
+                    setCookies
             );
         } catch (Exception e) {
             return new RelayResult(

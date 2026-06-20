@@ -21,7 +21,6 @@
 | `tcf-core` | O |
 | `tcf-web` | O |
 | `common-etc` | X |
-| `common-updownload` | X |
 
 ## 빌드·실행·배포
 

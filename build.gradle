@@ -58,6 +58,11 @@ subprojects { sub ->
         sub.tasks.withType(org.springframework.boot.gradle.tasks.run.BootRun).configureEach {
             workingDir = rootProject.projectDir
             systemProperty 'nsight.txlog.path', nsightTxlogPath
+            systemProperty 'file.encoding', 'UTF-8'
+            systemProperty 'sun.jnu.encoding', 'UTF-8'
+            systemProperty 'stdout.encoding', 'UTF-8'
+            systemProperty 'stderr.encoding', 'UTF-8'
+            jvmArgs '-Dfile.encoding=UTF-8', '-Dstdout.encoding=UTF-8', '-Dstderr.encoding=UTF-8'
         }
     }
 }

@@ -24,6 +24,8 @@ if not exist "!GRADLE!" (
 )
 
 cd /d "!PROJECT_HOME!"
+chcp 65001 >nul
+set "JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8"
 echo [tcf-om-run] gradle :!MODULE!:bootRun ^(port 8097^)
 call "!GRADLE!" :!MODULE!:bootRun
 exit /b %errorlevel%

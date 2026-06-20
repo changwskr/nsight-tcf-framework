@@ -10,8 +10,7 @@ nsight-tcf-framework
 ├─ tcf-core              TCF 엔진 (STF/TCF/ETF, Dispatcher)
 ├─ tcf-web               HTTP 레이어 (/online, TcfGateway)
 ├─ common-etc            공통 ETC 라이브러리 (ET)
-├─ common-updownload     파일 업·다운로드 (UD, bootRun)
-├─ tcf-om                운영관리 TCF 서비스 (OM, bootRun)
+├─ tcf-om                운영관리 + 파일 업·다운로드 (OM/UD, bootRun)
 ├─ tcf-ui                거래 테스트 UI (Relay, 8099)
 ├─ tcf-scripts           빌드·실행 스크립트
 ├─ cc-service … mg-service   17개 업무 WAR
@@ -36,7 +35,7 @@ TCF.process()
 ## 의존 방향
 
 ```text
-tcf-util → tcf-core → tcf-web → 업무 서비스 / common-updownload / tcf-om
+tcf-util → tcf-core → tcf-web → 업무 서비스 / tcf-om
 ```
 
 ## 빠른 시작
@@ -61,7 +60,7 @@ tcf-scripts\run-local.bat ui
 | 포트 | 모듈 |
 |------|------|
 | 8081–8096 | cc ~ mg (*-service) |
-| 8097 | tcf-om / common-updownload / om-service (동시 기동 불가) |
+| 8097 | tcf-om / om-service (동시 기동 불가, UD 파일 API 내장) |
 | 8099 | tcf-ui |
 
 ## 샘플 호출

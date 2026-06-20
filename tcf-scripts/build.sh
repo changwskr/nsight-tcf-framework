@@ -13,7 +13,7 @@ Targets:
   all       clean + buildBusinessWars
   wars      buildBusinessWars only
   tcf       tcf-util, tcf-core, tcf-web
-  common    common-etc, common-updownload
+  common    common-etc
   ui        tcf-ui bootJar
   services  all *-service modules
   sv ic     service code (ex: sv -> sv-service)
@@ -59,7 +59,6 @@ resolve_target() {
       ;;
     common)
       append :common-etc:build
-      append :common-updownload:build
       ;;
     ui|tcf-ui) append :tcf-ui:bootJar ;;
     services)

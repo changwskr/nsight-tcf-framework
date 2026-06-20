@@ -17,7 +17,7 @@ tcf-scripts/run-local.sh <target>
 | `sv`, `sv-service` | sv-service |
 | `tcf-ui`, `ui` | tcf-ui (8099) |
 | `tcf-om`, `om` | tcf-om (8097) |
-| `ud`, `common-updownload` | common-updownload (8097) |
+| `ud`, `common-updownload` | tcf-om (8097, UD API 내장, 별칭) |
 | `et`, `common-etc` | common-etc |
 | `all` | 17개 *-service 일괄 기동 (각각 새 창) |
 
@@ -33,7 +33,7 @@ tcf-scripts/build.sh <target>
 | 인자 | 설명 |
 |------|------|
 | `core` | tcf-util, tcf-core, tcf-web |
-| `common` | common-etc, common-updownload |
+| `common` | common-etc |
 | `wars` | 17개 업무 WAR 일괄 |
 | `all` | 전체 |
 
@@ -63,7 +63,7 @@ tcf-scripts/deploy.sh sv cc ud
 |------|------|
 | (없음) / `all` | 17개 업무 WAR + `ud.war` 일괄 빌드·배포 |
 | `sv`, `cc`, … | 선택 업무만 빌드·배포 |
-| `ud` | common-updownload |
+| `ud` | tcf-om (`ud.war`로 배포, UD API 내장) |
 | `tcf-om` | `tcf-om.war` → `om.war`로 배포 |
 
 **배포 경로 (Windows `deploy.bat` 기본값):**
@@ -106,5 +106,5 @@ tcf-scripts/deploy.sh sv cc ud
 | cs-service | 8094 |
 | ct-service | 8095 |
 | mg-service | 8096 |
-| tcf-om / common-updownload / om-service | 8097 |
+| tcf-om / om-service | 8097 (UD 파일 API는 tcf-om 내장) |
 | tcf-ui | 8099 |

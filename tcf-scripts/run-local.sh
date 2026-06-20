@@ -12,7 +12,7 @@ Usage: run-local.sh <target> [target2 ...]
 Targets:
   sv ic     service code (ex: sv -> sv-service bootRun)
   ui        tcf-ui bootRun (port 8099)
-  ud        common-updownload bootRun
+  ud        tcf-om bootRun (파일 업·다운로드 내장)
   et        common-etc bootRun
   all       start all 17 *-service in background
 
@@ -31,7 +31,7 @@ resolve_service() {
   target="$(echo "$1" | tr '[:upper:]' '[:lower:]')"
   case "$target" in
     ui|tcf-ui) echo "tcf-ui" ;;
-    ud|common-updownload) echo "common-updownload" ;;
+    ud|common-updownload|tcf-om) echo "tcf-om" ;;
     et|common-etc) echo "common-etc" ;;
     *-service) echo "$target" ;;
     *) echo "${target}-service" ;;

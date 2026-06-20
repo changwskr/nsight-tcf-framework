@@ -8,6 +8,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @MapperScan("com.nh.nsight.marketing.bc.mapper")
 public class NsightBcServiceApplication {
     public static void main(String[] args) {
+        System.out.println("\n ==============================================[NsightBcServiceApplication.main] start");
+        System.out.println(" ==============================================[NsightBcServiceApplication.main] scanBasePackages=com.nh.nsight");
+        System.out.println(" ==============================================[NsightBcServiceApplication.main] mapperScan=com.nh.nsight.marketing.bc.mapper");
+
         SpringApplication.run(NsightBcServiceApplication.class, args);
+
+        System.out.println(" ==============================================[NsightBcServiceApplication.main] end");
     }
 }

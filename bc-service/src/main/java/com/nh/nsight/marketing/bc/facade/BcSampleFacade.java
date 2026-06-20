@@ -16,6 +16,17 @@ public class BcSampleFacade {
 
     @Transactional(readOnly = true, timeout = 5)
     public Map<String, Object> inquiry(Map<String, Object> body, TransactionContext context) {
-        return service.inquiry(body, context);
+        System.out.println("\n ==============================================[BcSampleFacade.inquiry] start");
+        System.out.println(" ==============================================[BcSampleFacade.inquiry] serviceId="
+                + context.getHeader().getServiceId());
+        System.out.println(" ==============================================[BcSampleFacade.inquiry] guid="
+                + context.getHeader().getGuid());
+        System.out.println(" ==============================================[BcSampleFacade.inquiry] body=" + body);
+
+        Map<String, Object> result = service.inquiry(body, context);
+
+        System.out.println(" ==============================================[BcSampleFacade.inquiry] resultKeys=" + result.keySet());
+        System.out.println(" ==============================================[BcSampleFacade.inquiry] end");
+        return result;
     }
 }

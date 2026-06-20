@@ -31,7 +31,7 @@ ALL_MODULES=(
   ct-service:ct.war:ct.war:ct
   mg-service:mg.war:mg.war:mg
   om-service:om.war:om.war:om
-  common-updownload:ud.war:ud.war:ud
+  tcf-om:tcf-om.war:ud.war:ud
 )
 
 usage() {
@@ -63,7 +63,7 @@ resolve_entry() {
     return 0
   fi
   if [[ "${code}" == "common-updownload" || "${code}" == "ud" ]]; then
-    echo "common-updownload:ud.war:ud.war:ud"
+    echo "tcf-om:tcf-om.war:ud.war:ud"
     return 0
   fi
   for entry in "${ALL_MODULES[@]}"; do
@@ -134,7 +134,7 @@ fi
 
 if [[ "${deploy_all}" -eq 1 ]]; then
   selected=("${ALL_MODULES[@]}")
-  gradle_tasks=(buildBusinessWars :common-updownload:bootWar)
+  gradle_tasks=(buildBusinessWars :tcf-om:bootWar)
   echo "[deploy] Building all WAR files ..."
 else
   for local_code in "$@"; do

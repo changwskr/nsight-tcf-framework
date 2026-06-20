@@ -42,7 +42,7 @@ StandardResponse<Object> response = tcfGateway.invoke(
 ## 의존 관계
 
 ```text
-tcf-util → tcf-core → tcf-web → *-service / common-updownload / tcf-om
+tcf-util → tcf-core → tcf-web → *-service / tcf-om
 ```
 
 ## 빌드

@@ -31,11 +31,14 @@ public class TcfProperties {
     public TransactionLogDataSource getTransactionLogDatasource() { return transactionLogDatasource; }
 
     public static class TransactionLogDataSource {
+        private boolean separate = true;
         private String url = TcfTransactionLogConstants.DEFAULT_DATASOURCE_URL;
         private String username = "sa";
         private String password = "";
         private String driverClassName = "org.h2.Driver";
 
+        public boolean isSeparate() { return separate; }
+        public void setSeparate(boolean separate) { this.separate = separate; }
         public String getUrl() { return url; }
         public void setUrl(String url) { this.url = url; }
         public String getUsername() { return username; }
