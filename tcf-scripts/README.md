@@ -2,6 +2,8 @@
 
 로컬 개발용 Gradle 래퍼 스크립트 모음입니다. **프로젝트 루트**에서 실행합니다.
 
+> 전체 스크립트 맵 (ztomcat, tcf-cicd, 모듈 scripts): [docs/architecture/38-script.md](../docs/architecture/38-script.md)
+
 ## run-local — 서비스 기동
 
 ```bash

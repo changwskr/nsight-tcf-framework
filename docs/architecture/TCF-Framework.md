@@ -336,6 +336,7 @@ E-{영역}-{분류}-{번호}
 - `docs/architecture/35-BTF.md`
 - `docs/architecture/36-ETF.md`
 - `docs/architecture/37-transaction-log.md`
+- `docs/architecture/38-script.md`
 - `docs/architecture/08-timeout.md`
 - `docs/architecture/09-transaction log.md`
 - `docs/architecture/10-session.md`

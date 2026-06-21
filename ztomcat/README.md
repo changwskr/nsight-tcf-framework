@@ -425,6 +425,7 @@ Spring Boot 기동 성공 시 `Started *Application` 로그가 context별로 출
 
 - [프로젝트 README](../README.md) — 전체 가이드·모듈·포트
 - [tcf-scripts/README.md](../tcf-scripts/README.md) — Gradle 빌드·Tomcat 배포
+- [docs/architecture/38-script.md](../docs/architecture/38-script.md) — 전체 스크립트 맵·시나리오
 - [tcf-ui/README.md](../tcf-ui/README.md) — 브라우저 Relay·OM Admin UI
 - [tcf-batch/README.md](../tcf-batch/README.md) — 대시보드 수집 배치
 - [tcf-om/README.md](../tcf-om/README.md) — OM 운영 API (tcf-om vs om-service)

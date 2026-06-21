@@ -41,6 +41,7 @@
 | BTF 업무 계층 | [35-BTF.md](35-BTF.md) |
 | ETF 후처리 | [36-ETF.md](36-ETF.md) |
 | 트랜잭션 로그 처리 | [37-transaction-log.md](37-transaction-log.md) |
+| 스크립트 (빌드·배포) | [38-script.md](38-script.md) |
 | 모듈 재구성 이력 | [TCF_MODULE_RESTRUCTURE.md](../TCF_MODULE_RESTRUCTURE.md) |
 | 소스 인덱스 | [SOURCE_INDEX.md](../SOURCE_INDEX.md) |
 | Tomcat 배포 | [ztomcat/README.md](../../ztomcat/README.md) |
