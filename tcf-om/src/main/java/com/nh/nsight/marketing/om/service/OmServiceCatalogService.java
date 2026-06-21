@@ -29,7 +29,7 @@ public class OmServiceCatalogService {
     public Map<String, Object> inquiry(Map<String, Object> body, TransactionContext context) {
         rule.validateOperation(context);
         Map<String, Object> criteria = new HashMap<>();
-        copyIfPresent(body, criteria, "businessCode", "serviceId", "useYn");
+        copyIfPresent(body, criteria, "businessCode", "serviceId", "useYn", "pageNo", "pageSize");
         rule.normalizePaging(criteria);
 
         List<Map<String, Object>> rows = dao.searchServiceCatalog(criteria);

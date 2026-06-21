@@ -22,6 +22,23 @@
     return uiContext + normalized;
   };
 
+  function injectErrorPopup() {
+    if (window.NsightErrorPopup || document.querySelector('script[data-nsight-error-popup]')) {
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = uiContext + '/_shared/error-popup.js';
+    script.defer = true;
+    script.setAttribute('data-nsight-error-popup', '');
+    document.head.appendChild(script);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectErrorPopup);
+  } else {
+    injectErrorPopup();
+  }
+
   if (!uiContext) {
     return;
   }

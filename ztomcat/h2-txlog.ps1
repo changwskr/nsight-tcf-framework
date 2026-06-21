@@ -164,8 +164,8 @@ function Show-H2Status {
 }
 
 switch ($Action) {
-    'start' { Start-H2Server }
-    'stop' { Stop-H2Server }
-    'restart' { Stop-H2Server; Start-H2Server }
+    'start' { Start-H2Server; exit 0 }
+    'stop' { Stop-H2Server; exit 0 }
+    'restart' { Stop-H2Server; Start-H2Server; exit 0 }
     'status' { Show-H2Status }
 }

@@ -126,7 +126,10 @@
 
       const { body, relay } = await OmAdmin.inquiry('serviceCatalog', readFilters());
       const rows = body.rows || [];
-      statusEl.textContent = `${relay.elapsedMs}ms · 페이지 ${body.pageNo || page} · 총 ${body.totalCount ?? 0}건`;
+      const pageSize = body.pageSize || PAGE_SIZE;
+      const totalCount = body.totalCount ?? 0;
+      const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+      statusEl.textContent = `${relay.elapsedMs}ms · 페이지 ${body.pageNo || page} / ${totalPages} · 총 ${totalCount}건 · 페이지당 ${pageSize}건`;
 
       if (!rows.length) {
         tbody.innerHTML = '<tr><td colspan="11" class="om-empty">등록된 ServiceId가 없습니다.</td></tr>';
@@ -164,10 +167,13 @@
       OmAdmin.renderPagination(
         document.getElementById('pagination'),
         body.pageNo || page,
-        body.pageSize || PAGE_SIZE,
-        body.totalCount || 0,
-        p => loadList(p, el).catch(e => OmAdmin.showErrorBanner(el, e.message)),
-        true
+        pageSize,
+        totalCount,
+        p => {
+          loadList(p, el).catch(e => OmAdmin.showErrorBanner(el, e.message));
+          document.getElementById('pagination')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        },
+        false
       );
     }
 

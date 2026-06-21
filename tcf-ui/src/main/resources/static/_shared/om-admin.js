@@ -142,6 +142,48 @@ window.OmAdmin = (function () {
     return fetch(uiPath(path), init);
   }
 
+  let errorPopupReady = null;
+  function ensureErrorPopupReady() {
+    if (window.NsightErrorPopup) {
+      return Promise.resolve(window.NsightErrorPopup);
+    }
+    if (!errorPopupReady) {
+      errorPopupReady = new Promise(resolve => {
+        const finish = () => resolve(window.NsightErrorPopup || null);
+        if (document.querySelector('script[data-nsight-error-popup]')) {
+          const wait = setInterval(() => {
+            if (window.NsightErrorPopup) {
+              clearInterval(wait);
+              finish();
+            }
+          }, 30);
+          setTimeout(() => {
+            clearInterval(wait);
+            finish();
+          }, 3000);
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = uiContextPrefix() + '/_shared/error-popup.js';
+        script.setAttribute('data-nsight-error-popup', '');
+        script.onload = finish;
+        script.onerror = finish;
+        document.head.appendChild(script);
+      });
+    }
+    return errorPopupReady;
+  }
+
+  async function showErrorPopup(info) {
+    const popup = await ensureErrorPopupReady();
+    if (popup) popup.show(info);
+  }
+
+  async function notifyTransactionError(payload, relay, fallbackMessage) {
+    const popup = await ensureErrorPopupReady();
+    if (popup) popup.show(popup.fromPayload(payload, relay, fallbackMessage));
+  }
+
   async function parseRelayResponse(res) {
     const text = await res.text();
     let relay;
@@ -386,11 +428,14 @@ window.OmAdmin = (function () {
           ? 'tcf-om(/om)에 연결할 수 없습니다. Tomcat 기동 상태를 확인하세요.'
           : 'tcf-om(8097)에 연결할 수 없습니다. tcf-om을 먼저 실행하세요.';
       }
+      await notifyTransactionError(payload, relay, msg || `HTTP ${relay.httpStatus}`);
       throw new Error(msg || `HTTP ${relay.httpStatus}`);
     }
     if (payload.result && payload.result.resultCode && payload.result.resultCode !== 'S0000') {
       const detail = payload.result.errorDetail ? ` (${payload.result.errorDetail})` : '';
-      throw new Error((payload.result.errorMessage || payload.result.resultMessage || '거래 오류') + detail);
+      const msg = (payload.result.errorMessage || payload.result.resultMessage || '거래 오류') + detail;
+      await notifyTransactionError(payload, relay, msg);
+      throw new Error(msg);
     }
     return { payload, relay, body: payload.body || {} };
   }
@@ -785,6 +830,11 @@ window.OmAdmin = (function () {
   }
 
   async function initPage(pageId, title, renderFn) {
+    if (!window.__NSIGHT_UI_CONTEXT_INIT__) {
+      const script = document.createElement('script');
+      script.src = uiContextPrefix() + '/_shared/ui-context.js';
+      document.head.appendChild(script);
+    }
     const session = await requireAuth();
     if (!session) {
       return;
@@ -800,6 +850,11 @@ window.OmAdmin = (function () {
       prefetchCommonCodes(DEFAULT_PREFETCH_CODE_GROUPS, { useYn: 'Y' }).catch(() => {});
       await renderFn(container);
     } catch (err) {
+      showErrorPopup({
+        errorMessage: err.message || String(err),
+        errorDetail: err.stack || '',
+        systemNote: 'OM Admin 화면'
+      });
       showError(container, err.message || String(err));
     }
   }
@@ -810,7 +865,7 @@ window.OmAdmin = (function () {
     buildStandardHeader, relayMessage,
     chipForHealth, chipForResult,
     getSession, setSession, clearSession, requireAuth, logout, login,
-    inquiry, mutate, call, initPage, renderPagination, showError, showErrorBanner, loadConfig,
+    inquiry, mutate, call, initPage, renderPagination, showError, showErrorBanner, showErrorPopup, loadConfig,
     resolveBatchServiceUrl, resolveBatchLabel,
     updownloadQuery, updownloadBaseUrl, updownloadList, updownloadUpload, updownloadDelete, updownloadDownloadUrl,
     updownloadDetail, updownloadUpdate,

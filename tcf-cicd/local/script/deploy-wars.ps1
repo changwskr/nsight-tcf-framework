@@ -124,15 +124,22 @@ function Remove-LegacyOmArtifacts {
 }
 
 function Resolve-Gradle {
-    if ($env:GRADLE_HOME_OVERRIDE -and (Test-Path "$env:GRADLE_HOME_OVERRIDE\bin\gradle.bat")) {
-        return "$env:GRADLE_HOME_OVERRIDE\bin\gradle.bat"
+    $candidates = @()
+    if ($env:GRADLE_HOME_OVERRIDE) {
+        $candidates += (Join-Path $env:GRADLE_HOME_OVERRIDE 'bin\gradle.bat')
     }
-    if ($env:GRADLE_HOME -and (Test-Path "$env:GRADLE_HOME\bin\gradle.bat")) {
-        return "$env:GRADLE_HOME\bin\gradle.bat"
+    if ($env:GRADLE_HOME) {
+        $candidates += (Join-Path $env:GRADLE_HOME 'bin\gradle.bat')
     }
     $cmd = Get-Command gradle -ErrorAction SilentlyContinue
-    if ($cmd) { return $cmd.Source }
-    throw 'gradle not found. Set GRADLE_HOME or add gradle to PATH.'
+    if ($cmd) { $candidates += $cmd.Source }
+
+    foreach ($candidate in $candidates) {
+        if ($candidate -and (Test-Path -LiteralPath $candidate)) {
+            return (Resolve-Path -LiteralPath $candidate).Path
+        }
+    }
+    throw 'gradle not found. Set GRADLE_HOME (quote paths with parentheses) or add gradle to PATH.'
 }
 
 function Resolve-Modules {
@@ -237,9 +244,10 @@ try {
                 }
             }
             Write-Host "[deploy-wars] gradle $($tasks -join ' ')"
-            & $Gradle @tasks
+            $gradleArgs = [string[]]$tasks
+            & $Gradle @gradleArgs
         }
-        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        if ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     }
 
     Write-Host '[deploy-wars] removing stale exploded directories ...'

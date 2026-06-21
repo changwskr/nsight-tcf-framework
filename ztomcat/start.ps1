@@ -22,12 +22,12 @@ $env:CATALINA_BASE = $CatalinaHome
 & (Join-Path $ZTomcatHome 'apply-config.ps1')
 
 & (Join-Path $ZTomcatHome 'h2-txlog.ps1') -Action start
-if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+if ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 if ($env:ZTOMCAT_SKIP_DEPLOY -ne '1') {
     Write-Host '[ztomcat] Building and deploying batch.war, ui.war to Tomcat webapps ...'
     & (Join-Path $ZTomcatHome 'deploy-wars.bat') batch ui
-    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+    if ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 } else {
     Write-Host '[ztomcat] Skip WAR deploy (ZTOMCAT_SKIP_DEPLOY=1)'
 }

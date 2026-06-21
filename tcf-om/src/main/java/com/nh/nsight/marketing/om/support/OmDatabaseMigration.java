@@ -65,40 +65,10 @@ public class OmDatabaseMigration implements ApplicationRunner {
                 MERGE INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN) KEY (MENU_ID)
                 VALUES (?, ?, ?, NULL, ?, ?)
                 """, "OM_FIL", "파일 관리", "/om/admin/file-management.html", 10, "Y");
-        jdbcTemplate.update("""
-                MERGE INTO OM_SERVICE_CATALOG (CATALOG_ID, BUSINESS_CODE, SERVICE_ID, TRANSACTION_CODE,
-                                               PROCESSING_TYPE, HANDLER_CLASS, AUTH_CODE, AUDIT_YN,
-                                               TIMEOUT_SEC, USE_YN, DESCRIPTION)
-                KEY (CATALOG_ID)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                "CAT-036", "OM", "OM.TransactionLog.deleteAll", "OM-TXL-0002", "DELETE",
-                "OmTransactionLogDeleteAllHandler", "ROLE_OM_TXL", "Y", 30, "Y", "거래로그 전체 삭제");
-        mergeServiceCatalog("CAT-037", "OM.ServiceCatalog.save", "OM-SVC-0002", "UPDATE",
-                "OmServiceCatalogSaveHandler", "ServiceId 등록");
-        mergeServiceCatalog("CAT-038", "OM.ServiceCatalog.detail", "OM-SVC-0003", "INQUIRY",
-                "OmServiceCatalogDetailHandler", "ServiceId 상세");
-        mergeServiceCatalog("CAT-039", "OM.ServiceCatalog.update", "OM-SVC-0004", "UPDATE",
-                "OmServiceCatalogUpdateHandler", "ServiceId 수정");
-        mergeServiceCatalog("CAT-040", "OM.ServiceCatalog.delete", "OM-SVC-0005", "DELETE",
-                "OmServiceCatalogDeleteHandler", "ServiceId 삭제");
-        mergeServiceCatalog("CAT-041", "OM.ErrorCode.detail", "OM-ERR-0003", "INQUIRY",
-                "OmErrorCodeDetailHandler", "오류코드 상세");
-        mergeServiceCatalog("CAT-042", "OM.ErrorCode.update", "OM-ERR-0004", "UPDATE",
-                "OmErrorCodeUpdateHandler", "오류코드 수정");
-        mergeServiceCatalog("CAT-043", "OM.ErrorCode.delete", "OM-ERR-0005", "DELETE",
-                "OmErrorCodeDeleteHandler", "오류코드 삭제");
-        jdbcTemplate.update("""
-                MERGE INTO OM_SERVICE_CATALOG (CATALOG_ID, BUSINESS_CODE, SERVICE_ID, TRANSACTION_CODE,
-                                               PROCESSING_TYPE, HANDLER_CLASS, AUTH_CODE, AUDIT_YN,
-                                               TIMEOUT_SEC, USE_YN, DESCRIPTION)
-                KEY (CATALOG_ID)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                "CAT-044", "OM", "OM.Batch.deleteAll", "OM-BAT-0003", "DELETE",
-                "OmBatchDeleteAllHandler", "ROLE_OM_BAT", "Y", 30, "Y", "배치 실행이력 전체 삭제");
+        ServiceCatalogSeedData.mergeAll(jdbcTemplate);
         seedAuthCodeCommonCodes();
         seedCacheNameCommonCodes();
+        seedBusinessAuthCodes();
         repairCorruptedUtf8SeedData();
         log.debug("OM schema migration applied.");
     }
@@ -148,7 +118,36 @@ public class OmDatabaseMigration implements ApplicationRunner {
                 Map.entry("CAT-037", "ServiceId 등록"),
                 Map.entry("CAT-038", "ServiceId 상세"),
                 Map.entry("CAT-039", "ServiceId 수정"),
-                Map.entry("CAT-040", "ServiceId 삭제")
+                Map.entry("CAT-040", "ServiceId 삭제"),
+                Map.entry("CAT-044", "배치 실행이력 전체 삭제"),
+                Map.entry("CAT-045", "OM 샘플 조회"),
+                Map.entry("CAT-046", "CC 샘플 조회"),
+                Map.entry("CAT-047", "IC 샘플 조회"),
+                Map.entry("CAT-048", "PC 샘플 조회"),
+                Map.entry("CAT-049", "BC 샘플 조회"),
+                Map.entry("CAT-050", "MS 샘플 조회"),
+                Map.entry("CAT-051", "PD 샘플 조회"),
+                Map.entry("CAT-052", "CM 샘플 조회"),
+                Map.entry("CAT-053", "EB 샘플 조회"),
+                Map.entry("CAT-054", "EP 샘플 조회"),
+                Map.entry("CAT-055", "BP 샘플 조회"),
+                Map.entry("CAT-056", "BD 샘플 조회"),
+                Map.entry("CAT-057", "SS 샘플 조회"),
+                Map.entry("CAT-058", "CS 샘플 조회"),
+                Map.entry("CAT-059", "CT 샘플 조회"),
+                Map.entry("CAT-060", "MG 샘플 조회"),
+                Map.entry("CAT-061", "고객 상세 조회"),
+                Map.entry("CAT-062", "고객 등록"),
+                Map.entry("CAT-063", "캠페인 목록 조회"),
+                Map.entry("CAT-064", "메시지 발송"),
+                Map.entry("CAT-065", "파일 목록 조회"),
+                Map.entry("CAT-066", "파일 업로드"),
+                Map.entry("CAT-067", "파일 다운로드"),
+                Map.entry("CAT-068", "파일 상세 조회"),
+                Map.entry("CAT-069", "파일 메타 수정"),
+                Map.entry("CAT-070", "파일 삭제"),
+                Map.entry("CAT-071", "거래 I/O 목록 (레거시)"),
+                Map.entry("CAT-072", "거래 I/O 상세 (레거시)")
         );
         catalogDescriptions.forEach((catalogId, description) ->
                 jdbcTemplate.update(
@@ -164,6 +163,38 @@ public class OmDatabaseMigration implements ApplicationRunner {
         mergeCommonCode("BUSINESS_CODE", "CC", "Contact Center", 6, "컨택센터", ts);
         mergeCommonCode("BUSINESS_CODE", "MG", "Message", 7, "메시지 발송", ts);
         mergeCommonCode("BUSINESS_CODE", "ET", "Enterprise", 8, "엔터프라이즈(미사용)", ts);
+        mergeCommonCode("BUSINESS_CODE", "IC", "Integration Customer", 9, "통합고객 연계", ts);
+        mergeCommonCode("BUSINESS_CODE", "PC", "Private Customer", 10, "개인고객", ts);
+        mergeCommonCode("BUSINESS_CODE", "MS", "Mini Single View", 11, "미니 통합고객", ts);
+        mergeCommonCode("BUSINESS_CODE", "PD", "Product", 12, "상품", ts);
+        mergeCommonCode("BUSINESS_CODE", "EB", "EBM", 13, "EBM", ts);
+        mergeCommonCode("BUSINESS_CODE", "EP", "Event Processing", 14, "이벤트 처리", ts);
+        mergeCommonCode("BUSINESS_CODE", "BP", "Behavior Processing", 15, "행동 처리", ts);
+        mergeCommonCode("BUSINESS_CODE", "SS", "Sales Support", 16, "영업 지원", ts);
+        mergeCommonCode("BUSINESS_CODE", "CS", "Common Service", 17, "공통 서비스", ts);
+        mergeCommonCode("BUSINESS_CODE", "CT", "Contents", 18, "콘텐츠", ts);
+        mergeCommonCode("BUSINESS_CODE", "UD", "UpDownload", 19, "파일 업·다운로드", ts);
+    }
+
+    private void seedBusinessAuthCodes() {
+        String ts = DateTimeUtil.nowKst();
+        mergeCommonCode("AUTH_CODE", "ROLE_CC_INQ", "CC 조회", 14, "Contact Center 조회", ts);
+        mergeCommonCode("AUTH_CODE", "ROLE_IC_INQ", "IC 조회", 15, "Integration Customer 조회", ts);
+        mergeCommonCode("AUTH_CODE", "ROLE_PC_INQ", "PC 조회", 16, "Private Customer 조회", ts);
+        mergeCommonCode("AUTH_CODE", "ROLE_BC_INQ", "BC 조회", 17, "Business Customer 조회", ts);
+        mergeCommonCode("AUTH_CODE", "ROLE_MS_INQ", "MS 조회", 18, "Mini Single View 조회", ts);
+        mergeCommonCode("AUTH_CODE", "ROLE_PD_INQ", "PD 조회", 19, "Product 조회", ts);
+        mergeCommonCode("AUTH_CODE", "ROLE_CM_INQ", "CM 조회", 20, "Campaign 조회", ts);
+        mergeCommonCode("AUTH_CODE", "ROLE_EB_INQ", "EB 조회", 21, "EBM 조회", ts);
+        mergeCommonCode("AUTH_CODE", "ROLE_EP_INQ", "EP 조회", 22, "Event Processing 조회", ts);
+        mergeCommonCode("AUTH_CODE", "ROLE_BP_INQ", "BP 조회", 23, "Behavior Processing 조회", ts);
+        mergeCommonCode("AUTH_CODE", "ROLE_BD_INQ", "BD 조회", 24, "Behavior Data 조회", ts);
+        mergeCommonCode("AUTH_CODE", "ROLE_SS_INQ", "SS 조회", 25, "Sales Support 조회", ts);
+        mergeCommonCode("AUTH_CODE", "ROLE_CS_INQ", "CS 조회", 26, "Common Service 조회", ts);
+        mergeCommonCode("AUTH_CODE", "ROLE_CT_INQ", "CT 조회", 27, "Contents 조회", ts);
+        mergeCommonCode("AUTH_CODE", "ROLE_MG_INQ", "MG 조회", 28, "Message 조회/발송", ts);
+        mergeCommonCode("AUTH_CODE", "ROLE_UD_FIL", "UD 파일", 29, "파일 업·다운로드", ts);
+        mergeCommonCode("AUTH_CODE", "ROLE_ET_INQ", "ET 조회", 30, "Enterprise (레거시)", ts);
     }
 
     private void seedAuthCodeCommonCodes() {
@@ -199,19 +230,6 @@ public class OmDatabaseMigration implements ApplicationRunner {
                 VALUES (?, ?, ?, ?, 'Y', ?, ?, ?)
                 """,
                 codeGroup, code, codeName, sortOrder, description, timestamp, timestamp);
-    }
-
-    private void mergeServiceCatalog(String catalogId, String serviceId, String transactionCode,
-                                     String processingType, String handlerClass, String description) {
-        jdbcTemplate.update("""
-                MERGE INTO OM_SERVICE_CATALOG (CATALOG_ID, BUSINESS_CODE, SERVICE_ID, TRANSACTION_CODE,
-                                               PROCESSING_TYPE, HANDLER_CLASS, AUTH_CODE, AUDIT_YN,
-                                               TIMEOUT_SEC, USE_YN, DESCRIPTION)
-                KEY (CATALOG_ID)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                catalogId, "OM", serviceId, transactionCode, processingType,
-                handlerClass, "ROLE_OM_SVC", "Y", 5, "Y", description);
     }
 
     private void ensureSessionStatusTable() {

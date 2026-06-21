@@ -44,21 +44,29 @@ Framework root: $FwRoot
 if ($Help) { Show-Help; exit 0 }
 
 function Resolve-Gradle {
-    if ($env:GRADLE_HOME_OVERRIDE -and (Test-Path "$env:GRADLE_HOME_OVERRIDE\bin\gradle.bat")) {
-        return "$env:GRADLE_HOME_OVERRIDE\bin\gradle.bat"
+    $candidates = @()
+    if ($env:GRADLE_HOME_OVERRIDE) {
+        $candidates += (Join-Path $env:GRADLE_HOME_OVERRIDE 'bin\gradle.bat')
     }
-    if ($env:GRADLE_HOME -and (Test-Path "$env:GRADLE_HOME\bin\gradle.bat")) {
-        return "$env:GRADLE_HOME\bin\gradle.bat"
+    if ($env:GRADLE_HOME) {
+        $candidates += (Join-Path $env:GRADLE_HOME 'bin\gradle.bat')
     }
     $cmd = Get-Command gradle -ErrorAction SilentlyContinue
-    if ($cmd) { return $cmd.Source }
-    throw 'gradle not found. Set GRADLE_HOME or add gradle to PATH.'
+    if ($cmd) { $candidates += $cmd.Source }
+
+    foreach ($candidate in $candidates) {
+        if ($candidate -and (Test-Path -LiteralPath $candidate)) {
+            return (Resolve-Path -LiteralPath $candidate).Path
+        }
+    }
+    throw 'gradle not found. Set GRADLE_HOME (quote paths with parentheses) or add gradle to PATH.'
 }
 
 if (-not $SkipSync) {
     if (-not (Test-Path $SyncScript)) { throw "sync script not found: $SyncScript" }
     Write-Host '[build-all] sync local config -> framework'
-    & $SyncScript -Profile local
+    $syncParams = @{ Profile = 'local' }
+    & $SyncScript @syncParams
 }
 
 $Gradle = Resolve-Gradle
@@ -83,8 +91,9 @@ try {
     }
 
     Write-Host "[build-all] gradle $($tasks -join ' ')"
-    & $Gradle @tasks
-    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+    $gradleArgs = [string[]]$tasks
+    & $Gradle @gradleArgs
+    if ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     Write-Host "[build-all] Done ($Target)"
 }
 finally {

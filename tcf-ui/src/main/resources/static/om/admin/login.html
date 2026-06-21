@@ -69,6 +69,10 @@
         } catch (err) {
           errorEl.textContent = err.message || '로그인에 실패했습니다.';
           errorEl.hidden = false;
+          OmAdmin.showErrorPopup({
+            errorMessage: err.message || '로그인에 실패했습니다.',
+            systemNote: 'OM 로그인'
+          });
         } finally {
           submitBtn.disabled = false;
           submitBtn.textContent = '로그인';

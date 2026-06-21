@@ -1,5 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:nsight_sv;MODE=Oracle;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    hikari:
+      pool-name: nsight-sv-hikari-test
+  session:
+    store-type: none
+
 nsight:
   tcf:
+    transaction-log-enabled: true
+    transaction-log-schema-auto-init: true
     transaction-log-datasource:
       url: jdbc:h2:mem:nsight_sv_txlog;MODE=Oracle;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
       username: sa

@@ -1,6 +1,66 @@
 let modules = [];
 let config = {};
 
+(function bootstrapUiShared() {
+  const prefix = (location.pathname.startsWith('/ui/') || location.pathname === '/ui') ? '/ui' : '';
+  if (!window.__NSIGHT_UI_CONTEXT_INIT__) {
+    const script = document.createElement('script');
+    script.src = prefix + '/_shared/ui-context.js';
+    document.head.appendChild(script);
+  }
+})();
+
+function uiPrefix() {
+  return (location.pathname.startsWith('/ui/') || location.pathname === '/ui') ? '/ui' : '';
+}
+
+function ensureErrorPopupReady() {
+  if (window.NsightErrorPopup) {
+    return Promise.resolve(window.NsightErrorPopup);
+  }
+  return new Promise(resolve => {
+    const finish = () => resolve(window.NsightErrorPopup || null);
+    const existing = document.querySelector('script[data-nsight-error-popup]');
+    if (existing) {
+      const wait = setInterval(() => {
+        if (window.NsightErrorPopup) {
+          clearInterval(wait);
+          finish();
+        }
+      }, 30);
+      setTimeout(() => {
+        clearInterval(wait);
+        finish();
+      }, 3000);
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = uiPrefix() + '/_shared/error-popup.js';
+    script.setAttribute('data-nsight-error-popup', '');
+    script.onload = finish;
+    script.onerror = finish;
+    document.head.appendChild(script);
+  });
+}
+
+async function showRelayError(result, parsed, message) {
+  const popup = await ensureErrorPopupReady();
+  if (!popup) {
+    alert(message || '거래 처리 중 오류가 발생했습니다.');
+    return;
+  }
+  if (parsed && parsed.result) {
+    popup.show(popup.fromPayload(parsed, result, message));
+  } else {
+    popup.show({
+      errorMessage: message || `HTTP ${result.httpStatus}`,
+      httpStatus: result.httpStatus,
+      targetUrl: result.targetUrl,
+      systemNote: '온라인 거래 테스트'
+    });
+  }
+}
+
 const businessCodeEl = document.getElementById('businessCode');
 const deploymentModeEl = document.getElementById('deploymentMode');
 const bootrunHostEl = document.getElementById('bootrunHost');
@@ -91,7 +151,13 @@ async function sendRequest() {
   try {
     payload = JSON.parse(requestBodyEl.value);
   } catch (error) {
-    alert('요청 JSON 형식이 올바르지 않습니다.');
+    ensureErrorPopupReady().then(popup => {
+      if (popup) {
+        popup.show(popup.fromError(error, { systemNote: '요청 JSON 파싱' }));
+      } else {
+        alert('요청 JSON 형식이 올바르지 않습니다.');
+      }
+    });
     return;
   }
 
@@ -115,10 +181,19 @@ async function sendRequest() {
     <span>${result.elapsedMs} ms</span>
     <span>${result.targetUrl}</span>
   `;
+  let parsed = null;
   try {
-    responseBodyEl.value = JSON.stringify(JSON.parse(result.responseBody), null, 2);
+    parsed = JSON.parse(result.responseBody);
+    responseBodyEl.value = JSON.stringify(parsed, null, 2);
   } catch (error) {
     responseBodyEl.value = result.responseBody || '';
+  }
+  if (!ok) {
+    await showRelayError(result, parsed, `HTTP ${result.httpStatus} 응답`);
+    return;
+  }
+  if (parsed?.result?.resultCode && parsed.result.resultCode !== 'S0000') {
+    await showRelayError(result, parsed);
   }
 }
 
@@ -133,5 +208,11 @@ document.getElementById('reloadSampleBtn').addEventListener('click', () => selec
 document.getElementById('sendBtn').addEventListener('click', sendRequest);
 
 init().catch(error => {
-  alert('화면 초기화 실패: ' + error.message);
+  ensureErrorPopupReady().then(popup => {
+    if (popup) {
+      popup.show(popup.fromError(error, { systemNote: '화면 초기화' }));
+    } else {
+      alert('화면 초기화 실패: ' + error.message);
+    }
+  });
 });
