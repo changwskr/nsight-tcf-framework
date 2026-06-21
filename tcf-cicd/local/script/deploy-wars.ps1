@@ -7,7 +7,7 @@ param(
     [switch]$ExcludeBatch,
     [switch]$SkipBatchCollect,
     [switch]$Help,
-    [Parameter(ValueFromRemainingArguments = $true)]
+    [Parameter(Position = 0, ValueFromRemainingArguments = $true)]
     [string[]]$Codes = @(),
     [ValidateSet('dev', 'local')]
     [string]$SyncProfile = 'dev'

@@ -26,30 +26,32 @@ public class TCF {
 
     public StandardResponse<Object> process(StandardRequest<Map<String, Object>> request) {
         TransactionContext context = null;
-        TcfConsoleLog.println("\n ===================================================[TCF.process] start");
+        TcfConsoleLog
+                .println("\n ====================================================================[TCF.process] start");
         try {
             logClientRequest(request);
 
-            TcfConsoleLog.println(" ================[TCF.process] STF START");
+            TcfConsoleLog.println(" ======================================[TCF.process] STF START");
             context = stf.preProcess(request);
-            TcfConsoleLog.println(" ================[TCF.process] STF END");
+            TcfConsoleLog.println(" ======================================[TCF.process] STF END");
 
-            TcfConsoleLog.println(" ================[TCF.process] DISPATCHER  START");
+            TcfConsoleLog.println(" ======================================[TCF.process] DISPATCHER  START");
             Object body = dispatcher.dispatch(request, context);
-            TcfConsoleLog.println(" ================[TCF.process] DISPATCHER END");
+            TcfConsoleLog.println(" ======================================[TCF.process] DISPATCHER END");
 
-            TcfConsoleLog.println(" ================[TCF.process] ETF START");
+            TcfConsoleLog.println(" ======================================[TCF.process] ETF START");
             StandardResponse<Object> response = etf.success(request, body, context);
-            TcfConsoleLog.println(" ================[TCF.process] ETF END");
+            TcfConsoleLog.println(" ======================================[TCF.process] ETF END");
 
             logClientResponse(response);
-            TcfConsoleLog.println(" ===============================================[TCF.process] end (success)");
+            TcfConsoleLog.println(
+                    " =============================================================[TCF.process] end (success)");
             return response;
         } catch (BusinessException e) {
-            TcfConsoleLog.println(" ==============================================[TCF.process] etf.businessFail");
+            TcfConsoleLog.println(" =====================================[TCF.process] ETF.businessFail START");
             StandardResponse<Object> response = etf.businessFail(request, e, context);
             logClientResponse(response);
-            TcfConsoleLog.println(" ==============================================[TCF.process] end (businessFail)");
+            TcfConsoleLog.println(" ====================================[TCF.process] end (businessFail)");
             return response;
         } catch (Exception e) {
             TcfConsoleLog.println(" ===============================================[TCF.process] etf.systemError");
@@ -65,7 +67,8 @@ public class TCF {
     }
 
     private void logClientRequest(StandardRequest<Map<String, Object>> request) {
-        TcfConsoleLog.println(" =====[TCF.logClientRequest] client request (incoming)");
+        TcfConsoleLog
+                .println(" ======================================[TCF.logClientRequest] client request (incoming)");
         if (request == null) {
             TcfConsoleLog.println("  request=null");
             return;
@@ -95,7 +98,8 @@ public class TCF {
     }
 
     private void logClientResponse(StandardResponse<Object> response) {
-        TcfConsoleLog.println(" =====[TCF.logClientRequest] client response (outgoing)");
+        TcfConsoleLog
+                .println(" ======================================[TCF.logClientRequest] client response (outgoing)");
         if (response == null) {
             TcfConsoleLog.println("  response=null");
             return;
