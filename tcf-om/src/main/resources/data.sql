@@ -51,6 +51,7 @@ INSERT INTO OM_SERVICE_CATALOG (CATALOG_ID, BUSINESS_CODE, SERVICE_ID, TRANSACTI
 ('CAT-019', 'OM', 'OM.CommonCode.delete', 'OM-CDC-0005', 'DELETE', 'OmCommonCodeDeleteHandler', 'ROLE_OM_CDC', 'Y', 5, 'Y', '공통코드 삭제'),
 ('CAT-020', 'OM', 'OM.ErrorCode.save', 'OM-ERR-0002', 'UPDATE', 'OmErrorCodeSaveHandler', 'ROLE_OM_ERR', 'Y', 5, 'Y', '오류코드 등록'),
 ('CAT-021', 'OM', 'OM.Batch.execute', 'OM-BAT-0002', 'EXECUTE', 'OmBatchExecuteHandler', 'ROLE_OM_BAT', 'Y', 30, 'Y', '배치 재실행'),
+('CAT-044', 'OM', 'OM.Batch.deleteAll', 'OM-BAT-0003', 'DELETE', 'OmBatchDeleteAllHandler', 'ROLE_OM_BAT', 'Y', 30, 'Y', '배치 실행이력 전체 삭제'),
 ('CAT-022', 'OM', 'OM.FunctionAuth.inquiry', 'OM-FAU-0001', 'INQUIRY', 'OmFunctionAuthInquiryHandler', 'ROLE_OM_AUTH', 'N', 5, 'Y', '기능권한 조회'),
 ('CAT-023', 'OM', 'OM.DataAuth.inquiry', 'OM-DAU-0001', 'INQUIRY', 'OmDataAuthInquiryHandler', 'ROLE_OM_AUTH', 'N', 5, 'Y', '데이터권한 조회'),
 ('CAT-024', 'OM', 'OM.AuthHistory.inquiry', 'OM-AHT-0001', 'INQUIRY', 'OmAuthHistoryInquiryHandler', 'ROLE_OM_AUTH', 'Y', 10, 'Y', '권한이력 조회'),

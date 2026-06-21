@@ -260,7 +260,7 @@ public class SvSampleInquiryHandler implements TransactionHandler {
 | OM API | `:8097/om/online` | `:8080/om/online` |
 | OM UI | `:8099/om/admin/...` | `:8080/ui/om/admin/...` |
 | Batch | `:8098/batch/jobs/...` | `:8080/batch/jobs/...` |
-| Spring Profile | `bootrun` (batch 등) | `local,tomcat` |
+| Spring Profile | **`local`** | **`dev`** (ztomcat) / **`prod`** (운영) |
 
 ### 6.2 ztomcat Context 맵 (19 WAR)
 
@@ -293,7 +293,7 @@ public class NsightSvServiceApplication extends NsightWarBootstrap {
 }
 ```
 
-`application-tomcat.yml`이 `local,tomcat` 프로파일과 함께 로드되어 게이트웨이 URL·context 기반 설정이 적용된다.
+`application-dev.yml`·`application-prod.yml`이 Tomcat WAR 프로파일과 함께 로드되어 게이트웨이 URL·context 기반 설정이 적용된다.
 
 ---
 
@@ -390,8 +390,9 @@ Tomcat 모드에서는 `deployment-mode: tomcat`, `tomcat-gateway-url: http://lo
 
 프로파일별 수집 대상:
 
-- `application-bootrun.yml` — 개별 bootRun 포트 (8097, 8086 …)
-- `application-tomcat.yml` — `nsight.gateway.base-url` 기준 19 context
+- `application-local.yml` — 개별 bootRun 포트 (8097, 8086 …)
+- `application-dev.yml` — `nsight.gateway.base-url` 기준 19 context
+- `application-prod.yml` — 운영 게이트웨이 URL
 
 수동 실행:
 

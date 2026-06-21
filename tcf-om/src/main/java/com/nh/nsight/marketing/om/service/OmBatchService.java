@@ -138,6 +138,25 @@ public class OmBatchService {
         return result;
     }
 
+    public Map<String, Object> deleteAllHistories(Map<String, Object> body, TransactionContext context) {
+        rule.validateOperation(context);
+        rule.requireReason(body, "deleteReason");
+        if (!"DELETE_ALL".equals(OmBodySupport.stringValue(body, "confirmCode"))) {
+            throw new BusinessException("E-OM-VAL-0002", "confirmCode=DELETE_ALL 이 필요합니다.");
+        }
+
+        int deletedCount = dao.deleteAllBatchHistories();
+        String reason = OmBodySupport.stringValue(body, "deleteReason");
+        recorder.recordAdminAudit(context, "BATCH_HISTORY_DELETE_ALL", "배치 실행이력 전체 삭제", reason, "SUCCESS");
+        recorder.recordAuthHistory(context, "BATCH", "OM_BATCH_HISTORY", "all", "deleted:" + deletedCount, reason);
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("businessCode", "OM");
+        result.put("screen", "배치 실행이력 전체 삭제");
+        result.put("deletedCount", deletedCount);
+        return result;
+    }
+
     private void putIfPresent(Map<String, Object> body, Map<String, Object> criteria, String... keys) {
         for (String key : keys) {
             String value = OmBodySupport.stringValue(body, key);

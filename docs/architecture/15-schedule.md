@@ -165,16 +165,15 @@ Tomcat 통합 배포 중 조기 스케줄 실행을 막기 위한 안전장치:
 ## 8.1 공통 설정 위치
 
 - `tcf-batch/src/main/resources/application.yml`
-- `application-bootrun.yml`
-- `application-tomcat.yml`
+- `application-local.yml` / `application-dev.yml` / `application-prod.yml`
 - `tcf-om/src/main/resources/application.yml` (`session-cleanup`)
 
 ## 8.2 환경별 차이
 
-| 항목 | bootRun | tomcat |
-|------|---------|--------|
+| 항목 | local (bootRun) | dev / prod (Tomcat WAR) |
+|------|-----------------|-------------------------|
 | startup delay | 보통 0 | 대기 시간 큼 (배포 안정화) |
-| 대상 URL | 개별 포트 | 8080 게이트웨이 컨텍스트 |
+| 대상 URL | 개별 포트 | 게이트웨이 context |
 | 수집 대상 수 | 개발용 subset 가능 | 19 context 전체 |
 
 ---

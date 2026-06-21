@@ -5,7 +5,7 @@
 | 문서 번호 | 20 |
 | 제목 | Spring Environment Architecture (프로젝트별 Spring 설정) |
 | 상위 문서 | [architecture.md](architecture.md) |
-| 관련 문서 | [16-deploy.md](16-deploy.md), [19-tcf-table.md](19-tcf-table.md), [09-transaction log.md](09-transaction%20log.md), [10-session.md](10-session.md), [12-cache.md](12-cache.md), [13-batch.md](13-batch.md) |
+| 관련 문서 | [25-env-profile.md](25-env-profile.md), [24-env-spring-detail.md](24-env-spring-detail.md), [16-deploy.md](16-deploy.md), [19-tcf-table.md](19-tcf-table.md), [09-transaction log.md](09-transaction%20log.md), [10-session.md](10-session.md), [12-cache.md](12-cache.md), [13-batch.md](13-batch.md) |
 | 대상 | 프레임워크·업무·운영·인프라 담당자 |
 
 ---
@@ -52,23 +52,27 @@ tcf-util → tcf-core → tcf-web → (*-service | tcf-om | tcf-batch)
 
 ## 3. Spring 프로파일
 
+환경은 **`local` · `dev` · `prod`** 세 단계로 통일한다. 상세: [25-env-profile.md](25-env-profile.md).
+
 | 프로파일 | 활성화 시점 | 주요 효과 |
 |----------|-------------|-----------|
-| `local` | 업무·`tcf-om` `application.yml` 기본 | 로컬 H2, 개발 편의 설정 |
-| `bootrun` | `tcf-batch` bootRun (`build.gradle` systemProperty) | `context-path: /batch`, 소수 AP 수집 타겟 |
-| `tomcat` | ztomcat `setenv` — `-Dspring.profiles.active=local,tomcat` | 게이트웨이 URL, 파일 로깅, UI·배치·OM 오버라이드 |
+| `local` | bootRun 기본 (`application.yml`, `tcf-batch` `application-local.yml`) | 모듈별 포트, H2 로컬, UI `deployment-mode: bootrun` |
+| `dev` | ztomcat `setenv` — `-Dspring.profiles.active=dev` | 게이트웨이 8080, 파일 로깅, 19 WAR 수집·Relay |
+| `prod` | 운영 Tomcat — `-Dspring.profiles.active=prod` | `dev` 설정 + `NSIGHT_GATEWAY_BASE_URL` 등 운영 URL |
+
+`prod`는 프로파일 그룹으로 `dev`를 함께 로드한다 (`tcf-web` `spring.profiles.group.prod`).
 
 ### 3.1 프로파일별 설정 파일
 
-| 모듈 | 공통 | bootRun | Tomcat |
-|------|------|---------|--------|
-| `tcf-web` | `application.yml` | — | `application-tomcat.yml` (파일 로깅) |
-| `tcf-om` | `application.yml` | — | `application-tomcat.yml` (gateway, batch URL) |
-| `tcf-batch` | `application.yml` | `application-bootrun.yml` | `application-tomcat.yml` |
-| `tcf-ui` | `application.yml` | — | `application-tomcat.yml` (`deployment-mode: tomcat`) |
-| 업무 WAR | `application.yml` only | — | — (`tcf-web` tomcat yml만 상속) |
+| 모듈 | 공통 | local | dev | prod |
+|------|------|-------|-----|------|
+| `tcf-web` | `application.yml` | — | `application-dev.yml` | `application-prod.yml` |
+| `tcf-om` | `application.yml` | — | `application-dev.yml` | `application-prod.yml` |
+| `tcf-batch` | `application.yml` | `application-local.yml` | `application-dev.yml` | `application-prod.yml` |
+| `tcf-ui` | `application.yml` | — | `application-dev.yml` | `application-prod.yml` |
+| 업무 WAR | `application.yml` only | — | — | — (`tcf-web` dev/prod 상속) |
 
-Tomcat 통합 시 활성 프로파일 예: `local,tomcat`  
+ztomcat 통합 시 활성 프로파일: **`dev`**  
 상세 배포: [16-deploy.md](16-deploy.md).
 
 ---
@@ -131,7 +135,7 @@ nsight:
 | `nsight.txlog.path` | `{root}/data/nsight-txlog` | 거래로그 H2 공유 |
 | `file.encoding` | UTF-8 | 한글·전문 인코딩 |
 
-`tcf-batch:bootRun` 추가: `spring.profiles.active=bootrun`.
+`tcf-batch:bootRun` 추가: `spring.profiles.active=local`.
 
 ---
 
@@ -252,7 +256,7 @@ public class NsightXxServiceApplication extends NsightWarBootstrap { ... }
 | OM | `nsight.om.session-cleanup.fixed-rate-ms` | 10000 |
 | UD | `nsight.updownload.*` | storage-path, max size |
 
-**Tomcat 프로파일** (`application-tomcat.yml`):
+**`dev` 프로파일** (`application-dev.yml`):
 
 ```yaml
 nsight:
@@ -278,9 +282,9 @@ public class NsightTcfBatchApplication extends NsightWarBootstrap
 | DS | `nsight_om` file (OM과 공유) |
 | TCF | `transaction-log-enabled: false` |
 | Scheduling | `ApStatusCollectScheduler` 등 4종 `@Scheduled` |
-| Profile `bootrun` | `spring.servlet.context-path: /batch` |
-| Profile `bootrun` | 소수 모듈 Actuator 타겟 (OM, SV, CC, MG, UI, BATCH) |
-| Profile `tomcat` | 19 WAR 전체 게이트웨이 경로 타겟 |
+| Profile `local` | `spring.servlet.context-path: /batch` |
+| Profile `local` | 소수 모듈 Actuator 타겟 (OM, SV, CC, MG, UI, BATCH) |
+| Profile `dev` / `prod` | 19 WAR 전체 게이트웨이 경로 타겟 |
 | Batch | `nsight.batch.*` — cron, job-id, targets, timeouts |
 
 **전용 빈**: `BatchClientConfiguration` → `RestTemplate` (AP 수집 타임아웃).
@@ -300,7 +304,7 @@ public class NsightTcfBatchApplication extends NsightWarBootstrap
 **메인**: `SpringBootServletInitializer` 직접 상속 (`NsightWarBootstrap` 미사용).  
 `main()`에서 `server.port=8099` 고정.
 
-**Tomcat 프로파일**: `deployment-mode: tomcat` → Relay가 context path URL 사용.
+**`dev` / `prod` 프로파일**: `deployment-mode: tomcat` → Relay가 context path URL 사용.
 
 ---
 
@@ -354,7 +358,7 @@ public class NsightTcfBatchApplication extends NsightWarBootstrap
 - `nsight.om.batch-service-url`, `nsight.om.session-cleanup.*` — `tcf-om` 전용
 - `nsight.updownload.storage-path`, `max-file-size-bytes` — UD ([18-fileupdownload.md](18-fileupdownload.md))
 - `nsight.batch.ap-status|db-status|session-status|deploy-status.*` — `tcf-batch` 스케줄·타겟
-- `nsight.gateway.mode|base-url` — `bootrun` / `tomcat` 프로파일
+- `nsight.gateway.mode|base-url` — `local` / `dev` / `prod` 프로파일
 
 ---
 
@@ -407,17 +411,24 @@ public class NsightTcfBatchApplication extends NsightWarBootstrap
 
 ## 12. 설정 파일 위치 (참조)
 
+> **원문·항목별 해설:** [24-env-spring-detail.md](24-env-spring-detail.md) — 각 `application*.yml` 전체 내용과 프로젝트별 설명.
+
 | 경로 | 모듈 |
 |------|------|
 | `{module}/src/main/resources/application.yml` | 모든 실행 모듈 |
 | `tcf-web/.../application.yml` | TCF 기본 (jar) |
-| `tcf-web/.../application-tomcat.yml` | Tomcat 로깅 |
+| `tcf-web/.../application-dev.yml` | dev/prod Tomcat 로깅 |
+| `tcf-web/.../application-prod.yml` | prod 로그 보관 |
 | `tcf-cache/.../application.yml` | 캐시 기본 |
-| `tcf-om/.../application-tomcat.yml` | OM gateway |
-| `tcf-batch/.../application-bootrun.yml` | bootRun 수집 타겟 |
-| `tcf-batch/.../application-tomcat.yml` | 통합 수집 타겟 |
-| `tcf-ui/.../application-tomcat.yml` | UI Relay 모드 |
-| `ztomcat/conf/setenv.sh` | `spring.profiles.active=local,tomcat` |
+| `tcf-om/.../application-dev.yml` | OM gateway |
+| `tcf-om/.../application-prod.yml` | 운영 gateway URL |
+| `tcf-batch/.../application-local.yml` | local bootRun 수집 타겟 |
+| `tcf-batch/.../application-dev.yml` | 통합 수집 타겟 |
+| `tcf-batch/.../application-prod.yml` | 운영 gateway URL |
+| `tcf-ui/.../application-dev.yml` | UI Relay dev |
+| `tcf-ui/.../application-prod.yml` | UI Relay prod |
+| `ztomcat/conf/setenv.sh` | `spring.profiles.active=dev` |
+| `ztomcat/conf/setenv.prod.sh` | 운영 Tomcat 샘플 (`prod`, `NSIGHT_GATEWAY_BASE_URL`) |
 
 ---
 
@@ -444,11 +455,17 @@ public class NsightTcfBatchApplication extends NsightWarBootstrap
 - [ ] `tcf-om` + 업무 WAR 동시 기동 시 H2 `AUTO_SERVER=TRUE` 공유 확인
 - [ ] `om-service`와 `tcf-om` **동시 기동 금지** (포트 8097)
 
-**Tomcat 통합**
+**dev (ztomcat)**
 
-- [ ] `setenv`에 `local,tomcat` 프로파일 적용
+- [ ] `setenv`에 `spring.profiles.active=dev` 프로파일 적용
 - [ ] `tcf-ui` `deployment-mode=tomcat`, `tcf-batch` startup-collect delay 확인
-- [ ] `tcf-web` tomcat yml 로그 경로 `${CATALINA_BASE}/logs/`
+- [ ] `tcf-web` dev yml 로그 경로 `${CATALINA_BASE}/logs/`
+
+**prod (운영 Tomcat)**
+
+- [ ] `setenv.prod.*` 참고해 `NSIGHT_GATEWAY_BASE_URL`·DB 환경변수 설정
+- [ ] `-Dspring.profiles.active=prod` → 활성 프로파일 `prod`, `dev` (그룹)
+- [ ] `tcf-ui` `tomcat-gateway-url` = 공개 URL
 
 **신규 업무 WAR**
 
@@ -470,6 +487,7 @@ public class NsightTcfBatchApplication extends NsightWarBootstrap
 | 5 | `tcf-web/.../TcfPrimaryDataSourceAutoConfiguration.java` |
 | 6 | `tcf-web/.../boot/NsightWarBootstrap.java` |
 | 7 | `tcf-om/src/main/resources/application.yml` |
-| 8 | `tcf-batch/src/main/resources/application-bootrun.yml` |
-| 9 | `tcf-ui/.../TcfUiProperties.java` |
+| 8 | `tcf-batch/src/main/resources/application-local.yml` |
+| 9 | `docs/architecture/25-env-profile.md` |
 | 10 | `ztomcat/conf/setenv.sh` |
+| 11 | `ztomcat/conf/setenv.prod.sh` |

@@ -26,7 +26,7 @@ if not exist "!GRADLE!" (
 cd /d "!PROJECT_HOME!"
 chcp 65001 >nul
 set "JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8"
-echo [tcf-batch-run] gradle :!MODULE!:bootRun ^(port 8098, profile bootrun^)
-set "SPRING_PROFILES_ACTIVE=bootrun"
+echo [tcf-batch-run] gradle :!MODULE!:bootRun ^(port 8098, profile local^)
+set "SPRING_PROFILES_ACTIVE=local"
 call "!GRADLE!" :!MODULE!:bootRun
 exit /b %errorlevel%

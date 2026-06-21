@@ -1,5 +1,0 @@
-# ztomcat(8080) WAR 배포 — ui.war → /ui
-nsight:
-  tcf-ui:
-    deployment-mode: tomcat
-    tomcat-gateway-url: http://localhost:8080

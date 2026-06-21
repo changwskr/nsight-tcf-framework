@@ -28,7 +28,7 @@ public class OmSystemConfigRuntimeSupport {
 
     public String resolveDeploymentMode() {
         for (String profile : environment.getActiveProfiles()) {
-            if ("tomcat".equals(profile)) {
+            if ("dev".equals(profile) || "prod".equals(profile)) {
                 return MODE_TOMCAT;
             }
         }
@@ -86,12 +86,12 @@ public class OmSystemConfigRuntimeSupport {
         String contextPath = prop("server.servlet.context-path", "/");
         rows.add(row("deployment", "deployment.mode", "spring", "Spring bootRun (내장 Tomcat)"));
         rows.add(row("deployment", "spring.profiles.active", activeProfiles(), "활성 Spring 프로파일"));
-        rows.add(row("bootrun", "server.port", port, "tcf-om bootRun 포트"));
-        rows.add(row("bootrun", "server.servlet.context-path", contextPath, "Servlet context path"));
-        rows.add(row("bootrun", "om.access-url", "http://127.0.0.1:" + port + normalizeContext(contextPath),
+        rows.add(row("local", "server.port", port, "tcf-om bootRun 포트"));
+        rows.add(row("local", "server.servlet.context-path", contextPath, "Servlet context path"));
+        rows.add(row("local", "om.access-url", "http://127.0.0.1:" + port + normalizeContext(contextPath),
                 "tcf-om 접근 URL"));
-        rows.add(row("bootrun", "ui.access-url", "http://127.0.0.1:8099", "tcf-ui bootRun 기본 URL"));
-        rows.add(row("bootrun", "batch.access-url", prop("nsight.om.batch-service-url", "http://127.0.0.1:8098/batch"),
+        rows.add(row("local", "ui.access-url", "http://127.0.0.1:8099", "tcf-ui bootRun 기본 URL"));
+        rows.add(row("local", "batch.access-url", prop("nsight.om.batch-service-url", "http://127.0.0.1:8098/batch"),
                 "tcf-batch bootRun URL"));
         rows.add(row("deployment", "nsight.txlog.path", prop("nsight.txlog.path", "-"),
                 "공유 H2 경로 (tcf-om·tcf-batch·거래로그)"));

@@ -160,14 +160,16 @@ health + 기능 API + OM 화면까지 확인해야 완전한 배포 검증으로
 
 | 모드 | 프로파일 |
 |------|----------|
-| bootRun | `bootrun` 중심 |
-| ztomcat | `local,tomcat` |
+| bootRun | **`local`** |
+| ztomcat (통합 검증) | **`dev`** |
+| 운영 Tomcat | **`prod`** (+ `dev` 그룹) |
 
-각 모드별 설정 파일:
+각 환경별 설정 파일:
 
 - `application.yml` (공통)
-- `application-bootrun.yml`
-- `application-tomcat.yml`
+- `application-local.yml` (bootRun)
+- `application-dev.yml` (ztomcat WAR)
+- `application-prod.yml` (운영 오버라이드)
 
 ## 7.2 Tomcat setenv/apply-config
 

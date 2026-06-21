@@ -1,5 +1,4 @@
 server:
-  port: 8086
   servlet:
     context-path: /
     encoding:
@@ -17,17 +16,13 @@ server:
         same-site: Lax
 
 spring:
-  application:
-    name: nsight-sv-service
   profiles:
-    active: local
+    default: local
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:nsight_sv;MODE=Oracle;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
     username: sa
     password:
     hikari:
-      pool-name: nsight-sv-hikari
       maximum-pool-size: 10
       minimum-idle: 2
       connection-timeout: 3000
@@ -36,9 +31,6 @@ spring:
       max-lifetime: 1800000
       keepalive-time: 300000
       auto-commit: false
-  h2:
-    console:
-      enabled: true
   session:
     store-type: none
   transaction:
@@ -74,12 +66,6 @@ nsight:
     idempotency-enabled: true
     audit-enabled: true
     transaction-log-enabled: true
-    transaction-log-schema-auto-init: true
-    transaction-log-datasource:
-      url: jdbc:h2:file:${nsight.txlog.path:./data/nsight-txlog}/nsight_om;MODE=Oracle;AUTO_SERVER=TRUE;DATABASE_TO_UPPER=false
-      username: sa
-      password:
-      driver-class-name: org.h2.Driver
   timeout:
     online-transaction-seconds: 5
     db-query-seconds: 3

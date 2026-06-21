@@ -82,6 +82,8 @@ public interface OmOperationMapper {
 
     int countBatchHistories(Map<String, Object> params);
 
+    int deleteAllBatchHistories();
+
     List<Map<String, Object>> searchSystemConfigs(Map<String, Object> params);
 
     List<Map<String, Object>> searchFileDownloadLogs(Map<String, Object> params);

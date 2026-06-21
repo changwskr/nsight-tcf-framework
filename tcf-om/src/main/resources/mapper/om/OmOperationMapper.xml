@@ -503,6 +503,10 @@
         <include refid="batchHistorySearchWhere"/>
     </select>
 
+    <delete id="deleteAllBatchHistories">
+        DELETE FROM OM_BATCH_HISTORY
+    </delete>
+
     <select id="searchSystemConfigs" parameterType="map" resultType="map">
         SELECT CONFIG_KEY AS "configKey", CONFIG_CATEGORY AS "configCategory",
                CONFIG_VALUE AS "configValue", EDITABLE_YN AS "editableYn", DESCRIPTION AS "description"

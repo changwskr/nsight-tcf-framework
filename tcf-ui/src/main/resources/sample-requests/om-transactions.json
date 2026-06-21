@@ -537,6 +537,30 @@
     }
   },
   {
+    "label": "배치 실행이력 전체 삭제",
+    "sampleRequest": {
+      "header": {
+        "systemId": "NSIGHT-MP",
+        "businessCode": "OM",
+        "serviceId": "OM.Batch.deleteAll",
+        "transactionCode": "OM-BAT-0003",
+        "processingType": "DELETE",
+        "channelId": "WEBTOP",
+        "userId": "admin01",
+        "branchId": "000001",
+        "requestTime": "2026-06-14T10:30:00+09:00",
+        "transactionIntime": "2026-06-14T10:30:00+09:00",
+        "systemDate": "20260614",
+        "bizDate": "20260614",
+        "clientIp": "10.10.10.10"
+      },
+      "body": {
+        "confirmCode": "DELETE_ALL",
+        "deleteReason": "테스트 데이터 정리"
+      }
+    }
+  },
+  {
     "label": "기능권한 조회",
     "sampleRequest": {
       "header": {

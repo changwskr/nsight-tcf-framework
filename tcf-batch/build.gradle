@@ -30,5 +30,5 @@ war {
 }
 
 bootRun {
-    systemProperty 'spring.profiles.active', 'bootrun'
+    systemProperty 'spring.profiles.active', 'local'
 }

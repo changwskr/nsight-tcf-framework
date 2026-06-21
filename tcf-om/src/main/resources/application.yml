@@ -1,5 +1,4 @@
 server:
-  port: 8097
   servlet:
     context-path: /
     encoding:
@@ -17,10 +16,8 @@ server:
         same-site: Lax
 
 spring:
-  application:
-    name: nsight-tcf-om
   profiles:
-    active: local
+    default: local
   cache:
     type: jcache
     jcache:
@@ -29,11 +26,9 @@ spring:
     exclude: []
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:file:${nsight.txlog.path:./data/nsight-txlog}/nsight_om;MODE=Oracle;AUTO_SERVER=TRUE;DATABASE_TO_UPPER=false
     username: sa
     password:
     hikari:
-      pool-name: nsight-om-hikari
       maximum-pool-size: 10
       minimum-idle: 2
       connection-timeout: 3000
@@ -41,23 +36,6 @@ spring:
       idle-timeout: 600000
       max-lifetime: 1800000
       keepalive-time: 300000
-      auto-commit: true
-  h2:
-    console:
-      enabled: true
-  sql:
-    init:
-      mode: embedded
-      continue-on-error: true
-      encoding: UTF-8
-      schema-locations: classpath:schema.sql
-      data-locations: classpath:data.sql
-  session:
-    store-type: jdbc
-    timeout: 60m
-    jdbc:
-      initialize-schema: always
-      table-name: SPRING_SESSION
   transaction:
     default-timeout: 5
   servlet:
@@ -98,20 +76,9 @@ nsight:
     idempotency-enabled: false
     audit-enabled: true
     transaction-log-enabled: true
-    transaction-log-schema-auto-init: false
-    transaction-log-datasource:
-      separate: false
-      url: jdbc:h2:file:${nsight.txlog.path:./data/nsight-txlog}/nsight_om;MODE=Oracle;AUTO_SERVER=TRUE;DATABASE_TO_UPPER=false
-      username: sa
-      password:
-      driver-class-name: org.h2.Driver
   timeout:
     online-transaction-seconds: 5
     db-query-seconds: 3
   om:
-    batch-service-url: http://127.0.0.1:8098/batch
     session-cleanup:
       fixed-rate-ms: 10000
-  updownload:
-    storage-path: ./data/updownload
-    max-file-size-bytes: 52428800

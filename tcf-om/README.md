@@ -50,7 +50,7 @@ tcf-scripts/run-local.bat tcf-om
 ztomcat/deploy-wars.bat om
 ```
 
-Tomcat WAR: `spring.profiles.active=local,tomcat` — `application-tomcat.yml`
+ztomcat WAR: `spring.profiles.active=dev` — `application-dev.yml` ([25-env-profile.md](../docs/architecture/25-env-profile.md))
 
 ## API
 

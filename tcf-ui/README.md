@@ -19,10 +19,11 @@ WebTopSuite/Client 없이 브라우저에서 표준 HTTP/JSON 전문을 작성·
 
 | 모드 | 설정 | OM Admin URL |
 |------|------|--------------|
-| **bootrun** | `deployment-mode: bootrun` | http://localhost:8099/om/admin/login.html |
-| **tomcat** | `deployment-mode: tomcat` (WAR `/ui`) | http://localhost:8080/ui/om/admin/login.html |
+| **local (bootRun)** | `deployment-mode: bootrun` | http://localhost:8099/om/admin/login.html |
+| **dev/prod (Tomcat WAR)** | `deployment-mode: tomcat` (WAR `/ui`) | http://localhost:8080/ui/om/admin/login.html |
 
-Tomcat WAR 프로파일: `application-tomcat.yml` — `tomcat-gateway-url: http://localhost:8080`
+Tomcat WAR: `application-dev.yml` — `tomcat-gateway-url: http://localhost:8080`  
+운영: `application-prod.yml` — `tomcat-gateway-url: ${NSIGHT_GATEWAY_BASE_URL}`
 
 ## 실행
 
@@ -64,7 +65,7 @@ com.nh.nsight.tcf.ui
 ```yaml
 nsight:
   tcf-ui:
-    deployment-mode: bootrun      # tomcat WAR 시 application-tomcat.yml
+    deployment-mode: bootrun      # Tomcat WAR 시 application-dev.yml / prod.yml
     tomcat-gateway-url: http://localhost:8080
     bootrun-host: http://127.0.0.1
 

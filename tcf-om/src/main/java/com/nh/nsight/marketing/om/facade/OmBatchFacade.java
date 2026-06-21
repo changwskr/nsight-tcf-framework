@@ -23,6 +23,11 @@ public class OmBatchFacade {
     public Map<String, Object> execute(Map<String, Object> body, TransactionContext context) {
         return service.execute(body, context);
     }
+
+    @Transactional(timeout = 30)
+    public Map<String, Object> deleteAllHistories(Map<String, Object> body, TransactionContext context) {
+        return service.deleteAllHistories(body, context);
+    }
 }
 
 

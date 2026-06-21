@@ -178,6 +178,10 @@ public class OmOperationDao {
         return mapper.countBatchHistories(criteria);
     }
 
+    public int deleteAllBatchHistories() {
+        return mapper.deleteAllBatchHistories();
+    }
+
     public List<Map<String, Object>> searchSystemConfigs(Map<String, Object> criteria) {
         return mapper.searchSystemConfigs(criteria);
     }

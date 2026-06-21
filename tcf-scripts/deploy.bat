@@ -58,7 +58,7 @@ goto :run_build
 :build_all
 echo [deploy] Building all WAR files ...
 set "GRADLE_TASKS=buildBusinessWars"
-set "DEPLOY_ENTRIES=cc-service:cc.war:cc.war:cc ic-service:ic.war:ic.war:ic pc-service:pc-service.war:pc.war:pc bc-service:bc.war:bc.war:bc ms-service:ms.war:ms.war:ms sv-service:sv.war:sv.war:sv pd-service:pd.war:pd.war:pd cm-service:cm.war:cm.war:cm eb-service:eb.war:eb.war:eb ep-service:ep.war:ep.war:ep bp-service:bp.war:bp.war:bp bd-service:bd.war:bd.war:bd ss-service:ss.war:ss.war:ss cs-service:cs.war:cs.war:cs ct-service:ct.war:ct.war:ct mg-service:mg.war:mg.war:mg tcf-om:tcf-om.war:om.war:om"
+set "DEPLOY_ENTRIES=cc-service:cc.war:cc.war:cc ic-service:ic.war:ic.war:ic pc-service:pc.war:pc.war:pc bc-service:bc.war:bc.war:bc ms-service:ms.war:ms.war:ms sv-service:sv.war:sv.war:sv pd-service:pd.war:pd.war:pd cm-service:cm.war:cm.war:cm eb-service:eb.war:eb.war:eb ep-service:ep.war:ep.war:ep bp-service:bp.war:bp.war:bp bd-service:bd.war:bd.war:bd ss-service:ss.war:ss.war:ss cs-service:cs.war:cs.war:cs ct-service:ct.war:ct.war:ct mg-service:mg.war:mg.war:mg tcf-om:tcf-om.war:om.war:om"
 set "CLEAN_CTX=cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om"
 goto :run_build
 
@@ -145,7 +145,7 @@ exit /b 0
 set "CODE=%~1"
 if /i "!CODE!"=="cc" call :add_entry cc-service cc.war cc.war cc & exit /b 0
 if /i "!CODE!"=="ic" call :add_entry ic-service ic.war ic.war ic & exit /b 0
-if /i "!CODE!"=="pc" call :add_entry pc-service pc-service.war pc.war pc & exit /b 0
+if /i "!CODE!"=="pc" call :add_entry pc-service pc.war pc.war pc & exit /b 0
 if /i "!CODE!"=="bc" call :add_entry bc-service bc.war bc.war bc & exit /b 0
 if /i "!CODE!"=="ms" call :add_entry ms-service ms.war ms.war ms & exit /b 0
 if /i "!CODE!"=="sv" call :add_entry sv-service sv.war sv.war sv & exit /b 0

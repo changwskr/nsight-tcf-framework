@@ -75,8 +75,10 @@ ztomcat/
 │   ├── conf/server.xml      # UTF-8 Connector 패치 대상
 │   └── webapps/             # *.war 배포 위치
 ├── conf/
-│   ├── setenv.bat           # Windows JVM·JDK 21 템플릿
-│   └── setenv.sh            # Linux JVM·JDK 21 템플릿
+│   ├── setenv.bat           # Windows JVM·JDK 21 템플릿 (dev)
+│   ├── setenv.sh            # Linux JVM·JDK 21 템플릿 (dev)
+│   ├── setenv.prod.bat      # Windows 운영 샘플 (prod)
+│   └── setenv.prod.sh       # Linux 운영 샘플 (prod)
 ├── setenv.local.bat|sh      # 로컬 JAVA_HOME·CATALINA_OPTS 오버라이드
 ├── install-tomcat.*         # Tomcat 다운로드·압축 해제
 ├── deploy-wars.*            # Gradle bootWar + webapps 복사
@@ -329,7 +331,7 @@ POST http://localhost:8080/cc/online
 
 ### tcf-ui 연동 (Tomcat 모드)
 
-WAR `ui.war` 배포 시 `application-tomcat.yml`이 자동 적용됩니다.
+WAR `ui.war` 배포 시 `application-dev.yml`(ztomcat) 또는 `application-prod.yml`(운영)이 적용됩니다. Spring 프로파일은 `conf/setenv.*`(dev) 또는 `conf/setenv.prod.*`(prod) 참고.
 
 ```text
 OM Admin:  http://localhost:8080/ui/om/admin/login.html

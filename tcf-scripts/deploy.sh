@@ -16,7 +16,7 @@ fi
 ALL_MODULES=(
   cc-service:cc.war:cc.war:cc
   ic-service:ic.war:ic.war:ic
-  pc-service:pc-service.war:pc.war:pc
+  pc-service:pc.war:pc.war:pc
   bc-service:bc.war:bc.war:bc
   ms-service:ms.war:ms.war:ms
   sv-service:sv.war:sv.war:sv

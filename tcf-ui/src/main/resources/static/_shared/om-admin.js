@@ -68,6 +68,7 @@ window.OmAdmin = (function () {
     errorCodeUpdate: { serviceId: 'OM.ErrorCode.update', transactionCode: 'OM-ERR-0004' },
     errorCodeDelete: { serviceId: 'OM.ErrorCode.delete', transactionCode: 'OM-ERR-0005' },
     batchExecute: { serviceId: 'OM.Batch.execute', transactionCode: 'OM-BAT-0002' },
+    batchHistoryDeleteAll: { serviceId: 'OM.Batch.deleteAll', transactionCode: 'OM-BAT-0003' },
     functionAuth: { serviceId: 'OM.FunctionAuth.inquiry', transactionCode: 'OM-FAU-0001' },
     dataAuth: { serviceId: 'OM.DataAuth.inquiry', transactionCode: 'OM-DAU-0001' },
     authHistory: { serviceId: 'OM.AuthHistory.inquiry', transactionCode: 'OM-AHT-0001' },

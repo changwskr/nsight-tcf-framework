@@ -192,11 +192,11 @@ war     { archiveFileName = 'sv.war' }
 
 ```gradle
 bootRun {
-    systemProperty 'spring.profiles.active', 'bootrun'
+    systemProperty 'spring.profiles.active', 'local'
 }
 ```
 
-- bootRun 시 `/batch` context·소수 수집 타겟 ([20-env-spring.md](20-env-spring.md))
+- bootRun 시 `/batch` context·소수 수집 타겟 ([25-env-profile.md](25-env-profile.md))
 
 ### 5.4 `tcf-ui`
 
@@ -277,7 +277,7 @@ gradle :sv-service:bootRun
 |------|---------------|
 | `sv-service` | `http://localhost:8086/sv/online` |
 | `tcf-om` | `http://localhost:8097/om/online`, `/ud/files/*` |
-| `tcf-batch` | `http://localhost:8098/batch` (profile `bootrun`) |
+| `tcf-batch` | `http://localhost:8098/batch` (profile `local`) |
 | `tcf-ui` | `http://localhost:8099/ui/...` |
 
 ### 7.2 `tcf-scripts/run-local` (권장 래퍼)
@@ -389,7 +389,7 @@ ztomcat WAR rename:
 | **실행** | `gradle :모듈:bootRun` | `ztomcat/start` |
 | **포트** | 모듈별 8081~8099 | 통합 **8080** |
 | **JDK** | toolchain 21 | Tomcat JVM 21 (`setenv`) |
-| **프로파일** | `local` (+ batch `bootrun`) | `local,tomcat` |
+| **프로파일** | **`local`** | **`dev`** (ztomcat) / **`prod`** (운영) |
 | **검증** | `curl` / Actuator | `ztomcat/verify-deploy` |
 
 동일 소스·동일 WAR 산출물 — **실행 방식만** 다르다 ([16-deploy.md](16-deploy.md)).

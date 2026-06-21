@@ -69,6 +69,7 @@
           <div class="actions" style="display:flex;gap:8px;align-items:end">
             <button class="btn-primary" id="searchBtn" type="button">조회</button>
             <button class="btn-secondary" id="executeBtn" type="button">선택 Job 재실행</button>
+            <button class="btn-secondary" id="deleteAllHistBtn" type="button">실행이력 전체 삭제</button>
             <button class="btn-secondary" id="resetBtn" type="button">초기화</button>
           </div>
         </section>
@@ -103,6 +104,24 @@
         try {
           const { body } = await OmAdmin.mutate('batchExecute', { jobId, executeReason }, 'EXECUTE');
           alert('재실행 완료: ' + body.runStatus);
+          await load(1, el);
+        } catch (e) { alert(e.message); }
+      });
+      document.getElementById('deleteAllHistBtn').addEventListener('click', async () => {
+        if (!confirm('OM_BATCH_HISTORY 테이블의 실행 이력을 전부 삭제합니다.\n되돌릴 수 없습니다. 계속하시겠습니까?')) {
+          return;
+        }
+        const deleteReason = prompt('삭제 사유 (5자 이상, 감사로그에 기록됩니다):');
+        if (!deleteReason || deleteReason.trim().length < 5) {
+          alert('삭제 사유를 5자 이상 입력해야 합니다.');
+          return;
+        }
+        try {
+          const { body } = await OmAdmin.mutate('batchHistoryDeleteAll', {
+            confirmCode: 'DELETE_ALL',
+            deleteReason: deleteReason.trim()
+          }, 'DELETE');
+          alert(`실행 이력 ${body.deletedCount ?? 0}건이 삭제되었습니다.`);
           await load(1, el);
         } catch (e) { alert(e.message); }
       });

@@ -88,6 +88,15 @@ public class OmDatabaseMigration implements ApplicationRunner {
                 "OmErrorCodeUpdateHandler", "오류코드 수정");
         mergeServiceCatalog("CAT-043", "OM.ErrorCode.delete", "OM-ERR-0005", "DELETE",
                 "OmErrorCodeDeleteHandler", "오류코드 삭제");
+        jdbcTemplate.update("""
+                MERGE INTO OM_SERVICE_CATALOG (CATALOG_ID, BUSINESS_CODE, SERVICE_ID, TRANSACTION_CODE,
+                                               PROCESSING_TYPE, HANDLER_CLASS, AUTH_CODE, AUDIT_YN,
+                                               TIMEOUT_SEC, USE_YN, DESCRIPTION)
+                KEY (CATALOG_ID)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                "CAT-044", "OM", "OM.Batch.deleteAll", "OM-BAT-0003", "DELETE",
+                "OmBatchDeleteAllHandler", "ROLE_OM_BAT", "Y", 30, "Y", "배치 실행이력 전체 삭제");
         seedAuthCodeCommonCodes();
         seedCacheNameCommonCodes();
         repairCorruptedUtf8SeedData();

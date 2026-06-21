@@ -1,5 +1,4 @@
 server:
-  port: 8099
   servlet:
     encoding:
       charset: UTF-8
@@ -7,17 +6,14 @@ server:
       force: true
 
 spring:
-  application:
-    name: nsight-tcf-ui
+  profiles:
+    default: local
+    group:
+      prod:
+        - dev
 
 management:
   endpoints:
     web:
       exposure:
         include: health,info,metrics
-
-nsight:
-  tcf-ui:
-    deployment-mode: bootrun
-    tomcat-gateway-url: http://localhost:8080
-    bootrun-host: http://127.0.0.1
