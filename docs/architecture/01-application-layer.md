@@ -479,6 +479,7 @@ Rule        → (없음 — 순수 검증)
 | [03-transaction.md](03-transaction.md) | 트랜잭션 처리 아키텍처 |
 | [04-messaging.md](04-messaging.md) | 메시지 처리·릴레이 |
 | [05-exception.md](05-exception.md) | 예외 처리 표준 |
+| [29-facade.md](29-facade.md) | Web→TCF→Facade→Service→DAO 소스 가이드 |
 | [TCF_FRAMEWORK_GUIDE.md](../TCF_FRAMEWORK_GUIDE.md) | Handler 개발 가이드 |
 | [TCF_MODULE_RESTRUCTURE.md](../TCF_MODULE_RESTRUCTURE.md) | 모듈·패키지 변경 이력 |
 | [SOURCE_INDEX.md](../SOURCE_INDEX.md) | 소스 위치 인덱스 |

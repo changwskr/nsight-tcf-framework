@@ -46,7 +46,7 @@ tcf-om
 
 | 계층 | 기술 |
 |------|------|
-| 캐시 추상화 | Spring Cache (`@Cacheable`, `@CacheEvict`) |
+| 캐시 추상화 | Spring Cache (`@Cacheable`, `@CacheEvict`) — AOP: [32-AOP.md](32-AOP.md) |
 | 캐시 구현체 | Ehcache 3 |
 | 표준 API | JCache (`javax.cache`) |
 | 운영 연동 | `TcfCacheSupport` + OM 거래(`OM.Cache.*`) |

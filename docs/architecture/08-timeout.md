@@ -73,7 +73,7 @@ TCF Transaction (STF → Handler → ETF)
 
 ### 4.1 Facade 중심 제어
 
-타임아웃 경계는 Facade에서 선언한다.
+타임아웃 경계는 Facade에서 선언한다. AOP(`@Transactional`) 동작: [32-AOP.md](32-AOP.md)
 
 ```java
 @Transactional(readOnly = true, timeout = 5)   // 조회

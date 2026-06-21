@@ -8,11 +8,11 @@
 | 표준 전문 | `tcf-core/src/main/java/com/nh/nsight/tcf/core/message` |
 | 거래 Context | `tcf-core/src/main/java/com/nh/nsight/tcf/core/context` |
 | 오류/예외 | `tcf-core/src/main/java/com/nh/nsight/tcf/core/error` |
-| TCF | `tcf-web/src/main/java/com/nh/nsight/tcf/web/processor/TCF.java` |
-| STF | `tcf-web/src/main/java/com/nh/nsight/tcf/web/processor/STF.java` |
-| ETF | `tcf-web/src/main/java/com/nh/nsight/tcf/web/processor/ETF.java` |
-| Dispatcher | `tcf-web/src/main/java/com/nh/nsight/tcf/web/dispatch/TransactionDispatcher.java` |
-| Handler Interface | `tcf-web/src/main/java/com/nh/nsight/tcf/web/transaction/TransactionHandler.java` |
+| TCF | `tcf-core/src/main/java/com/nh/nsight/tcf/core/processor/TCF.java` |
+| STF | `tcf-core/src/main/java/com/nh/nsight/tcf/core/processor/STF.java` |
+| ETF | `tcf-core/src/main/java/com/nh/nsight/tcf/core/processor/ETF.java` |
+| Dispatcher | `tcf-core/src/main/java/com/nh/nsight/tcf/core/dispatch/TransactionDispatcher.java` |
+| Handler Interface | `tcf-core/src/main/java/com/nh/nsight/tcf/core/transaction/TransactionHandler.java` |
 | Controller | `tcf-web/src/main/java/com/nh/nsight/tcf/web/controller/OnlineTransactionController.java` |
 
 ## 2. 업무 샘플
@@ -27,5 +27,15 @@
 ## 3. 실행 흐름
 
 ```text
-OnlineTransactionController → TCF → STF → TransactionDispatcher → TransactionHandler → ETF
+OnlineTransactionController → TCF → STF → TransactionDispatcher → Handler
+  → Facade → Service → Rule / DAO → Mapper
+  → ETF → StandardResponse
 ```
+
+상세 소스 가이드: [architecture/29-facade.md](architecture/29-facade.md)  
+Spring Boot 기동: [architecture/30-springboot.md](architecture/30-springboot.md)  
+AutoConfiguration: [architecture/31-autoconfiguration.md](architecture/31-autoconfiguration.md)  
+AOP: [architecture/32-AOP.md](architecture/32-AOP.md)  
+TCF 엔진: [architecture/33-TCF.md](architecture/33-TCF.md)  
+STF: [architecture/34-STF.md](architecture/34-STF.md)  
+BTF: [architecture/35-BTF.md](architecture/35-BTF.md)

@@ -29,7 +29,7 @@ OnlineTransactionController / TcfGateway
 TCF.process()
   ├─ STF (전처리)
   ├─ Dispatcher (serviceId 라우팅)
-  ├─ Handler → Facade → Service → Rule → DAO/Mapper
+  ├─ BTF: Handler → Facade → Service → Rule → DAO/Mapper
   └─ ETF (후처리)
    ▼
 StandardResponse JSON
@@ -59,7 +59,7 @@ StandardResponse JSON
 ## 2.3 Business
 
 - `cc-service` ~ `mg-service` 16개 업무 WAR
-- 동일한 Handler/Facade/Service/Rule/DAO/Mapper 패턴 적용
+- 동일한 BTF 패턴 (Handler/Facade/Service/Rule/DAO/Mapper) — [35-BTF.md](35-BTF.md)
 
 ---
 
@@ -102,6 +102,8 @@ Handler (얇은 어댑터)
 ```
 
 ## 3.5 ETF (End Transaction Framework)
+
+상세: [36-ETF.md](36-ETF.md)
 
 | 분기 | 조건 | resultCode |
 |------|------|------------|
@@ -322,6 +324,18 @@ E-{영역}-{분류}-{번호}
 - `docs/architecture/05-exception.md`
 - `docs/architecture/06-naming.md`
 - `docs/architecture/07-DAO.md`
+- `docs/architecture/26-mybatis.md`
+- `docs/architecture/27-paging.md`
+- `docs/architecture/28-tcf-framework-ref.md`
+- `docs/architecture/29-facade.md`
+- `docs/architecture/30-springboot.md`
+- `docs/architecture/31-autoconfiguration.md`
+- `docs/architecture/32-AOP.md`
+- `docs/architecture/33-TCF.md`
+- `docs/architecture/34-STF.md`
+- `docs/architecture/35-BTF.md`
+- `docs/architecture/36-ETF.md`
+- `docs/architecture/37-transaction-log.md`
 - `docs/architecture/08-timeout.md`
 - `docs/architecture/09-transaction log.md`
 - `docs/architecture/10-session.md`

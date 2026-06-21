@@ -7,6 +7,9 @@
 | 상위 문서 | [architecture.md](architecture.md) |
 | 관련 문서 | [25-env-profile.md](25-env-profile.md), [24-env-spring-detail.md](24-env-spring-detail.md), [16-deploy.md](16-deploy.md), [19-tcf-table.md](19-tcf-table.md), [09-transaction log.md](09-transaction%20log.md), [10-session.md](10-session.md), [12-cache.md](12-cache.md), [13-batch.md](13-batch.md) |
 | 대상 | 프레임워크·업무·운영·인프라 담당자 |
+| Spring Boot 기동 | [30-springboot.md](30-springboot.md) |
+| AutoConfiguration | [31-autoconfiguration.md](31-autoconfiguration.md) |
+| AOP | [32-AOP.md](32-AOP.md) |
 
 ---
 
@@ -80,6 +83,8 @@ ztomcat 통합 시 활성 프로파일: **`dev`**
 ## 4. AutoConfiguration (프레임워크 JAR)
 
 ### 4.1 `tcf-web` — `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`
+
+상세 처리 원리: [31-autoconfiguration.md](31-autoconfiguration.md)
 
 | 클래스 | 역할 |
 |--------|------|

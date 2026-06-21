@@ -5,7 +5,7 @@
 | 문서 번호 | 09 |
 | 제목 | Transaction Input/Output Logging Architecture |
 | 상위 문서 | [architecture.md](architecture.md) |
-| 관련 문서 | [03-transaction.md](03-transaction.md), [04-messaging.md](04-messaging.md), [05-exception.md](05-exception.md), [08-timeout.md](08-timeout.md) |
+| 관련 문서 | [03-transaction.md](03-transaction.md), [04-messaging.md](04-messaging.md), [05-exception.md](05-exception.md), [08-timeout.md](08-timeout.md), [37-transaction-log.md](37-transaction-log.md) |
 | 구현 모듈 | `tcf-core`, `tcf-web`, `tcf-om` |
 | 대상 | 프레임워크·업무·운영 개발자 |
 
