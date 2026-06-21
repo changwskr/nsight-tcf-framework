@@ -5,7 +5,7 @@
 | 문서 번호 | 22 |
 | 제목 | Build & Run Project Architecture |
 | 상위 문서 | [architecture.md](architecture.md) |
-| 관련 문서 | [16-deploy.md](16-deploy.md), [17-script.md](17-script.md), [20-env-spring.md](20-env-spring.md), [21-env-tomcat.md](21-env-tomcat.md), [38-script.md](38-script.md), [../manual/gradle.md](../manual/gradle.md), [README.md](../../README.md) |
+| 관련 문서 | [16-deploy.md](16-deploy.md), [17-script.md](17-script.md), [20-env-spring.md](20-env-spring.md), [21-env-tomcat.md](21-env-tomcat.md), [38-script.md](38-script.md), [../manual/gradle.md](../manual/gradle.md), [../manual/artifacts.md](../manual/artifacts.md), [../manual/lib-module.md](../manual/lib-module.md), [README.md](../../README.md) |
 | 대상 | 프레임워크·업무·빌드 담당자 |
 
 ---

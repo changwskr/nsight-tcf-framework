@@ -5,7 +5,7 @@
 | 문서 번호 | 25 |
 | 제목 | Environment Profiles |
 | 상위 문서 | [architecture.md](architecture.md) |
-| 관련 문서 | [20-env-spring.md](20-env-spring.md), [24-env-spring-detail.md](24-env-spring-detail.md), [21-env-tomcat.md](21-env-tomcat.md), [23-env-apache.md](23-env-apache.md) |
+| 관련 문서 | [20-env-spring.md](20-env-spring.md), [24-env-spring-detail.md](24-env-spring-detail.md), [21-env-tomcat.md](21-env-tomcat.md), [23-env-apache.md](23-env-apache.md), [../manual/environment-variables.md](../manual/environment-variables.md) |
 | 대상 | 개발·운영·인프라 담당자 |
 
 ---
@@ -119,7 +119,7 @@ spring:
 | `NSIGHT_BATCH_SERVICE_URL` | OM → 배치 (미지정 시 `{gateway}/batch`) |
 | `NSIGHT_TXLOG_PATH` | 공유 H2·거래로그 경로 (Tomcat) |
 
-기본 placeholder: `https://marketing.example.com` — 배포 시 반드시 교체.
+운영 시 **환경변수 요약**: [../manual/environment-variables.md](../manual/environment-variables.md) §8–§9.
 
 ---
 

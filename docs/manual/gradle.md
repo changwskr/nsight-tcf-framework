@@ -77,7 +77,9 @@ gradle buildZtomcatWars          # 루트 집계 태스크 (콜론 없음)
   tcf-core-1.0.0-SNAPSHOT.jar
 ```
 
-WAR 파일명은 `bootWar { archiveFileName = 'sv.war' }`로 고정됩니다.
+WAR 파일명은 `bootWar { archiveFileName = 'sv.war' }`로 고정됩니다.  
+물리 배치·ztomcat 경로: [artifacts.md](artifacts.md)  
+lib 모듈·Gradle 캐시→WAR→Tomcat: [lib-module.md](lib-module.md)
 
 ---
 
