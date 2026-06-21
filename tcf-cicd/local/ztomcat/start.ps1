@@ -70,6 +70,9 @@ $env:CATALINA_BASE = $CatalinaHome
 
 & (Join-Path $ZTomcatHome 'apply-config.ps1')
 
+& (Join-Path $ZTomcatHome 'h2-txlog.ps1') -Action start
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
 if (-not $SkipDeploy) {
     if ($DeployAll) {
         Write-Host '[local-ztomcat] Deploying all 19 WARs ...'

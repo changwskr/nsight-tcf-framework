@@ -4,8 +4,10 @@ param(
     [switch]$SkipBuild,
     [switch]$NoGradleStop,
     [switch]$Restart,
+    [switch]$ExcludeBatch,
+    [switch]$SkipBatchCollect,
     [switch]$Help,
-    [Parameter(Position = 0)]
+    [Parameter(ValueFromRemainingArguments = $true)]
     [string[]]$Codes = @(),
     [ValidateSet('dev', 'local')]
     [string]$SyncProfile = 'dev'
@@ -18,6 +20,7 @@ $FwRoot = (Resolve-Path (Join-Path $CicdRoot '..')).Path
 $ZTomcatHome = Join-Path $FwRoot 'ztomcat'
 $CatalinaHome = Join-Path $ZTomcatHome 'apache-tomcat-10.1.34'
 $Webapps = Join-Path $CatalinaHome 'webapps'
+$BatchWarsDir = Join-Path $ZTomcatHome 'wars'
 $SyncScript = Join-Path $CicdRoot 'scripts/sync-to-framework.ps1'
 
 # module:buildWar:deployWar:context
@@ -39,8 +42,8 @@ $AllModules = @(
     @{ Module = 'ct-service';  Src = 'ct.war';       Dest = 'ct.war';       Ctx = 'ct' }
     @{ Module = 'mg-service';  Src = 'mg.war';       Dest = 'mg.war';       Ctx = 'mg' }
     @{ Module = 'tcf-om';      Src = 'tcf-om.war';   Dest = 'om.war';       Ctx = 'om' }
-    @{ Module = 'tcf-batch';   Src = 'tcf-batch.war'; Dest = 'batch.war';   Ctx = 'batch' }
     @{ Module = 'tcf-ui';      Src = 'tcf-ui.war';   Dest = 'ui.war';       Ctx = 'ui' }
+    @{ Module = 'tcf-batch';   Src = 'tcf-batch.war'; Dest = 'zz-batch.war'; Ctx = 'batch' }
 )
 
 $ValidCodes = $AllModules | ForEach-Object { $_.Ctx }
@@ -61,6 +64,8 @@ Options:
   -SkipBuild               기존 WAR만 복사 (Gradle 생략)
   -NoGradleStop            gradle --stop 생략
   -Restart                 배포 후 ztomcat/start.ps1 실행
+  -ExcludeBatch            zz-batch.war 복사·기동 생략 (deploy-restart 1단계)
+  -SkipBatchCollect        batch dashboard 수집 POST 생략
 
 Examples:
   .\deploy-wars.ps1
@@ -76,6 +81,48 @@ Webapps: $Webapps
 
 if ($Help) { Show-Help; exit 0 }
 
+function Sync-BatchContextDescriptor {
+    $descDir = Join-Path $CatalinaHome 'conf\Catalina\localhost'
+    if (-not (Test-Path $descDir)) {
+        New-Item -ItemType Directory -Path $descDir -Force | Out-Null
+    }
+    $stale = Join-Path $descDir 'zz-batch.xml'
+    if (Test-Path $stale) {
+        Remove-Item -LiteralPath $stale -Force
+        Write-Host '  removed stale conf/Catalina/localhost/zz-batch.xml'
+    }
+    New-Item -ItemType Directory -Force -Path $BatchWarsDir | Out-Null
+    $warPath = (Join-Path $BatchWarsDir 'zz-batch.war').Replace('\', '/')
+    $xml = @"
+<?xml version="1.0" encoding="UTF-8"?>
+<Context docBase="$warPath" />
+"@
+    $dst = Join-Path $descDir 'batch.xml'
+    Set-Content -Path $dst -Value $xml -Encoding UTF8
+    $src = Join-Path $ZTomcatHome 'conf\Catalina\localhost\batch.xml'
+    Set-Content -Path $src -Value $xml -Encoding UTF8
+}
+
+function Remove-LegacyBatchArtifacts {
+    foreach ($name in @('batch.war', 'batch', 'zz-batch.war', 'zz-batch')) {
+        $path = Join-Path $Webapps $name
+        if (Test-Path $path) {
+            Remove-Item -LiteralPath $path -Recurse -Force
+            Write-Host "  removed legacy webapps/$name"
+        }
+    }
+}
+
+function Remove-LegacyOmArtifacts {
+    foreach ($name in @('00-om.war', '00-om')) {
+        $path = Join-Path $Webapps $name
+        if (Test-Path $path) {
+            Remove-Item -LiteralPath $path -Recurse -Force
+            Write-Host "  removed legacy $name"
+        }
+    }
+}
+
 function Resolve-Gradle {
     if ($env:GRADLE_HOME_OVERRIDE -and (Test-Path "$env:GRADLE_HOME_OVERRIDE\bin\gradle.bat")) {
         return "$env:GRADLE_HOME_OVERRIDE\bin\gradle.bat"
@@ -90,30 +137,44 @@ function Resolve-Gradle {
 
 function Resolve-Modules {
     param([string[]]$InputCodes)
-    if ($InputCodes.Count -eq 0) { return $AllModules }
-    $normalized = $InputCodes | ForEach-Object { $_.ToLowerInvariant() }
-    if ($normalized -contains 'all') { return $AllModules }
+    if (-not $InputCodes -or $InputCodes.Count -eq 0) { return @($AllModules) }
+    $normalized = @($InputCodes | ForEach-Object { $_.ToLowerInvariant() })
+    if ($normalized -contains 'all') { return @($AllModules) }
 
     $selected = @()
     foreach ($code in $normalized) {
-        $m = $AllModules | Where-Object { $_.Ctx -eq $code }
-        if (-not $m) {
+        $matches = @($AllModules | Where-Object { $_.Ctx -eq $code })
+        if ($matches.Count -eq 0) {
             throw "Unknown code: $code. Valid: $($ValidCodes -join ' ')"
         }
-        $selected += $m
+        $selected += $matches
     }
-    return $selected
+    return @($selected)
+}
+
+function Test-TomcatRunning {
+    try {
+        $conn = Get-NetTCPConnection -LocalPort 8080 -State Listen -ErrorAction SilentlyContinue
+        return $null -ne $conn
+    } catch {
+        return $false
+    }
 }
 
 function Invoke-BatchDashboardCollect {
     $batchBase = 'http://localhost:8080/batch'
-    Write-Host '[deploy-wars] waiting for tcf-batch context (~90s) ...'
-    $deadline = (Get-Date).AddSeconds(90)
+    $rollingRedeploy = Test-TomcatRunning
+    if ($rollingRedeploy) {
+        Write-Host '[deploy-wars] Tomcat autoDeploy — initial wait 20s before batch health poll ...'
+        Start-Sleep -Seconds 20
+    }
+    Write-Host '[deploy-wars] waiting for tcf-batch context (~180s, Hikari init up to 120s) ...'
+    $deadline = (Get-Date).AddSeconds(180)
     $up = $false
     do {
-        Start-Sleep -Seconds 3
+        Start-Sleep -Seconds 5
         try {
-            $health = Invoke-RestMethod -Uri "$batchBase/actuator/health" -TimeoutSec 5
+            $health = Invoke-RestMethod -Uri "$batchBase/actuator/health" -TimeoutSec 10
             if ($health.status -eq 'UP') { $up = $true; break }
         } catch { }
     } while ((Get-Date) -lt $deadline)
@@ -145,7 +206,14 @@ if (-not $SkipSync) {
     & $SyncScript -Profile $SyncProfile
 }
 
-$selected = Resolve-Modules -InputCodes $Codes
+$selected = @(Resolve-Modules -InputCodes $Codes)
+$requestAll = (-not $Codes -or $Codes.Count -eq 0) -or (($Codes | ForEach-Object { $_.ToLowerInvariant() }) -contains 'all')
+
+if ($ExcludeBatch) {
+    Remove-LegacyBatchArtifacts
+    $selected = @($selected | Where-Object { $_.Ctx -ne 'batch' })
+    Write-Host '[deploy-wars] batch deferred — zz-batch.war will not be copied yet'
+}
 
 $Gradle = Resolve-Gradle
 
@@ -157,11 +225,17 @@ try {
             & $Gradle --stop 2>$null | Out-Null
         }
 
-        if ($selected.Count -eq $AllModules.Count) {
+        if ($requestAll) {
             Write-Host '[deploy-wars] gradle buildZtomcatWars'
             & $Gradle buildZtomcatWars
         } else {
             $tasks = [string[]]@($selected | ForEach-Object { ":$($_.Module):bootWar" })
+            if ($ExcludeBatch -and ($Codes | ForEach-Object { $_.ToLowerInvariant() }) -contains 'batch') {
+                # batch-only phase after defer: ensure tcf-batch is built
+                if ($tasks -notcontains ':tcf-batch:bootWar') {
+                    $tasks += ':tcf-batch:bootWar'
+                }
+            }
             Write-Host "[deploy-wars] gradle $($tasks -join ' ')"
             & $Gradle @tasks
         }
@@ -169,28 +243,52 @@ try {
     }
 
     Write-Host '[deploy-wars] removing stale exploded directories ...'
-    $contexts = $selected | ForEach-Object { $_.Ctx }
-    if ($selected.Count -eq $AllModules.Count) {
+    if ($selected | Where-Object { $_.Ctx -eq 'om' }) {
+        Remove-LegacyOmArtifacts
+    }
+    if ($selected | Where-Object { $_.Ctx -eq 'batch' }) {
+        Sync-BatchContextDescriptor
+        Remove-LegacyBatchArtifacts
+    }
+    if ($selected.Count -eq @($AllModules).Count -and -not $ExcludeBatch) {
         & (Join-Path $ZTomcatHome 'clean-exploded.ps1')
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     } else {
-        foreach ($ctx in $contexts) {
-            $dir = Join-Path $Webapps $ctx
-            if (Test-Path $dir) {
-                Remove-Item -LiteralPath $dir -Recurse -Force
-                Write-Host "  removed $ctx/"
+        foreach ($m in $selected) {
+            $dirs = @($m.Ctx)
+            if ($m.Ctx -eq 'batch') { $dirs = @('batch', 'zz-batch') }
+            foreach ($name in $dirs) {
+                $dir = Join-Path $Webapps $name
+                if (Test-Path $dir) {
+                    Remove-Item -LiteralPath $dir -Recurse -Force
+                    Write-Host "  removed $name/"
+                }
             }
         }
     }
 
-    Write-Host '[deploy-wars] copying WAR files to webapps ...'
+    Write-Host "[deploy-wars] copying $($selected.Count) WAR file(s) ..."
     $missing = @()
     foreach ($m in $selected) {
         $from = Join-Path $FwRoot "$($m.Module)/build/libs/$($m.Src)"
-        $to = Join-Path $Webapps $m.Dest
+        if ($m.Ctx -eq 'batch') {
+            New-Item -ItemType Directory -Force -Path $BatchWarsDir | Out-Null
+            $to = Join-Path $BatchWarsDir $m.Dest
+            $destLabel = "wars/$($m.Dest)"
+        } else {
+            $to = Join-Path $Webapps $m.Dest
+            $destLabel = $m.Dest
+        }
         if (Test-Path $from) {
             Copy-Item -Force -Path $from -Destination $to
-            Write-Host "  deployed $($m.Dest) (from $($m.Src))"
+            Write-Host "  deployed $destLabel (from $($m.Src))"
+            if ($m.Ctx -eq 'batch') {
+                Sync-BatchContextDescriptor
+                $batchDesc = Join-Path $CatalinaHome 'conf\Catalina\localhost\batch.xml'
+                if (Test-Path $batchDesc) {
+                    (Get-Item $batchDesc).LastWriteTime = Get-Date
+                }
+            }
         } else {
             Write-Host "  missing $($m.Src) in $($m.Module)"
             $missing += $from
@@ -202,8 +300,12 @@ try {
     }
 
     $batchDeployed = $selected | Where-Object { $_.Ctx -eq 'batch' }
-    if ($batchDeployed -and -not $Restart) {
-        Invoke-BatchDashboardCollect
+    if ($batchDeployed -and -not $Restart -and -not $SkipBatchCollect -and -not $ExcludeBatch) {
+        if (Test-TomcatRunning) {
+            Invoke-BatchDashboardCollect
+        } else {
+            Write-Host '[deploy-wars] Tomcat not running — skip batch dashboard collect (deploy-restart will collect later)'
+        }
     }
 }
 finally {
@@ -218,7 +320,7 @@ if ($Restart) {
     } else {
         Write-Warning "start.ps1 not found: $startPs1"
     }
-} elseif ($selected.Count -eq $AllModules.Count) {
+} elseif (@($selected).Count -eq @($AllModules).Count) {
     Write-Host '[deploy-wars] Done. Restart Tomcat if it is already running.'
 } else {
     Write-Host '[deploy-wars] Done. Running Tomcat redeploys context automatically (~15s).'

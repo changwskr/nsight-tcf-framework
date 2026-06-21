@@ -3,9 +3,10 @@ spring:
   application:
     name: nsight-tcf-batch
   datasource:
-    url: jdbc:h2:file:${nsight.txlog.path:./data/nsight-txlog}/nsight_om;MODE=Oracle;AUTO_SERVER=TRUE;DATABASE_TO_UPPER=false
+    url: jdbc:h2:tcp://127.0.0.1:9092/${nsight.txlog.path:./data/nsight-txlog}/nsight_om;MODE=Oracle;DATABASE_TO_UPPER=false
     hikari:
       pool-name: nsight-batch-hikari-dev
+      initialization-fail-timeout: 120000
 
 nsight:
   gateway:
@@ -41,7 +42,7 @@ nsight:
         - db-id: LOGDB
           db-name: jdbc:h2:file:./data/nsight-txlog/nsight_om
           source-type: jdbc
-          jdbc-url: jdbc:h2:file:${nsight.txlog.path:./data/nsight-txlog}/nsight_om;MODE=Oracle;AUTO_SERVER=TRUE;DATABASE_TO_UPPER=false
+          jdbc-url: jdbc:h2:tcp://127.0.0.1:9092/${nsight.txlog.path:./data/nsight-txlog}/nsight_om;MODE=Oracle;DATABASE_TO_UPPER=false
           jdbc-user: sa
           jdbc-password: ""
           enabled: true

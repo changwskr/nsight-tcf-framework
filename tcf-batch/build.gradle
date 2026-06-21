@@ -1,6 +1,6 @@
 // TCF Batch — OM 대시보드 데이터 수집 배치
 // bootRun: gradle :tcf-batch:bootRun (포트 8098)
-// WAR:     gradle :tcf-batch:bootWar → ztomcat batch.war (/batch)
+// WAR:     gradle :tcf-batch:bootWar → ztomcat zz-batch.war (/batch, Tomcat deploy last)
 
 plugins {
     id 'org.springframework.boot'

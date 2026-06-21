@@ -1,5 +1,5 @@
 param(
-    [string[]]$Contexts = @('cc','ic','pc','bc','ms','sv','pd','cm','eb','ep','bp','bd','ss','cs','ct','mg','om','batch','ui')
+    [string[]]$Contexts = @('cc','ic','pc','bc','ms','sv','pd','cm','eb','ep','bp','bd','ss','cs','ct','mg','om','ui','batch','zz-batch','00-om')
 )
 
 $ErrorActionPreference = 'Stop'

@@ -24,8 +24,8 @@ ALL_MODULES=(
   ct-service:ct.war:ct.war:ct
   mg-service:mg.war:mg.war:mg
   tcf-om:tcf-om.war:om.war:om
-  tcf-batch:tcf-batch.war:batch.war:batch
   tcf-ui:tcf-ui.war:ui.war:ui
+  tcf-batch:tcf-batch.war:zz-batch.war:batch
 )
 
 usage() {
@@ -120,6 +120,12 @@ fi
 echo "[ztomcat] Removing stale exploded directories ..."
 for entry in "${selected[@]}"; do
   IFS=':' read -r _module _src _dest ctx <<< "${entry}"
+  if [[ "${ctx}" == "om" ]]; then
+    rm -rf "${WEBAPPS}/00-om" "${WEBAPPS}/00-om.war"
+  fi
+  if [[ "${ctx}" == "batch" ]]; then
+    rm -rf "${WEBAPPS}/batch" "${WEBAPPS}/batch.war" "${WEBAPPS}/zz-batch"
+  fi
   rm -rf "${WEBAPPS}/${ctx}"
 done
 

@@ -13,6 +13,50 @@ if (-not (Test-Path $ServerXml)) {
 
 Copy-Item -Path $SetenvSrc -Destination $SetenvDst -Force
 
+$LocalhostConfDst = Join-Path $CatalinaHome 'conf\Catalina\localhost'
+if (-not (Test-Path $LocalhostConfDst)) {
+    New-Item -ItemType Directory -Path $LocalhostConfDst -Force | Out-Null
+}
+
+$staleOm = Join-Path $LocalhostConfDst '00-om.xml'
+if (Test-Path $staleOm) {
+    Remove-Item $staleOm -Force
+    Write-Host '[ztomcat] Removed stale Catalina/localhost/00-om.xml'
+}
+
+$staleBatchDesc = Join-Path $LocalhostConfDst 'zz-batch.xml'
+if (Test-Path $staleBatchDesc) {
+    Remove-Item $staleBatchDesc -Force
+    Write-Host '[ztomcat] Removed stale Catalina/localhost/zz-batch.xml'
+}
+
+$warsDir = Join-Path $ZTomcatHome 'wars'
+New-Item -ItemType Directory -Force -Path $warsDir | Out-Null
+$legacyWebappsWar = Join-Path $CatalinaHome 'webapps\zz-batch.war'
+$targetWar = Join-Path $warsDir 'zz-batch.war'
+if ((Test-Path $legacyWebappsWar) -and -not (Test-Path $targetWar)) {
+    Copy-Item -Force -Path $legacyWebappsWar -Destination $targetWar
+    Write-Host '[ztomcat] Migrated webapps/zz-batch.war -> ztomcat/wars/zz-batch.war'
+}
+foreach ($legacy in @('zz-batch.war', 'zz-batch', 'batch.war', 'batch')) {
+    $p = Join-Path $CatalinaHome "webapps\$legacy"
+    if (Test-Path $p) {
+        Remove-Item -LiteralPath $p -Recurse -Force -ErrorAction SilentlyContinue
+        Write-Host "[ztomcat] Removed legacy webapps/$legacy"
+    }
+}
+
+$warPath = $targetWar.Replace('\', '/')
+$batchXml = @"
+<?xml version="1.0" encoding="UTF-8"?>
+<Context docBase="$warPath" />
+"@
+$batchDescDst = Join-Path $LocalhostConfDst 'batch.xml'
+Set-Content -Path $batchDescDst -Value $batchXml -Encoding UTF8
+$batchDescSrc = Join-Path $ZTomcatHome 'conf\Catalina\localhost\batch.xml'
+Set-Content -Path $batchDescSrc -Value $batchXml -Encoding UTF8
+Write-Host "[ztomcat] batch.xml -> /batch (docBase=$warPath)"
+
 $LoggingProps = Join-Path $CatalinaHome 'conf\logging.properties'
 if (Test-Path $LoggingProps) {
     $logging = Get-Content -Path $LoggingProps -Raw -Encoding UTF8
@@ -41,6 +85,18 @@ if (Test-Path $LoggingProps) {
 }
 
 $content = Get-Content -Path $ServerXml -Raw -Encoding UTF8
+if ($content -notmatch 'copyXML="true"') {
+    $content = $content -replace '(<Host name="localhost"\s+appBase="webapps"\s+unpackWARs="true"\s+autoDeploy="true")', '$1 copyXML="true"'
+    Set-Content -Path $ServerXml -Value $content -Encoding UTF8 -NoNewline
+    Write-Host '[ztomcat] Enabled Host copyXML=true'
+    $content = Get-Content -Path $ServerXml -Raw -Encoding UTF8
+}
+if ($content -notmatch 'deployIgnore=') {
+    $content = $content -replace '(<Host name="localhost"\s+appBase="webapps"\s+unpackWARs="true"\s+autoDeploy="true"\s+copyXML="true")', '$1 deployIgnore="^zz-batch(\.war)?$"'
+    Set-Content -Path $ServerXml -Value $content -Encoding UTF8 -NoNewline
+    Write-Host '[ztomcat] Host deployIgnore=^zz-batch(\.war)?$ (autoDeploy only via batch.xml -> /batch)'
+    $content = Get-Content -Path $ServerXml -Raw -Encoding UTF8
+}
 if ($content -notmatch 'URIEncoding="UTF-8"') {
     $content = $content -replace '(<Connector port="8080" protocol="HTTP/1\.1"\s*)', '$1URIEncoding="UTF-8" useBodyEncodingForURI="true" '
     Set-Content -Path $ServerXml -Value $content -Encoding UTF8 -NoNewline

@@ -33,7 +33,7 @@ resolve_gradle() {
 if [[ "${1:-}" == "help" || "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
   cat <<EOF
 Usage: deploy.sh
-  Build tcf-om.war and deploy to Tomcat webapps as om.war (/om)
+  Build tcf-om.war and deploy to Tomcat webapps as 00-om.war (/om)
 
 Target webapps:
   ${WEBAPPS}

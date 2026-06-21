@@ -35,6 +35,7 @@ $deadline = (Get-Date).AddSeconds(45)
 while ((Get-Date) -lt $deadline) {
     if (-not (Test-PortListening 8080) -and -not (Test-PortListening 8005)) {
         Write-Host '[ztomcat] Tomcat stopped (ports 8080/8005 closed).'
+        & (Join-Path $ZTomcatHome 'h2-txlog.ps1') -Action stop
         exit 0
     }
     Start-Sleep -Seconds 2
@@ -54,3 +55,4 @@ if (Test-PortListening 8080) {
     exit 1
 }
 Write-Host '[ztomcat] Tomcat stopped (forced).'
+& (Join-Path $ZTomcatHome 'h2-txlog.ps1') -Action stop

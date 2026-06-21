@@ -104,6 +104,15 @@ $Txlog = @'
       driver-class-name: org.h2.Driver
 '@
 
+$TxlogDev = @'
+    transaction-log-schema-auto-init: true
+    transaction-log-datasource:
+      url: jdbc:h2:tcp://127.0.0.1:9092/${nsight.txlog.path:./data/nsight-txlog}/nsight_om;MODE=Oracle;DATABASE_TO_UPPER=false
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+'@
+
 $TxlogProd = @'
     transaction-log-schema-auto-init: false
     transaction-log-datasource:
@@ -155,9 +164,8 @@ spring:
 
 nsight:
   tcf:
-$Txlog
+$TxlogDev
 "@
-    $codeU = $code.ToUpper()
     $prod = @"
 # prod - production Tomcat WAR (/$code)
 spring:

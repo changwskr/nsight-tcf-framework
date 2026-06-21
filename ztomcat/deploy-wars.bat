@@ -49,7 +49,7 @@ goto :collect_args
 if not defined GRADLE_TASKS (
     set "GRADLE_TASKS=buildZtomcatWars"
     set "DEPLOY_ALL=1"
-    set "DEPLOY_ENTRIES=cc-service:cc.war:cc.war:cc ic-service:ic.war:ic.war:ic pc-service:pc.war:pc.war:pc bc-service:bc.war:bc.war:bc ms-service:ms.war:ms.war:ms sv-service:sv.war:sv.war:sv pd-service:pd.war:pd.war:pd cm-service:cm.war:cm.war:cm eb-service:eb.war:eb.war:eb ep-service:ep.war:ep.war:ep bp-service:bp.war:bp.war:bp bd-service:bd.war:bd.war:bd ss-service:ss.war:ss.war:ss cs-service:cs.war:cs.war:cs ct-service:ct.war:ct.war:ct mg-service:mg.war:mg.war:mg tcf-om:tcf-om.war:om.war:om tcf-batch:tcf-batch.war:batch.war:batch tcf-ui:tcf-ui.war:ui.war:ui"
+    set "DEPLOY_ENTRIES=cc-service:cc.war:cc.war:cc ic-service:ic.war:ic.war:ic pc-service:pc.war:pc.war:pc bc-service:bc.war:bc.war:bc ms-service:ms.war:ms.war:ms sv-service:sv.war:sv.war:sv pd-service:pd.war:pd.war:pd cm-service:cm.war:cm.war:cm eb-service:eb.war:eb.war:eb ep-service:ep.war:ep.war:ep bp-service:bp.war:bp.war:bp bd-service:bd.war:bd.war:bd ss-service:ss.war:ss.war:ss cs-service:cs.war:cs.war:cs ct-service:ct.war:ct.war:ct mg-service:mg.war:mg.war:mg tcf-om:tcf-om.war:om.war:om tcf-ui:tcf-ui.war:ui.war:ui tcf-batch:tcf-batch.war:zz-batch.war:batch"
     echo [ztomcat] Building all WAR files ...
 ) else (
     set "DEPLOY_ALL=0"
@@ -70,7 +70,14 @@ if "!DEPLOY_ALL!"=="1" (
     if errorlevel 1 exit /b 1
 ) else (
     for %%W in (!CLEAN_CTX!) do (
-        if exist "%WEBAPPS%\%%W" (
+        if /i "%%W"=="batch" (
+            if exist "%WEBAPPS%\batch" rmdir /s /q "%WEBAPPS%\batch"
+            if exist "%WEBAPPS%\batch.war" del /f /q "%WEBAPPS%\batch.war"
+            if exist "%WEBAPPS%\zz-batch" rmdir /s /q "%WEBAPPS%\zz-batch"
+        ) else if /i "%%W"=="om" (
+            if exist "%WEBAPPS%\00-om" rmdir /s /q "%WEBAPPS%\00-om"
+            if exist "%WEBAPPS%\00-om.war" del /f /q "%WEBAPPS%\00-om.war"
+        ) else if exist "%WEBAPPS%\%%W" (
             rmdir /s /q "%WEBAPPS%\%%W"
             if exist "%WEBAPPS%\%%W" (
                 echo [ztomcat] ERROR: could not remove %%W/ — stop Tomcat and retry.
@@ -131,7 +138,7 @@ if /i "%CODE%"=="cs" call :add_entry cs-service cs.war cs.war cs & exit /b 0
 if /i "%CODE%"=="ct" call :add_entry ct-service ct.war ct.war ct & exit /b 0
 if /i "%CODE%"=="mg" call :add_entry mg-service mg.war mg.war mg & exit /b 0
 if /i "%CODE%"=="om" call :add_entry tcf-om tcf-om.war om.war om & exit /b 0
-if /i "%CODE%"=="batch" call :add_entry tcf-batch tcf-batch.war batch.war batch & exit /b 0
+if /i "%CODE%"=="batch" call :add_entry tcf-batch tcf-batch.war zz-batch.war batch & exit /b 0
 if /i "%CODE%"=="ui" call :add_entry tcf-ui tcf-ui.war ui.war ui & exit /b 0
 echo [ztomcat] Unknown code: %CODE%
 echo [ztomcat] Codes: cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om batch ui

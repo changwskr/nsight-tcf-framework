@@ -10,15 +10,18 @@ param(
 $ErrorActionPreference = 'Stop'
 $ZTomcatHome = Split-Path -Parent $MyInvocation.MyCommand.Path
 $FwRoot = (Resolve-Path (Join-Path $ZTomcatHome '..')).Path
+$CicdDeployScript = Join-Path $FwRoot 'tcf-cicd\local\script\deploy-wars.ps1'
 
-$AllContexts = @('cc', 'ic', 'pc', 'bc', 'ms', 'sv', 'pd', 'cm', 'eb', 'ep', 'bp', 'bd', 'ss', 'cs', 'ct', 'mg', 'om', 'batch', 'ui')
+function Get-ZtomcatContextList {
+    return @('cc', 'ic', 'pc', 'bc', 'ms', 'sv', 'pd', 'cm', 'eb', 'ep', 'bp', 'bd', 'ss', 'cs', 'ct', 'mg', 'om', 'ui', 'batch')
+}
 
 function Show-Help {
     @"
 
 Usage: deploy-restart.ps1 [codes...] [options]
 
-전체(19 WAR): stop -> clean -> deploy -> start -> health 확인
+전체(19 WAR): stop -> clean -> deploy(18) -> start -> deploy(batch) -> health 확인
 일부 WAR:     Tomcat 유지 -> deploy -> autoDeploy (~15s) -> health 확인
 
 Codes (생략 또는 all = 19 WAR 전체):
@@ -43,15 +46,20 @@ if ($Help) { Show-Help; exit 0 }
 
 function Resolve-Contexts {
     param([string[]]$InputCodes)
-    if ($InputCodes.Count -eq 0) { return $AllContexts }
-    $normalized = $InputCodes | ForEach-Object { $_.ToLowerInvariant() }
-    if ($normalized -contains 'all') { return $AllContexts }
+    $all = Get-ZtomcatContextList
+    if (-not $InputCodes -or $InputCodes.Count -eq 0) { return @($all) }
+    $normalized = @($InputCodes | ForEach-Object { $_.ToLowerInvariant() })
+    if ($normalized -contains 'all') { return @($all) }
+    $ordered = @()
+    foreach ($code in $all) {
+        if ($code -in $normalized) { $ordered += $code }
+    }
     foreach ($code in $normalized) {
-        if ($code -notin $AllContexts) {
-            throw "Unknown code: $code. Valid: $($AllContexts -join ' ')"
+        if ($code -notin $all) {
+            throw "Unknown code: $code. Valid: $($all -join ' ')"
         }
     }
-    return @($normalized)
+    return @($ordered)
 }
 
 function Test-TomcatRunning {
@@ -64,17 +72,28 @@ function Test-TomcatRunning {
 }
 
 function Invoke-BatchDashboardCollect {
+    param(
+        [int]$MaxWaitSeconds = 180,
+        [switch]$SkipWait
+    )
     $batchBase = 'http://localhost:8080/batch'
-    Write-Host '[ztomcat] waiting for tcf-batch context (~90s) ...'
-    $deadline = (Get-Date).AddSeconds(90)
     $up = $false
-    do {
-        Start-Sleep -Seconds 3
+    if (-not $SkipWait) {
+        Write-Host "[ztomcat] waiting for tcf-batch context (~$MaxWaitSeconds s, Hikari up to 120s) ..."
+        $deadline = (Get-Date).AddSeconds($MaxWaitSeconds)
+        do {
+            Start-Sleep -Seconds 5
+            try {
+                $health = Invoke-RestMethod -Uri "$batchBase/actuator/health" -TimeoutSec 10
+                if ($health.status -eq 'UP') { $up = $true; break }
+            } catch { }
+        } while ((Get-Date) -lt $deadline)
+    } else {
         try {
-            $health = Invoke-RestMethod -Uri "$batchBase/actuator/health" -TimeoutSec 5
-            if ($health.status -eq 'UP') { $up = $true; break }
+            $health = Invoke-RestMethod -Uri "$batchBase/actuator/health" -TimeoutSec 10
+            $up = ($health.status -eq 'UP')
         } catch { }
-    } while ((Get-Date) -lt $deadline)
+    }
 
     if (-not $up) {
         Write-Warning '[ztomcat] tcf-batch not UP yet — POST /batch/jobs/db-status/run 로 수동 갱신하세요.'
@@ -93,7 +112,26 @@ function Invoke-BatchDashboardCollect {
 }
 
 function Invoke-DeployWars {
-    param([string[]]$InputCodes)
+    param(
+        [string[]]$InputCodes,
+        [switch]$SkipBuild,
+        [switch]$ExcludeBatch,
+        [switch]$SkipBatchCollect
+    )
+    if (Test-Path $CicdDeployScript) {
+        $deployArgs = @{
+            SkipSync    = $true
+            SyncProfile = 'dev'
+        }
+        if ($SkipBuild) { $deployArgs['SkipBuild'] = $true }
+        if ($ExcludeBatch) { $deployArgs['ExcludeBatch'] = $true }
+        if ($SkipBatchCollect) { $deployArgs['SkipBatchCollect'] = $true }
+        if ($InputCodes -and $InputCodes.Count -gt 0) {
+            $deployArgs['Codes'] = @($InputCodes)
+        }
+        & $CicdDeployScript @deployArgs
+        return
+    }
     $deployBat = Join-Path $ZTomcatHome 'deploy-wars.bat'
     if ($InputCodes.Count -gt 0) {
         & $deployBat @InputCodes
@@ -116,14 +154,51 @@ function Invoke-StartTomcatSkipDeploy {
     }
 }
 
-$contexts = Resolve-Contexts -InputCodes $Codes
-$deployAll = ($Codes.Count -eq 0) -or (($Codes | ForEach-Object { $_.ToLowerInvariant() }) -contains 'all')
+function Wait-ContextsHealthy {
+    param(
+        [string[]]$TargetContexts,
+        [string]$Label,
+        [int]$TimeoutMinutes = 6
+    )
+    $targets = @($TargetContexts)
+    if ($targets.Count -eq 0) {
+        Write-Warning "  $Label health skipped — no target contexts"
+        return $false
+    }
+    $base = 'http://localhost:8080'
+    $deadline = (Get-Date).AddMinutes($TimeoutMinutes)
+    do {
+        Start-Sleep -Seconds 15
+        $up = 0
+        foreach ($ctx in $targets) {
+            try {
+                $null = Invoke-WebRequest -Uri "$base/$ctx/actuator/health" -UseBasicParsing -TimeoutSec 5
+                $up++
+            } catch { }
+        }
+        Write-Host "  $Label health OK: $up / $($targets.Count)"
+        if ($up -eq $targets.Count) { return $true }
+    } while ((Get-Date) -lt $deadline)
+    return $false
+}
+
+$VerifyContexts = @(Resolve-Contexts -InputCodes $Codes)
+$PreBatchContexts = @(Get-ZtomcatContextList | Where-Object { $_ -ne 'batch' })
+$deployAll = (-not $Codes -or $Codes.Count -eq 0) -or (($Codes | ForEach-Object { $_.ToLowerInvariant() }) -contains 'all')
 $fullRestart = $deployAll -or $Restart
+$batchLastDeploy = $fullRestart -and (
+    (-not $Codes -or $Codes.Count -eq 0) -or
+    (($Codes | ForEach-Object { $_.ToLowerInvariant() }) -contains 'all')
+)
 
 if ($fullRestart) {
-    Write-Host '[ztomcat] Full restart: stop -> clean -> deploy -> start -> verify'
+    if ($batchLastDeploy) {
+        Write-Host '[ztomcat] Full restart: stop -> clean -> deploy(18) -> start -> deploy(batch) -> verify'
+    } else {
+        Write-Host '[ztomcat] Full restart: stop -> clean -> deploy -> start -> verify'
+    }
 } else {
-    Write-Host "[ztomcat] Rolling deploy ($($contexts -join ' ')): Tomcat 유지, autoDeploy -> verify"
+    Write-Host "[ztomcat] Rolling deploy ($($VerifyContexts -join ' ')): Tomcat 유지, autoDeploy -> verify"
 }
 
 $tomcatRunning = Test-TomcatRunning
@@ -132,20 +207,29 @@ if ($fullRestart) {
     & (Join-Path $ZTomcatHome 'stop.ps1')
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
+    $portWait = (Get-Date).AddSeconds(15)
+    while ((Get-Date) -lt $portWait -and (Test-TomcatRunning)) {
+        Start-Sleep -Seconds 1
+    }
+
     & (Join-Path $ZTomcatHome 'clean-exploded.ps1')
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 }
 
-if ($Codes.Count -gt 0) {
-    Invoke-DeployWars -InputCodes $Codes
+if ($batchLastDeploy) {
+    Write-Host '[ztomcat] Phase 1: deploy 18 WARs (batch excluded) ...'
+    Invoke-DeployWars -ExcludeBatch -SkipBatchCollect
+} elseif ($Codes.Count -gt 0) {
+    $skipCollect = ($Codes.Count -eq 1) -and (($Codes | ForEach-Object { $_.ToLowerInvariant() }) -contains 'batch')
+    if ($skipCollect) {
+        Invoke-DeployWars -InputCodes $Codes -SkipBatchCollect
+    } else {
+        Invoke-DeployWars -InputCodes $Codes
+    }
 } else {
     Invoke-DeployWars -InputCodes @()
 }
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-
-if ($contexts -contains 'batch' -and -not $fullRestart) {
-    Invoke-BatchDashboardCollect
-}
 
 if ($fullRestart) {
     Invoke-StartTomcatSkipDeploy
@@ -158,33 +242,40 @@ if ($fullRestart) {
     Write-Host '[ztomcat] Tomcat running — selected context(s) redeploy automatically (~15s).'
 }
 
+if ($batchLastDeploy) {
+    Write-Host "[ztomcat] Waiting for $($PreBatchContexts.Count) WARs before batch deploy (~5 min) ..."
+    if (-not (Wait-ContextsHealthy -TargetContexts $PreBatchContexts -Label 'pre-batch')) {
+        Write-Warning '[ztomcat] Not all contexts UP — deploying batch anyway'
+    }
+    Write-Host '[ztomcat] Phase 2: deploy tcf-batch (zz-batch.war) last ...'
+    Invoke-DeployWars -InputCodes @('batch') -SkipBuild -SkipBatchCollect
+    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+    Invoke-BatchDashboardCollect
+} elseif ($VerifyContexts -contains 'batch' -and -not $fullRestart) {
+    Write-Host '[ztomcat] Tomcat autoDeploy — waiting before batch health (~20s) ...'
+    Start-Sleep -Seconds 20
+    if (-not (Wait-ContextsHealthy -TargetContexts @('batch') -Label 'batch' -TimeoutMinutes 4)) {
+        Write-Warning '[ztomcat] batch context not UP within 4 min — check catalina log'
+    }
+    Invoke-BatchDashboardCollect -SkipWait
+}
+
 if ($SkipVerify) {
     Write-Host '[ztomcat] Done (verify skipped).'
     exit 0
 }
 
 $waitHint = if ($fullRestart) { '~5 min' } else { '~30s per context' }
-Write-Host "[ztomcat] Waiting for WAR deployments ($waitHint for $($contexts.Count) context(s))..."
-$deadline = (Get-Date).AddMinutes(6)
-$base = 'http://localhost:8080'
-
-do {
-    Start-Sleep -Seconds 15
-    $up = 0
-    foreach ($ctx in $contexts) {
-        try {
-            $null = Invoke-WebRequest -Uri "$base/$ctx/actuator/health" -UseBasicParsing -TimeoutSec 5
-            $up++
-        } catch { }
-    }
-    Write-Host "  health OK: $up / $($contexts.Count)"
-    if ($up -eq $contexts.Count) { break }
-} while ((Get-Date) -lt $deadline)
+Write-Host "[ztomcat] Waiting for WAR deployments ($waitHint for $($VerifyContexts.Count) context(s))..."
+if (-not (Wait-ContextsHealthy -TargetContexts $VerifyContexts -Label 'final')) {
+    Write-Warning '[ztomcat] Timeout waiting for all contexts — running health check anyway'
+}
 
 Write-Host '[ztomcat] Health check (GET /{context}/actuator/health)'
+$base = 'http://localhost:8080'
 $ok = 0
 $fail = 0
-foreach ($ctx in $contexts) {
+foreach ($ctx in $VerifyContexts) {
     $url = "$base/$ctx/actuator/health"
     try {
         $r = Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 30
@@ -201,6 +292,6 @@ foreach ($ctx in $contexts) {
     }
 }
 
-Write-Host "[ztomcat] Result: $ok OK, $fail FAIL (total $($contexts.Count))"
+Write-Host "[ztomcat] Result: $ok OK, $fail FAIL (total $($VerifyContexts.Count))"
 if ($fail -gt 0) { exit 1 }
 Write-Host '[ztomcat] deploy-restart complete.'

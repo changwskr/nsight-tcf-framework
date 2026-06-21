@@ -105,6 +105,14 @@ TXLOG = """    transaction-log-schema-auto-init: true
       driver-class-name: org.h2.Driver
 """
 
+TXLOG_DEV = """    transaction-log-schema-auto-init: true
+    transaction-log-datasource:
+      url: jdbc:h2:tcp://127.0.0.1:9092/${nsight.txlog.path:./data/nsight-txlog}/nsight_om;MODE=Oracle;DATABASE_TO_UPPER=false
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+"""
+
 TXLOG_PROD = """    transaction-log-schema-auto-init: false
     transaction-log-datasource:
       url: ${NSIGHT_TXLOG_JDBC_URL:jdbc:h2:file:${nsight.txlog.path:./data/nsight-txlog}/nsight_om;MODE=Oracle;AUTO_SERVER=TRUE;DATABASE_TO_UPPER=false}
@@ -152,8 +160,7 @@ spring:
 
 nsight:
   tcf:
-{TXLOG}"""
-        prod = f"""# prod — 운영 Tomcat WAR (/{code})
+{TXLOG_DEV}"""
 spring:
   application:
     name: {app_name}
