@@ -16,7 +16,7 @@ public class OmBatchRemoteClient {
     private final String batchServiceUrl;
 
     public OmBatchRemoteClient(RestTemplateBuilder builder,
-                               @Value("${nsight.om.batch-service-url:http://127.0.0.1:8098}") String batchServiceUrl) {
+                               @Value("${nsight.om.batch-service-url:http://127.0.0.1:8098/batch}") String batchServiceUrl) {
         this.batchServiceUrl = batchServiceUrl.endsWith("/")
                 ? batchServiceUrl.substring(0, batchServiceUrl.length() - 1)
                 : batchServiceUrl;

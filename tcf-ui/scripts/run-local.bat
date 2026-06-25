@@ -26,6 +26,9 @@ if not exist "!GRADLE!" (
 cd /d "!PROJECT_HOME!"
 chcp 65001 >nul
 set "JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8"
+echo [tcf-ui-run] sync static resources...
+call "!GRADLE!" :!MODULE!:classes -q
+if errorlevel 1 exit /b %errorlevel%
 echo [tcf-ui-run] gradle :!MODULE!:bootRun ^(port 8099^)
 call "!GRADLE!" :!MODULE!:bootRun
 exit /b %errorlevel%

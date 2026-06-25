@@ -69,7 +69,7 @@ curl -X POST http://localhost:8080/batch/jobs/ap-status/run
 ## OM 연동
 
 - tcf-om 설정 (Tomcat): `nsight.om.batch-service-url: http://127.0.0.1:8080/batch`
-- tcf-om 설정 (bootRun): `nsight.om.batch-service-url: http://127.0.0.1:8098`
+- tcf-om 설정 (bootRun): `nsight.om.batch-service-url: http://127.0.0.1:8098/batch`
 - OM 배치 관리 화면에서 Job `BAT-BATCH-001` ~ `004` 수동 재실행 가능
 
 ## 세션 수집 참고 (Tomcat)

@@ -18,6 +18,11 @@ public class OmAuditLogFacade {
     public Map<String, Object> inquiry(Map<String, Object> body, TransactionContext context) {
         return service.inquiry(body, context);
     }
+
+    @Transactional(timeout = 30)
+    public Map<String, Object> deleteAll(Map<String, Object> body, TransactionContext context) {
+        return service.deleteAll(body, context);
+    }
 }
 
 

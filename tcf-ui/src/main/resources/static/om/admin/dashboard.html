@@ -8,10 +8,48 @@
   <link rel="stylesheet" href="/_shared/om-admin.css">
 </head>
 <body>
-  <script src="/_shared/om-admin.js?v=20260616"></script>
+  <script src="/_shared/om-admin.js?v=20260625f"></script>
   <script>
     OmAdmin.initPage('dashboard', '운영 대시보드', async (el) => {
       const REFRESH_MS = 60_000;
+
+      el.innerHTML = `
+        <div class="om-toolbar" style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px">
+          <button class="btn-secondary" id="dashboardResetBtn" type="button">DB 초기화</button>
+        </div>
+        <div id="dashboardBody"></div>`;
+      const bodyEl = el.querySelector('#dashboardBody');
+
+      document.getElementById('dashboardResetBtn').addEventListener('click', async () => {
+        if (!confirm(
+          '대시보드 스냅샷 DB(OM_AP_STATUS, OM_DB_STATUS, OM_SESSION_STATUS, OM_DEPLOY_STATUS)를 초기화하고\n'
+          + 'tcf-batch 수집을 즉시 재실행합니다.\n\n'
+          + '거래로그·사용자·메뉴 등 운영 데이터는 삭제되지 않습니다.\n계속하시겠습니까?'
+        )) {
+          return;
+        }
+        const resetReason = prompt('초기화 사유 (5자 이상, 감사로그에 기록됩니다):');
+        if (!resetReason || resetReason.trim().length < 5) {
+          alert('초기화 사유를 5자 이상 입력해야 합니다.');
+          return;
+        }
+        const btn = document.getElementById('dashboardResetBtn');
+        btn.disabled = true;
+        try {
+          const { body } = await OmAdmin.mutate('dashboardReset', {
+            confirmCode: 'RESET_DASHBOARD',
+            resetReason: resetReason.trim()
+          }, 'EXECUTE');
+          const deleted = (body.deletedApCount ?? 0) + (body.deletedDbCount ?? 0)
+            + (body.deletedSessionCount ?? 0) + (body.deletedDeployCount ?? 0);
+          alert(`${body.message || '초기화 완료'}\n삭제 행: ${deleted}건`);
+          await renderDashboard();
+        } catch (e) {
+          OmAdmin.showErrorBanner(el, e.message);
+        } finally {
+          btn.disabled = false;
+        }
+      });
 
       const formatCheckedAt = (value) => {
         const s = String(value || '');
@@ -100,7 +138,7 @@
             <td class="om-mono">${formatDeployTime(OmAdmin.field(r, 'deployedAt'))}</td>
           </tr>`).join('') || '<tr><td colspan="5" class="om-empty">배치 수집 전 · tcf-batch BAT-BATCH-004 실행 필요</td></tr>';
 
-        el.innerHTML = `
+        bodyEl.innerHTML = `
           <div class="om-alert info">기준일 <strong>${body.baseDate || baseDate}</strong> · 60초마다 자동 갱신 · ${batchLabel} 5분 주기 수집</div>
           <section class="om-status-banner ${statusClass}">
             <div class="om-status-main ${statusClass}">전체 상태: ${statusLabel}</div>

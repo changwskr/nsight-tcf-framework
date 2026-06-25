@@ -2,7 +2,16 @@
 
 로컬 개발용 Gradle 래퍼 스크립트 모음입니다. **프로젝트 루트**에서 실행합니다.
 
-> 전체 스크립트 맵 (ztomcat, tcf-cicd, 모듈 scripts): [docs/architecture/38-script.md](../docs/architecture/38-script.md)
+> 전체 스크립트 맵: [docs/architecture/38-script.md](../docs/architecture/38-script.md)  
+> Gradle·산출물·lib 경로: [docs/manual/gradle.md](../docs/manual/gradle.md), [docs/manual/lib-module.md](../docs/manual/lib-module.md)
+
+## 공통 — Gradle 경로
+
+`GRADLE_HOME_OVERRIDE` → `GRADLE_HOME` → PATH `gradle` 순으로 탐색합니다.
+
+```powershell
+$env:GRADLE_HOME_OVERRIDE = 'C:\Programming(23-08-15)\gradle-8.10.1'
+```
 
 ## run-local — 서비스 기동
 
@@ -33,13 +42,17 @@ tcf-scripts/build.sh <target>
 
 | 인자 | 설명 |
 |------|------|
-| `all` | clean + 업무 WAR 일괄 빌드 |
-| `wars` | `buildBusinessWars` (17 WAR: 16 *-service + tcf-om) |
-| `ztomcat` | `gradle buildZtomcatWars` (19 WAR — Gradle 직접 호출) |
-| `tcf` | tcf-util, tcf-core, tcf-web |
-| `ui` | tcf-ui bootJar |
-| `batch` | tcf-batch bootJar |
-| `sv`, `tcf-om`, … | 개별 모듈 build |
+| `all` | `clean` + `buildBusinessWars` (17 WAR) |
+| `wars` | `buildBusinessWars` (16 *-service + tcf-om) |
+| `ztomcat` | `buildZtomcatWars` (19 WAR — batch + ui 포함) |
+| `tcf` | `tcf-util`, `tcf-core`, `tcf-web` |
+| `ui` | `tcf-ui` bootJar |
+| `batch` | `tcf-batch` bootWar |
+| `tcf-om`, `om` | `tcf-om` bootWar |
+| `services` | 16 *-service `:build` + `tcf-om:bootWar` |
+| `sv`, `ic`, … | 개별 모듈 `:build` |
+
+`build-all.bat` / `build-all.sh` → `build all` 호출.
 
 ## curl-sample — 샘플 거래 호출
 
@@ -52,23 +65,25 @@ tcf-scripts/curl-sample.sh sv
 
 ## deploy — Tomcat webapps 배포
 
-WAR 빌드 후 [ztomcat](../ztomcat/README.md) `webapps`로 복사합니다.
+WAR 빌드 후 [ztomcat](../ztomcat/README.md) `webapps`(및 batch는 `wars/`)로 복사합니다.
 
 ```bash
 tcf-scripts\deploy.bat sv cc om
 tcf-scripts/deploy.sh sv cc om
+tcf-scripts\deploy.bat batch ui
 ```
 
 | 인자 | 설명 |
 |------|------|
-| (없음) / `all` | 업무 WAR + tcf-om 일괄 |
-| `sv`, `cc`, … | 선택 업무만 |
-| `ud`, `tcf-om`, `om` | tcf-om (`om.war`) |
-| `batch`, `ui` | tcf-batch, tcf-ui |
+| (없음) / `all` | 업무 17 WAR (`buildBusinessWars`) |
+| `sv`, `cc`, … | 선택 업무 — `tcf-*` lib 선행 빌드 + `bootWar` |
+| `ud`, `tcf-om`, `om` | `tcf-om.war` → `om.war` |
+| `batch`, `tcf-batch` | `tcf-batch.war` → `ztomcat/wars/zz-batch.war` + `batch.xml` |
+| `ui`, `tcf-ui` | `tcf-ui.war` → `ui.war` |
 
 환경 변수: `TOMCAT_WEBAPPS`, `GRADLE_HOME` / `GRADLE_HOME_OVERRIDE`
 
-> 전체 Tomcat 배포·검증은 `ztomcat/deploy-wars.bat`, `ztomcat/verify-deploy.ps1` 사용을 권장합니다.
+> **19 WAR 전체** (sync·검증 포함): `ztomcat/deploy-wars.bat all`, `ztomcat/verify-deploy.ps1`
 
 ## 포트 참고 (bootRun)
 

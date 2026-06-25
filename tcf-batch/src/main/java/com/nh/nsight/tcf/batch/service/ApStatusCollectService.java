@@ -54,6 +54,8 @@ public class ApStatusCollectService {
                     snapshot.heapUsagePct(), snapshot.threadCount());
         }
 
+        pruneStaleTargets(targets);
+
         long durationMs = System.currentTimeMillis() - start;
         String runStatus = failCount == 0 ? "SUCCESS" : (successCount == 0 ? "FAIL" : "PARTIAL");
         String message = "AP 상태 %d건 수집 (성공 %d, 실패 %d)".formatted(targets.size(), successCount, failCount);
@@ -129,5 +131,10 @@ public class ApStatusCollectService {
 
     private double round1(double value) {
         return Math.round(value * 10) / 10.0;
+    }
+
+    private void pruneStaleTargets(List<ApTargetProperties> enabledTargets) {
+        List<String> keepIds = enabledTargets.stream().map(ApTargetProperties::getApId).toList();
+        repository.retainOnlyApIds(keepIds);
     }
 }

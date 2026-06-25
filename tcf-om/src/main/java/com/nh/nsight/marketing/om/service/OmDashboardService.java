@@ -1,12 +1,17 @@
 package com.nh.nsight.marketing.om.service;
 
 import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.tcf.core.error.BusinessException;
 import com.nh.nsight.tcf.util.DateTimeUtil;
 import com.nh.nsight.marketing.om.dao.OmOperationDao;
 import com.nh.nsight.marketing.om.rule.OmOperationRule;
 import com.nh.nsight.marketing.om.support.OmBodySupport;
+import com.nh.nsight.marketing.om.support.OmBatchRemoteClient;
+import com.nh.nsight.marketing.om.support.OmDashboardSnapshotTx;
+import com.nh.nsight.marketing.om.support.OmDashboardSnapshotTx.SnapshotPurgeResult;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,12 +26,17 @@ public class OmDashboardService {
 
     private final OmOperationRule rule;
     private final OmOperationDao dao;
+    private final OmDashboardSnapshotTx snapshotTx;
+    private final OmBatchRemoteClient batchRemoteClient;
     private final String batchServiceUrl;
 
-    public OmDashboardService(OmOperationRule rule, OmOperationDao dao,
+    public OmDashboardService(OmOperationRule rule, OmOperationDao dao, OmDashboardSnapshotTx snapshotTx,
+                              OmBatchRemoteClient batchRemoteClient,
                               @Value("${nsight.om.batch-service-url:http://127.0.0.1:8098/batch}") String batchServiceUrl) {
         this.rule = rule;
         this.dao = dao;
+        this.snapshotTx = snapshotTx;
+        this.batchRemoteClient = batchRemoteClient;
         this.batchServiceUrl = batchServiceUrl;
     }
 
@@ -57,7 +67,7 @@ public class OmDashboardService {
         List<Map<String, Object>> dbStatus = dao.selectDbStatus();
         List<Map<String, Object>> deployStatus = dao.selectDeployStatus();
         List<Map<String, Object>> sessionStatus = dao.selectSessionStatus();
-        String batchLastCollectedAt = resolveLatestCollectedAt(apStatus, dbStatus, sessionStatus, deployStatus);
+        String batchLastCollectedAt = resolveLatestCollectedAt(apStatus, dbStatus, sessionStatus);
         result.put("apStatus", apStatus);
         result.put("dbStatus", dbStatus);
         result.put("deployStatus", deployStatus);
@@ -81,6 +91,36 @@ public class OmDashboardService {
         return result;
     }
 
+    public Map<String, Object> reset(Map<String, Object> body, TransactionContext context) {
+        rule.validateOperation(context);
+        rule.requireReason(body, "resetReason");
+        if (!"RESET_DASHBOARD".equals(OmBodySupport.stringValue(body, "confirmCode"))) {
+            throw new BusinessException("E-OM-VAL-0002", "confirmCode=RESET_DASHBOARD 이 필요합니다.");
+        }
+
+        String reason = OmBodySupport.stringValue(body, "resetReason");
+        SnapshotPurgeResult purge = snapshotTx.purgeAll();
+
+        List<Map<String, Object>> collectResults = new ArrayList<>();
+        collectResults.add(batchRemoteClient.runApStatusCollect());
+        collectResults.add(batchRemoteClient.runDbStatusCollect());
+        collectResults.add(batchRemoteClient.runSessionStatusCollect());
+        collectResults.add(batchRemoteClient.runDeployStatusCollect());
+
+        snapshotTx.recordResetAudit(context, purge, reason);
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("businessCode", "OM");
+        result.put("screen", "대시보드 DB 초기화");
+        result.put("deletedApCount", purge.deletedAp());
+        result.put("deletedDbCount", purge.deletedDb());
+        result.put("deletedSessionCount", purge.deletedSession());
+        result.put("deletedDeployCount", purge.deletedDeploy());
+        result.put("collectResults", collectResults);
+        result.put("message", "대시보드 스냅샷 테이블을 초기화하고 tcf-batch 수집을 재실행했습니다.");
+        return result;
+    }
+
     private long toLong(Object value) {
         if (value == null) {
             return 0L;
@@ -90,13 +130,11 @@ public class OmDashboardService {
 
     private String resolveLatestCollectedAt(List<Map<String, Object>> apStatus,
                                           List<Map<String, Object>> dbStatus,
-                                          List<Map<String, Object>> sessionStatus,
-                                          List<Map<String, Object>> deployStatus) {
+                                          List<Map<String, Object>> sessionStatus) {
         OffsetDateTime latest = null;
         latest = maxCheckedAt(latest, apStatus, "checkedAt");
         latest = maxCheckedAt(latest, dbStatus, "checkedAt");
         latest = maxCheckedAt(latest, sessionStatus, "checkedAt");
-        latest = maxCheckedAt(latest, deployStatus, "deployedAt");
         return latest == null ? null : latest.toString();
     }
 

@@ -4,14 +4,16 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_HOME="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-# Tomcat webapps (override: export TOMCAT_WEBAPPS=/path/to/webapps)
 if [[ -n "${TOMCAT_WEBAPPS:-}" ]]; then
   WEBAPPS="${TOMCAT_WEBAPPS}"
 elif [[ -d "${PROJECT_HOME}/ztomcat/apache-tomcat-10.1.34/webapps" ]]; then
   WEBAPPS="$(cd "${PROJECT_HOME}/ztomcat/apache-tomcat-10.1.34/webapps" && pwd)"
 else
-  WEBAPPS="${TOMCAT_WEBAPPS:-/opt/tomcat/webapps}"
+  WEBAPPS="/opt/tomcat/webapps"
 fi
+
+BATCH_WARS="${PROJECT_HOME}/ztomcat/wars"
+BATCH_XML="${PROJECT_HOME}/ztomcat/conf/Catalina/localhost/batch.xml"
 
 ALL_MODULES=(
   cc-service:cc.war:cc.war:cc
@@ -36,10 +38,11 @@ ALL_MODULES=(
 usage() {
   cat <<EOF
 Usage:
-  deploy.sh              Build and deploy all WARs
+  deploy.sh              Build and deploy business WARs + om (17)
   deploy.sh all          Same as above
   deploy.sh sv           Build and deploy one code
-  deploy.sh sv cc ud     Build and deploy multiple codes
+  deploy.sh sv cc om     Build and deploy multiple codes
+  deploy.sh batch ui     tcf-batch (wars/zz-batch.war) + tcf-ui
 
 Target webapps:
   ${WEBAPPS}
@@ -49,7 +52,8 @@ Gradle:
   export GRADLE_HOME=/path/to/gradle-8.10.1
   or export GRADLE_HOME_OVERRIDE=...
 
-Codes: cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om tcf-om
+Codes: cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om batch ui
+Full 19 WAR: ztomcat/deploy-wars.sh all
 EOF
 }
 
@@ -57,10 +61,11 @@ resolve_entry() {
   local code
   code="$(echo "$1" | tr '[:upper:]' '[:lower:]')"
   local entry module _src _dest ctx
-  if [[ "${code}" == "tcf-om" ]]; then
-    echo "tcf-om:tcf-om.war:om.war:om"
-    return 0
-  fi
+  case "${code}" in
+    tcf-om|om|ud) echo "tcf-om:tcf-om.war:om.war:om"; return 0 ;;
+    ui|tcf-ui) echo "tcf-ui:tcf-ui.war:ui.war:ui"; return 0 ;;
+    batch|tcf-batch) echo "__batch__"; return 0 ;;
+  esac
   for entry in "${ALL_MODULES[@]}"; do
     IFS=':' read -r module _src _dest ctx <<< "${entry}"
     if [[ "${ctx}" == "${code}" ]]; then
@@ -69,7 +74,7 @@ resolve_entry() {
     fi
   done
   echo "[deploy] Unknown code: ${1}" >&2
-  echo "[deploy] Codes: cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om tcf-om" >&2
+  echo "[deploy] Codes: cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om batch ui" >&2
   return 1
 }
 
@@ -80,24 +85,22 @@ resolve_gradle() {
     GRADLE="${home}/bin/gradle"
     return 0
   fi
-  if [[ -n "${GRADLE:-}" && -x "${GRADLE}" ]]; then
-    return 0
-  fi
   if command -v gradle >/dev/null 2>&1; then
     GRADLE="$(command -v gradle)"
     return 0
   fi
-  for candidate in \
-    "${HOME}/gradle-8.10.1" \
-    "/opt/gradle/gradle-8.10.1" \
-    "/usr/local/gradle-8.10.1"; do
-    if [[ -x "${candidate}/bin/gradle" ]]; then
-      GRADLE="${candidate}/bin/gradle"
-      return 0
-    fi
-  done
-  echo "[deploy] gradle not found. Set GRADLE_HOME or add gradle to PATH." >&2
+  echo "[deploy] gradle not found. Set GRADLE_HOME or GRADLE_HOME_OVERRIDE." >&2
   exit 1
+}
+
+sync_batch_xml() {
+  mkdir -p "$(dirname "${BATCH_XML}")"
+  local war_path
+  war_path="$(echo "${BATCH_WARS}/zz-batch.war" | sed 's|\\|/|g')"
+  cat >"${BATCH_XML}" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<Context docBase="${war_path}" />
+EOF
 }
 
 if [[ "${1:-}" == "help" || "${1:-}" == "-h" || "${1:-}" == "--help" || "${1:-}" == "/?" ]]; then
@@ -113,7 +116,7 @@ fi
 resolve_gradle
 
 selected=()
-gradle_tasks=()
+batch_deploy=0
 deploy_all=0
 
 if [[ $# -eq 0 ]]; then
@@ -130,13 +133,23 @@ fi
 if [[ "${deploy_all}" -eq 1 ]]; then
   selected=("${ALL_MODULES[@]}")
   gradle_tasks=(buildBusinessWars)
-  echo "[deploy] Building all WAR files ..."
+  echo "[deploy] Building all WAR files (buildBusinessWars) ..."
 else
+  gradle_tasks=(
+    :tcf-util:build
+    :tcf-core:build
+    :tcf-web:build
+  )
   for local_code in "$@"; do
     if [[ "$(echo "${local_code}" | tr '[:upper:]' '[:lower:]')" == "all" ]]; then
       continue
     fi
     resolved="$(resolve_entry "${local_code}")"
+    if [[ "${resolved}" == "__batch__" ]]; then
+      batch_deploy=1
+      gradle_tasks+=(":tcf-batch:bootWar")
+      continue
+    fi
     selected+=("${resolved}")
     module="${resolved%%:*}"
     gradle_tasks+=(":${module}:bootWar")
@@ -154,8 +167,15 @@ for entry in "${selected[@]}"; do
   IFS=':' read -r _module _src _dest ctx <<< "${entry}"
   rm -rf "${WEBAPPS}/${ctx}"
 done
+if [[ "${batch_deploy}" -eq 1 ]]; then
+  rm -rf "${WEBAPPS}/batch"
+fi
 
-echo "[deploy] Copying WAR files to ${WEBAPPS} ..."
+if [[ "${batch_deploy}" -eq 1 ]]; then
+  sync_batch_xml
+fi
+
+echo "[deploy] Copying WAR files ..."
 for entry in "${selected[@]}"; do
   IFS=':' read -r module src dest _ctx <<< "${entry}"
   from="${PROJECT_HOME}/${module}/build/libs/${src}"
@@ -166,6 +186,17 @@ for entry in "${selected[@]}"; do
     echo "  missing ${src} in ${module}"
   fi
 done
+
+if [[ "${batch_deploy}" -eq 1 ]]; then
+  mkdir -p "${BATCH_WARS}"
+  from="${PROJECT_HOME}/tcf-batch/build/libs/tcf-batch.war"
+  if [[ -f "${from}" ]]; then
+    cp -f "${from}" "${BATCH_WARS}/zz-batch.war"
+    echo "  deployed wars/zz-batch.war (from tcf-batch.war)"
+  else
+    echo "  missing tcf-batch.war"
+  fi
+fi
 
 echo
 echo "[deploy] Verifying deployed WAR files ..."
@@ -183,17 +214,29 @@ for entry in "${selected[@]}"; do
     echo "  [MISSING] ${dest} - not found in ${WEBAPPS}"
   fi
 done
+
+if [[ "${batch_deploy}" -eq 1 ]]; then
+  if [[ -f "${BATCH_WARS}/zz-batch.war" ]]; then
+    verify_count=$((verify_count + 1))
+    echo "  [OK] wars/zz-batch.war"
+    ls -lh "${BATCH_WARS}/zz-batch.war"
+  else
+    verify_failed=$((verify_failed + 1))
+    echo "  [MISSING] wars/zz-batch.war"
+  fi
+fi
 echo
 
 if [[ "${verify_failed}" -gt 0 ]]; then
-  echo "[deploy] Verification failed: ${verify_failed} WAR(s) missing in ${WEBAPPS}" >&2
+  echo "[deploy] Verification failed: ${verify_failed} WAR(s) missing" >&2
   exit 1
 fi
 
-echo "[deploy] All ${verify_count} WAR(s) verified in ${WEBAPPS}"
+echo "[deploy] All ${verify_count} WAR(s) verified"
 
 if [[ "${deploy_all}" -eq 1 ]]; then
-  echo "[deploy] Done. Restart Tomcat if it is already running."
+  echo "[deploy] Done. For batch/ui use: deploy.sh batch ui  or  ztomcat/deploy-wars.sh all"
+  echo "[deploy] Restart Tomcat if it is already running."
 else
   echo "[deploy] Done. Tomcat running: context redeploys automatically (~15s)."
 fi

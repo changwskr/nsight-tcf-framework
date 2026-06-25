@@ -48,12 +48,44 @@ $AllModules = @(
 
 $ValidCodes = $AllModules | ForEach-Object { $_.Ctx }
 
+function Test-ModulePresent {
+    param([hashtable]$ModuleEntry)
+    $buildFile = Join-Path $FwRoot "$($ModuleEntry.Module)/build.gradle"
+    return Test-Path -LiteralPath $buildFile
+}
+
+function Filter-DeployableModules {
+    param(
+        [array]$Modules,
+        [switch]$RequireAllPresent
+    )
+    $deployable = @()
+    $skipped = @()
+    foreach ($m in $Modules) {
+        if (Test-ModulePresent $m) {
+            $deployable += $m
+        } else {
+            $skipped += $m
+        }
+    }
+    if ($RequireAllPresent -and $skipped.Count -gt 0) {
+        $names = ($skipped | ForEach-Object { $_.Ctx }) -join ', '
+        throw "Module source missing in workspace: $names. Restore with: git restore $($skipped.Module -join ' ')"
+    }
+    if ($skipped.Count -gt 0) {
+        $names = ($skipped | ForEach-Object { "$($_.Ctx) ($($_.Module))" }) -join ', '
+        Write-Warning "[deploy-wars] skip not in workspace ($($skipped.Count)): $names"
+        Write-Warning '[deploy-wars] full 19 WAR: git restore cc-service bc-service cm-service bp-service bd-service cs-service ct-service'
+    }
+    return ,$deployable
+}
+
 function Show-Help {
     @"
 
 Usage: deploy-wars.ps1 [codes...] [options]
 
-tcf-cicd 설정 sync -> WAR 빌드 -> ztomcat webapps 배포 (19 context).
+tcf-cicd 설정 sync -> WAR 빌드 -> ztomcat webapps 배포 (최대 19 context, workspace에 있는 모듈만).
 
 Codes (생략 또는 all = 전체):
   cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om batch ui
@@ -144,9 +176,13 @@ function Resolve-Gradle {
 
 function Resolve-Modules {
     param([string[]]$InputCodes)
-    if (-not $InputCodes -or $InputCodes.Count -eq 0) { return @($AllModules) }
+    if (-not $InputCodes -or $InputCodes.Count -eq 0) {
+        return ,@(Filter-DeployableModules -Modules $AllModules)
+    }
     $normalized = @($InputCodes | ForEach-Object { $_.ToLowerInvariant() })
-    if ($normalized -contains 'all') { return @($AllModules) }
+    if ($normalized -contains 'all') {
+        return ,@(Filter-DeployableModules -Modules $AllModules)
+    }
 
     $selected = @()
     foreach ($code in $normalized) {
@@ -156,7 +192,7 @@ function Resolve-Modules {
         }
         $selected += $matches
     }
-    return @($selected)
+    return ,@(Filter-DeployableModules -Modules $selected -RequireAllPresent)
 }
 
 function Test-TomcatRunning {
@@ -258,7 +294,7 @@ try {
         Sync-BatchContextDescriptor
         Remove-LegacyBatchArtifacts
     }
-    if ($selected.Count -eq @($AllModules).Count -and -not $ExcludeBatch) {
+    if ($requestAll -and -not $ExcludeBatch) {
         & (Join-Path $ZTomcatHome 'clean-exploded.ps1')
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     } else {
@@ -275,7 +311,7 @@ try {
         }
     }
 
-    Write-Host "[deploy-wars] copying $($selected.Count) WAR file(s) ..."
+    Write-Host "[deploy-wars] deploying $($selected.Count) WAR(s) (workspace present) ..."
     $missing = @()
     foreach ($m in $selected) {
         $from = Join-Path $FwRoot "$($m.Module)/build/libs/$($m.Src)"
@@ -304,7 +340,15 @@ try {
     }
 
     if ($missing.Count -gt 0) {
-        throw "WAR build output missing. Run without -SkipBuild or fix Gradle errors."
+        $list = ($missing | ForEach-Object { $_ }) -join "`n  "
+        throw @"
+WAR build output missing for module(s) present in workspace. Run without -SkipBuild or fix Gradle errors.
+  $list
+"@
+    }
+
+    if ($selected.Count -eq 0) {
+        throw 'No deployable modules in workspace. Restore service modules or pass explicit codes (e.g. sv om ui batch).'
     }
 
     $batchDeployed = $selected | Where-Object { $_.Ctx -eq 'batch' }
@@ -328,7 +372,7 @@ if ($Restart) {
     } else {
         Write-Warning "start.ps1 not found: $startPs1"
     }
-} elseif (@($selected).Count -eq @($AllModules).Count) {
+} elseif ($selected.Count -eq @($AllModules | Where-Object { Test-ModulePresent $_ }).Count) {
     Write-Host '[deploy-wars] Done. Restart Tomcat if it is already running.'
 } else {
     Write-Host '[deploy-wars] Done. Running Tomcat redeploys context automatically (~15s).'

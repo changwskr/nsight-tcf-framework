@@ -10,19 +10,24 @@ usage() {
 Usage: build.sh <target> [target2 ...]
 
 Targets:
-  all       clean + buildBusinessWars
+  all       clean + buildBusinessWars (17 WAR)
   wars      buildBusinessWars only
+  ztomcat   buildZtomcatWars (19 WAR: + batch + ui)
   tcf       tcf-util, tcf-core, tcf-web
   common    (removed — use tcf-om)
   ui        tcf-ui bootJar
+  batch     tcf-batch bootWar
   services  all *-service modules + tcf-om bootWar
   sv ic     service code (ex: sv -> sv-service)
+  tcf-om    tcf-om bootWar
 
 Examples:
   ./build.sh sv
   ./build.sh tcf sv
-  ./build.sh tcf ic ui
+  ./build.sh ztomcat
   ./build.sh all
+
+Gradle: GRADLE_HOME_OVERRIDE > GRADLE_HOME > PATH
 
 EOF
   exit 1
@@ -36,7 +41,22 @@ is_service_code() {
   return 1
 }
 
-gradle --stop >/dev/null 2>&1 || true
+resolve_gradle() {
+  local home="${GRADLE_HOME_OVERRIDE:-${GRADLE_HOME:-}}"
+  if [[ -n "${home}" && -x "${home}/bin/gradle" ]]; then
+    GRADLE="${home}/bin/gradle"
+    return 0
+  fi
+  if command -v gradle >/dev/null 2>&1; then
+    GRADLE="$(command -v gradle)"
+    return 0
+  fi
+  echo "[build] gradle not found. Set GRADLE_HOME or GRADLE_HOME_OVERRIDE." >&2
+  exit 1
+}
+
+resolve_gradle
+"${GRADLE}" --stop >/dev/null 2>&1 || true
 
 TASKS=()
 append() { TASKS+=("$1"); }
@@ -47,11 +67,12 @@ resolve_target() {
 
   case "$target" in
     all)
-      echo "[build] gradle clean buildBusinessWars"
-      gradle clean buildBusinessWars
+      echo "[build] ${GRADLE} clean buildBusinessWars"
+      "${GRADLE}" clean buildBusinessWars
       exit 0
       ;;
     wars) append buildBusinessWars ;;
+    ztomcat) append buildZtomcatWars ;;
     tcf)
       append :tcf-util:build
       append :tcf-core:build
@@ -62,6 +83,8 @@ resolve_target() {
       exit 1
       ;;
     ui|tcf-ui) append :tcf-ui:bootJar ;;
+    batch|tcf-batch) append :tcf-batch:bootWar ;;
+    tcf-om|om) append :tcf-om:bootWar ;;
     services)
       for code in "${SERVICE_CODES[@]}"; do
         append ":${code}-service:build"
@@ -90,5 +113,5 @@ done
 
 [[ ${#TASKS[@]} -eq 0 ]] && usage
 
-echo "[build] gradle ${TASKS[*]}"
-gradle "${TASKS[@]}"
+echo "[build] ${GRADLE} ${TASKS[*]}"
+"${GRADLE}" "${TASKS[@]}"

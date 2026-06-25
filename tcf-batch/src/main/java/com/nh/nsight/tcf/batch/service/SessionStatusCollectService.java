@@ -62,6 +62,8 @@ public class SessionStatusCollectService {
                     snapshot.scopeId(), snapshot.activeCount(), snapshot.expiredCount(), snapshot.uniqueUserCount());
         }
 
+        pruneStaleTargets(targets);
+
         long durationMs = System.currentTimeMillis() - start;
         String runStatus = failCount == 0 ? "SUCCESS" : (successCount == 0 ? "FAIL" : "PARTIAL");
         String message = "세션 현황 %d건 수집 (활성 %d, 만료 %d, 사용자 %d)".formatted(
@@ -128,5 +130,10 @@ public class SessionStatusCollectService {
                 false,
                 detail
         );
+    }
+
+    private void pruneStaleTargets(List<SessionTargetProperties> enabledTargets) {
+        List<String> keepIds = enabledTargets.stream().map(SessionTargetProperties::getScopeId).toList();
+        repository.retainOnlySessionScopeIds(keepIds);
     }
 }

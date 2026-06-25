@@ -64,6 +64,22 @@ public class OmOperationDao {
         return mapper.selectDeployStatus();
     }
 
+    public int deleteAllApStatus() {
+        return mapper.deleteAllApStatus();
+    }
+
+    public int deleteAllDbStatus() {
+        return mapper.deleteAllDbStatus();
+    }
+
+    public int deleteAllSessionStatus() {
+        return mapper.deleteAllSessionStatus();
+    }
+
+    public int deleteAllDeployStatus() {
+        return mapper.deleteAllDeployStatus();
+    }
+
     public int selectActiveSessionCount() {
         Integer count = mapper.selectActiveSessionCount();
         return count == null ? 0 : count;
@@ -146,8 +162,52 @@ public class OmOperationDao {
         return mapper.searchMenus(criteria);
     }
 
+    public Map<String, Object> selectMenuById(String menuId) {
+        return mapper.selectMenuById(menuId);
+    }
+
+    public int countChildMenus(String menuId) {
+        return mapper.countChildMenus(menuId);
+    }
+
+    public int insertMenu(Map<String, Object> row) {
+        return mapper.insertMenu(row);
+    }
+
+    public int updateMenu(Map<String, Object> row) {
+        return mapper.updateMenu(row);
+    }
+
+    public int disableMenu(Map<String, Object> row) {
+        return mapper.disableMenu(row);
+    }
+
     public List<Map<String, Object>> searchAuthGroups(Map<String, Object> criteria) {
         return mapper.searchAuthGroups(criteria);
+    }
+
+    public Map<String, Object> selectAuthGroupById(String authGroupId) {
+        return mapper.selectAuthGroupById(authGroupId);
+    }
+
+    public int countFunctionAuthByGroup(String authGroupId) {
+        return mapper.countFunctionAuthByGroup(authGroupId);
+    }
+
+    public int countDataAuthByGroup(String authGroupId) {
+        return mapper.countDataAuthByGroup(authGroupId);
+    }
+
+    public int insertAuthGroup(Map<String, Object> row) {
+        return mapper.insertAuthGroup(row);
+    }
+
+    public int updateAuthGroup(Map<String, Object> row) {
+        return mapper.updateAuthGroup(row);
+    }
+
+    public int disableAuthGroup(Map<String, Object> row) {
+        return mapper.disableAuthGroup(row);
     }
 
     public List<Map<String, Object>> searchAuditLogs(Map<String, Object> criteria) {
@@ -156,6 +216,10 @@ public class OmOperationDao {
 
     public int countAuditLogs(Map<String, Object> criteria) {
         return mapper.countAuditLogs(criteria);
+    }
+
+    public int deleteAllAuditLogs() {
+        return mapper.deleteAllAuditLogs();
     }
 
     public List<Map<String, Object>> searchErrorCodes(Map<String, Object> criteria) {

@@ -147,10 +147,16 @@ configure(sharedBusinessModules.collect { project(":${it}") }) {
 }
 
 // 17개 업무 WAR 일괄 빌드: gradle buildBusinessWars
+// bootWar 태스크가 있는 모듈만 포함 (로컬에 디렉터리/build.gradle 없으면 skip)
 tasks.register('buildBusinessWars') {
     group = 'build'
-    description = 'Build all 17 NSIGHT business WAR files (16 services + tcf-om).'
-    dependsOn businessModules.collect { ":${it}:bootWar" }
+    description = 'Build all NSIGHT business WAR files (modules with bootWar; 16 services + tcf-om when present).'
+    dependsOn {
+        businessModules.findAll { moduleName ->
+            def sub = findProject(":${moduleName}")
+            sub != null && sub.tasks.findByName('bootWar') != null
+        }.collect { ":${it}:bootWar" }
+    }
 }
 
 // ztomcat 전체 WAR (업무 17 + batch + ui): gradle buildZtomcatWars

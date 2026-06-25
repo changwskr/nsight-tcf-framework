@@ -26,6 +26,14 @@ public interface OmOperationMapper {
 
     List<Map<String, Object>> selectDeployStatus();
 
+    int deleteAllApStatus();
+
+    int deleteAllDbStatus();
+
+    int deleteAllSessionStatus();
+
+    int deleteAllDeployStatus();
+
     Integer selectActiveSessionCount();
 
     List<Map<String, Object>> searchTransactionLogs(Map<String, Object> params);
@@ -66,11 +74,35 @@ public interface OmOperationMapper {
 
     List<Map<String, Object>> searchMenus(Map<String, Object> params);
 
+    Map<String, Object> selectMenuById(String menuId);
+
+    int countChildMenus(String menuId);
+
+    int insertMenu(Map<String, Object> params);
+
+    int updateMenu(Map<String, Object> params);
+
+    int disableMenu(Map<String, Object> params);
+
     List<Map<String, Object>> searchAuthGroups(Map<String, Object> params);
+
+    Map<String, Object> selectAuthGroupById(String authGroupId);
+
+    int countFunctionAuthByGroup(String authGroupId);
+
+    int countDataAuthByGroup(String authGroupId);
+
+    int insertAuthGroup(Map<String, Object> params);
+
+    int updateAuthGroup(Map<String, Object> params);
+
+    int disableAuthGroup(Map<String, Object> params);
 
     List<Map<String, Object>> searchAuditLogs(Map<String, Object> params);
 
     int countAuditLogs(Map<String, Object> params);
+
+    int deleteAllAuditLogs();
 
     List<Map<String, Object>> searchErrorCodes(Map<String, Object> params);
 

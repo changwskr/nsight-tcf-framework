@@ -59,6 +59,8 @@ public class DbStatusCollectService {
                     snapshot.dbId(), snapshot.healthStatus(), snapshot.poolUsagePct());
         }
 
+        pruneStaleTargets(targets);
+
         long durationMs = System.currentTimeMillis() - start;
         String runStatus = failCount == 0 ? "SUCCESS" : (successCount == 0 ? "FAIL" : "PARTIAL");
         String message = "DB 상태 %d건 수집 (성공 %d, 실패 %d)".formatted(targets.size(), successCount, failCount);
@@ -157,5 +159,10 @@ public class DbStatusCollectService {
 
     private double round1(double value) {
         return Math.round(value * 10) / 10.0;
+    }
+
+    private void pruneStaleTargets(List<DbTargetProperties> enabledTargets) {
+        List<String> keepIds = enabledTargets.stream().map(DbTargetProperties::getDbId).toList();
+        repository.retainOnlyDbIds(keepIds);
     }
 }

@@ -30,6 +30,46 @@ public class BatchDatabaseMigration implements ApplicationRunner {
         removeDuplicateOmSessionStatus();
         removeEmptyDeployStatus();
         removeEmptyDbStatus();
+        removeObsoleteDashboardRows();
+    }
+
+    private void removeObsoleteDashboardRows() {
+        if (tableExists("OM_AP_STATUS")) {
+            jdbcTemplate.update("""
+                    DELETE FROM OM_AP_STATUS
+                     WHERE AP_ID IN (
+                           'bc-ap', 'ic-ap', 'pc-ap', 'cc-ap', 'ms-ap', 'sv-ap', 'pd-ap', 'cm-ap',
+                           'eb-ap', 'ep-ap', 'bp-ap', 'bd-ap', 'ss-ap', 'cs-ap', 'ct-ap', 'mg-ap'
+                     )
+                    """);
+        }
+        if (tableExists("OM_DB_STATUS")) {
+            jdbcTemplate.update("""
+                    DELETE FROM OM_DB_STATUS
+                     WHERE DB_ID IN (
+                           'LOGDB', 'CC-DS', 'BC-DS', 'IC-DS', 'PC-DS', 'MS-DS', 'SV-DS', 'PD-DS',
+                           'CM-DS', 'EB-DS', 'EP-DS', 'BP-DS', 'BD-DS', 'SS-DS', 'CS-DS', 'CT-DS', 'MG-DS'
+                     )
+                    """);
+        }
+        if (tableExists("OM_SESSION_STATUS")) {
+            jdbcTemplate.update("""
+                    DELETE FROM OM_SESSION_STATUS
+                     WHERE SCOPE_ID IN (
+                           'SV-AP', 'BC-AP', 'IC-AP', 'PC-AP', 'CC-AP', 'MS-AP', 'PD-AP', 'CM-AP',
+                           'EB-AP', 'EP-AP', 'BP-AP', 'BD-AP', 'SS-AP', 'CS-AP', 'CT-AP', 'MG-AP'
+                     )
+                    """);
+        }
+        if (tableExists("OM_DEPLOY_STATUS")) {
+            jdbcTemplate.update("""
+                    DELETE FROM OM_DEPLOY_STATUS
+                     WHERE BUSINESS_CODE IN (
+                           'CC', 'BC', 'IC', 'PC', 'MS', 'SV', 'PD', 'CM', 'EB', 'EP',
+                           'BP', 'BD', 'SS', 'CS', 'CT', 'MG'
+                     )
+                    """);
+        }
     }
 
     private boolean tableExists(String tableName) {

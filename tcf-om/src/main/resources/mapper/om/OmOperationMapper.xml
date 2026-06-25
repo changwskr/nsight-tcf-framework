@@ -98,6 +98,22 @@
          ORDER BY BUSINESS_CODE
     </select>
 
+    <delete id="deleteAllApStatus">
+        DELETE FROM OM_AP_STATUS
+    </delete>
+
+    <delete id="deleteAllDbStatus">
+        DELETE FROM OM_DB_STATUS
+    </delete>
+
+    <delete id="deleteAllSessionStatus">
+        DELETE FROM OM_SESSION_STATUS
+    </delete>
+
+    <delete id="deleteAllDeployStatus">
+        DELETE FROM OM_DEPLOY_STATUS
+    </delete>
+
     <select id="selectActiveSessionCount" resultType="int">
         SELECT COUNT(*) FROM SPRING_SESSION
     </select>
@@ -371,11 +387,49 @@
                PARENT_MENU_ID AS "parentMenuId", SORT_ORDER AS "sortOrder", USE_YN AS "useYn"
           FROM OM_MENU
          WHERE 1 = 1
+        <if test="menuId != null and menuId != ''">
+            AND MENU_ID = #{menuId}
+        </if>
+        <if test="menuName != null and menuName != ''">
+            AND MENU_NAME LIKE '%' || #{menuName} || '%'
+        </if>
         <if test="useYn != null and useYn != ''">
             AND USE_YN = #{useYn}
         </if>
          ORDER BY SORT_ORDER, MENU_ID
     </select>
+
+    <select id="selectMenuById" parameterType="string" resultType="map">
+        SELECT MENU_ID AS "menuId", MENU_NAME AS "menuName", MENU_URL AS "menuUrl",
+               PARENT_MENU_ID AS "parentMenuId", SORT_ORDER AS "sortOrder", USE_YN AS "useYn"
+          FROM OM_MENU
+         WHERE MENU_ID = #{menuId}
+    </select>
+
+    <select id="countChildMenus" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM OM_MENU
+         WHERE PARENT_MENU_ID = #{menuId}
+           AND USE_YN = 'Y'
+    </select>
+
+    <insert id="insertMenu" parameterType="map">
+        INSERT INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN)
+        VALUES (#{menuId}, #{menuName}, #{menuUrl}, #{parentMenuId}, #{sortOrder}, #{useYn})
+    </insert>
+
+    <update id="updateMenu" parameterType="map">
+        UPDATE OM_MENU
+           SET MENU_NAME = #{menuName},
+               MENU_URL = #{menuUrl},
+               PARENT_MENU_ID = #{parentMenuId},
+               SORT_ORDER = #{sortOrder},
+               USE_YN = #{useYn}
+         WHERE MENU_ID = #{menuId}
+    </update>
+
+    <update id="disableMenu" parameterType="map">
+        UPDATE OM_MENU SET USE_YN = 'N' WHERE MENU_ID = #{menuId}
+    </update>
 
     <select id="searchAuthGroups" parameterType="map" resultType="map">
         SELECT AUTH_GROUP_ID AS "authGroupId", AUTH_GROUP_NAME AS "authGroupName",
@@ -385,8 +439,46 @@
         <if test="authGroupId != null and authGroupId != ''">
             AND AUTH_GROUP_ID = #{authGroupId}
         </if>
+        <if test="authGroupName != null and authGroupName != ''">
+            AND AUTH_GROUP_NAME LIKE '%' || #{authGroupName} || '%'
+        </if>
+        <if test="useYn != null and useYn != ''">
+            AND USE_YN = #{useYn}
+        </if>
          ORDER BY AUTH_GROUP_ID
     </select>
+
+    <select id="selectAuthGroupById" parameterType="string" resultType="map">
+        SELECT AUTH_GROUP_ID AS "authGroupId", AUTH_GROUP_NAME AS "authGroupName",
+               DESCRIPTION AS "description", USE_YN AS "useYn"
+          FROM OM_AUTH_GROUP
+         WHERE AUTH_GROUP_ID = #{authGroupId}
+    </select>
+
+    <select id="countFunctionAuthByGroup" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM OM_FUNCTION_AUTH WHERE AUTH_GROUP_ID = #{authGroupId}
+    </select>
+
+    <select id="countDataAuthByGroup" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM OM_DATA_AUTH WHERE AUTH_GROUP_ID = #{authGroupId}
+    </select>
+
+    <insert id="insertAuthGroup" parameterType="map">
+        INSERT INTO OM_AUTH_GROUP (AUTH_GROUP_ID, AUTH_GROUP_NAME, DESCRIPTION, USE_YN)
+        VALUES (#{authGroupId}, #{authGroupName}, #{description}, #{useYn})
+    </insert>
+
+    <update id="updateAuthGroup" parameterType="map">
+        UPDATE OM_AUTH_GROUP
+           SET AUTH_GROUP_NAME = #{authGroupName},
+               DESCRIPTION = #{description},
+               USE_YN = #{useYn}
+         WHERE AUTH_GROUP_ID = #{authGroupId}
+    </update>
+
+    <update id="disableAuthGroup" parameterType="map">
+        UPDATE OM_AUTH_GROUP SET USE_YN = 'N' WHERE AUTH_GROUP_ID = #{authGroupId}
+    </update>
 
     <sql id="auditLogSearchWhere">
         <if test="userId != null and userId != ''">
@@ -428,6 +520,10 @@
         SELECT COUNT(*) FROM OM_AUDIT_LOG WHERE 1 = 1
         <include refid="auditLogSearchWhere"/>
     </select>
+
+    <delete id="deleteAllAuditLogs">
+        DELETE FROM OM_AUDIT_LOG
+    </delete>
 
     <select id="searchErrorCodes" parameterType="map" resultType="map">
         SELECT ERROR_CODE AS "errorCode", ERROR_CATEGORY AS "errorCategory",

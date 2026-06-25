@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/_shared/om-admin.css">
 </head>
 <body>
-  <script src="/_shared/om-admin.js"></script>
+  <script src="/_shared/om-admin.js?v=20260625f"></script>
   <script>
     const PAGE_SIZE = 20;
     let currentPage = 1;
@@ -80,7 +80,8 @@
           <div class="field"><label for="filterToDate">종료일시</label><input id="filterToDate" type="text"></div>
           <div class="actions" style="display:flex;gap:8px;align-items:end">
             <button class="btn-primary" id="searchBtn" type="button">조회</button>
-            <button class="btn-secondary" id="resetBtn" type="button">초기화</button>
+            <button class="btn-secondary" id="resetBtn" type="button">조건 초기화</button>
+            <button class="btn-secondary" id="deleteAllBtn" type="button">로그 초기화</button>
           </div>
         </section>
         <div style="margin-bottom:10px;color:var(--muted);font-size:0.85rem" id="listStatus">-</div>
@@ -103,6 +104,26 @@
       document.getElementById('resetBtn').addEventListener('click', () => {
         el.querySelectorAll('.om-filter-bar input').forEach(i => { i.value = ''; });
         document.getElementById('filterResultStatus').value = '';
+      });
+      document.getElementById('deleteAllBtn').addEventListener('click', async () => {
+        if (!confirm('OM_AUDIT_LOG 테이블의 감사로그를 전부 삭제합니다.\n되돌릴 수 없습니다. 계속하시겠습니까?')) {
+          return;
+        }
+        const deleteReason = prompt('초기화 사유 (5자 이상, 감사로그에 기록됩니다):');
+        if (!deleteReason || deleteReason.trim().length < 5) {
+          alert('초기화 사유를 5자 이상 입력해야 합니다.');
+          return;
+        }
+        try {
+          const { body } = await OmAdmin.mutate('auditLogDeleteAll', {
+            confirmCode: 'DELETE_ALL',
+            deleteReason: deleteReason.trim()
+          }, 'DELETE');
+          alert(`${body.message || '초기화 완료'}\n삭제 건수: ${body.deletedCount ?? 0}건`);
+          await loadList(1, el);
+        } catch (e) {
+          OmAdmin.showErrorBanner(el, e.message);
+        }
       });
 
       await loadList(1, el);

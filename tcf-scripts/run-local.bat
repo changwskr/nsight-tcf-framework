@@ -1,8 +1,14 @@
 @echo off
-setlocal EnableDelayedExpansion
+setlocal enabledelayedexpansion
 cd /d "%~dp0.."
 
 if "%~1"=="" goto usage
+if /i "%~1"=="help" goto usage
+if /i "%~1"=="/?" goto usage
+if /i "%~1"=="-h" goto usage
+
+call :resolve_gradle
+if errorlevel 1 exit /b 1
 
 set "TARGET_COUNT=0"
 set "RUN_ALL=0"
@@ -22,14 +28,14 @@ if defined RUN_FOREGROUND goto start_foreground
 goto usage
 
 :start_foreground
-echo [run-local] gradle :%RUN_FOREGROUND%:bootRun
-gradle :%RUN_FOREGROUND%:bootRun
+echo [run-local] "!GRADLE!" :%RUN_FOREGROUND%:bootRun
+"!GRADLE!" :%RUN_FOREGROUND%:bootRun
 exit /b %errorlevel%
 
 :start_background
 for %%T in (%BACKGROUND_TARGETS%) do (
   echo [run-local] start %%T in new window
-  start "%%T" cmd /k "cd /d "%CD%" && gradle :%%T:bootRun"
+  start "%%T" cmd /k "cd /d "%CD%" && "%GRADLE%" :%%T:bootRun"
 )
 echo [run-local] started %TARGET_COUNT% service(s)
 exit /b 0
@@ -38,10 +44,10 @@ exit /b 0
 echo [run-local] starting all business services + tcf-om...
 for %%C in (cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg) do (
   echo [run-local] start %%C-service
-  start "%%C-service" cmd /k "cd /d "%CD%" && gradle :%%C-service:bootRun"
+  start "%%C-service" cmd /k "cd /d "%CD%" && "%GRADLE%" :%%C-service:bootRun"
 )
 echo [run-local] start tcf-om
-start "tcf-om" cmd /k "cd /d "%CD%" && gradle :tcf-om:bootRun"
+start "tcf-om" cmd /k "cd /d "%CD%" && "%GRADLE%" :tcf-om:bootRun"
 echo [run-local] started 16 service(s) + tcf-om
 exit /b 0
 
@@ -53,36 +59,45 @@ if /i "%TARGET%"=="all" (
   set "RUN_ALL=1"
   goto :eof
 )
-if /i "%TARGET%"=="ui" (
-  set "TARGET=tcf-ui"
-)
-if /i "%TARGET%"=="tcf-ui" (
-  set "TARGET=tcf-ui"
-)
-if /i "%TARGET%"=="tcf-om" (
-  set "TARGET=tcf-om"
-)
-if /i "%TARGET%"=="batch" (
-  set "TARGET=tcf-batch"
-)
-if /i "%TARGET%"=="tcf-batch" (
-  set "TARGET=tcf-batch"
-)
-if /i "%TARGET%"=="ud" (
-  set "TARGET=tcf-om"
-)
-if /i "%TARGET%"=="common-updownload" (
-  set "TARGET=tcf-om"
-)
-if /i "%TARGET%"=="om" (
-  set "TARGET=tcf-om"
-)
+if /i "%TARGET%"=="ui" set "TARGET=tcf-ui"
+if /i "%TARGET%"=="tcf-ui" set "TARGET=tcf-ui"
+if /i "%TARGET%"=="tcf-om" set "TARGET=tcf-om"
+if /i "%TARGET%"=="batch" set "TARGET=tcf-batch"
+if /i "%TARGET%"=="tcf-batch" set "TARGET=tcf-batch"
+if /i "%TARGET%"=="ud" set "TARGET=tcf-om"
+if /i "%TARGET%"=="common-updownload" set "TARGET=tcf-om"
+if /i "%TARGET%"=="om" set "TARGET=tcf-om"
 if /i not "%TARGET:~-8%"=="-service" (
   if /i not "%TARGET%"=="tcf-ui" if /i not "%TARGET%"=="tcf-om" if /i not "%TARGET%"=="tcf-batch" set "TARGET=%TARGET%-service"
 )
 
 if %TARGET_COUNT%==1 set "RUN_FOREGROUND=%TARGET%"
 set "BACKGROUND_TARGETS=!BACKGROUND_TARGETS! %TARGET%"
+goto :eof
+
+:resolve_gradle
+set "GRADLE=gradle"
+if defined GRADLE_HOME_OVERRIDE (
+  if exist "!GRADLE_HOME_OVERRIDE!\bin\gradle.bat" (
+    set "GRADLE=!GRADLE_HOME_OVERRIDE!\bin\gradle.bat"
+    goto :eof
+  )
+)
+if defined GRADLE_HOME (
+  if exist "!GRADLE_HOME!\bin\gradle.bat" (
+    set "GRADLE=!GRADLE_HOME!\bin\gradle.bat"
+    goto :eof
+  )
+)
+for /f "delims=" %%G in ('where gradle.bat 2^>nul') do (
+  set "GRADLE=%%G"
+  goto :eof
+)
+where gradle >nul 2>&1
+if errorlevel 1 (
+  echo [run-local] gradle not found. Set GRADLE_HOME or GRADLE_HOME_OVERRIDE.
+  exit /b 1
+)
 goto :eof
 
 :usage
@@ -97,10 +112,6 @@ echo   batch     tcf-batch bootRun (port 8098)
 echo   ud        tcf-om bootRun (파일 업·다운로드 내장)
 echo   all       start 16 *-service + tcf-om in new windows
 echo.
-echo Examples:
-echo   run-local.bat sv
-echo   run-local.bat ic
-echo   run-local.bat sv ic
-echo   run-local.bat all
+echo Gradle: GRADLE_HOME_OVERRIDE ^> GRADLE_HOME ^> PATH
 echo.
 exit /b 1

@@ -38,6 +38,7 @@ window.OmAdmin = (function () {
     authLogout: { serviceId: 'OM.Auth.logout', transactionCode: 'OM-AUT-0003' },
     authSession: { serviceId: 'OM.Auth.session', transactionCode: 'OM-AUT-0004' },
     dashboard: { serviceId: 'OM.Dashboard.inquiry', transactionCode: 'OM-DSH-0001' },
+    dashboardReset: { serviceId: 'OM.Dashboard.reset', transactionCode: 'OM-DSH-0002' },
     transactionLog: { serviceId: 'OM.TransactionLog.inquiry', transactionCode: 'OM-TXL-0001' },
     transactionLogDeleteAll: { serviceId: 'OM.TransactionLog.deleteAll', transactionCode: 'OM-TXL-0002' },
     serviceCatalog: { serviceId: 'OM.ServiceCatalog.inquiry', transactionCode: 'OM-SVC-0001' },
@@ -51,8 +52,17 @@ window.OmAdmin = (function () {
     userUpdate: { serviceId: 'OM.User.update', transactionCode: 'OM-USR-0004' },
     userDelete: { serviceId: 'OM.User.delete', transactionCode: 'OM-USR-0005' },
     menu: { serviceId: 'OM.Menu.inquiry', transactionCode: 'OM-MNU-0001' },
+    menuSave: { serviceId: 'OM.Menu.save', transactionCode: 'OM-MNU-0002' },
+    menuDetail: { serviceId: 'OM.Menu.detail', transactionCode: 'OM-MNU-0003' },
+    menuUpdate: { serviceId: 'OM.Menu.update', transactionCode: 'OM-MNU-0004' },
+    menuDelete: { serviceId: 'OM.Menu.delete', transactionCode: 'OM-MNU-0005' },
     authGroup: { serviceId: 'OM.AuthGroup.inquiry', transactionCode: 'OM-AUT-0001' },
+    authGroupSave: { serviceId: 'OM.AuthGroup.save', transactionCode: 'OM-AGP-0001' },
+    authGroupDetail: { serviceId: 'OM.AuthGroup.detail', transactionCode: 'OM-AGP-0002' },
+    authGroupUpdate: { serviceId: 'OM.AuthGroup.update', transactionCode: 'OM-AGP-0003' },
+    authGroupDelete: { serviceId: 'OM.AuthGroup.delete', transactionCode: 'OM-AGP-0004' },
     auditLog: { serviceId: 'OM.AuditLog.inquiry', transactionCode: 'OM-AUD-0001' },
+    auditLogDeleteAll: { serviceId: 'OM.AuditLog.deleteAll', transactionCode: 'OM-AUD-0002' },
     errorCode: { serviceId: 'OM.ErrorCode.inquiry', transactionCode: 'OM-ERR-0001' },
     batch: { serviceId: 'OM.Batch.inquiry', transactionCode: 'OM-BAT-0001' },
     healthCheck: { serviceId: 'OM.HealthCheck.inquiry', transactionCode: 'OM-HLT-0001' },
@@ -407,6 +417,9 @@ window.OmAdmin = (function () {
 
   async function call(txKey, body, processingType) {
     const tx = typeof txKey === 'string' ? TX[txKey] : txKey;
+    if (!tx || !tx.serviceId) {
+      throw new Error(`거래 정의를 찾을 수 없습니다: ${txKey}. 브라우저 강력 새로고침(Ctrl+F5) 후 다시 시도하세요.`);
+    }
     const request = { header: buildHeader(tx, processingType), body: body || {} };
     const res = await relayFetch(`/api/relay/${BUSINESS_CODE}/online?${buildRelayQuery()}`, {
       method: 'POST',
@@ -579,13 +592,23 @@ window.OmAdmin = (function () {
   function showErrorBanner(container, message) {
     const existing = container.querySelector('.om-load-error');
     if (existing) existing.remove();
-    const hint = targetUrl && targetUrl !== '-'
-      ? ` (${targetUrl})`
-      : '';
     const banner = document.createElement('div');
     banner.className = 'om-alert error om-load-error';
-    banner.innerHTML = `${message}<br><small>tcf-om을 재빌드 후 NsightTcfOmApplication을 재시작하세요.${hint}</small>`;
+    banner.innerHTML = `${message}<br><small>${hintForOmError(message)}</small>`;
     container.prepend(banner);
+  }
+
+  function hintForOmError(message) {
+    const msg = String(message || '');
+    if (msg.includes('거래 정의를 찾을 수 없습니다')) {
+      return 'om-admin.js가 오래된 버전일 수 있습니다. Ctrl+F5로 강력 새로고침하세요.';
+    }
+    if (msg.includes('등록되지 않은 serviceId') || msg.includes('OM.Dashboard.reset')
+        || msg.includes('OM.AuditLog.deleteAll')) {
+      return 'gradle :tcf-om:bootRun 으로 tcf-om을 재기동하세요. (신규 Handler 등록 필요)';
+    }
+    const hint = targetUrl && targetUrl !== '-' ? ` (${targetUrl})` : '';
+    return `tcf-om을 재빌드 후 NsightTcfOmApplication을 재시작하세요.${hint}`;
   }
 
   async function pingBackend() {
@@ -866,7 +889,7 @@ window.OmAdmin = (function () {
     chipForHealth, chipForResult,
     getSession, setSession, clearSession, requireAuth, logout, login,
     inquiry, mutate, call, initPage, renderPagination, showError, showErrorBanner, showErrorPopup, loadConfig,
-    resolveBatchServiceUrl, resolveBatchLabel,
+    isTomcatUiDeployment, resolveBatchServiceUrl, resolveBatchLabel,
     updownloadQuery, updownloadBaseUrl, updownloadList, updownloadUpload, updownloadDelete, updownloadDownloadUrl,
     updownloadDetail, updownloadUpdate,
     loadCommonCodes, loadCodeGroups, fillCodeSelect, formatCodeLabel,

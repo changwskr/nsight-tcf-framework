@@ -55,6 +55,8 @@ public class DeployStatusCollectService {
                     snapshot.businessCode(), snapshot.healthStatus(), snapshot.warVersion(), snapshot.deployedAt());
         }
 
+        pruneStaleTargets(targets);
+
         long durationMs = System.currentTimeMillis() - start;
         String runStatus = failCount == 0 ? "SUCCESS" : (successCount == 0 ? "FAIL" : "PARTIAL");
         String message = "배포 현황 %d건 수집 (기동 %d, 미기동 %d)".formatted(
@@ -109,5 +111,10 @@ public class DeployStatusCollectService {
                 false,
                 detail
         );
+    }
+
+    private void pruneStaleTargets(List<DeployTargetProperties> enabledTargets) {
+        List<String> keepCodes = enabledTargets.stream().map(DeployTargetProperties::getBusinessCode).toList();
+        repository.retainOnlyDeployBusinessCodes(keepCodes);
     }
 }

@@ -4,9 +4,13 @@ import com.nh.nsight.tcf.batch.model.ApStatusSnapshot;
 import com.nh.nsight.tcf.batch.model.DbStatusSnapshot;
 import com.nh.nsight.tcf.batch.model.DeployStatusSnapshot;
 import com.nh.nsight.tcf.batch.model.SessionStatusSnapshot;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 @Repository
 public class OmDashboardStatusRepository {
@@ -89,6 +93,37 @@ public class OmDashboardStatusRepository {
 
     public void deleteDeploy(String businessCode) {
         jdbcTemplate.update("DELETE FROM OM_DEPLOY_STATUS WHERE BUSINESS_CODE = ?", businessCode);
+    }
+
+    public void retainOnlyApIds(Collection<String> keepIds) {
+        deleteNotIn("OM_AP_STATUS", "AP_ID", keepIds);
+    }
+
+    public void retainOnlyDbIds(Collection<String> keepIds) {
+        deleteNotIn("OM_DB_STATUS", "DB_ID", keepIds);
+    }
+
+    public void retainOnlySessionScopeIds(Collection<String> keepIds) {
+        deleteNotIn("OM_SESSION_STATUS", "SCOPE_ID", keepIds);
+    }
+
+    public void retainOnlyDeployBusinessCodes(Collection<String> keepIds) {
+        deleteNotIn("OM_DEPLOY_STATUS", "BUSINESS_CODE", keepIds);
+    }
+
+    private void deleteNotIn(String table, String column, Collection<String> keepIds) {
+        List<String> ids = keepIds.stream()
+                .filter(StringUtils::hasText)
+                .distinct()
+                .toList();
+        if (ids.isEmpty()) {
+            jdbcTemplate.update("DELETE FROM " + table);
+            return;
+        }
+        String placeholders = ids.stream().map(id -> "?").collect(Collectors.joining(","));
+        jdbcTemplate.update(
+                "DELETE FROM " + table + " WHERE " + column + " NOT IN (" + placeholders + ")",
+                ids.toArray());
     }
 
     public void insertBatchHistory(String jobId, String runTime, String runStatus, long durationMs, String message) {
