@@ -432,13 +432,20 @@ public class OmDatabaseMigration implements ApplicationRunner {
         }
         jdbcTemplate.update("""
                 UPDATE OM_MENU
-                   SET MENU_NAME = '사용자/권한/메뉴/기능권한'
+                   SET MENU_NAME = '사용자/권한/메뉴/기능·데이터권한'
                  WHERE MENU_ID = 'OM_AUTH'
                 """);
         jdbcTemplate.update("""
                 UPDATE OM_MENU
-                   SET MENU_URL = '/om/admin/user-auth.html#function'
+                   SET MENU_URL = '/om/admin/user-auth.html',
+                       USE_YN = 'N'
                  WHERE MENU_ID = 'OM_FAU'
+                """);
+        jdbcTemplate.update("""
+                UPDATE OM_MENU
+                   SET MENU_URL = '/om/admin/user-auth.html',
+                       USE_YN = 'N'
+                 WHERE MENU_ID = 'OM_DAU'
                 """);
     }
 

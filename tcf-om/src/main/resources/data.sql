@@ -16,7 +16,7 @@ INSERT INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, U
 ('OM_DASH', '운영 대시보드', '/om/admin/dashboard.html', 'OM_GRP_OPS', 1, 'Y'),
 ('OM_TX', '거래로그 조회', '/om/admin/transaction-log.html', 'OM_GRP_OPS', 2, 'Y'),
 ('OM_SVC', 'ServiceId 관리', '/om/admin/service-catalog.html', 'OM_GRP_OPS', 3, 'Y'),
-('OM_AUTH', '사용자/권한/메뉴/기능권한', '/om/admin/user-auth.html', 'OM_GRP_OPS', 4, 'Y'),
+('OM_AUTH', '사용자/권한/메뉴/기능·데이터권한', '/om/admin/user-auth.html', 'OM_GRP_OPS', 4, 'Y'),
 ('OM_AUDIT', '감사로그', '/om/admin/audit-log.html', 'OM_GRP_OPS', 5, 'Y'),
 ('OM_SES', '세션 관리', '/om/admin/session.html', 'OM_GRP_OPS', 6, 'Y'),
 ('OM_GRP_SYS', '시스템·배포', '', NULL, 10, 'Y'),
@@ -28,8 +28,8 @@ INSERT INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, U
 ('OM_DPL', '배포 관리', '/om/admin/deploy.html', 'OM_GRP_SYS', 16, 'Y'),
 ('OM_GRP_AUTH', '권한·코드', '', NULL, 20, 'Y'),
 ('OM_CDC', '공통코드 관리', '/om/admin/common-code.html', 'OM_GRP_AUTH', 21, 'Y'),
-('OM_FAU', '기능권한', '/om/admin/user-auth.html#function', 'OM_GRP_AUTH', 22, 'Y'),
-('OM_DAU', '데이터권한', '/om/admin/data-auth.html', 'OM_GRP_AUTH', 23, 'Y'),
+('OM_FAU', '기능권한', '/om/admin/user-auth.html', 'OM_GRP_AUTH', 22, 'N'),
+('OM_DAU', '데이터권한', '/om/admin/user-auth.html', 'OM_GRP_AUTH', 23, 'N'),
 ('OM_AHT', '권한이력', '/om/admin/auth-history.html', 'OM_GRP_AUTH', 24, 'Y'),
 ('OM_CCH', 'Cache 관리', '/om/admin/cache.html', 'OM_GRP_AUTH', 25, 'Y');
 

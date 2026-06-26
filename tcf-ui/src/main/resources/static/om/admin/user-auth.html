@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/_shared/om-admin.css">
 </head>
 <body>
-  <script src="/_shared/om-admin.js?v=20260626c"></script>
+  <script src="/_shared/om-admin.js?v=20260627b"></script>
   <script>
     let userPage = 1;
     const USER_PAGE_SIZE = 10;
@@ -22,11 +22,11 @@
     async function loadAuthGroupOptions() {
       const { body } = await OmAdmin.inquiry('authGroup', {});
       authGroupOptions = body.rows || body.authGroups || [];
-      ['filterAuthGroup', 'fAuthGroup', 'filterFaGroup', 'fFaAuthGroup'].forEach(id => {
+      ['filterAuthGroup', 'fAuthGroup', 'filterFaGroup', 'fFaAuthGroup', 'filterDaGroup'].forEach(id => {
         const sel = document.getElementById(id);
         if (!sel) return;
         const current = sel.value;
-        const isFilter = id === 'filterAuthGroup';
+        const isFilter = ['filterAuthGroup', 'filterFaGroup', 'filterDaGroup'].includes(id);
         sel.innerHTML = isFilter ? '<option value="">전체</option>' : '';
         authGroupOptions.forEach(g => {
           const gid = OmAdmin.field(g, 'authGroupId');
@@ -191,6 +191,31 @@
           }
         });
       });
+    }
+
+    async function loadDataAuths(el) {
+      const tbody = document.getElementById('tabBody');
+      tbody.innerHTML = '<tr><td colspan="4" class="om-empty">조회 중...</td></tr>';
+      document.getElementById('userPagination').hidden = true;
+
+      const group = document.getElementById('filterDaGroup')?.value;
+      const criteria = group ? { authGroupId: group } : {};
+      const { body } = await OmAdmin.inquiry('dataAuth', criteria);
+      const rows = body.rows || [];
+      if (!rows.length) {
+        const hint = group
+          ? `선택한 권한그룹(${group})에 데이터권한이 없습니다.`
+          : '등록된 데이터권한이 없습니다.';
+        tbody.innerHTML = `<tr><td colspan="4" class="om-empty">${hint}</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = rows.map(r => `
+        <tr>
+          <td>${OmAdmin.field(r, 'authGroupName', OmAdmin.field(r, 'authGroupId'))}</td>
+          <td class="om-mono">${OmAdmin.field(r, 'branchScope')}</td>
+          <td class="om-mono">${OmAdmin.field(r, 'customerAccessLevel')}</td>
+          <td>${OmAdmin.field(r, 'description')}</td>
+        </tr>`).join('');
     }
 
     function readUserFilters() {
@@ -450,6 +475,7 @@
       const authPanel = document.getElementById('authPanel');
       const menuPanel = document.getElementById('menuPanel');
       const functionPanel = document.getElementById('functionPanel');
+      const dataPanel = document.getElementById('dataPanel');
       const head = document.getElementById('tableHead');
       const title = document.getElementById('tabTitle');
 
@@ -457,6 +483,7 @@
       authPanel.hidden = tab !== 'auth';
       menuPanel.hidden = tab !== 'menu';
       functionPanel.hidden = tab !== 'function';
+      dataPanel.hidden = tab !== 'data';
 
       if (tab === 'users') {
         title.textContent = '사용자 목록';
@@ -470,7 +497,7 @@
         title.textContent = '메뉴 목록';
         head.innerHTML = '<tr><th>메뉴ID</th><th>메뉴명</th><th>URL</th><th>상위메뉴</th><th>정렬</th></tr>';
         loadMenuOptions().then(() => loadMenus(el)).catch(e => OmAdmin.showErrorBanner(el, e.message));
-      } else {
+      } else if (tab === 'function') {
         title.textContent = '기능권한 매트릭스';
         head.innerHTML = '<tr><th>권한그룹</th><th>메뉴ID</th><th>메뉴명</th><th>조회</th><th>등록</th><th>수정</th><th>삭제</th><th>다운로드</th></tr>';
         const filterGroup = document.getElementById('filterFaGroup');
@@ -480,17 +507,24 @@
         loadFunctionAuthMenuOptions()
           .then(() => loadFunctionAuths(el))
           .catch(e => OmAdmin.showErrorBanner(el, e.message));
+      } else if (tab === 'data') {
+        title.textContent = '데이터권한 목록';
+        head.innerHTML = '<tr><th>권한그룹</th><th>지점범위</th><th>고객접근</th><th>설명</th></tr>';
+        const filterGroup = document.getElementById('filterDaGroup');
+        if (filterGroup) filterGroup.value = '';
+        loadDataAuths(el).catch(e => OmAdmin.showErrorBanner(el, e.message));
       }
     }
 
-    OmAdmin.initPage('user-auth', '사용자 / 권한 / 메뉴 / 기능권한', async (el) => {
+    OmAdmin.initPage('user-auth', '사용자 / 권한 / 메뉴 / 기능·데이터권한', async (el) => {
       el.innerHTML = `
-        <div class="om-alert info">사용자·권한그룹·메뉴·기능권한 탭에서 등록·수정·삭제가 가능합니다. 목록 행을 클릭하면 폼에 반영됩니다.</div>
+        <div class="om-alert info">사용자·권한그룹·메뉴·기능권한·데이터권한 탭에서 조회·등록·수정·삭제가 가능합니다. 목록 행을 클릭하면 폼에 반영됩니다.</div>
         <div class="om-tabs">
           <button type="button" class="om-tab active" data-tab="users">사용자 관리</button>
           <button type="button" class="om-tab" data-tab="auth">권한그룹</button>
           <button type="button" class="om-tab" data-tab="menu">메뉴 관리</button>
           <button type="button" class="om-tab" data-tab="function">기능권한</button>
+          <button type="button" class="om-tab" data-tab="data">데이터권한</button>
         </div>
 
         <div id="usersPanel">
@@ -616,6 +650,17 @@
               <button class="btn-secondary" id="faDeleteBtn" type="button">삭제</button>
             </div>
           </div>
+        </div>
+
+        <div id="dataPanel" hidden>
+          <div class="om-alert info">권한그룹별 <strong>지점 범위</strong>·<strong>고객정보 접근 범위</strong>를 확인합니다. (현재 조회 전용)</div>
+          <section class="om-filter-bar">
+            <div class="field"><label for="filterDaGroup">권한그룹</label><select id="filterDaGroup"><option value="">전체</option></select></div>
+            <div class="actions" style="display:flex;gap:8px;align-items:end">
+              <button class="btn-primary" id="daSearchBtn" type="button">조회</button>
+              <button class="btn-secondary" id="daFilterResetBtn" type="button">초기화</button>
+            </div>
+          </section>
         </div>
 
         <div class="om-card">
@@ -812,12 +857,19 @@
         } catch (e) { alert(e.message); }
       });
 
+      document.getElementById('daSearchBtn').addEventListener('click', () =>
+        loadDataAuths(el).catch(e => OmAdmin.showErrorBanner(el, e.message)));
+      document.getElementById('daFilterResetBtn').addEventListener('click', () => {
+        document.getElementById('filterDaGroup').value = '';
+        loadDataAuths(el).catch(e => OmAdmin.showErrorBanner(el, e.message));
+      });
+
       el.querySelectorAll('.om-tab').forEach(btn => {
         btn.addEventListener('click', () => setTab(btn.dataset.tab, el));
       });
 
       const initialTab = (location.hash || '').replace('#', '') || 'users';
-      setTab(['users', 'auth', 'menu', 'function'].includes(initialTab) ? initialTab : 'users', el);
+      setTab(['users', 'auth', 'menu'].includes(initialTab) ? initialTab : 'users', el);
     });
   </script>
 </body>

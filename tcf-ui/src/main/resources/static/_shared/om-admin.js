@@ -10,7 +10,7 @@ window.OmAdmin = (function () {
     { id: 'transaction-log', label: '거래로그 조회', href: '/om/admin/transaction-log.html' },
     { id: 'service-catalog', label: 'ServiceId 관리', href: '/om/admin/service-catalog.html' },
     { id: 'message-composer', label: '공통 전문 조립', href: '/om/admin/message-composer.html' },
-    { id: 'user-auth', label: '사용자 / 권한 / 메뉴 / 기능권한', href: '/om/admin/user-auth.html' },
+    { id: 'user-auth', label: '사용자 / 권한 / 메뉴 / 기능·데이터권한', href: '/om/admin/user-auth.html' },
     { id: 'session', label: '세션 관리', href: '/om/admin/session.html' },
     { id: 'audit-log', label: '감사로그 조회', href: '/om/admin/audit-log.html' }
   ];
@@ -26,7 +26,6 @@ window.OmAdmin = (function () {
 
   const NAV_TERTIARY = [
     { id: 'common-code', label: '공통코드 관리', href: '/om/admin/common-code.html' },
-    { id: 'data-auth', label: '데이터권한', href: '/om/admin/data-auth.html' },
     { id: 'auth-history', label: '권한이력', href: '/om/admin/auth-history.html' },
     { id: 'cache', label: 'Cache 관리', href: '/om/admin/cache.html' }
   ];
