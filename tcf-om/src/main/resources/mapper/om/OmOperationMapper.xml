@@ -750,8 +750,57 @@
         <if test="authGroupId != null and authGroupId != ''">
             AND F.AUTH_GROUP_ID = #{authGroupId}
         </if>
+        <if test="menuId != null and menuId != ''">
+            AND F.MENU_ID = #{menuId}
+        </if>
          ORDER BY F.AUTH_GROUP_ID, F.MENU_ID
     </select>
+
+    <select id="selectFunctionAuthById" parameterType="string" resultType="map">
+        SELECT F.AUTH_ID AS "authId", F.AUTH_GROUP_ID AS "authGroupId", G.AUTH_GROUP_NAME AS "authGroupName",
+               F.MENU_ID AS "menuId", M.MENU_NAME AS "menuName",
+               F.CAN_INQUIRY AS "canInquiry", F.CAN_REGISTER AS "canRegister",
+               F.CAN_UPDATE AS "canUpdate", F.CAN_DELETE AS "canDelete", F.CAN_DOWNLOAD AS "canDownload"
+          FROM OM_FUNCTION_AUTH F
+          LEFT JOIN OM_AUTH_GROUP G ON F.AUTH_GROUP_ID = G.AUTH_GROUP_ID
+          LEFT JOIN OM_MENU M ON F.MENU_ID = M.MENU_ID
+         WHERE F.AUTH_ID = #{authId}
+    </select>
+
+    <select id="countFunctionAuthByGroupAndMenu" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM OM_FUNCTION_AUTH
+         WHERE AUTH_GROUP_ID = #{authGroupId}
+           AND MENU_ID = #{menuId}
+        <if test="excludeAuthId != null and excludeAuthId != ''">
+            AND AUTH_ID != #{excludeAuthId}
+        </if>
+    </select>
+
+    <insert id="insertFunctionAuth" parameterType="map">
+        INSERT INTO OM_FUNCTION_AUTH (
+            AUTH_ID, AUTH_GROUP_ID, MENU_ID,
+            CAN_INQUIRY, CAN_REGISTER, CAN_UPDATE, CAN_DELETE, CAN_DOWNLOAD
+        ) VALUES (
+            #{authId}, #{authGroupId}, #{menuId},
+            #{canInquiry}, #{canRegister}, #{canUpdate}, #{canDelete}, #{canDownload}
+        )
+    </insert>
+
+    <update id="updateFunctionAuth" parameterType="map">
+        UPDATE OM_FUNCTION_AUTH
+           SET AUTH_GROUP_ID = #{authGroupId},
+               MENU_ID = #{menuId},
+               CAN_INQUIRY = #{canInquiry},
+               CAN_REGISTER = #{canRegister},
+               CAN_UPDATE = #{canUpdate},
+               CAN_DELETE = #{canDelete},
+               CAN_DOWNLOAD = #{canDownload}
+         WHERE AUTH_ID = #{authId}
+    </update>
+
+    <delete id="deleteFunctionAuthById" parameterType="string">
+        DELETE FROM OM_FUNCTION_AUTH WHERE AUTH_ID = #{authId}
+    </delete>
 
     <select id="searchDataAuths" parameterType="map" resultType="map">
         SELECT D.AUTH_ID AS "authId", D.AUTH_GROUP_ID AS "authGroupId", G.AUTH_GROUP_NAME AS "authGroupName",

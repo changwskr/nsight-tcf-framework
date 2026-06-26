@@ -77,6 +77,9 @@ public class OmDatabaseMigration implements ApplicationRunner {
         repairCorruptedUtf8SeedData();
         ensureMenuHierarchy();
         normalizeMenuNullColumns();
+        FunctionAuthSeedData.ensureTable(jdbcTemplate);
+        FunctionAuthSeedData.mergeAll(jdbcTemplate);
+        removeLegacyFunctionAuthIds();
         log.debug("OM schema migration applied.");
     }
 
@@ -426,6 +429,26 @@ public class OmDatabaseMigration implements ApplicationRunner {
                            SORT_ORDER = ?
                      WHERE MENU_ID = ?
                     """, entry.getValue(), menuSort.get(menuId), menuId);
+        }
+        jdbcTemplate.update("""
+                UPDATE OM_MENU
+                   SET MENU_NAME = '사용자/권한/메뉴/기능권한'
+                 WHERE MENU_ID = 'OM_AUTH'
+                """);
+        jdbcTemplate.update("""
+                UPDATE OM_MENU
+                   SET MENU_URL = '/om/admin/user-auth.html#function'
+                 WHERE MENU_ID = 'OM_FAU'
+                """);
+    }
+
+    private void removeLegacyFunctionAuthIds() {
+        int deleted = jdbcTemplate.update("""
+                DELETE FROM OM_FUNCTION_AUTH
+                 WHERE AUTH_ID IN ('FA-001', 'FA-002', 'FA-003', 'FA-004')
+                """);
+        if (deleted > 0) {
+            log.info("Removed legacy OM_FUNCTION_AUTH seed rows: {}", deleted);
         }
     }
 

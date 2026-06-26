@@ -1,9 +1,9 @@
-# dev - ztomcat WAR (/ss)
+﻿# dev - ztomcat WAR (/ss)
 spring:
   application:
     name: nsight-ss-service
   datasource:
-    url: jdbc:h2:mem:nsight_ss;MODE=Oracle;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
+    url: jdbc:h2:tcp://127.0.0.1:9092/./nsight_om;MODE=Oracle;DATABASE_TO_UPPER=false
     hikari:
       pool-name: nsight-ss-hikari-dev
   h2:
@@ -14,7 +14,8 @@ nsight:
   tcf:
     transaction-log-schema-auto-init: true
     transaction-log-datasource:
-      url: jdbc:h2:tcp://127.0.0.1:9092/${nsight.txlog.path:./data/nsight-txlog}/nsight_om;MODE=Oracle;DATABASE_TO_UPPER=false
+      separate: false
+      url: jdbc:h2:tcp://127.0.0.1:9092/./nsight_om;MODE=Oracle;DATABASE_TO_UPPER=false
       username: sa
       password:
       driver-class-name: org.h2.Driver

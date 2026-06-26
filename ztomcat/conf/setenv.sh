@@ -27,7 +27,7 @@ if [ -z "${JAVA_TOOL_OPTIONS:-}" ]; then
 fi
 
 if [ -z "${NSIGHT_TXLOG_PATH:-}" ] && [ -n "${CATALINA_HOME:-}" ]; then
-  NSIGHT_TXLOG_PATH="$(cd "${CATALINA_HOME}/../.." && pwd)/data/nsight-txlog"
+  NSIGHT_TXLOG_PATH="$(cd "${CATALINA_HOME}/../data/nsight-txlog" && pwd)"
 fi
 if [ -n "${NSIGHT_TXLOG_PATH:-}" ]; then
   CATALINA_OPTS="${CATALINA_OPTS} -Dnsight.txlog.path=${NSIGHT_TXLOG_PATH}"

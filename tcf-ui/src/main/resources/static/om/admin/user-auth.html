@@ -8,20 +8,21 @@
   <link rel="stylesheet" href="/_shared/om-admin.css">
 </head>
 <body>
-  <script src="/_shared/om-admin.js?v=20260626b"></script>
+  <script src="/_shared/om-admin.js?v=20260626c"></script>
   <script>
     let userPage = 1;
     const USER_PAGE_SIZE = 10;
     let userEditMode = false;
     let authGroupEditMode = false;
     let menuEditMode = false;
+    let functionAuthEditMode = false;
     let authGroupOptions = [];
     let menuOptions = [];
 
     async function loadAuthGroupOptions() {
       const { body } = await OmAdmin.inquiry('authGroup', {});
       authGroupOptions = body.rows || body.authGroups || [];
-      ['filterAuthGroup', 'fAuthGroup'].forEach(id => {
+      ['filterAuthGroup', 'fAuthGroup', 'filterFaGroup', 'fFaAuthGroup'].forEach(id => {
         const sel = document.getElementById(id);
         if (!sel) return;
         const current = sel.value;
@@ -76,6 +77,120 @@
         if (id.startsWith('OM_GRP_')) return '(그룹)';
       }
       return formatMenuUrl(url);
+    }
+
+    function ynChip(v) {
+      return v === 'Y' ? '<span class="om-chip ok">Y</span>' : '<span class="om-chip muted">N</span>';
+    }
+
+    async function loadFunctionAuthMenuOptions() {
+      if (!menuOptions.length) {
+        const { body } = await OmAdmin.inquiry('menu', {});
+        menuOptions = (body.rows || body.menus || []).filter(m => OmAdmin.field(m, 'useYn', 'Y') !== 'N');
+      }
+      const sel = document.getElementById('fFaMenu');
+      if (!sel) return;
+      const current = sel.value;
+      sel.innerHTML = '';
+      menuOptions
+        .filter(m => {
+          const url = OmAdmin.field(m, 'menuUrl', '');
+          return url && url !== 'null';
+        })
+        .forEach(m => {
+          const mid = OmAdmin.field(m, 'menuId');
+          const name = OmAdmin.field(m, 'menuName');
+          sel.innerHTML += `<option value="${mid}">${name} (${mid})</option>`;
+        });
+      if (current) sel.value = current;
+    }
+
+    function clearFunctionAuthForm() {
+      functionAuthEditMode = false;
+      document.getElementById('fFaAuthId').value = '';
+      document.getElementById('fFaAuthId').readOnly = true;
+      if (authGroupOptions.length) {
+        document.getElementById('fFaAuthGroup').value = OmAdmin.field(authGroupOptions[0], 'authGroupId');
+      }
+      document.getElementById('fFaMenu').value = document.getElementById('fFaMenu').options[0]?.value || '';
+      ['fFaInquiry', 'fFaRegister', 'fFaUpdate', 'fFaDelete', 'fFaDownload'].forEach(id => {
+        document.getElementById(id).value = 'N';
+      });
+      document.getElementById('fFaReason').value = '';
+      document.getElementById('functionAuthFormMode').textContent = '신규 등록';
+    }
+
+    function fillFunctionAuthForm(row) {
+      functionAuthEditMode = true;
+      document.getElementById('fFaAuthId').value = OmAdmin.field(row, 'authId', '');
+      document.getElementById('fFaAuthGroup').value = OmAdmin.field(row, 'authGroupId', '');
+      document.getElementById('fFaMenu').value = OmAdmin.field(row, 'menuId', '');
+      document.getElementById('fFaInquiry').value = OmAdmin.field(row, 'canInquiry', 'N');
+      document.getElementById('fFaRegister').value = OmAdmin.field(row, 'canRegister', 'N');
+      document.getElementById('fFaUpdate').value = OmAdmin.field(row, 'canUpdate', 'N');
+      document.getElementById('fFaDelete').value = OmAdmin.field(row, 'canDelete', 'N');
+      document.getElementById('fFaDownload').value = OmAdmin.field(row, 'canDownload', 'N');
+      document.getElementById('fFaAuthId').readOnly = true;
+      document.getElementById('functionAuthFormMode').textContent = '수정 / 삭제';
+    }
+
+    function functionAuthFormPayload() {
+      return {
+        authId: document.getElementById('fFaAuthId').value.trim(),
+        authGroupId: document.getElementById('fFaAuthGroup').value,
+        menuId: document.getElementById('fFaMenu').value,
+        canInquiry: document.getElementById('fFaInquiry').value,
+        canRegister: document.getElementById('fFaRegister').value,
+        canUpdate: document.getElementById('fFaUpdate').value,
+        canDelete: document.getElementById('fFaDelete').value,
+        canDownload: document.getElementById('fFaDownload').value,
+        changeReason: document.getElementById('fFaReason').value.trim()
+      };
+    }
+
+    async function loadFunctionAuths(el) {
+      const tbody = document.getElementById('tabBody');
+      tbody.innerHTML = '<tr><td colspan="8" class="om-empty">조회 중...</td></tr>';
+      document.getElementById('userPagination').hidden = true;
+
+      const criteria = {};
+      const group = document.getElementById('filterFaGroup')?.value;
+      const menu = document.getElementById('filterFaMenu')?.value.trim();
+      if (group) criteria.authGroupId = group;
+      if (menu) criteria.menuId = menu;
+
+      const { body } = await OmAdmin.inquiry('functionAuth', criteria);
+      const rows = body.rows || [];
+      if (!rows.length) {
+        const hint = group
+          ? `선택한 권한그룹(${group})에 기능권한이 없습니다. 필터를 '전체'로 바꾸거나 아래에서 신규 등록하세요.`
+          : '등록된 기능권한이 없습니다. om 재기동 후에도 비어 있으면 seed-function-auth.bat 실행을 확인하세요.';
+        tbody.innerHTML = `<tr><td colspan="8" class="om-empty">${hint}</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = rows.map(r => `
+        <tr class="om-row-selectable" data-auth-id="${OmAdmin.field(r, 'authId')}">
+          <td>${OmAdmin.field(r, 'authGroupName', OmAdmin.field(r, 'authGroupId'))}</td>
+          <td class="om-mono">${OmAdmin.field(r, 'menuId')}</td>
+          <td>${OmAdmin.field(r, 'menuName')}</td>
+          <td>${ynChip(OmAdmin.field(r, 'canInquiry'))}</td>
+          <td>${ynChip(OmAdmin.field(r, 'canRegister'))}</td>
+          <td>${ynChip(OmAdmin.field(r, 'canUpdate'))}</td>
+          <td>${ynChip(OmAdmin.field(r, 'canDelete'))}</td>
+          <td>${ynChip(OmAdmin.field(r, 'canDownload'))}</td>
+        </tr>`).join('');
+      tbody.querySelectorAll('tr.om-row-selectable').forEach(tr => {
+        tr.addEventListener('click', async () => {
+          tbody.querySelectorAll('tr.om-row-selected').forEach(r => r.classList.remove('om-row-selected'));
+          tr.classList.add('om-row-selected');
+          try {
+            const { body: detail } = await OmAdmin.inquiry('functionAuthDetail', { authId: tr.dataset.authId });
+            fillFunctionAuthForm(detail.row || {});
+          } catch (e) {
+            OmAdmin.showErrorBanner(el, e.message);
+          }
+        });
+      });
     }
 
     function readUserFilters() {
@@ -334,12 +449,14 @@
       const usersPanel = document.getElementById('usersPanel');
       const authPanel = document.getElementById('authPanel');
       const menuPanel = document.getElementById('menuPanel');
+      const functionPanel = document.getElementById('functionPanel');
       const head = document.getElementById('tableHead');
       const title = document.getElementById('tabTitle');
 
       usersPanel.hidden = tab !== 'users';
       authPanel.hidden = tab !== 'auth';
       menuPanel.hidden = tab !== 'menu';
+      functionPanel.hidden = tab !== 'function';
 
       if (tab === 'users') {
         title.textContent = '사용자 목록';
@@ -349,20 +466,31 @@
         title.textContent = '권한그룹 목록';
         head.innerHTML = '<tr><th>그룹ID</th><th>그룹명</th><th>설명</th><th>사용</th></tr>';
         loadAuthGroups(el).catch(e => OmAdmin.showErrorBanner(el, e.message));
-      } else {
+      } else if (tab === 'menu') {
         title.textContent = '메뉴 목록';
         head.innerHTML = '<tr><th>메뉴ID</th><th>메뉴명</th><th>URL</th><th>상위메뉴</th><th>정렬</th></tr>';
         loadMenuOptions().then(() => loadMenus(el)).catch(e => OmAdmin.showErrorBanner(el, e.message));
+      } else {
+        title.textContent = '기능권한 매트릭스';
+        head.innerHTML = '<tr><th>권한그룹</th><th>메뉴ID</th><th>메뉴명</th><th>조회</th><th>등록</th><th>수정</th><th>삭제</th><th>다운로드</th></tr>';
+        const filterGroup = document.getElementById('filterFaGroup');
+        const filterMenu = document.getElementById('filterFaMenu');
+        if (filterGroup) filterGroup.value = '';
+        if (filterMenu) filterMenu.value = '';
+        loadFunctionAuthMenuOptions()
+          .then(() => loadFunctionAuths(el))
+          .catch(e => OmAdmin.showErrorBanner(el, e.message));
       }
     }
 
-    OmAdmin.initPage('user-auth', '사용자 / 권한 / 메뉴 관리', async (el) => {
+    OmAdmin.initPage('user-auth', '사용자 / 권한 / 메뉴 / 기능권한', async (el) => {
       el.innerHTML = `
-        <div class="om-alert info">사용자·권한그룹·메뉴 탭에서 등록·수정·삭제(USE_YN=N)가 가능합니다. 목록 행을 클릭하면 폼에 반영됩니다.</div>
+        <div class="om-alert info">사용자·권한그룹·메뉴·기능권한 탭에서 등록·수정·삭제가 가능합니다. 목록 행을 클릭하면 폼에 반영됩니다.</div>
         <div class="om-tabs">
           <button type="button" class="om-tab active" data-tab="users">사용자 관리</button>
           <button type="button" class="om-tab" data-tab="auth">권한그룹</button>
           <button type="button" class="om-tab" data-tab="menu">메뉴 관리</button>
+          <button type="button" class="om-tab" data-tab="function">기능권한</button>
         </div>
 
         <div id="usersPanel">
@@ -428,7 +556,7 @@
         </div>
 
         <div id="menuPanel" hidden>
-          <div class="om-alert info">상위 메뉴는 <strong>그룹(폴더)</strong> 용도입니다. URL 없는 그룹(운영·시스템·배포 등) 아래에 화면 메뉴를 연결합니다. 좌측 사이드바는 <code>om-admin.js</code>에 고정되어 있으며, 이 DB 메뉴는 <strong>기능권한</strong> 매핑에 사용됩니다.</div>
+          <div class="om-alert info">상위 메뉴는 <strong>그룹(폴더)</strong> 용도입니다. URL 없는 그룹(운영·시스템·배포 등) 아래에 화면 메뉴를 연결합니다. 좌측 사이드바는 <code>om-admin.js</code>에 고정되어 있으며, 이 DB 메뉴는 <strong>기능권한</strong> 탭 매핑에 사용됩니다.</div>
           <section class="om-filter-bar">
             <div class="field"><label for="filterMenuId">메뉴 ID</label><input id="filterMenuId" type="text"></div>
             <div class="field"><label for="filterMenuName">메뉴명</label><input id="filterMenuName" type="text"></div>
@@ -458,6 +586,38 @@
           </div>
         </div>
 
+        <div id="functionPanel" hidden>
+          <div class="om-alert info">권한그룹별로 메뉴 화면의 <strong>조회·등록·수정·삭제·다운로드</strong> 허용 여부를 설정합니다. 사용자는 <em>사용자 관리</em> 탭에서 그룹에 배정됩니다.</div>
+          <section class="om-filter-bar">
+            <div class="field"><label for="filterFaGroup">권한그룹</label><select id="filterFaGroup"><option value="">전체</option></select></div>
+            <div class="field"><label for="filterFaMenu">메뉴 ID</label><input id="filterFaMenu" type="text" placeholder="부분 검색"></div>
+            <div class="actions" style="display:flex;gap:8px;align-items:end">
+              <button class="btn-primary" id="faSearchBtn" type="button">조회</button>
+              <button class="btn-secondary" id="faFilterResetBtn" type="button">초기화</button>
+            </div>
+          </section>
+          <div class="om-form-panel">
+            <h3 id="functionAuthFormMode">신규 등록</h3>
+            <div class="om-form-grid">
+              <div class="field"><label for="fFaAuthId">권한 ID</label><input id="fFaAuthId" type="text" readonly placeholder="자동 생성"></div>
+              <div class="field"><label for="fFaAuthGroup">권한그룹</label><select id="fFaAuthGroup"></select></div>
+              <div class="field"><label for="fFaMenu">메뉴</label><select id="fFaMenu"></select></div>
+              <div class="field"><label for="fFaInquiry">조회</label><select id="fFaInquiry"><option>N</option><option>Y</option></select></div>
+              <div class="field"><label for="fFaRegister">등록</label><select id="fFaRegister"><option>N</option><option>Y</option></select></div>
+              <div class="field"><label for="fFaUpdate">수정</label><select id="fFaUpdate"><option>N</option><option>Y</option></select></div>
+              <div class="field"><label for="fFaDelete">삭제</label><select id="fFaDelete"><option>N</option><option>Y</option></select></div>
+              <div class="field"><label for="fFaDownload">다운로드</label><select id="fFaDownload"><option>N</option><option>Y</option></select></div>
+              <div class="field field-wide"><label for="fFaReason">변경 사유 (5자+)</label><input id="fFaReason" type="text" placeholder="승인 후 반영"></div>
+            </div>
+            <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn-secondary" id="faNewBtn" type="button">신규</button>
+              <button class="btn-primary" id="faSaveBtn" type="button">등록</button>
+              <button class="btn-primary" id="faUpdateBtn" type="button">수정</button>
+              <button class="btn-secondary" id="faDeleteBtn" type="button">삭제</button>
+            </div>
+          </div>
+        </div>
+
         <div class="om-card">
           <div class="om-card-head" id="tabTitle">사용자 목록</div>
           <div class="om-card-body om-table-wrap">
@@ -473,6 +633,8 @@
       clearUserForm();
       clearAuthGroupForm();
       clearMenuForm();
+      await loadFunctionAuthMenuOptions();
+      clearFunctionAuthForm();
 
       document.getElementById('userSearchBtn').addEventListener('click', () => {
         userPage = 1;
@@ -609,11 +771,53 @@
         } catch (e) { alert(e.message); }
       });
 
+      document.getElementById('faSearchBtn').addEventListener('click', () =>
+        loadFunctionAuths(el).catch(e => OmAdmin.showErrorBanner(el, e.message)));
+      document.getElementById('faFilterResetBtn').addEventListener('click', () => {
+        document.getElementById('filterFaGroup').value = '';
+        document.getElementById('filterFaMenu').value = '';
+        loadFunctionAuths(el).catch(e => OmAdmin.showErrorBanner(el, e.message));
+      });
+      document.getElementById('faNewBtn').addEventListener('click', clearFunctionAuthForm);
+      document.getElementById('faSaveBtn').addEventListener('click', async () => {
+        try {
+          const payload = functionAuthFormPayload();
+          delete payload.authId;
+          const { body } = await OmAdmin.mutate('functionAuthSave', payload, 'UPDATE');
+          alert(`등록 완료: ${body.authId}`);
+          clearFunctionAuthForm();
+          await loadFunctionAuths(el);
+        } catch (e) { alert(e.message); }
+      });
+      document.getElementById('faUpdateBtn').addEventListener('click', async () => {
+        if (!functionAuthEditMode) { alert('수정할 기능권한을 목록에서 선택하세요.'); return; }
+        try {
+          const { body } = await OmAdmin.mutate('functionAuthUpdate', functionAuthFormPayload(), 'UPDATE');
+          alert(`수정 완료: ${body.authId}`);
+          await loadFunctionAuths(el);
+        } catch (e) { alert(e.message); }
+      });
+      document.getElementById('faDeleteBtn').addEventListener('click', async () => {
+        if (!functionAuthEditMode) { alert('삭제할 기능권한을 목록에서 선택하세요.'); return; }
+        if (!confirm('기능권한 행을 삭제합니다. 계속할까요?')) return;
+        try {
+          const payload = functionAuthFormPayload();
+          await OmAdmin.mutate('functionAuthDelete', {
+            authId: payload.authId,
+            changeReason: payload.changeReason
+          }, 'DELETE');
+          alert('삭제 완료');
+          clearFunctionAuthForm();
+          await loadFunctionAuths(el);
+        } catch (e) { alert(e.message); }
+      });
+
       el.querySelectorAll('.om-tab').forEach(btn => {
         btn.addEventListener('click', () => setTab(btn.dataset.tab, el));
       });
 
-      setTab('users', el);
+      const initialTab = (location.hash || '').replace('#', '') || 'users';
+      setTab(['users', 'auth', 'menu', 'function'].includes(initialTab) ? initialTab : 'users', el);
     });
   </script>
 </body>

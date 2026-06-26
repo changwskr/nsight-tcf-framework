@@ -10,7 +10,7 @@ window.OmAdmin = (function () {
     { id: 'transaction-log', label: '거래로그 조회', href: '/om/admin/transaction-log.html' },
     { id: 'service-catalog', label: 'ServiceId 관리', href: '/om/admin/service-catalog.html' },
     { id: 'message-composer', label: '공통 전문 조립', href: '/om/admin/message-composer.html' },
-    { id: 'user-auth', label: '사용자 / 권한 / 메뉴', href: '/om/admin/user-auth.html' },
+    { id: 'user-auth', label: '사용자 / 권한 / 메뉴 / 기능권한', href: '/om/admin/user-auth.html' },
     { id: 'session', label: '세션 관리', href: '/om/admin/session.html' },
     { id: 'audit-log', label: '감사로그 조회', href: '/om/admin/audit-log.html' }
   ];
@@ -26,7 +26,6 @@ window.OmAdmin = (function () {
 
   const NAV_TERTIARY = [
     { id: 'common-code', label: '공통코드 관리', href: '/om/admin/common-code.html' },
-    { id: 'function-auth', label: '기능권한', href: '/om/admin/function-auth.html' },
     { id: 'data-auth', label: '데이터권한', href: '/om/admin/data-auth.html' },
     { id: 'auth-history', label: '권한이력', href: '/om/admin/auth-history.html' },
     { id: 'cache', label: 'Cache 관리', href: '/om/admin/cache.html' }
@@ -90,6 +89,10 @@ window.OmAdmin = (function () {
     deployHealthCheck: { serviceId: 'OM.Deploy.healthCheck', transactionCode: 'OM-DPL-0009' },
     deployDeleteAll: { serviceId: 'OM.Deploy.deleteAll', transactionCode: 'OM-DPL-0010' },
     functionAuth: { serviceId: 'OM.FunctionAuth.inquiry', transactionCode: 'OM-FAU-0001' },
+    functionAuthDetail: { serviceId: 'OM.FunctionAuth.detail', transactionCode: 'OM-FAU-0003' },
+    functionAuthSave: { serviceId: 'OM.FunctionAuth.save', transactionCode: 'OM-FAU-0002' },
+    functionAuthUpdate: { serviceId: 'OM.FunctionAuth.update', transactionCode: 'OM-FAU-0004' },
+    functionAuthDelete: { serviceId: 'OM.FunctionAuth.delete', transactionCode: 'OM-FAU-0005' },
     dataAuth: { serviceId: 'OM.DataAuth.inquiry', transactionCode: 'OM-DAU-0001' },
     authHistory: { serviceId: 'OM.AuthHistory.inquiry', transactionCode: 'OM-AHT-0001' },
     cache: { serviceId: 'OM.Cache.inquiry', transactionCode: 'OM-CCH-0001' },

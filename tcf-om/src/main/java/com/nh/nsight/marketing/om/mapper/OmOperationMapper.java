@@ -140,6 +140,16 @@ public interface OmOperationMapper {
 
     List<Map<String, Object>> searchFunctionAuths(Map<String, Object> params);
 
+    Map<String, Object> selectFunctionAuthById(String authId);
+
+    int countFunctionAuthByGroupAndMenu(Map<String, Object> params);
+
+    int insertFunctionAuth(Map<String, Object> params);
+
+    int updateFunctionAuth(Map<String, Object> params);
+
+    int deleteFunctionAuthById(String authId);
+
     List<Map<String, Object>> searchDataAuths(Map<String, Object> params);
 
     List<Map<String, Object>> searchAuthHistories(Map<String, Object> params);

@@ -294,6 +294,32 @@ public class OmOperationDao {
         return mapper.searchFunctionAuths(criteria);
     }
 
+    public Map<String, Object> selectFunctionAuthById(String authId) {
+        return mapper.selectFunctionAuthById(authId);
+    }
+
+    public int countFunctionAuthByGroupAndMenu(String authGroupId, String menuId, String excludeAuthId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("authGroupId", authGroupId);
+        params.put("menuId", menuId);
+        if (excludeAuthId != null) {
+            params.put("excludeAuthId", excludeAuthId);
+        }
+        return mapper.countFunctionAuthByGroupAndMenu(params);
+    }
+
+    public int insertFunctionAuth(Map<String, Object> row) {
+        return mapper.insertFunctionAuth(row);
+    }
+
+    public int updateFunctionAuth(Map<String, Object> row) {
+        return mapper.updateFunctionAuth(row);
+    }
+
+    public int deleteFunctionAuthById(String authId) {
+        return mapper.deleteFunctionAuthById(authId);
+    }
+
     public List<Map<String, Object>> searchDataAuths(Map<String, Object> criteria) {
         return mapper.searchDataAuths(criteria);
     }

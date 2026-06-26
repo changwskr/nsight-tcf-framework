@@ -1,9 +1,9 @@
-# dev - ztomcat WAR (batch.war -> /batch)
+﻿# dev - ztomcat WAR (batch.war -> /batch)
 spring:
   application:
     name: nsight-tcf-batch
   datasource:
-    url: jdbc:h2:tcp://127.0.0.1:9092/${nsight.txlog.path:./data/nsight-txlog}/nsight_om;MODE=Oracle;DATABASE_TO_UPPER=false
+    url: jdbc:h2:tcp://127.0.0.1:9092/./nsight_om;MODE=Oracle;DATABASE_TO_UPPER=false
     hikari:
       pool-name: nsight-batch-hikari-dev
       initialization-fail-timeout: 120000
@@ -31,26 +31,16 @@ nsight:
         - { ap-id: batch-ap, ap-name: 'tcf-batch (/batch)', base-url: '${nsight.gateway.base-url}/batch', enabled: true }
         - { ap-id: ui-ap, ap-name: 'tcf-ui (/ui)', base-url: '${nsight.gateway.base-url}/ui', enabled: true }
     db-status:
+      # ztomcat dev: OM·batch·거래로그 공유 DB(nsight_om)만 모니터링.
+      # 업무 WAR의 spring.datasource(h2:mem)는 샘플용이며 대시보드 DB 항목에 포함하지 않음.
       targets:
         - db-id: LOGDB
           db-name: jdbc:h2:file:./data/nsight-txlog/nsight_om
           source-type: jdbc
-          jdbc-url: jdbc:h2:tcp://127.0.0.1:9092/${nsight.txlog.path:./data/nsight-txlog}/nsight_om;MODE=Oracle;DATABASE_TO_UPPER=false
+          jdbc-url: jdbc:h2:tcp://127.0.0.1:9092/./nsight_om;MODE=Oracle;DATABASE_TO_UPPER=false
           jdbc-user: sa
           jdbc-password: ""
           enabled: true
-        - { db-id: IC-DS, db-name: 'jdbc:h2:mem:nsight_ic', source-type: actuator, base-url: '${nsight.gateway.base-url}/ic', enabled: true }
-        - { db-id: PC-DS, db-name: 'jdbc:h2:mem:nsight_pc', source-type: actuator, base-url: '${nsight.gateway.base-url}/pc', enabled: true }
-        - { db-id: MS-DS, db-name: 'jdbc:h2:mem:nsight_ms', source-type: actuator, base-url: '${nsight.gateway.base-url}/ms', enabled: true }
-        - { db-id: SV-DS, db-name: 'jdbc:h2:mem:nsight_sv', source-type: actuator, base-url: '${nsight.gateway.base-url}/sv', enabled: true }
-        - { db-id: PD-DS, db-name: 'jdbc:h2:mem:nsight_pd', source-type: actuator, base-url: '${nsight.gateway.base-url}/pd', enabled: true }
-        - { db-id: EB-DS, db-name: 'jdbc:h2:mem:nsight_eb', source-type: actuator, base-url: '${nsight.gateway.base-url}/eb', enabled: true }
-        - { db-id: EP-DS, db-name: 'jdbc:h2:mem:nsight_ep', source-type: actuator, base-url: '${nsight.gateway.base-url}/ep', enabled: true }
-        - { db-id: SS-DS, db-name: 'jdbc:h2:mem:nsight_ss', source-type: actuator, base-url: '${nsight.gateway.base-url}/ss', enabled: true }
-        - { db-id: MG-DS, db-name: 'jdbc:h2:mem:nsight_mg', source-type: actuator, base-url: '${nsight.gateway.base-url}/mg', enabled: true }
-        - { db-id: OM-DS, db-name: 'jdbc:h2:file:./data/nsight-txlog/nsight_om', source-type: actuator, base-url: '${nsight.gateway.base-url}/om', enabled: true }
-        - { db-id: BATCH-DS, db-name: 'jdbc:h2:file:./data/nsight-txlog/nsight_om', source-type: actuator, base-url: '${nsight.gateway.base-url}/batch', enabled: true }
-        - { db-id: UI-DS, db-name: '(no datasource)', source-type: actuator, base-url: '${nsight.gateway.base-url}/ui', enabled: true }
     session-status:
       targets:
         - scope-id: OM-PORTAL

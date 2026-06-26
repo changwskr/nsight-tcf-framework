@@ -11,7 +11,7 @@ if not defined JAVA_HOME (
 
 set "CATALINA_OPTS=-Xms512m -Xmx1536m -Dfile.encoding=UTF-8 -Duser.timezone=Asia/Seoul"
 if defined NSIGHT_TXLOG_PATH goto :apply_txlog_path
-for %%I in ("%~dp0..\..\..") do set "NSIGHT_TXLOG_PATH=%%~fI\data\nsight-txlog"
+for %%I in ("%~dp0..\data\nsight-txlog") do set "NSIGHT_TXLOG_PATH=%%~fI"
 :apply_txlog_path
 if not defined NSIGHT_TXLOG_PATH goto :skip_txlog_path
 set "CATALINA_OPTS=%CATALINA_OPTS% -Dnsight.txlog.path=%NSIGHT_TXLOG_PATH:\=/%"
