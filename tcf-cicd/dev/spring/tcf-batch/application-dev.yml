@@ -14,25 +14,18 @@ nsight:
     base-url: http://127.0.0.1:8080
   batch:
     startup-collect:
-      # batch.war가 알파벳 순 첫 WAR → 나머지 18개 순차 배포(~6분) 후 수집
-      initial-delay-ms: 420000
+      # batch.war가 알파벳 순 첫 WAR → 나머지 11개 순차 배포 후 수집
+      initial-delay-ms: 300000
     ap-status:
       targets:
-        - { ap-id: cc-ap, ap-name: 'cc-service (/cc)', base-url: '${nsight.gateway.base-url}/cc', enabled: true }
         - { ap-id: ic-ap, ap-name: 'ic-service (/ic)', base-url: '${nsight.gateway.base-url}/ic', enabled: true }
         - { ap-id: pc-ap, ap-name: 'pc-service (/pc)', base-url: '${nsight.gateway.base-url}/pc', enabled: true }
-        - { ap-id: bc-ap, ap-name: 'bc-service (/bc)', base-url: '${nsight.gateway.base-url}/bc', enabled: true }
         - { ap-id: ms-ap, ap-name: 'ms-service (/ms)', base-url: '${nsight.gateway.base-url}/ms', enabled: true }
         - { ap-id: sv-ap, ap-name: 'sv-service (/sv)', base-url: '${nsight.gateway.base-url}/sv', enabled: true }
         - { ap-id: pd-ap, ap-name: 'pd-service (/pd)', base-url: '${nsight.gateway.base-url}/pd', enabled: true }
-        - { ap-id: cm-ap, ap-name: 'cm-service (/cm)', base-url: '${nsight.gateway.base-url}/cm', enabled: true }
         - { ap-id: eb-ap, ap-name: 'eb-service (/eb)', base-url: '${nsight.gateway.base-url}/eb', enabled: true }
         - { ap-id: ep-ap, ap-name: 'ep-service (/ep)', base-url: '${nsight.gateway.base-url}/ep', enabled: true }
-        - { ap-id: bp-ap, ap-name: 'bp-service (/bp)', base-url: '${nsight.gateway.base-url}/bp', enabled: true }
-        - { ap-id: bd-ap, ap-name: 'bd-service (/bd)', base-url: '${nsight.gateway.base-url}/bd', enabled: true }
         - { ap-id: ss-ap, ap-name: 'ss-service (/ss)', base-url: '${nsight.gateway.base-url}/ss', enabled: true }
-        - { ap-id: cs-ap, ap-name: 'cs-service (/cs)', base-url: '${nsight.gateway.base-url}/cs', enabled: true }
-        - { ap-id: ct-ap, ap-name: 'ct-service (/ct)', base-url: '${nsight.gateway.base-url}/ct', enabled: true }
         - { ap-id: mg-ap, ap-name: 'mg-service (/mg)', base-url: '${nsight.gateway.base-url}/mg', enabled: true }
         - { ap-id: om-ap, ap-name: 'tcf-om (/om)', base-url: '${nsight.gateway.base-url}/om', enabled: true }
         - { ap-id: batch-ap, ap-name: 'tcf-batch (/batch)', base-url: '${nsight.gateway.base-url}/batch', enabled: true }
@@ -46,21 +39,14 @@ nsight:
           jdbc-user: sa
           jdbc-password: ""
           enabled: true
-        - { db-id: CC-DS, db-name: 'jdbc:h2:mem:nsight_cc', source-type: actuator, base-url: '${nsight.gateway.base-url}/cc', enabled: true }
         - { db-id: IC-DS, db-name: 'jdbc:h2:mem:nsight_ic', source-type: actuator, base-url: '${nsight.gateway.base-url}/ic', enabled: true }
         - { db-id: PC-DS, db-name: 'jdbc:h2:mem:nsight_pc', source-type: actuator, base-url: '${nsight.gateway.base-url}/pc', enabled: true }
-        - { db-id: BC-DS, db-name: 'jdbc:h2:mem:nsight_bc', source-type: actuator, base-url: '${nsight.gateway.base-url}/bc', enabled: true }
         - { db-id: MS-DS, db-name: 'jdbc:h2:mem:nsight_ms', source-type: actuator, base-url: '${nsight.gateway.base-url}/ms', enabled: true }
         - { db-id: SV-DS, db-name: 'jdbc:h2:mem:nsight_sv', source-type: actuator, base-url: '${nsight.gateway.base-url}/sv', enabled: true }
         - { db-id: PD-DS, db-name: 'jdbc:h2:mem:nsight_pd', source-type: actuator, base-url: '${nsight.gateway.base-url}/pd', enabled: true }
-        - { db-id: CM-DS, db-name: 'jdbc:h2:mem:nsight_cm', source-type: actuator, base-url: '${nsight.gateway.base-url}/cm', enabled: true }
         - { db-id: EB-DS, db-name: 'jdbc:h2:mem:nsight_eb', source-type: actuator, base-url: '${nsight.gateway.base-url}/eb', enabled: true }
         - { db-id: EP-DS, db-name: 'jdbc:h2:mem:nsight_ep', source-type: actuator, base-url: '${nsight.gateway.base-url}/ep', enabled: true }
-        - { db-id: BP-DS, db-name: 'jdbc:h2:mem:nsight_bp', source-type: actuator, base-url: '${nsight.gateway.base-url}/bp', enabled: true }
-        - { db-id: BD-DS, db-name: 'jdbc:h2:mem:nsight_bd', source-type: actuator, base-url: '${nsight.gateway.base-url}/bd', enabled: true }
         - { db-id: SS-DS, db-name: 'jdbc:h2:mem:nsight_ss', source-type: actuator, base-url: '${nsight.gateway.base-url}/ss', enabled: true }
-        - { db-id: CS-DS, db-name: 'jdbc:h2:mem:nsight_cs', source-type: actuator, base-url: '${nsight.gateway.base-url}/cs', enabled: true }
-        - { db-id: CT-DS, db-name: 'jdbc:h2:mem:nsight_ct', source-type: actuator, base-url: '${nsight.gateway.base-url}/ct', enabled: true }
         - { db-id: MG-DS, db-name: 'jdbc:h2:mem:nsight_mg', source-type: actuator, base-url: '${nsight.gateway.base-url}/mg', enabled: true }
         - { db-id: OM-DS, db-name: 'jdbc:h2:file:./data/nsight-txlog/nsight_om', source-type: actuator, base-url: '${nsight.gateway.base-url}/om', enabled: true }
         - { db-id: BATCH-DS, db-name: 'jdbc:h2:file:./data/nsight-txlog/nsight_om', source-type: actuator, base-url: '${nsight.gateway.base-url}/batch', enabled: true }
@@ -71,31 +57,19 @@ nsight:
           scope-name: OM 운영 포털 (Spring Session)
           source-type: spring-session
           enabled: true
-        - { scope-id: CC-AP, scope-name: 'cc-service HTTP Session (/cc)', source-type: actuator, base-url: '${nsight.gateway.base-url}/cc', metric-name: tomcat.sessions.active.current, enabled: true }
         - { scope-id: IC-AP, scope-name: 'ic-service HTTP Session (/ic)', source-type: actuator, base-url: '${nsight.gateway.base-url}/ic', metric-name: tomcat.sessions.active.current, enabled: true }
         - { scope-id: PC-AP, scope-name: 'pc-service HTTP Session (/pc)', source-type: actuator, base-url: '${nsight.gateway.base-url}/pc', metric-name: tomcat.sessions.active.current, enabled: true }
-        - { scope-id: BC-AP, scope-name: 'bc-service HTTP Session (/bc)', source-type: actuator, base-url: '${nsight.gateway.base-url}/bc', metric-name: tomcat.sessions.active.current, enabled: true }
         - { scope-id: MS-AP, scope-name: 'ms-service HTTP Session (/ms)', source-type: actuator, base-url: '${nsight.gateway.base-url}/ms', metric-name: tomcat.sessions.active.current, enabled: true }
         - { scope-id: SV-AP, scope-name: 'sv-service HTTP Session (/sv)', source-type: actuator, base-url: '${nsight.gateway.base-url}/sv', metric-name: tomcat.sessions.active.current, enabled: true }
         - { scope-id: PD-AP, scope-name: 'pd-service HTTP Session (/pd)', source-type: actuator, base-url: '${nsight.gateway.base-url}/pd', metric-name: tomcat.sessions.active.current, enabled: true }
-        - { scope-id: CM-AP, scope-name: 'cm-service HTTP Session (/cm)', source-type: actuator, base-url: '${nsight.gateway.base-url}/cm', metric-name: tomcat.sessions.active.current, enabled: true }
         - { scope-id: EB-AP, scope-name: 'eb-service HTTP Session (/eb)', source-type: actuator, base-url: '${nsight.gateway.base-url}/eb', metric-name: tomcat.sessions.active.current, enabled: true }
         - { scope-id: EP-AP, scope-name: 'ep-service HTTP Session (/ep)', source-type: actuator, base-url: '${nsight.gateway.base-url}/ep', metric-name: tomcat.sessions.active.current, enabled: true }
-        - { scope-id: BP-AP, scope-name: 'bp-service HTTP Session (/bp)', source-type: actuator, base-url: '${nsight.gateway.base-url}/bp', metric-name: tomcat.sessions.active.current, enabled: true }
-        - { scope-id: BD-AP, scope-name: 'bd-service HTTP Session (/bd)', source-type: actuator, base-url: '${nsight.gateway.base-url}/bd', metric-name: tomcat.sessions.active.current, enabled: true }
         - { scope-id: SS-AP, scope-name: 'ss-service HTTP Session (/ss)', source-type: actuator, base-url: '${nsight.gateway.base-url}/ss', metric-name: tomcat.sessions.active.current, enabled: true }
-        - { scope-id: CS-AP, scope-name: 'cs-service HTTP Session (/cs)', source-type: actuator, base-url: '${nsight.gateway.base-url}/cs', metric-name: tomcat.sessions.active.current, enabled: true }
-        - { scope-id: CT-AP, scope-name: 'ct-service HTTP Session (/ct)', source-type: actuator, base-url: '${nsight.gateway.base-url}/ct', metric-name: tomcat.sessions.active.current, enabled: true }
         - { scope-id: MG-AP, scope-name: 'mg-service HTTP Session (/mg)', source-type: actuator, base-url: '${nsight.gateway.base-url}/mg', metric-name: tomcat.sessions.active.current, enabled: true }
         - { scope-id: BATCH-AP, scope-name: 'tcf-batch HTTP Session (/batch)', source-type: actuator, base-url: '${nsight.gateway.base-url}/batch', metric-name: tomcat.sessions.active.current, enabled: true }
         - { scope-id: UI-AP, scope-name: 'tcf-ui HTTP Session (/ui)', source-type: actuator, base-url: '${nsight.gateway.base-url}/ui', metric-name: tomcat.sessions.active.current, enabled: true }
     deploy-status:
       targets:
-        - business-code: CC
-          war-name: cc.war
-          base-url: ${nsight.gateway.base-url}/cc
-          source-type: actuator
-          enabled: true
         - business-code: IC
           war-name: ic.war
           base-url: ${nsight.gateway.base-url}/ic
@@ -104,11 +78,6 @@ nsight:
         - business-code: PC
           war-name: pc.war
           base-url: ${nsight.gateway.base-url}/pc
-          source-type: actuator
-          enabled: true
-        - business-code: BC
-          war-name: bc.war
-          base-url: ${nsight.gateway.base-url}/bc
           source-type: actuator
           enabled: true
         - business-code: MS
@@ -126,11 +95,6 @@ nsight:
           base-url: ${nsight.gateway.base-url}/pd
           source-type: actuator
           enabled: true
-        - business-code: CM
-          war-name: cm.war
-          base-url: ${nsight.gateway.base-url}/cm
-          source-type: actuator
-          enabled: true
         - business-code: EB
           war-name: eb.war
           base-url: ${nsight.gateway.base-url}/eb
@@ -141,29 +105,9 @@ nsight:
           base-url: ${nsight.gateway.base-url}/ep
           source-type: actuator
           enabled: true
-        - business-code: BP
-          war-name: bp.war
-          base-url: ${nsight.gateway.base-url}/bp
-          source-type: actuator
-          enabled: true
-        - business-code: BD
-          war-name: bd.war
-          base-url: ${nsight.gateway.base-url}/bd
-          source-type: actuator
-          enabled: true
         - business-code: SS
           war-name: ss.war
           base-url: ${nsight.gateway.base-url}/ss
-          source-type: actuator
-          enabled: true
-        - business-code: CS
-          war-name: cs.war
-          base-url: ${nsight.gateway.base-url}/cs
-          source-type: actuator
-          enabled: true
-        - business-code: CT
-          war-name: ct.war
-          base-url: ${nsight.gateway.base-url}/ct
           source-type: actuator
           enabled: true
         - business-code: MG

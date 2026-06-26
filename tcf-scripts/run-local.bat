@@ -42,13 +42,13 @@ exit /b 0
 
 :start_all
 echo [run-local] starting all business services + tcf-om...
-for %%C in (cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg) do (
+for %%C in (ic pc ms sv pd eb ep ss mg) do (
   echo [run-local] start %%C-service
   start "%%C-service" cmd /k "cd /d "%CD%" && "%GRADLE%" :%%C-service:bootRun"
 )
 echo [run-local] start tcf-om
 start "tcf-om" cmd /k "cd /d "%CD%" && "%GRADLE%" :tcf-om:bootRun"
-echo [run-local] started 16 service(s) + tcf-om
+echo [run-local] started 9 service(s) + tcf-om
 exit /b 0
 
 :queue_target
@@ -110,7 +110,7 @@ echo   ui        tcf-ui bootRun (port 8099)
 echo   om        tcf-om bootRun (port 8097)
 echo   batch     tcf-batch bootRun (port 8098)
 echo   ud        tcf-om bootRun (파일 업·다운로드 내장)
-echo   all       start 16 *-service + tcf-om in new windows
+echo   all       start 9 *-service + tcf-om in new windows
 echo.
 echo Gradle: GRADLE_HOME_OVERRIDE ^> GRADLE_HOME ^> PATH
 echo.

@@ -1,4 +1,4 @@
-# local — Tomcat deploy-wars (19 WAR 빌드 + webapps 배포)
+# local — Tomcat deploy-wars (12 WAR 빌드 + webapps 배포)
 param(
     [switch]$SkipSync,
     [switch]$SkipBuild,
@@ -7,10 +7,10 @@ param(
     [switch]$ExcludeBatch,
     [switch]$SkipBatchCollect,
     [switch]$Help,
-    [Parameter(Position = 0, ValueFromRemainingArguments = $true)]
-    [string[]]$Codes = @(),
     [ValidateSet('dev', 'local')]
-    [string]$SyncProfile = 'dev'
+    [string]$SyncProfile = 'dev',
+    [Parameter(Position = 0, ValueFromRemainingArguments = $true)]
+    [string[]]$Codes = @()
 )
 
 $ErrorActionPreference = 'Stop'
@@ -25,21 +25,14 @@ $SyncScript = Join-Path $CicdRoot 'scripts/sync-to-framework.ps1'
 
 # module:buildWar:deployWar:context
 $AllModules = @(
-    @{ Module = 'cc-service';  Src = 'cc.war';       Dest = 'cc.war';       Ctx = 'cc' }
     @{ Module = 'ic-service';  Src = 'ic.war';       Dest = 'ic.war';       Ctx = 'ic' }
     @{ Module = 'pc-service';  Src = 'pc.war';       Dest = 'pc.war';       Ctx = 'pc' }
-    @{ Module = 'bc-service';  Src = 'bc.war';       Dest = 'bc.war';       Ctx = 'bc' }
     @{ Module = 'ms-service';  Src = 'ms.war';       Dest = 'ms.war';       Ctx = 'ms' }
     @{ Module = 'sv-service';  Src = 'sv.war';       Dest = 'sv.war';       Ctx = 'sv' }
     @{ Module = 'pd-service';  Src = 'pd.war';       Dest = 'pd.war';       Ctx = 'pd' }
-    @{ Module = 'cm-service';  Src = 'cm.war';       Dest = 'cm.war';       Ctx = 'cm' }
     @{ Module = 'eb-service';  Src = 'eb.war';       Dest = 'eb.war';       Ctx = 'eb' }
     @{ Module = 'ep-service';  Src = 'ep.war';       Dest = 'ep.war';       Ctx = 'ep' }
-    @{ Module = 'bp-service';  Src = 'bp.war';       Dest = 'bp.war';       Ctx = 'bp' }
-    @{ Module = 'bd-service';  Src = 'bd.war';       Dest = 'bd.war';       Ctx = 'bd' }
     @{ Module = 'ss-service';  Src = 'ss.war';       Dest = 'ss.war';       Ctx = 'ss' }
-    @{ Module = 'cs-service';  Src = 'cs.war';       Dest = 'cs.war';       Ctx = 'cs' }
-    @{ Module = 'ct-service';  Src = 'ct.war';       Dest = 'ct.war';       Ctx = 'ct' }
     @{ Module = 'mg-service';  Src = 'mg.war';       Dest = 'mg.war';       Ctx = 'mg' }
     @{ Module = 'tcf-om';      Src = 'tcf-om.war';   Dest = 'om.war';       Ctx = 'om' }
     @{ Module = 'tcf-ui';      Src = 'tcf-ui.war';   Dest = 'ui.war';       Ctx = 'ui' }
@@ -75,9 +68,9 @@ function Filter-DeployableModules {
     if ($skipped.Count -gt 0) {
         $names = ($skipped | ForEach-Object { "$($_.Ctx) ($($_.Module))" }) -join ', '
         Write-Warning "[deploy-wars] skip not in workspace ($($skipped.Count)): $names"
-        Write-Warning '[deploy-wars] full 19 WAR: git restore cc-service bc-service cm-service bp-service bd-service cs-service ct-service'
+        Write-Warning '[deploy-wars] full 12 WAR: git restore ic-service pc-service ms-service sv-service pd-service eb-service ep-service ss-service mg-service'
     }
-    return ,$deployable
+    return @($deployable)
 }
 
 function Show-Help {
@@ -85,10 +78,10 @@ function Show-Help {
 
 Usage: deploy-wars.ps1 [codes...] [options]
 
-tcf-cicd 설정 sync -> WAR 빌드 -> ztomcat webapps 배포 (최대 19 context, workspace에 있는 모듈만).
+tcf-cicd 설정 sync -> WAR 빌드 -> ztomcat webapps 배포 (최대 12 context, workspace에 있는 모듈만).
 
 Codes (생략 또는 all = 전체):
-  cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om batch ui
+  ic pc ms sv pd eb ep ss mg om batch ui
 
 Options:
   -SyncProfile dev|local   framework sync 프로파일 (기본 dev — Tomcat setenv)
@@ -177,11 +170,13 @@ function Resolve-Gradle {
 function Resolve-Modules {
     param([string[]]$InputCodes)
     if (-not $InputCodes -or $InputCodes.Count -eq 0) {
-        return ,@(Filter-DeployableModules -Modules $AllModules)
+        return @(Filter-DeployableModules -Modules $AllModules)
     }
-    $normalized = @($InputCodes | ForEach-Object { $_.ToLowerInvariant() })
+    $normalized = @($InputCodes | ForEach-Object { $_.ToLowerInvariant() } | Where-Object {
+        $_ -and -not $_.StartsWith('-')
+    })
     if ($normalized -contains 'all') {
-        return ,@(Filter-DeployableModules -Modules $AllModules)
+        return @(Filter-DeployableModules -Modules $AllModules)
     }
 
     $selected = @()
@@ -192,7 +187,7 @@ function Resolve-Modules {
         }
         $selected += $matches
     }
-    return ,@(Filter-DeployableModules -Modules $selected -RequireAllPresent)
+    return @(Filter-DeployableModules -Modules $selected -RequireAllPresent)
 }
 
 function Test-TomcatRunning {

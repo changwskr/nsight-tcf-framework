@@ -17,7 +17,7 @@ $SyncScript = Join-Path $CicdRoot 'scripts/sync-to-framework.ps1'
 $DeployScript = Join-Path (Join-Path $CicdRoot 'local/script') 'deploy-wars.ps1'
 
 function Get-ZtomcatContextList {
-    return @('cc', 'ic', 'pc', 'bc', 'ms', 'sv', 'pd', 'cm', 'eb', 'ep', 'bp', 'bd', 'ss', 'cs', 'ct', 'mg', 'om', 'ui', 'batch')
+    return @('ic', 'pc', 'ms', 'sv', 'pd', 'eb', 'ep', 'ss', 'mg', 'om', 'ui', 'batch')
 }
 
 function Show-Help {

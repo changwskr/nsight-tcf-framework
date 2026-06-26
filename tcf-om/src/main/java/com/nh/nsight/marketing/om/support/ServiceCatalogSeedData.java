@@ -182,7 +182,27 @@ final class ServiceCatalogSeedData {
             entry("CAT-071", "ET", "ET.TransactionIo.list", "ET-LST-0001", "INQUIRY",
                     "EtTransactionIoListHandler", "ROLE_ET_INQ", "N", 5, "N", "거래 I/O 목록 (레거시)"),
             entry("CAT-072", "ET", "ET.TransactionIo.detail", "ET-DTL-0001", "INQUIRY",
-                    "EtTransactionIoDetailHandler", "ROLE_ET_INQ", "N", 5, "N", "거래 I/O 상세 (레거시)")
+                    "EtTransactionIoDetailHandler", "ROLE_ET_INQ", "N", 5, "N", "거래 I/O 상세 (레거시)"),
+            entry("CAT-083", "OM", "OM.Deploy.buildRequest", "OM-DPL-0001", "UPDATE",
+                    "OmDeployBuildRequestHandler", "ROLE_OM_DEP", "Y", 10, "Y", "배포 Gradle 빌드 요청"),
+            entry("CAT-084", "OM", "OM.Deploy.buildStatus", "OM-DPL-0002", "INQUIRY",
+                    "OmDeployBuildStatusHandler", "ROLE_OM_DEP", "N", 5, "Y", "배포 빌드 상태 조회"),
+            entry("CAT-085", "OM", "OM.Deploy.deployRequest", "OM-DPL-0003", "UPDATE",
+                    "OmDeployDeployRequestHandler", "ROLE_OM_DEP", "Y", 10, "Y", "배포 요청 등록"),
+            entry("CAT-086", "OM", "OM.Deploy.approve", "OM-DPL-0004", "UPDATE",
+                    "OmDeployApproveHandler", "ROLE_OM_DEP", "Y", 10, "Y", "배포 승인"),
+            entry("CAT-087", "OM", "OM.Deploy.execute", "OM-DPL-0005", "EXECUTE",
+                    "OmDeployExecuteHandler", "ROLE_OM_DEP", "Y", 300, "Y", "배포 실행"),
+            entry("CAT-088", "OM", "OM.Deploy.history", "OM-DPL-0006", "INQUIRY",
+                    "OmDeployHistoryInquiryHandler", "ROLE_OM_DEP", "N", 10, "Y", "배포 이력 조회"),
+            entry("CAT-089", "OM", "OM.Deploy.logInquiry", "OM-DPL-0007", "INQUIRY",
+                    "OmDeployLogInquiryHandler", "ROLE_OM_DEP", "N", 10, "Y", "배포 로그 조회"),
+            entry("CAT-090", "OM", "OM.Deploy.rollbackRequest", "OM-DPL-0008", "UPDATE",
+                    "OmDeployRollbackHandler", "ROLE_OM_DEP", "Y", 10, "Y", "배포 롤백 요청"),
+            entry("CAT-091", "OM", "OM.Deploy.healthCheck", "OM-DPL-0009", "INQUIRY",
+                    "OmDeployHealthCheckHandler", "ROLE_OM_DEP", "N", 10, "Y", "배포 Health Check"),
+            entry("CAT-092", "OM", "OM.Deploy.deleteAll", "OM-DPL-0010", "DELETE",
+                    "OmDeployDeleteAllHandler", "ROLE_OM_DEP", "Y", 30, "Y", "배포 요청·이력 초기화")
     };
 
     static void mergeAll(JdbcTemplate jdbcTemplate) {

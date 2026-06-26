@@ -383,27 +383,35 @@
     </update>
 
     <select id="searchMenus" parameterType="map" resultType="map">
-        SELECT MENU_ID AS "menuId", MENU_NAME AS "menuName", MENU_URL AS "menuUrl",
-               PARENT_MENU_ID AS "parentMenuId", SORT_ORDER AS "sortOrder", USE_YN AS "useYn"
-          FROM OM_MENU
+        SELECT M.MENU_ID AS "menuId", M.MENU_NAME AS "menuName",
+               COALESCE(M.MENU_URL, '') AS "menuUrl",
+               COALESCE(M.PARENT_MENU_ID, '') AS "parentMenuId",
+               COALESCE(P.MENU_NAME, '') AS "parentMenuName",
+               M.SORT_ORDER AS "sortOrder", M.USE_YN AS "useYn"
+          FROM OM_MENU M
+          LEFT JOIN OM_MENU P ON P.MENU_ID = M.PARENT_MENU_ID
          WHERE 1 = 1
         <if test="menuId != null and menuId != ''">
-            AND MENU_ID = #{menuId}
+            AND M.MENU_ID = #{menuId}
         </if>
         <if test="menuName != null and menuName != ''">
-            AND MENU_NAME LIKE '%' || #{menuName} || '%'
+            AND M.MENU_NAME LIKE '%' || #{menuName} || '%'
         </if>
         <if test="useYn != null and useYn != ''">
-            AND USE_YN = #{useYn}
+            AND M.USE_YN = #{useYn}
         </if>
-         ORDER BY SORT_ORDER, MENU_ID
+         ORDER BY M.SORT_ORDER, M.MENU_ID
     </select>
 
     <select id="selectMenuById" parameterType="string" resultType="map">
-        SELECT MENU_ID AS "menuId", MENU_NAME AS "menuName", MENU_URL AS "menuUrl",
-               PARENT_MENU_ID AS "parentMenuId", SORT_ORDER AS "sortOrder", USE_YN AS "useYn"
-          FROM OM_MENU
-         WHERE MENU_ID = #{menuId}
+        SELECT M.MENU_ID AS "menuId", M.MENU_NAME AS "menuName",
+               COALESCE(M.MENU_URL, '') AS "menuUrl",
+               COALESCE(M.PARENT_MENU_ID, '') AS "parentMenuId",
+               COALESCE(P.MENU_NAME, '') AS "parentMenuName",
+               M.SORT_ORDER AS "sortOrder", M.USE_YN AS "useYn"
+          FROM OM_MENU M
+          LEFT JOIN OM_MENU P ON P.MENU_ID = M.PARENT_MENU_ID
+         WHERE M.MENU_ID = #{menuId}
     </select>
 
     <select id="countChildMenus" parameterType="string" resultType="int">

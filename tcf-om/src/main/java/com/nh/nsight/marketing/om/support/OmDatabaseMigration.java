@@ -56,6 +56,7 @@ public class OmDatabaseMigration implements ApplicationRunner {
                 "BAT-BATCH-004", "대시보드 배포 현황 수집", "BATCH", "55 */5 * * * *", "Y",
                 "Actuator/HTTP 배포 상태 → OM_DEPLOY_STATUS (tcf-batch)");
         ensureSessionStatusTable();
+        ensureDeployTables();
         removeLegacyApSeedApStatus();
         removeEmptySessionStatus();
         removeDuplicateOmSessionStatus();
@@ -63,13 +64,19 @@ public class OmDatabaseMigration implements ApplicationRunner {
         removeEmptyDeployStatus();
         jdbcTemplate.update("""
                 MERGE INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN) KEY (MENU_ID)
-                VALUES (?, ?, ?, NULL, ?, ?)
-                """, "OM_FIL", "파일 관리", "/om/admin/file-management.html", 10, "Y");
+                VALUES (?, ?, ?, ?, ?, ?)
+                """, "OM_FIL", "파일 관리", "/om/admin/file-management.html", "OM_GRP_SYS", 15, "Y");
+        jdbcTemplate.update("""
+                MERGE INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN) KEY (MENU_ID)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """, "OM_DPL", "배포 관리", "/om/admin/deploy.html", "OM_GRP_SYS", 16, "Y");
         ServiceCatalogSeedData.mergeAll(jdbcTemplate);
         seedAuthCodeCommonCodes();
         seedCacheNameCommonCodes();
         seedBusinessAuthCodes();
         repairCorruptedUtf8SeedData();
+        ensureMenuHierarchy();
+        normalizeMenuNullColumns();
         log.debug("OM schema migration applied.");
     }
 
@@ -248,6 +255,50 @@ public class OmDatabaseMigration implements ApplicationRunner {
                 """);
     }
 
+    private void ensureDeployTables() {
+        jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS OM_DEPLOY_REQUEST (
+                    DEPLOY_REQUEST_ID VARCHAR(40) NOT NULL,
+                    REQUEST_TYPE VARCHAR(20) NOT NULL,
+                    ENV_CODE VARCHAR(20),
+                    BUSINESS_CODE VARCHAR(20),
+                    MODULE_NAME VARCHAR(100),
+                    BRANCH_NAME VARCHAR(100),
+                    COMMIT_ID VARCHAR(100),
+                    GRADLE_TASK VARCHAR(200),
+                    ARTIFACT_NAME VARCHAR(200),
+                    STATUS VARCHAR(30) NOT NULL,
+                    REQUEST_USER_ID VARCHAR(50),
+                    APPROVE_USER_ID VARCHAR(50),
+                    REQUEST_TIME VARCHAR(40) NOT NULL,
+                    APPROVE_TIME VARCHAR(40),
+                    START_TIME VARCHAR(40),
+                    END_TIME VARCHAR(40),
+                    ERROR_MESSAGE CLOB,
+                    PRIMARY KEY (DEPLOY_REQUEST_ID)
+                )
+                """);
+        jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS OM_DEPLOY_HISTORY (
+                    DEPLOY_HISTORY_ID VARCHAR(40) NOT NULL,
+                    DEPLOY_REQUEST_ID VARCHAR(40),
+                    ENV_CODE VARCHAR(20),
+                    TARGET_SERVER VARCHAR(100),
+                    CONTEXT_PATH VARCHAR(50),
+                    BEFORE_VERSION VARCHAR(100),
+                    AFTER_VERSION VARCHAR(100),
+                    RESULT_CODE VARCHAR(20),
+                    RESULT_MESSAGE VARCHAR(1000),
+                    HEALTH_CHECK_URL VARCHAR(500),
+                    HEALTH_CHECK_RESULT VARCHAR(20),
+                    CREATED_TIME VARCHAR(40) NOT NULL,
+                    PRIMARY KEY (DEPLOY_HISTORY_ID)
+                )
+                """);
+        jdbcTemplate.execute("CREATE INDEX IF NOT EXISTS IDX_OM_DEPLOY_REQ_STATUS ON OM_DEPLOY_REQUEST (STATUS, REQUEST_TIME DESC)");
+        jdbcTemplate.execute("CREATE INDEX IF NOT EXISTS IDX_OM_DEPLOY_HIST_REQ ON OM_DEPLOY_HISTORY (DEPLOY_REQUEST_ID, CREATED_TIME DESC)");
+    }
+
     private void ensureUdFileMetaTable() {
         jdbcTemplate.execute("""
                 CREATE TABLE IF NOT EXISTS UD_FILE_META (
@@ -316,6 +367,82 @@ public class OmDatabaseMigration implements ApplicationRunner {
         if (deleted > 0) {
             log.info("Removed empty or legacy AP status rows: {}", deleted);
         }
+    }
+
+    /** OM_MENU 상위 그룹(폴더) — 기능권한·메뉴관리 계층. 기존에 상위가 없는 시드만 자동 연결. */
+    private void ensureMenuHierarchy() {
+        mergeMenuFolder("OM_GRP_OPS", "운영", 0);
+        mergeMenuFolder("OM_GRP_SYS", "시스템·배포", 10);
+        mergeMenuFolder("OM_GRP_AUTH", "권한·코드", 20);
+
+        jdbcTemplate.update("""
+                MERGE INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN) KEY (MENU_ID)
+                VALUES ('OM_SES', '세션 관리', '/om/admin/session.html', 'OM_GRP_OPS', 6, 'Y')
+                """);
+
+        Map<String, String> childToParent = Map.ofEntries(
+                Map.entry("OM_DASH", "OM_GRP_OPS"),
+                Map.entry("OM_TX", "OM_GRP_OPS"),
+                Map.entry("OM_SVC", "OM_GRP_OPS"),
+                Map.entry("OM_AUTH", "OM_GRP_OPS"),
+                Map.entry("OM_AUDIT", "OM_GRP_OPS"),
+                Map.entry("OM_SES", "OM_GRP_OPS"),
+                Map.entry("OM_ERR", "OM_GRP_SYS"),
+                Map.entry("OM_BAT", "OM_GRP_SYS"),
+                Map.entry("OM_HLT", "OM_GRP_SYS"),
+                Map.entry("OM_CFG", "OM_GRP_SYS"),
+                Map.entry("OM_FIL", "OM_GRP_SYS"),
+                Map.entry("OM_DPL", "OM_GRP_SYS"),
+                Map.entry("OM_CDC", "OM_GRP_AUTH"),
+                Map.entry("OM_FAU", "OM_GRP_AUTH"),
+                Map.entry("OM_DAU", "OM_GRP_AUTH"),
+                Map.entry("OM_AHT", "OM_GRP_AUTH"),
+                Map.entry("OM_CCH", "OM_GRP_AUTH")
+        );
+        Map<String, Integer> menuSort = Map.ofEntries(
+                Map.entry("OM_DASH", 1),
+                Map.entry("OM_TX", 2),
+                Map.entry("OM_SVC", 3),
+                Map.entry("OM_AUTH", 4),
+                Map.entry("OM_AUDIT", 5),
+                Map.entry("OM_SES", 6),
+                Map.entry("OM_ERR", 11),
+                Map.entry("OM_BAT", 12),
+                Map.entry("OM_HLT", 13),
+                Map.entry("OM_CFG", 14),
+                Map.entry("OM_FIL", 15),
+                Map.entry("OM_DPL", 16),
+                Map.entry("OM_CDC", 21),
+                Map.entry("OM_FAU", 22),
+                Map.entry("OM_DAU", 23),
+                Map.entry("OM_AHT", 24),
+                Map.entry("OM_CCH", 25)
+        );
+        for (Map.Entry<String, String> entry : childToParent.entrySet()) {
+            String menuId = entry.getKey();
+            jdbcTemplate.update("""
+                    UPDATE OM_MENU
+                       SET PARENT_MENU_ID = ?,
+                           SORT_ORDER = ?
+                     WHERE MENU_ID = ?
+                    """, entry.getValue(), menuSort.get(menuId), menuId);
+        }
+    }
+
+    private void mergeMenuFolder(String menuId, String menuName, int sortOrder) {
+        jdbcTemplate.update("""
+                MERGE INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN) KEY (MENU_ID)
+                VALUES (?, ?, '', NULL, ?, 'Y')
+                """, menuId, menuName, sortOrder);
+    }
+
+    /** 그룹 메뉴 URL·미연결 상위 ID의 NULL을 빈 문자열로 정규화 (API/화면 null 표시 방지). */
+    private void normalizeMenuNullColumns() {
+        jdbcTemplate.update("""
+                UPDATE OM_MENU
+                   SET MENU_URL = ''
+                 WHERE MENU_URL IS NULL
+                """);
     }
 
 }

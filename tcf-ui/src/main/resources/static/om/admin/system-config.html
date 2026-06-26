@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -8,8 +8,17 @@
   <link rel="stylesheet" href="/_shared/om-admin.css">
 </head>
 <body>
-  <script src="/_shared/om-admin.js?v=20260625f"></script>
+  <script src="/_shared/om-admin.js?v=20260626a"></script>
   <script>
+    function isTomcatMode() {
+      if (typeof OmAdmin.isTomcatUiDeployment === 'function') {
+        return OmAdmin.isTomcatUiDeployment();
+      }
+      const cfg = OmAdmin.config || {};
+      return (cfg.deploymentMode || '') === 'tomcat'
+          || location.pathname.startsWith('/ui/') || location.pathname === '/ui';
+    }
+
     function deploymentCategories(tomcat) {
       if (tomcat) {
         return [
@@ -46,7 +55,7 @@
       tbody.innerHTML = '<tr><td colspan="5" class="om-empty">조회 중...</td></tr>';
 
       const { body: data, relay } = await OmAdmin.inquiry('systemConfig', body);
-      const tomcat = (data.deploymentMode || '') === 'tomcat' || OmAdmin.isTomcatUiDeployment();
+      const tomcat = (data.deploymentMode || '') === 'tomcat' || isTomcatMode();
       document.getElementById('modeBanner').innerHTML = deploymentBanner(tomcat, data);
       document.getElementById('listStatus').textContent = `${relay.elapsedMs}ms · ${data.totalCount ?? 0}건 · ${tomcat ? 'Tomcat' : 'Spring bootRun'}`;
 
@@ -63,7 +72,7 @@
 
     OmAdmin.initPage('system-config', '환경설정 조회', async (el) => {
       await OmAdmin.loadConfig();
-      const tomcat = OmAdmin.isTomcatUiDeployment();
+      const tomcat = isTomcatMode();
       const categoryOptions = deploymentCategories(tomcat).map(c =>
         `<option value="${c.value}">${c.label}</option>`).join('');
 

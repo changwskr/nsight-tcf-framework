@@ -51,21 +51,14 @@ if /i "%TARGET%"=="tcf-ui" (call :append_task :tcf-ui:bootJar & goto :eof)
 if /i "%TARGET%"=="batch" (call :append_task :tcf-batch:bootWar & goto :eof)
 if /i "%TARGET%"=="tcf-batch" (call :append_task :tcf-batch:bootWar & goto :eof)
 if /i "%TARGET%"=="services" (
-  call :append_task :cc-service:build
   call :append_task :ic-service:build
   call :append_task :pc-service:build
-  call :append_task :bc-service:build
   call :append_task :ms-service:build
   call :append_task :sv-service:build
   call :append_task :pd-service:build
-  call :append_task :cm-service:build
   call :append_task :eb-service:build
   call :append_task :ep-service:build
-  call :append_task :bp-service:build
-  call :append_task :bd-service:build
   call :append_task :ss-service:build
-  call :append_task :cs-service:build
-  call :append_task :ct-service:build
   call :append_task :mg-service:build
   call :append_task :tcf-om:bootWar
   goto :eof

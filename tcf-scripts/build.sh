@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-SERVICE_CODES=(cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg)
+SERVICE_CODES=(ic pc ms sv pd eb ep ss mg)
 
 usage() {
   cat <<'EOF'
@@ -10,9 +10,9 @@ usage() {
 Usage: build.sh <target> [target2 ...]
 
 Targets:
-  all       clean + buildBusinessWars (17 WAR)
+  all       clean + buildBusinessWars (10 WAR)
   wars      buildBusinessWars only
-  ztomcat   buildZtomcatWars (19 WAR: + batch + ui)
+  ztomcat   buildZtomcatWars (12 WAR: + batch + ui)
   tcf       tcf-util, tcf-core, tcf-web
   common    (removed — use tcf-om)
   ui        tcf-ui bootJar

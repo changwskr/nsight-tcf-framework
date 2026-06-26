@@ -23,9 +23,12 @@ tcf-cicd/
 │   └── env/.env.example
 ├── prod/apache/            # Apache reverse proxy
 └── scripts/
-    ├── pull-from-framework.ps1   # framework → tcf-cicd (bootstrap)
-    ├── sync-to-framework.ps1     # tcf-cicd → framework (빌드 전)
-    └── apply-tomcat-config.sh    # prod → Tomcat conf/nsight/ (runtime)
+    ├── cicd-deploy.ps1 / .bat / .sh   # CI/CD 파이프라인 (sync → build → deploy)
+    ├── cicd-build.ps1 / .bat / .sh    # sync + Gradle 빌드만
+    ├── cicd-common.ps1                # 공통 모듈·Gradle 유틸
+    ├── pull-from-framework.ps1        # framework → tcf-cicd (bootstrap)
+    ├── sync-to-framework.ps1        # tcf-cicd → framework (빌드 전)
+    └── apply-tomcat-config.sh       # prod → Tomcat conf/nsight/ (runtime)
 ```
 
 ---
@@ -137,17 +140,52 @@ tcf-cicd/scripts/apply-tomcat-config.sh prod
 
 ---
 
+## CI/CD 배포 스크립트 (`scripts/`)
+
+**전체 파이프라인 (권장):**
+
+```powershell
+cd tcf-cicd/scripts
+.\cicd-deploy.ps1                          # dev: sync + buildZtomcatWars + webapps
+.\cicd-deploy.ps1 -Profile local          # local yml sync
+.\cicd-deploy.ps1 sv om -Restart          # 선택 배포 + Tomcat 기동
+.\cicd-deploy.ps1 -Action build           # sync + build만
+.\cicd-deploy.ps1 -Profile prod -ArtifactDir .\artifacts
+```
+
+```bash
+tcf-cicd/scripts/cicd-deploy.sh
+tcf-cicd/scripts/cicd-deploy.sh --profile dev sv om --restart
+tcf-cicd/scripts/cicd-build.sh --target wars
+```
+
+| Action | 설명 |
+|--------|------|
+| `full` | sync → build → deploy (local/dev) |
+| `sync` | yml/setenv만 framework 반영 |
+| `build` | sync(옵션) + Gradle WAR |
+| `deploy` | 기존 WAR → ztomcat webapps |
+| `config` | prod runtime yml mount (`CATALINA_BASE` 필요) |
+
+12 context: `ic pc ms sv pd eb ep ss mg om ui batch` (workspace에 있는 모듈만)
+
+---
+
 ## CI 연동 예시
 
 ```yaml
-# dev pipeline
-- run: pwsh tcf-cicd/scripts/sync-to-framework.ps1 -Profile dev
-- run: gradle buildZtomcatWars
-- run: ztomcat/deploy-wars.sh all
+# dev pipeline (단일 스크립트)
+- run: pwsh tcf-cicd/scripts/cicd-deploy.ps1 -Profile dev
 
-# prod pipeline (runtime config)
-- run: tcf-cicd/scripts/apply-tomcat-config.sh prod
-- scp: tcf-cicd/prod/ztomcat/setenv.sh -> server tomcat/bin/
+# dev pipeline (단계 분리)
+- run: pwsh tcf-cicd/scripts/cicd-deploy.ps1 -Action sync -Profile dev
+- run: pwsh tcf-cicd/scripts/cicd-build.ps1 -Profile dev -SkipSync
+- run: pwsh tcf-cicd/local/script/deploy-wars.ps1 -SkipSync -SkipBuild
+
+# prod pipeline
+- run: pwsh tcf-cicd/scripts/cicd-deploy.ps1 -Profile prod -Action build -ArtifactDir artifacts
+- upload: artifacts/*.war
+- run: tcf-cicd/scripts/apply-tomcat-config.sh prod  # CATALINA_BASE on server
 ```
 
 ---

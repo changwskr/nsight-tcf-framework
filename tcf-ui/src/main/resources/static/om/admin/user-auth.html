@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/_shared/om-admin.css">
 </head>
 <body>
-  <script src="/_shared/om-admin.js?v=20260625f"></script>
+  <script src="/_shared/om-admin.js?v=20260626b"></script>
   <script>
     let userPage = 1;
     const USER_PAGE_SIZE = 10;
@@ -38,18 +38,44 @@
 
     async function loadMenuOptions() {
       const { body } = await OmAdmin.inquiry('menu', {});
-      menuOptions = (body.rows || body.menus || []).filter(m =>
-        OmAdmin.field(m, 'useYn') === 'Y');
+      const rows = body.rows || body.menus || [];
+      menuOptions = rows.filter(m => OmAdmin.field(m, 'useYn', 'Y') !== 'N');
       const sel = document.getElementById('fMenuParent');
       if (!sel) return;
       const current = sel.value;
-      sel.innerHTML = '<option value="">(없음)</option>';
-      menuOptions.forEach(m => {
-        const mid = OmAdmin.field(m, 'menuId');
-        const name = OmAdmin.field(m, 'menuName');
-        sel.innerHTML += `<option value="${mid}">${name} (${mid})</option>`;
-      });
+      const editingId = document.getElementById('fMenuId')?.value.trim();
+      sel.innerHTML = '<option value="">(없음 — 최상위)</option>';
+      menuOptions
+        .filter(m => OmAdmin.field(m, 'menuId') !== editingId)
+        .forEach(m => {
+          const mid = OmAdmin.field(m, 'menuId');
+          const name = OmAdmin.field(m, 'menuName');
+          const folder = !OmAdmin.field(m, 'menuUrl', '');
+          const tag = folder ? ' [그룹]' : '';
+          sel.innerHTML += `<option value="${mid}">${name}${tag} (${mid})</option>`;
+        });
       if (current) sel.value = current;
+    }
+
+    function menuParentLabel(row) {
+      const id = OmAdmin.field(row, 'parentMenuId', '');
+      if (!id || id === '-' || id === 'null') return '(없음)';
+      const name = OmAdmin.field(row, 'parentMenuName', '');
+      return name ? `${name} (${id})` : id;
+    }
+
+    function formatMenuUrl(url) {
+      if (url == null || url === '' || url === 'null') return '—';
+      return url;
+    }
+
+    function formatMenuUrlFromRow(row) {
+      const url = OmAdmin.field(row, 'menuUrl', '');
+      if (!url) {
+        const id = OmAdmin.field(row, 'menuId', '');
+        if (id.startsWith('OM_GRP_')) return '(그룹)';
+      }
+      return formatMenuUrl(url);
     }
 
     function readUserFilters() {
@@ -275,12 +301,15 @@
         tbody.innerHTML = '<tr><td colspan="5" class="om-empty">메뉴 없음</td></tr>';
         return;
       }
+      if (!menuOptions.length) {
+        menuOptions = rows.filter(m => OmAdmin.field(m, 'useYn', 'Y') !== 'N');
+      }
       tbody.innerHTML = rows.map(r => `
         <tr class="om-row-selectable" data-menu-id="${OmAdmin.field(r, 'menuId')}">
           <td>${OmAdmin.field(r, 'menuId')}</td>
           <td>${OmAdmin.field(r, 'menuName')}</td>
-          <td class="om-mono">${OmAdmin.field(r, 'menuUrl')}</td>
-          <td>${OmAdmin.field(r, 'parentMenuId', '-')}</td>
+          <td class="om-mono">${formatMenuUrlFromRow(r)}</td>
+          <td>${menuParentLabel(r)}</td>
           <td>${OmAdmin.field(r, 'sortOrder')}</td>
         </tr>`).join('');
       tbody.querySelectorAll('tr.om-row-selectable').forEach(tr => {
@@ -290,6 +319,7 @@
           try {
             const { body: detail } = await OmAdmin.inquiry('menuDetail', { menuId: tr.dataset.menuId });
             fillMenuForm(detail.row || {});
+            await loadMenuOptions();
           } catch (e) {
             OmAdmin.showErrorBanner(el, e.message);
           }
@@ -398,6 +428,7 @@
         </div>
 
         <div id="menuPanel" hidden>
+          <div class="om-alert info">상위 메뉴는 <strong>그룹(폴더)</strong> 용도입니다. URL 없는 그룹(운영·시스템·배포 등) 아래에 화면 메뉴를 연결합니다. 좌측 사이드바는 <code>om-admin.js</code>에 고정되어 있으며, 이 DB 메뉴는 <strong>기능권한</strong> 매핑에 사용됩니다.</div>
           <section class="om-filter-bar">
             <div class="field"><label for="filterMenuId">메뉴 ID</label><input id="filterMenuId" type="text"></div>
             <div class="field"><label for="filterMenuName">메뉴명</label><input id="filterMenuName" type="text"></div>

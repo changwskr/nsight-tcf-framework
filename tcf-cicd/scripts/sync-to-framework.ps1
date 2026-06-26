@@ -14,9 +14,8 @@ $FwRoot = (Resolve-Path (Join-Path $CicdRoot '..')).Path
 
 $Modules = @(
     'tcf-web', 'tcf-cache', 'tcf-core', 'tcf-om', 'tcf-batch', 'tcf-ui',
-    'cc-service', 'ic-service', 'pc-service', 'bc-service', 'ms-service', 'sv-service',
-    'pd-service', 'cm-service', 'eb-service', 'ep-service', 'bp-service', 'bd-service',
-    'ss-service', 'cs-service', 'ct-service', 'mg-service', 'om-service'
+    'ic-service', 'pc-service', 'ms-service', 'sv-service',
+    'pd-service', 'eb-service', 'ep-service', 'ss-service', 'mg-service'
 )
 
 $ProfileFiles = @{

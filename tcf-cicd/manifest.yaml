@@ -21,23 +21,15 @@ modules:
     - tcf-batch
     - tcf-ui
   business:
-    - cc-service
     - ic-service
     - pc-service
-    - bc-service
     - ms-service
     - sv-service
     - pd-service
-    - cm-service
     - eb-service
     - ep-service
-    - bp-service
-    - bd-service
     - ss-service
-    - cs-service
-    - ct-service
     - mg-service
-    - om-service
 
 # ztomcat / 인프라 (profile 디렉터리 기준 상대 경로)
 ztomcat:

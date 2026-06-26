@@ -16,21 +16,14 @@ BATCH_WARS="${PROJECT_HOME}/ztomcat/wars"
 BATCH_XML="${PROJECT_HOME}/ztomcat/conf/Catalina/localhost/batch.xml"
 
 ALL_MODULES=(
-  cc-service:cc.war:cc.war:cc
   ic-service:ic.war:ic.war:ic
   pc-service:pc.war:pc.war:pc
-  bc-service:bc.war:bc.war:bc
   ms-service:ms.war:ms.war:ms
   sv-service:sv.war:sv.war:sv
   pd-service:pd.war:pd.war:pd
-  cm-service:cm.war:cm.war:cm
   eb-service:eb.war:eb.war:eb
   ep-service:ep.war:ep.war:ep
-  bp-service:bp.war:bp.war:bp
-  bd-service:bd.war:bd.war:bd
   ss-service:ss.war:ss.war:ss
-  cs-service:cs.war:cs.war:cs
-  ct-service:ct.war:ct.war:ct
   mg-service:mg.war:mg.war:mg
   tcf-om:tcf-om.war:om.war:om
 )
@@ -38,7 +31,7 @@ ALL_MODULES=(
 usage() {
   cat <<EOF
 Usage:
-  deploy.sh              Build and deploy business WARs + om (17)
+  deploy.sh              Build and deploy business WARs + om (10)
   deploy.sh all          Same as above
   deploy.sh sv           Build and deploy one code
   deploy.sh sv cc om     Build and deploy multiple codes
@@ -52,8 +45,8 @@ Gradle:
   export GRADLE_HOME=/path/to/gradle-8.10.1
   or export GRADLE_HOME_OVERRIDE=...
 
-Codes: cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om batch ui
-Full 19 WAR: ztomcat/deploy-wars.sh all
+Codes: ic pc ms sv pd eb ep ss mg om batch ui
+Full 12 WAR: ztomcat/deploy-wars.sh all
 EOF
 }
 
@@ -74,7 +67,7 @@ resolve_entry() {
     fi
   done
   echo "[deploy] Unknown code: ${1}" >&2
-  echo "[deploy] Codes: cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om batch ui" >&2
+  echo "[deploy] Codes: ic pc ms sv pd eb ep ss mg om batch ui" >&2
   return 1
 }
 

@@ -18,6 +18,7 @@ window.OmAdmin = (function () {
   const NAV_SECONDARY = [
     { id: 'error-code', label: '오류코드 / 메시지', href: '/om/admin/error-code.html' },
     { id: 'batch', label: '배치 / 스케줄', href: '/om/admin/batch.html' },
+    { id: 'deploy', label: '배포 관리', href: '/om/admin/deploy.html' },
     { id: 'health-check', label: 'Health Check', href: '/om/admin/health-check.html' },
     { id: 'system-config', label: '환경설정 조회', href: '/om/admin/system-config.html' },
     { id: 'file-management', label: '파일 관리', href: '/om/admin/file-management.html' }
@@ -79,6 +80,15 @@ window.OmAdmin = (function () {
     errorCodeDelete: { serviceId: 'OM.ErrorCode.delete', transactionCode: 'OM-ERR-0005' },
     batchExecute: { serviceId: 'OM.Batch.execute', transactionCode: 'OM-BAT-0002' },
     batchHistoryDeleteAll: { serviceId: 'OM.Batch.deleteAll', transactionCode: 'OM-BAT-0003' },
+    deployHistory: { serviceId: 'OM.Deploy.history', transactionCode: 'OM-DPL-0006' },
+    deployBuildRequest: { serviceId: 'OM.Deploy.buildRequest', transactionCode: 'OM-DPL-0001' },
+    deployDeployRequest: { serviceId: 'OM.Deploy.deployRequest', transactionCode: 'OM-DPL-0003' },
+    deployApprove: { serviceId: 'OM.Deploy.approve', transactionCode: 'OM-DPL-0004' },
+    deployExecute: { serviceId: 'OM.Deploy.execute', transactionCode: 'OM-DPL-0005' },
+    deployRollback: { serviceId: 'OM.Deploy.rollbackRequest', transactionCode: 'OM-DPL-0008' },
+    deployLog: { serviceId: 'OM.Deploy.logInquiry', transactionCode: 'OM-DPL-0007' },
+    deployHealthCheck: { serviceId: 'OM.Deploy.healthCheck', transactionCode: 'OM-DPL-0009' },
+    deployDeleteAll: { serviceId: 'OM.Deploy.deleteAll', transactionCode: 'OM-DPL-0010' },
     functionAuth: { serviceId: 'OM.FunctionAuth.inquiry', transactionCode: 'OM-FAU-0001' },
     dataAuth: { serviceId: 'OM.DataAuth.inquiry', transactionCode: 'OM-DAU-0001' },
     authHistory: { serviceId: 'OM.AuthHistory.inquiry', transactionCode: 'OM-AHT-0001' },
@@ -463,11 +473,14 @@ window.OmAdmin = (function () {
 
   function field(row, name, fallback) {
     if (!row) return fallback !== undefined ? fallback : '-';
-    if (row[name] != null && row[name] !== '') return row[name];
+    const raw = row[name];
+    if (raw != null && raw !== '' && raw !== 'null') return raw;
     const upper = name.toUpperCase();
-    if (row[upper] != null && row[upper] !== '') return row[upper];
+    if (row[upper] != null && row[upper] !== '' && row[upper] !== 'null') return row[upper];
     const key = Object.keys(row).find(k => k.toUpperCase() === upper);
-    return key ? row[key] : (fallback !== undefined ? fallback : '-');
+    const val = key ? row[key] : undefined;
+    if (val != null && val !== '' && val !== 'null') return val;
+    return fallback !== undefined ? fallback : '-';
   }
 
   function chipForHealth(status) {
@@ -600,7 +613,7 @@ window.OmAdmin = (function () {
 
   function hintForOmError(message) {
     const msg = String(message || '');
-    if (msg.includes('거래 정의를 찾을 수 없습니다')) {
+    if (msg.includes('isTomcatUiDeployment is not a function') || msg.includes('거래 정의를 찾을 수 없습니다')) {
       return 'om-admin.js가 오래된 버전일 수 있습니다. Ctrl+F5로 강력 새로고침하세요.';
     }
     if (msg.includes('등록되지 않은 serviceId') || msg.includes('OM.Dashboard.reset')
@@ -895,4 +908,40 @@ window.OmAdmin = (function () {
     loadCommonCodes, loadCodeGroups, fillCodeSelect, formatCodeLabel,
     invalidateCommonCodeCache, prefetchCommonCodes
   };
+})();
+
+(function patchOmAdminExports() {
+  const oa = window.OmAdmin;
+  if (!oa) return;
+  if (typeof oa.isTomcatUiDeployment !== 'function') {
+    oa.isTomcatUiDeployment = function () {
+      const cfg = oa.config || {};
+      return cfg.deploymentMode === 'tomcat'
+          || location.pathname.startsWith('/ui/') || location.pathname === '/ui';
+    };
+  }
+  if (typeof oa.resolveBatchServiceUrl !== 'function') {
+    oa.resolveBatchServiceUrl = function () {
+      if (oa.isTomcatUiDeployment()) {
+        const gateway = ((oa.config && oa.config.tomcatGatewayUrl) || 'http://localhost:8080').replace(/\/$/, '');
+        return `${gateway}/batch`;
+      }
+      const host = ((oa.config && oa.config.bootrunHost) || 'http://127.0.0.1').replace(/\/$/, '');
+      return `${host}:8098/batch`;
+    };
+  }
+  if (typeof oa.resolveBatchLabel !== 'function') {
+    oa.resolveBatchLabel = function () {
+      if (oa.isTomcatUiDeployment()) {
+        try {
+          const u = new URL(((oa.config && oa.config.tomcatGatewayUrl) || 'http://localhost:8080').replace(/\/$/, ''));
+          const port = u.port || (u.protocol === 'https:' ? '443' : '80');
+          return `Tomcat /batch (${port})`;
+        } catch (e) {
+          return 'Tomcat /batch (8080)';
+        }
+      }
+      return 'tcf-batch (:8098)';
+    };
+  }
 })();

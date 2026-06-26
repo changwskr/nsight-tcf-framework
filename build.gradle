@@ -91,29 +91,21 @@ project(':tcf-util') {
 // TCF OM 운영관리 서비스 — tcf-om/build.gradle
 
 // -----------------------------------------------------------------------------
-// 업무 서비스 WAR 모듈 (17개)
+// 업무 서비스 WAR 모듈 (workspace에 build.gradle 이 있는 모듈만)
 // bootRun: gradle :sv-service:bootRun
 // WAR 배포: Tomcat context-path /{업무코드} (예: /sv)
 // -----------------------------------------------------------------------------
 ext.businessModules = [
-    'cc-service',
     'ic-service',
     'pc-service',
-    'bc-service',
     'ms-service',
     'sv-service',
     'pd-service',
-    'cm-service',
     'eb-service',
     'ep-service',
-    'bp-service',
-    'bd-service',
     'ss-service',
-    'cs-service',
-    'ct-service',
     'mg-service',
     'tcf-om'
-
 ]
 
 def sharedBusinessModules = businessModules.findAll { it == 'pc-service' }
@@ -146,11 +138,11 @@ configure(sharedBusinessModules.collect { project(":${it}") }) {
     }
 }
 
-// 17개 업무 WAR 일괄 빌드: gradle buildBusinessWars
+// 업무 WAR 일괄 빌드: gradle buildBusinessWars
 // bootWar 태스크가 있는 모듈만 포함 (로컬에 디렉터리/build.gradle 없으면 skip)
 tasks.register('buildBusinessWars') {
     group = 'build'
-    description = 'Build all NSIGHT business WAR files (modules with bootWar; 16 services + tcf-om when present).'
+    description = 'Build all NSIGHT business WAR files (modules with bootWar; 9 services + tcf-om when present).'
     dependsOn {
         businessModules.findAll { moduleName ->
             def sub = findProject(":${moduleName}")
@@ -159,9 +151,9 @@ tasks.register('buildBusinessWars') {
     }
 }
 
-// ztomcat 전체 WAR (업무 17 + batch + ui): gradle buildZtomcatWars
+// ztomcat 전체 WAR (업무 + batch + ui): gradle buildZtomcatWars
 tasks.register('buildZtomcatWars') {
     group = 'build'
-    description = 'Build all WAR files for ztomcat (19 modules: business + tcf-batch + tcf-ui).'
+    description = 'Build all WAR files for ztomcat (12 modules: business + tcf-batch + tcf-ui).'
     dependsOn 'buildBusinessWars', ':tcf-batch:bootWar', ':tcf-ui:bootWar'
 }

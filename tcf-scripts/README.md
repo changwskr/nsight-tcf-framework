@@ -29,7 +29,7 @@ tcf-scripts/run-local.sh <target>
 | `tcf-ui`, `ui` | tcf-ui (8099) |
 | `tcf-om`, `om`, `ud` | tcf-om (8097, UD API 내장) |
 | `batch`, `tcf-batch` | tcf-batch (8098) |
-| `all` | 16개 *-service + tcf-om 일괄 기동 (각각 새 창) |
+| `all` | 9개 *-service + tcf-om 일괄 기동 (각각 새 창) |
 
 단일 인자: 포그라운드 실행. 복수 인자: 백그라운드(새 창) 실행.
 
@@ -42,14 +42,14 @@ tcf-scripts/build.sh <target>
 
 | 인자 | 설명 |
 |------|------|
-| `all` | `clean` + `buildBusinessWars` (17 WAR) |
-| `wars` | `buildBusinessWars` (16 *-service + tcf-om) |
-| `ztomcat` | `buildZtomcatWars` (19 WAR — batch + ui 포함) |
+| `all` | `clean` + `buildBusinessWars` (10 WAR) |
+| `wars` | `buildBusinessWars` (9 *-service + tcf-om) |
+| `ztomcat` | `buildZtomcatWars` (12 WAR — batch + ui 포함) |
 | `tcf` | `tcf-util`, `tcf-core`, `tcf-web` |
 | `ui` | `tcf-ui` bootJar |
 | `batch` | `tcf-batch` bootWar |
 | `tcf-om`, `om` | `tcf-om` bootWar |
-| `services` | 16 *-service `:build` + `tcf-om:bootWar` |
+| `services` | 9 *-service `:build` + `tcf-om:bootWar` |
 | `sv`, `ic`, … | 개별 모듈 `:build` |
 
 `build-all.bat` / `build-all.sh` → `build all` 호출.
@@ -68,54 +68,47 @@ tcf-scripts/curl-sample.sh sv
 WAR 빌드 후 [ztomcat](../ztomcat/README.md) `webapps`(및 batch는 `wars/`)로 복사합니다.
 
 ```bash
-tcf-scripts\deploy.bat sv cc om
-tcf-scripts/deploy.sh sv cc om
+tcf-scripts\deploy.bat sv ic om
+tcf-scripts/deploy.sh sv ic om
 tcf-scripts\deploy.bat batch ui
 ```
 
 | 인자 | 설명 |
 |------|------|
-| (없음) / `all` | 업무 17 WAR (`buildBusinessWars`) |
-| `sv`, `cc`, … | 선택 업무 — `tcf-*` lib 선행 빌드 + `bootWar` |
+| (없음) / `all` | 업무 10 WAR (`buildBusinessWars`) |
+| `sv`, `ic`, … | 선택 업무 — `tcf-*` lib 선행 빌드 + `bootWar` |
 | `ud`, `tcf-om`, `om` | `tcf-om.war` → `om.war` |
 | `batch`, `tcf-batch` | `tcf-batch.war` → `ztomcat/wars/zz-batch.war` + `batch.xml` |
 | `ui`, `tcf-ui` | `tcf-ui.war` → `ui.war` |
 
 환경 변수: `TOMCAT_WEBAPPS`, `GRADLE_HOME` / `GRADLE_HOME_OVERRIDE`
 
-> **19 WAR 전체** (sync·검증 포함): `ztomcat/deploy-wars.bat all`, `ztomcat/verify-deploy.ps1`
+> **12 WAR 전체** (sync·검증 포함): `ztomcat/deploy-wars.bat all`, `ztomcat/verify-deploy.ps1`
 
 ## 포트 참고 (bootRun)
 
 | 모듈 | 포트 |
 |------|------|
-| cc-service | 8081 |
 | ic-service | 8082 |
 | pc-service | 8083 |
-| bc-service | 8084 |
 | ms-service | 8085 |
 | sv-service | 8086 |
 | pd-service | 8087 |
-| cm-service | 8088 |
 | eb-service | 8089 |
 | ep-service | 8090 |
-| bp-service | 8091 |
-| bd-service | 8092 |
 | ss-service | 8093 |
-| cs-service | 8094 |
-| ct-service | 8095 |
 | mg-service | 8096 |
 | tcf-om | 8097 |
 | tcf-batch | 8098 |
 | tcf-ui | 8099 |
 
-Tomcat(ztomcat) 모드: 모든 context **8080** — `/cc` … `/mg`, `/om`, `/batch`, `/ui`
+Tomcat(ztomcat) 모드: 모든 context **8080** — `/ic` … `/mg`, `/om`, `/batch`, `/ui`
 
 ## Gradle 직접 호출
 
 ```bash
-gradle buildBusinessWars     # 17 WAR
-gradle buildZtomcatWars      # 19 WAR
+gradle buildBusinessWars     # 10 WAR
+gradle buildZtomcatWars      # 12 WAR
 gradle :tcf-om:bootRun
 gradle :tcf-batch:bootRun
 gradle :tcf-ui:bootRun

@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-SERVICE_CODES=(cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg)
+SERVICE_CODES=(ic pc ms sv pd eb ep ss mg)
 
 usage() {
   cat <<'EOF'
@@ -15,7 +15,7 @@ Targets:
   om        tcf-om bootRun (port 8097)
   batch     tcf-batch bootRun (port 8098)
   ud        tcf-om bootRun (파일 업·다운로드 내장)
-  all       start 16 *-service + tcf-om in background
+  all       start 9 *-service + tcf-om in background
 
 Examples:
   ./run-local.sh sv

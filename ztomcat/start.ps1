@@ -26,7 +26,12 @@ if ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 if ($env:ZTOMCAT_SKIP_DEPLOY -ne '1') {
     Write-Host '[ztomcat] Building and deploying batch.war, ui.war to Tomcat webapps ...'
-    & (Join-Path $ZTomcatHome 'deploy-wars.bat') batch ui
+    $DeployScript = Join-Path (Split-Path $ZTomcatHome -Parent) 'tcf-cicd\local\script\deploy-wars.ps1'
+    if (-not (Test-Path $DeployScript)) {
+        Write-Host "[ztomcat] deploy script not found: $DeployScript"
+        exit 1
+    }
+    & $DeployScript -SkipSync -SyncProfile dev -SkipBatchCollect batch ui
     if ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 } else {
     Write-Host '[ztomcat] Skip WAR deploy (ZTOMCAT_SKIP_DEPLOY=1)'

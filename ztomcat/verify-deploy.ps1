@@ -1,5 +1,5 @@
 $ErrorActionPreference = 'Continue'
-$contexts = @('cc','ic','pc','bc','ms','sv','pd','cm','eb','ep','bp','bd','ss','cs','ct','mg','om','batch','ui')
+$contexts = @('ic','pc','ms','sv','pd','eb','ep','ss','mg','om','batch','ui')
 $base = 'http://localhost:8080'
 
 Write-Host '[ztomcat] Health check (GET /{context}/actuator/health)'

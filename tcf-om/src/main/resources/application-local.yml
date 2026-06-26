@@ -28,6 +28,8 @@ spring:
       table-name: SPRING_SESSION
 
 nsight:
+  gateway:
+    base-url: http://127.0.0.1:8080
   tcf:
     transaction-log-schema-auto-init: false
     transaction-log-datasource:
@@ -38,6 +40,8 @@ nsight:
       driver-class-name: org.h2.Driver
   om:
     batch-service-url: http://127.0.0.1:8098/batch
+    cicd:
+      gradle-command: C:/Programming(23-08-15)/gradle-8.10.1/bin/gradle.bat
   updownload:
     storage-path: ./data/updownload
     max-file-size-bytes: 52428800

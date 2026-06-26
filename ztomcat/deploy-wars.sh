@@ -7,21 +7,14 @@ CATALINA_HOME="${ZTOMCAT_HOME}/apache-tomcat-10.1.34"
 WEBAPPS="${CATALINA_HOME}/webapps"
 
 ALL_MODULES=(
-  cc-service:cc.war:cc.war:cc
   ic-service:ic.war:ic.war:ic
   pc-service:pc.war:pc.war:pc
-  bc-service:bc.war:bc.war:bc
   ms-service:ms.war:ms.war:ms
   sv-service:sv.war:sv.war:sv
   pd-service:pd.war:pd.war:pd
-  cm-service:cm.war:cm.war:cm
   eb-service:eb.war:eb.war:eb
   ep-service:ep.war:ep.war:ep
-  bp-service:bp.war:bp.war:bp
-  bd-service:bd.war:bd.war:bd
   ss-service:ss.war:ss.war:ss
-  cs-service:cs.war:cs.war:cs
-  ct-service:ct.war:ct.war:ct
   mg-service:mg.war:mg.war:mg
   tcf-om:tcf-om.war:om.war:om
   tcf-ui:tcf-ui.war:ui.war:ui
@@ -31,12 +24,12 @@ ALL_MODULES=(
 usage() {
   cat <<'EOF'
 Usage:
-  deploy-wars.sh              Build and deploy all 19 WARs
+  deploy-wars.sh              Build and deploy all 12 WARs
   deploy-wars.sh all          Same as above
   deploy-wars.sh sv           Build and deploy one code (e.g. sv.war -> /sv)
-  deploy-wars.sh sv cc om     Build and deploy multiple codes
+  deploy-wars.sh sv ic om     Build and deploy multiple codes
 
-Codes: cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om batch ui
+Codes: ic pc ms sv pd eb ep ss mg om batch ui
 EOF
 }
 
@@ -52,7 +45,7 @@ resolve_entry() {
     fi
   done
   echo "[ztomcat] Unknown code: ${1}" >&2
-  echo "[ztomcat] Codes: cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om batch ui" >&2
+  echo "[ztomcat] Codes: ic pc ms sv pd eb ep ss mg om batch ui" >&2
   return 1
 }
 
