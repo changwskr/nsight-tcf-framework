@@ -6,6 +6,22 @@ $ErrorActionPreference = 'Stop'
 $ZTomcatHome = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Webapps = Join-Path $ZTomcatHome 'apache-tomcat-10.1.34\webapps'
 
+function Test-TomcatRunning {
+    try {
+        $conn = Get-NetTCPConnection -LocalPort 8080 -State Listen -ErrorAction SilentlyContinue
+        return $null -ne $conn
+    } catch {
+        return $false
+    }
+}
+
+if (Test-TomcatRunning) {
+    Write-Host '[ztomcat] ERROR: Tomcat is running on port 8080.'
+    Write-Host '[ztomcat] Stop Tomcat first: ztomcat\stop.ps1'
+    Write-Host '[ztomcat] Or use rolling deploy (WAR copy only): ztomcat\deploy-restart.bat sv om'
+    exit 1
+}
+
 Write-Host '[ztomcat] Removing exploded WAR directories...'
 $failed = @()
 foreach ($ctx in $Contexts) {

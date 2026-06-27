@@ -131,19 +131,22 @@ function Sync-BatchContextDescriptor {
 function Remove-LegacyBatchArtifacts {
     foreach ($name in @('batch.war', 'batch', 'zz-batch.war', 'zz-batch')) {
         $path = Join-Path $Webapps $name
-        if (Test-Path $path) {
-            Remove-Item -LiteralPath $path -Recurse -Force
-            Write-Host "  removed legacy webapps/$name"
-        }
+        Remove-WebappPathIfSafe -Path $path -Label "legacy webapps/$name" | Out-Null
     }
 }
 
 function Remove-LegacyOmArtifacts {
     foreach ($name in @('00-om.war', '00-om')) {
         $path = Join-Path $Webapps $name
-        if (Test-Path $path) {
-            Remove-Item -LiteralPath $path -Recurse -Force
-            Write-Host "  removed legacy $name"
+        Remove-WebappPathIfSafe -Path $path -Label "legacy $name" | Out-Null
+    }
+}
+
+function Remove-LegacyRetiredBusinessArtifacts {
+    foreach ($ctx in @('bc', 'bd', 'bp', 'cc', 'cm', 'cs', 'ct')) {
+        foreach ($suffix in @('', '.war')) {
+            $path = Join-Path $Webapps "$ctx$suffix"
+            Remove-WebappPathIfSafe -Path $path -Label "retired webapps/$ctx$suffix" | Out-Null
         }
     }
 }
@@ -199,6 +202,38 @@ function Test-TomcatRunning {
     }
 }
 
+function Remove-WebappPathIfSafe {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path,
+        [string]$Label = $null
+    )
+    if (-not (Test-Path -LiteralPath $Path)) {
+        return $true
+    }
+    $name = if ($Label) { $Label } else { Split-Path -Leaf $Path }
+    if (Test-TomcatRunning) {
+        Write-Host "  skip remove $name (Tomcat running — WAR overwrite triggers autoDeploy)"
+        return $true
+    }
+    for ($attempt = 1; $attempt -le 3; $attempt++) {
+        try {
+            Remove-Item -LiteralPath $Path -Recurse -Force -ErrorAction Stop
+            Write-Host "  removed $name"
+            return $true
+        } catch {
+            if ($attempt -lt 3) {
+                Write-Host "  retry remove $name ($attempt/3) ..."
+                Start-Sleep -Seconds 2
+            } else {
+                Write-Warning "  FAIL remove $name — $($_.Exception.Message)"
+                return $false
+            }
+        }
+    }
+    return $false
+}
+
 function Invoke-BatchDashboardCollect {
     $batchBase = 'http://localhost:8080/batch'
     $rollingRedeploy = Test-TomcatRunning
@@ -243,6 +278,8 @@ if (-not $SkipSync) {
     Write-Host "[deploy-wars] sync $SyncProfile config -> framework"
     & $SyncScript -Profile $SyncProfile
 }
+
+Remove-LegacyRetiredBusinessArtifacts
 
 $selected = @(Resolve-Modules -InputCodes $Codes)
 $requestAll = (-not $Codes -or $Codes.Count -eq 0) -or (($Codes | ForEach-Object { $_.ToLowerInvariant() }) -contains 'all')
@@ -289,21 +326,28 @@ try {
         Sync-BatchContextDescriptor
         Remove-LegacyBatchArtifacts
     }
+    $removeFailed = @()
     if ($requestAll -and -not $ExcludeBatch) {
-        & (Join-Path $ZTomcatHome 'clean-exploded.ps1')
-        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        if (Test-TomcatRunning) {
+            Write-Host '[deploy-wars] Tomcat running — skip clean-exploded (WAR overwrite triggers autoDeploy)'
+        } else {
+            & (Join-Path $ZTomcatHome 'clean-exploded.ps1')
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        }
     } else {
         foreach ($m in $selected) {
             $dirs = @($m.Ctx)
             if ($m.Ctx -eq 'batch') { $dirs = @('batch', 'zz-batch') }
             foreach ($name in $dirs) {
                 $dir = Join-Path $Webapps $name
-                if (Test-Path $dir) {
-                    Remove-Item -LiteralPath $dir -Recurse -Force
-                    Write-Host "  removed $name/"
+                if (-not (Remove-WebappPathIfSafe -Path $dir -Label "$name/")) {
+                    $removeFailed += $name
                 }
             }
         }
+    }
+    if ($removeFailed.Count -gt 0) {
+        throw "Could not remove exploded directories: $($removeFailed -join ', '). Stop Tomcat and retry: ztomcat\stop.ps1"
     }
 
     Write-Host "[deploy-wars] deploying $($selected.Count) WAR(s) (workspace present) ..."

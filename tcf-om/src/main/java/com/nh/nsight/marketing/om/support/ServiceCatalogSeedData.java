@@ -210,7 +210,15 @@ final class ServiceCatalogSeedData {
             entry("CAT-091", "OM", "OM.Deploy.healthCheck", "OM-DPL-0009", "INQUIRY",
                     "OmDeployHealthCheckHandler", "ROLE_OM_DEP", "N", 10, "Y", "배포 Health Check"),
             entry("CAT-092", "OM", "OM.Deploy.deleteAll", "OM-DPL-0010", "DELETE",
-                    "OmDeployDeleteAllHandler", "ROLE_OM_DEP", "Y", 30, "Y", "배포 요청·이력 초기화")
+                    "OmDeployDeleteAllHandler", "ROLE_OM_DEP", "Y", 30, "Y", "배포 요청·이력 초기화"),
+            entry("CAT-097", "OM", "OM.TransactionControl.inquiry", "OM-TXC-0001", "INQUIRY",
+                    "OmTransactionControlInquiryHandler", "ROLE_OM_TXC", "N", 10, "Y", "거래통제 조회"),
+            entry("CAT-098", "OM", "OM.TransactionControl.save", "OM-TXC-0002", "UPDATE",
+                    "OmTransactionControlSaveHandler", "ROLE_OM_TXC", "Y", 5, "Y", "거래통제 등록"),
+            entry("CAT-099", "OM", "OM.TransactionControl.delete", "OM-TXC-0003", "DELETE",
+                    "OmTransactionControlDeleteHandler", "ROLE_OM_TXC", "Y", 5, "Y", "거래통제 삭제"),
+            entry("CAT-100", "OM", "OM.TransactionControl.update", "OM-TXC-0004", "UPDATE",
+                    "OmTransactionControlUpdateHandler", "ROLE_OM_TXC", "Y", 5, "Y", "거래통제 수정")
     };
 
     static void mergeAll(JdbcTemplate jdbcTemplate) {

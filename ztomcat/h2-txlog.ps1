@@ -86,6 +86,32 @@ function Resolve-JavaExe {
     throw 'JDK not found. Set JAVA_HOME or install temurin-21.0.4.'
 }
 
+function Warmup-TcpDatabase {
+    param(
+        [string]$H2Jar,
+        [string]$Java
+    )
+    $url = "jdbc:h2:tcp://127.0.0.1:$TcpPort/./nsight_om;MODE=Oracle;DATABASE_TO_UPPER=false"
+    $sqlFile = Join-Path $env:TEMP 'nsight-h2-warmup.sql'
+    $scriptArg = $sqlFile.Replace('\', '/')
+    $prevEap = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+        Set-Content -Path $sqlFile -Value 'SELECT 1 FROM DUAL;' -Encoding ASCII
+        & $Java -cp $H2Jar org.h2.tools.RunScript -url $url -user sa -script $scriptArg 2>&1 | Out-Null
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host '[h2-txlog] Warmed up ./nsight_om via TCP'
+        } else {
+            Write-Host '[h2-txlog] Warmup skipped (non-fatal)'
+        }
+    } catch {
+        Write-Host "[h2-txlog] Warmup skipped (non-fatal): $($_.Exception.Message)"
+    } finally {
+        $ErrorActionPreference = $prevEap
+        Remove-Item -LiteralPath $sqlFile -Force -ErrorAction SilentlyContinue
+    }
+}
+
 function Start-H2Server {
     if (Test-PortListening $TcpPort) {
         Write-Host "[h2-txlog] Already listening on port $TcpPort"
@@ -119,6 +145,7 @@ function Start-H2Server {
     while ((Get-Date) -lt $deadline) {
         if (Test-PortListening $TcpPort) {
             Write-Host "[h2-txlog] Ready (PID $($proc.Id))"
+            Warmup-TcpDatabase -H2Jar $h2Jar -Java $java
             return
         }
         if ($proc.HasExited) {

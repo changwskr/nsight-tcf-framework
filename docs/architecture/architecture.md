@@ -42,6 +42,7 @@
 | ETF 후처리 | [36-ETF.md](36-ETF.md) |
 | 트랜잭션 로그 처리 | [37-transaction-log.md](37-transaction-log.md) |
 | 스크립트 (빌드·배포) | [38-script.md](38-script.md) |
+| Header 기반 거래통제 | [39-header-transaction-control.md](39-header-transaction-control.md) |
 | Gradle 매뉴얼 | [../manual/gradle.md](../manual/gradle.md) |
 | 환경변수 매뉴얼 | [../manual/environment-variables.md](../manual/environment-variables.md) |
 | 빌드 산출물·기동 파일 | [../manual/artifacts.md](../manual/artifacts.md) |
@@ -60,7 +61,7 @@ NSIGHT TCF Framework는 마케팅 플랫폼 업무 서비스를 **표준 HTTP/JS
 
 1. **Handler 중심 개발** — 업무 개발자는 `TransactionHandler` 구현과 `serviceId` 등록에 집중한다.
 2. **공통 파이프라인** — 검증·세션·권한·로깅·응답 조립은 STF/TCF/ETF가 담당한다.
-3. **업무 독립 WAR** — 16개 업무는 동일 패턴의 독립 Spring Boot WAR로 배포한다.
+3. **업무 독립 WAR** — 9개 업무는 동일 패턴의 독립 Spring Boot WAR로 배포한다.
 4. **이중 배포 모드** — 개발은 `bootRun`(포트 분리), 통합 검증은 `ztomcat`(8080 게이트웨이)을 지원한다.
 
 ```text

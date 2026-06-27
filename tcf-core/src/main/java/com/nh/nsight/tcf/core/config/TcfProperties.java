@@ -1,5 +1,6 @@
 package com.nh.nsight.tcf.core.config;
 
+import com.nh.nsight.tcf.core.control.TcfTransactionControlConstants;
 import com.nh.nsight.tcf.core.logging.TcfTransactionLogConstants;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -12,6 +13,9 @@ public class TcfProperties {
     private boolean transactionLogEnabled = true;
     private boolean transactionLogSchemaAutoInit = true;
     private String transactionLogTableName = TcfTransactionLogConstants.TABLE_NAME;
+    private boolean transactionControlEnabled = true;
+    private boolean transactionControlSchemaAutoInit = true;
+    private String transactionControlTableName = TcfTransactionControlConstants.TABLE_NAME;
     private final TransactionLogDataSource transactionLogDatasource = new TransactionLogDataSource();
 
     public boolean isSessionValidationEnabled() { return sessionValidationEnabled; }
@@ -28,6 +32,12 @@ public class TcfProperties {
     public void setTransactionLogSchemaAutoInit(boolean transactionLogSchemaAutoInit) { this.transactionLogSchemaAutoInit = transactionLogSchemaAutoInit; }
     public String getTransactionLogTableName() { return transactionLogTableName; }
     public void setTransactionLogTableName(String transactionLogTableName) { this.transactionLogTableName = transactionLogTableName; }
+    public boolean isTransactionControlEnabled() { return transactionControlEnabled; }
+    public void setTransactionControlEnabled(boolean transactionControlEnabled) { this.transactionControlEnabled = transactionControlEnabled; }
+    public boolean isTransactionControlSchemaAutoInit() { return transactionControlSchemaAutoInit; }
+    public void setTransactionControlSchemaAutoInit(boolean transactionControlSchemaAutoInit) { this.transactionControlSchemaAutoInit = transactionControlSchemaAutoInit; }
+    public String getTransactionControlTableName() { return transactionControlTableName; }
+    public void setTransactionControlTableName(String transactionControlTableName) { this.transactionControlTableName = transactionControlTableName; }
     public TransactionLogDataSource getTransactionLogDatasource() { return transactionLogDatasource; }
 
     public static class TransactionLogDataSource {

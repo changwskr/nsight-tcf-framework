@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/_shared/om-admin.css">
 </head>
 <body>
-  <script src="/_shared/om-admin.js?v=20260627b"></script>
+  <script src="/_shared/om-admin.js?v=20260627c"></script>
   <script>
     let userPage = 1;
     const USER_PAGE_SIZE = 10;
@@ -45,7 +45,7 @@
       if (!sel) return;
       const current = sel.value;
       const editingId = document.getElementById('fMenuId')?.value.trim();
-      sel.innerHTML = '<option value="">(없음 — 최상위)</option>';
+      sel.innerHTML = '<option value="">(없음 ? 최상위)</option>';
       menuOptions
         .filter(m => OmAdmin.field(m, 'menuId') !== editingId)
         .forEach(m => {
@@ -66,7 +66,7 @@
     }
 
     function formatMenuUrl(url) {
-      if (url == null || url === '' || url === 'null') return '—';
+      if (url == null || url === '' || url === 'null') return '?';
       return url;
     }
 

@@ -1,5 +1,6 @@
 package com.nh.nsight.tcf.core.message;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,12 +10,15 @@ public class StandardHeader implements Serializable {
     private String systemId;
     private String businessCode;
     private String serviceId;
+    private String serviceName;
     private String transactionCode;
     private String processingType;
     private String guid;
     private String traceId;
     private String channelId;
+    @JsonAlias("user")
     private String userId;
+    @JsonAlias("branch")
     private String branchId;
     private String centerId;
     private String requestTime;
@@ -46,6 +50,8 @@ public class StandardHeader implements Serializable {
     public void setBusinessCode(String businessCode) { this.businessCode = businessCode; }
     public String getServiceId() { return serviceId; }
     public void setServiceId(String serviceId) { this.serviceId = serviceId; }
+    public String getServiceName() { return serviceName; }
+    public void setServiceName(String serviceName) { this.serviceName = serviceName; }
     public String getTransactionCode() { return transactionCode; }
     public void setTransactionCode(String transactionCode) { this.transactionCode = transactionCode; }
     public String getProcessingType() { return processingType; }

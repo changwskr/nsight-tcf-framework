@@ -11,6 +11,8 @@ logging:
 
 nsight:
   tcf:
+    transaction-control-datasource:
+      url: jdbc:h2:tcp://127.0.0.1:9092/./nsight_om;MODE=Oracle;DATABASE_TO_UPPER=false
     transaction-log-datasource:
       separate: false
       url: jdbc:h2:tcp://127.0.0.1:9092/./nsight_om;MODE=Oracle;DATABASE_TO_UPPER=false

@@ -168,6 +168,18 @@ public interface OmOperationMapper {
 
     int disableErrorCode(Map<String, Object> params);
 
+    List<Map<String, Object>> searchTransactionControls(Map<String, Object> params);
+
+    int countTransactionControls(Map<String, Object> params);
+
+    Map<String, Object> selectTransactionControlByKey(Map<String, Object> params);
+
+    int insertTransactionControl(Map<String, Object> params);
+
+    int updateTransactionControl(Map<String, Object> params);
+
+    int deleteTransactionControl(Map<String, Object> params);
+
     Map<String, Object> selectBatchJobById(String jobId);
 
     int insertBatchHistory(Map<String, Object> params);

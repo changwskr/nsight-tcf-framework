@@ -887,6 +887,149 @@
          WHERE ERROR_CODE = #{errorCode}
     </update>
 
+    <select id="searchTransactionControls" parameterType="map" resultType="map">
+        SELECT SERVICE_ID AS "serviceId", TRANSACTION_CODE AS "transactionCode",
+               BUSINESS_CODE AS "businessCode", SERVICE_NAME AS "serviceName",
+               USER_ID AS "userId", CHANNEL_ID AS "channelId", BRANCH_ID AS "branchId",
+               CONTROL_TYPE AS "controlType", BLOCK_YN AS "blockYn"
+          FROM TCF_TRANSACTION_CONTROL
+         WHERE 1 = 1
+        <if test="serviceId != null and serviceId != ''">
+            AND SERVICE_ID LIKE '%' || #{serviceId} || '%'
+        </if>
+        <if test="transactionCode != null and transactionCode != ''">
+            AND TRANSACTION_CODE LIKE '%' || #{transactionCode} || '%'
+        </if>
+        <if test="businessCode != null and businessCode != ''">
+            AND BUSINESS_CODE = #{businessCode}
+        </if>
+        <if test="serviceName != null and serviceName != ''">
+            AND SERVICE_NAME LIKE '%' || #{serviceName} || '%'
+        </if>
+        <if test="userId != null and userId != ''">
+            AND USER_ID LIKE '%' || #{userId} || '%'
+        </if>
+        <if test="channelId != null and channelId != ''">
+            AND CHANNEL_ID = #{channelId}
+        </if>
+        <if test="branchId != null and branchId != ''">
+            AND BRANCH_ID = #{branchId}
+        </if>
+        <if test="controlType != null and controlType != ''">
+            AND CONTROL_TYPE = #{controlType}
+        </if>
+        <if test="blockYn != null and blockYn != ''">
+            AND BLOCK_YN = #{blockYn}
+        </if>
+        <if test="targetKeyword != null and targetKeyword != ''">
+            AND (
+                SERVICE_ID LIKE '%' || #{targetKeyword} || '%'
+                OR BUSINESS_CODE LIKE '%' || #{targetKeyword} || '%'
+                OR USER_ID LIKE '%' || #{targetKeyword} || '%'
+                OR CHANNEL_ID LIKE '%' || #{targetKeyword} || '%'
+                OR BRANCH_ID LIKE '%' || #{targetKeyword} || '%'
+                OR SERVICE_NAME LIKE '%' || #{targetKeyword} || '%'
+            )
+        </if>
+         ORDER BY CONTROL_TYPE, BUSINESS_CODE, SERVICE_ID, USER_ID
+        <if test="pageSize != null">
+            OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
+        </if>
+    </select>
+
+    <select id="countTransactionControls" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+          FROM TCF_TRANSACTION_CONTROL
+         WHERE 1 = 1
+        <if test="serviceId != null and serviceId != ''">
+            AND SERVICE_ID LIKE '%' || #{serviceId} || '%'
+        </if>
+        <if test="transactionCode != null and transactionCode != ''">
+            AND TRANSACTION_CODE LIKE '%' || #{transactionCode} || '%'
+        </if>
+        <if test="businessCode != null and businessCode != ''">
+            AND BUSINESS_CODE = #{businessCode}
+        </if>
+        <if test="serviceName != null and serviceName != ''">
+            AND SERVICE_NAME LIKE '%' || #{serviceName} || '%'
+        </if>
+        <if test="userId != null and userId != ''">
+            AND USER_ID LIKE '%' || #{userId} || '%'
+        </if>
+        <if test="channelId != null and channelId != ''">
+            AND CHANNEL_ID = #{channelId}
+        </if>
+        <if test="branchId != null and branchId != ''">
+            AND BRANCH_ID = #{branchId}
+        </if>
+        <if test="controlType != null and controlType != ''">
+            AND CONTROL_TYPE = #{controlType}
+        </if>
+        <if test="blockYn != null and blockYn != ''">
+            AND BLOCK_YN = #{blockYn}
+        </if>
+        <if test="targetKeyword != null and targetKeyword != ''">
+            AND (
+                SERVICE_ID LIKE '%' || #{targetKeyword} || '%'
+                OR BUSINESS_CODE LIKE '%' || #{targetKeyword} || '%'
+                OR USER_ID LIKE '%' || #{targetKeyword} || '%'
+                OR CHANNEL_ID LIKE '%' || #{targetKeyword} || '%'
+                OR BRANCH_ID LIKE '%' || #{targetKeyword} || '%'
+                OR SERVICE_NAME LIKE '%' || #{targetKeyword} || '%'
+            )
+        </if>
+    </select>
+
+    <select id="selectTransactionControlByKey" parameterType="map" resultType="map">
+        SELECT SERVICE_ID AS "serviceId", TRANSACTION_CODE AS "transactionCode",
+               BUSINESS_CODE AS "businessCode", SERVICE_NAME AS "serviceName",
+               USER_ID AS "userId", CHANNEL_ID AS "channelId", BRANCH_ID AS "branchId",
+               CONTROL_TYPE AS "controlType", BLOCK_YN AS "blockYn"
+          FROM TCF_TRANSACTION_CONTROL
+         WHERE SERVICE_ID = #{serviceId}
+           AND TRANSACTION_CODE = #{transactionCode}
+           AND BUSINESS_CODE = #{businessCode}
+           AND SERVICE_NAME = #{serviceName}
+           AND USER_ID = #{userId}
+           AND CHANNEL_ID = #{channelId}
+           AND BRANCH_ID = #{branchId}
+    </select>
+
+    <insert id="insertTransactionControl" parameterType="map">
+        INSERT INTO TCF_TRANSACTION_CONTROL (
+            SERVICE_ID, TRANSACTION_CODE, BUSINESS_CODE, SERVICE_NAME,
+            USER_ID, CHANNEL_ID, BRANCH_ID, CONTROL_TYPE, BLOCK_YN
+        ) VALUES (
+            #{serviceId}, #{transactionCode}, #{businessCode}, #{serviceName},
+            #{userId}, #{channelId}, #{branchId},
+            #{controlType}, #{blockYn}
+        )
+    </insert>
+
+    <update id="updateTransactionControl" parameterType="map">
+        UPDATE TCF_TRANSACTION_CONTROL
+           SET CONTROL_TYPE = #{controlType},
+               BLOCK_YN = #{blockYn}
+         WHERE SERVICE_ID = #{serviceId}
+           AND TRANSACTION_CODE = #{transactionCode}
+           AND BUSINESS_CODE = #{businessCode}
+           AND SERVICE_NAME = #{serviceName}
+           AND USER_ID = #{userId}
+           AND CHANNEL_ID = #{channelId}
+           AND BRANCH_ID = #{branchId}
+    </update>
+
+    <delete id="deleteTransactionControl" parameterType="map">
+        DELETE FROM TCF_TRANSACTION_CONTROL
+         WHERE SERVICE_ID = #{serviceId}
+           AND TRANSACTION_CODE = #{transactionCode}
+           AND BUSINESS_CODE = #{businessCode}
+           AND SERVICE_NAME = #{serviceName}
+           AND USER_ID = #{userId}
+           AND CHANNEL_ID = #{channelId}
+           AND BRANCH_ID = #{branchId}
+    </delete>
+
     <select id="selectBatchJobById" parameterType="string" resultType="map">
         SELECT JOB_ID AS "jobId", JOB_NAME AS "jobName", BUSINESS_CODE AS "businessCode",
                CRON_EXPR AS "cronExpr", USE_YN AS "useYn", DESCRIPTION AS "description"

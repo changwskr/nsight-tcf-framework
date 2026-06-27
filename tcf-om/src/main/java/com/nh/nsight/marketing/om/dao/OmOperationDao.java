@@ -356,6 +356,30 @@ public class OmOperationDao {
         return mapper.disableErrorCode(row);
     }
 
+    public List<Map<String, Object>> searchTransactionControls(Map<String, Object> criteria) {
+        return mapper.searchTransactionControls(criteria);
+    }
+
+    public int countTransactionControls(Map<String, Object> criteria) {
+        return mapper.countTransactionControls(criteria);
+    }
+
+    public Map<String, Object> selectTransactionControlByKey(Map<String, Object> key) {
+        return mapper.selectTransactionControlByKey(key);
+    }
+
+    public int insertTransactionControl(Map<String, Object> row) {
+        return mapper.insertTransactionControl(row);
+    }
+
+    public int updateTransactionControl(Map<String, Object> row) {
+        return mapper.updateTransactionControl(row);
+    }
+
+    public int deleteTransactionControl(Map<String, Object> key) {
+        return mapper.deleteTransactionControl(key);
+    }
+
     public Map<String, Object> selectBatchJobById(String jobId) {
         return mapper.selectBatchJobById(jobId);
     }

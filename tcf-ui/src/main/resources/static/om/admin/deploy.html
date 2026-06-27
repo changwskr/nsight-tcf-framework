@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/_shared/om-admin.css">
 </head>
 <body>
-  <script src="/_shared/om-admin.js?v=20260626a"></script>
+  <script src="/_shared/om-admin.js?v=20260627c"></script>
   <script>
     const PAGE_SIZE = 10;
     let currentPage = 1;
@@ -149,7 +149,7 @@
       else if (status === 'FAIL') next = '실행 버튼으로 같은 요청을 다시 시도할 수 있습니다. (재요청 불필요)';
       else if (status === 'SUCCESS') next = '처리가 완료되었습니다.';
       else if (status === 'RUNNING') next = '실행 중입니다. 잠시 후 조회하세요.';
-      box.innerHTML = `선택 <code class="om-mono">${id}</code> · ${type} · ${statusChip(status)} — ${next}`;
+      box.innerHTML = `선택 <code class="om-mono">${id}</code> · ${type} · ${statusChip(status)} ? ${next}`;
     }
 
     function clearFormFields() {

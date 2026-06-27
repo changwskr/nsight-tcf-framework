@@ -8,6 +8,7 @@ window.OmAdmin = (function () {
   const NAV_PRIMARY = [
     { id: 'dashboard', label: '운영 대시보드', href: '/om/admin/dashboard.html' },
     { id: 'transaction-log', label: '거래로그 조회', href: '/om/admin/transaction-log.html' },
+    { id: 'transaction-control', label: '거래통제 관리', href: '/om/admin/transaction-control.html' },
     { id: 'service-catalog', label: 'ServiceId 관리', href: '/om/admin/service-catalog.html' },
     { id: 'message-composer', label: '공통 전문 조립', href: '/om/admin/message-composer.html' },
     { id: 'user-auth', label: '사용자 / 권한 / 메뉴 / 기능·데이터권한', href: '/om/admin/user-auth.html' },
@@ -97,8 +98,92 @@ window.OmAdmin = (function () {
     cache: { serviceId: 'OM.Cache.inquiry', transactionCode: 'OM-CCH-0001' },
     cacheDelete: { serviceId: 'OM.Cache.delete', transactionCode: 'OM-CCH-0002' },
     session: { serviceId: 'OM.Session.inquiry', transactionCode: 'OM-SES-0001' },
-    sessionDelete: { serviceId: 'OM.Session.delete', transactionCode: 'OM-SES-0002' }
+    sessionDelete: { serviceId: 'OM.Session.delete', transactionCode: 'OM-SES-0002' },
+    transactionControl: { serviceId: 'OM.TransactionControl.inquiry', transactionCode: 'OM-TXC-0001' },
+    transactionControlSave: { serviceId: 'OM.TransactionControl.save', transactionCode: 'OM-TXC-0002' },
+    transactionControlDelete: { serviceId: 'OM.TransactionControl.delete', transactionCode: 'OM-TXC-0003' },
+    transactionControlUpdate: { serviceId: 'OM.TransactionControl.update', transactionCode: 'OM-TXC-0004' }
   };
+
+  const TX_SERVICE_NAME = {
+    'OM.Auth.login': 'OM 로그인',
+    'OM.Auth.logout': 'OM 로그아웃',
+    'OM.Auth.session': 'OM 세션 조회',
+    'OM.Dashboard.inquiry': '운영 대시보드',
+    'OM.Dashboard.reset': '대시보드 스냅샷 DB 초기화',
+    'OM.TransactionLog.inquiry': '거래로그 조회',
+    'OM.TransactionLog.deleteAll': '거래로그 전체 삭제',
+    'OM.TransactionControl.inquiry': '거래통제 조회',
+    'OM.TransactionControl.save': '거래통제 등록',
+    'OM.TransactionControl.delete': '거래통제 삭제',
+    'OM.TransactionControl.update': '거래통제 수정',
+    'OM.ServiceCatalog.inquiry': 'ServiceId 카탈로그',
+    'OM.ServiceCatalog.save': 'ServiceId 등록',
+    'OM.ServiceCatalog.detail': 'ServiceId 상세',
+    'OM.ServiceCatalog.update': 'ServiceId 수정',
+    'OM.ServiceCatalog.delete': 'ServiceId 삭제',
+    'OM.User.inquiry': '사용자 조회',
+    'OM.User.detail': '사용자 상세',
+    'OM.User.save': '사용자 등록',
+    'OM.User.update': '사용자 수정',
+    'OM.User.delete': '사용자 삭제',
+    'OM.Menu.inquiry': '메뉴 조회',
+    'OM.Menu.save': '메뉴 등록',
+    'OM.Menu.detail': '메뉴 상세',
+    'OM.Menu.update': '메뉴 수정',
+    'OM.Menu.delete': '메뉴 삭제',
+    'OM.AuthGroup.inquiry': '권한그룹 조회',
+    'OM.AuthGroup.save': '권한그룹 등록',
+    'OM.AuthGroup.detail': '권한그룹 상세',
+    'OM.AuthGroup.update': '권한그룹 수정',
+    'OM.AuthGroup.delete': '권한그룹 삭제',
+    'OM.AuditLog.inquiry': '감사로그 조회',
+    'OM.AuditLog.deleteAll': '감사로그 전체 삭제',
+    'OM.ErrorCode.inquiry': '오류코드 조회',
+    'OM.ErrorCode.save': '오류코드 등록',
+    'OM.ErrorCode.detail': '오류코드 상세',
+    'OM.ErrorCode.update': '오류코드 수정',
+    'OM.ErrorCode.delete': '오류코드 삭제',
+    'OM.Batch.inquiry': '배치/스케줄 조회',
+    'OM.Batch.execute': '배치 재실행',
+    'OM.Batch.deleteAll': '배치 실행이력 전체 삭제',
+    'OM.HealthCheck.inquiry': 'Health Check 조회',
+    'OM.SystemConfig.inquiry': '환경설정 조회',
+    'OM.FileDownload.inquiry': '파일 다운로드 이력',
+    'OM.CommonCode.inquiry': '공통코드 목록 조회',
+    'OM.CommonCode.save': '공통코드 등록',
+    'OM.CommonCode.detail': '공통코드 단건 조회',
+    'OM.CommonCode.update': '공통코드 수정',
+    'OM.CommonCode.delete': '공통코드 삭제',
+    'OM.FunctionAuth.inquiry': '기능권한 조회',
+    'OM.FunctionAuth.save': '기능권한 등록',
+    'OM.FunctionAuth.detail': '기능권한 상세',
+    'OM.FunctionAuth.update': '기능권한 수정',
+    'OM.FunctionAuth.delete': '기능권한 삭제',
+    'OM.DataAuth.inquiry': '데이터권한 조회',
+    'OM.AuthHistory.inquiry': '권한이력 조회',
+    'OM.Cache.inquiry': 'Cache 조회',
+    'OM.Cache.delete': 'Cache 삭제',
+    'OM.Session.inquiry': '세션 목록 조회',
+    'OM.Session.delete': '세션 강제 종료',
+    'OM.Deploy.buildRequest': '배포 Gradle 빌드 요청',
+    'OM.Deploy.buildStatus': '배포 빌드 상태 조회',
+    'OM.Deploy.deployRequest': '배포 요청 등록',
+    'OM.Deploy.approve': '배포 승인',
+    'OM.Deploy.execute': '배포 실행',
+    'OM.Deploy.history': '배포 이력 조회',
+    'OM.Deploy.logInquiry': '배포 로그 조회',
+    'OM.Deploy.rollbackRequest': '배포 롤백 요청',
+    'OM.Deploy.healthCheck': '배포 Health Check',
+    'OM.Deploy.deleteAll': '배포 요청·이력 초기화'
+  };
+
+  Object.keys(TX).forEach(key => {
+    const tx = TX[key];
+    if (tx && tx.serviceId && TX_SERVICE_NAME[tx.serviceId]) {
+      tx.serviceName = TX_SERVICE_NAME[tx.serviceId];
+    }
+  });
 
   let config = { deploymentMode: 'bootrun', bootrunHost: 'http://127.0.0.1', tomcatGatewayUrl: 'http://localhost:8080' };
   let targetUrl = '-';
@@ -296,6 +381,7 @@ window.OmAdmin = (function () {
       businessCode: (o.businessCode || BUSINESS_CODE).toUpperCase(),
       serviceId: o.serviceId || '',
       transactionCode: o.transactionCode || '',
+      serviceName: o.serviceName != null ? o.serviceName : '',
       processingType: (o.processingType || 'INQUIRY').toUpperCase(),
       guid: o.guid || newGuid(),
       traceId: o.traceId != null ? o.traceId : '',
@@ -312,11 +398,19 @@ window.OmAdmin = (function () {
     };
   }
 
+  function resolveServiceName(tx) {
+    if (!tx) {
+      return '';
+    }
+    return tx.serviceName || TX_SERVICE_NAME[tx.serviceId] || '';
+  }
+
   function buildHeader(tx, processingType) {
     return buildStandardHeader({
       businessCode: BUSINESS_CODE,
       serviceId: tx.serviceId,
       transactionCode: tx.transactionCode,
+      serviceName: resolveServiceName(tx),
       processingType: processingType || 'INQUIRY'
     });
   }
@@ -371,7 +465,12 @@ window.OmAdmin = (function () {
   async function login(userId, password) {
     const tx = TX.authLogin;
     const request = {
-      header: { ...buildHeader(tx, 'EXECUTE'), userId: userId || 'GUEST', branchId: '' },
+      header: {
+        ...buildHeader(tx, 'EXECUTE'),
+        userId: userId || 'GUEST',
+        branchId: '',
+        serviceName: resolveServiceName(tx) || 'OM 로그인'
+      },
       body: { userId, password }
     };
     const res = await relayFetch(`/api/relay/${BUSINESS_CODE}/online?${buildRelayQuery()}`, {

@@ -1,7 +1,7 @@
 package com.nh.nsight.tcf.web.config;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
-import com.nh.nsight.tcf.core.logging.TcfTransactionLogConstants;
+import com.nh.nsight.tcf.core.logging.H2DevDataSourceUrls;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -25,11 +25,7 @@ public class TcfTransactionLogDataSourceConfiguration {
 
         @Bean(name = "transactionLogDataSource")
         public DataSource transactionLogDataSource(TcfProperties properties, Environment environment) {
-            String configured = environment.getProperty("nsight.tcf.transaction-log-datasource.url");
-            String rawUrl = (configured != null && !configured.isBlank())
-                    ? configured
-                    : TcfTransactionLogConstants.DEFAULT_DATASOURCE_URL_TEMPLATE;
-            String url = environment.resolveRequiredPlaceholders(rawUrl);
+            String url = resolveTransactionLogUrl(environment);
             log.info("Transaction log datasource url={}", url);
             TcfProperties.TransactionLogDataSource cfg = properties.getTransactionLogDatasource();
             return DataSourceBuilder.create()
@@ -44,6 +40,20 @@ public class TcfTransactionLogDataSourceConfiguration {
         public JdbcTemplate transactionLogJdbcTemplate(
                 @Qualifier("transactionLogDataSource") DataSource transactionLogDataSource) {
             return new JdbcTemplate(transactionLogDataSource);
+        }
+
+        private static String resolveTransactionLogUrl(Environment environment) {
+            String configured = environment.getProperty("nsight.tcf.transaction-log-datasource.url");
+            String resolved = H2DevDataSourceUrls.resolveNsightOmUrl(environment, configured);
+            if (configured != null && !configured.isBlank()
+                    && H2DevDataSourceUrls.isInvalidTcpDatabasePath(
+                            environment.resolveRequiredPlaceholders(configured.trim()))) {
+                log.warn(
+                        "Invalid dev transaction-log TCP URL (use ./nsight_om); was {} — using {}",
+                        environment.resolveRequiredPlaceholders(configured.trim()),
+                        H2DevDataSourceUrls.DEV_NSIGHT_OM_TCP);
+            }
+            return resolved;
         }
     }
 }

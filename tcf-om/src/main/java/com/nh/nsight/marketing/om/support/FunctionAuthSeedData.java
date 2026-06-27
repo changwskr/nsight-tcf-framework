@@ -26,7 +26,7 @@ final class FunctionAuthSeedData {
             String canDownload) {}
 
     private static final String[] SCREEN_MENUS = {
-            "OM_DASH", "OM_TX", "OM_SVC", "OM_AUTH", "OM_AUDIT", "OM_SES",
+            "OM_DASH", "OM_TX", "OM_TXC", "OM_SVC", "OM_AUTH", "OM_AUDIT", "OM_SES",
             "OM_ERR", "OM_BAT", "OM_HLT", "OM_CFG", "OM_FIL", "OM_DPL",
             "OM_CDC", "OM_FAU", "OM_DAU", "OM_AHT", "OM_CCH"
     };
@@ -94,6 +94,7 @@ final class FunctionAuthSeedData {
         return Map.ofEntries(
                 Map.entry("OM_DASH", new String[] {"Y", "N", "N", "N", "N"}),
                 Map.entry("OM_TX", new String[] {"Y", "N", "N", "N", "N"}),
+                Map.entry("OM_TXC", new String[] {"Y", "N", "N", "N", "N"}),
                 Map.entry("OM_SVC", new String[] {"Y", "N", "N", "N", "N"}),
                 Map.entry("OM_AUTH", new String[] {"N", "N", "N", "N", "N"}),
                 Map.entry("OM_AUDIT", new String[] {"Y", "N", "N", "N", "N"}),
@@ -151,6 +152,7 @@ final class FunctionAuthSeedData {
 
         rows.add(entry("ROLE_OPERATOR", "OM_DASH", "Y", "N", "N", "N", "Y"));
         rows.add(entry("ROLE_OPERATOR", "OM_TX", "Y", "N", "N", "N", "Y"));
+        rows.add(entry("ROLE_OPERATOR", "OM_TXC", "Y", "Y", "N", "Y", "N"));
         rows.add(entry("ROLE_OPERATOR", "OM_SVC", "Y", "N", "N", "N", "N"));
         rows.add(entry("ROLE_OPERATOR", "OM_AUTH", "N", "N", "N", "N", "N"));
         rows.add(entry("ROLE_OPERATOR", "OM_AUDIT", "Y", "N", "N", "N", "Y"));
@@ -169,6 +171,7 @@ final class FunctionAuthSeedData {
 
         rows.add(entry("ROLE_VIEWER", "OM_DASH", "Y", "N", "N", "N", "N"));
         rows.add(entry("ROLE_VIEWER", "OM_TX", "Y", "N", "N", "N", "N"));
+        rows.add(entry("ROLE_VIEWER", "OM_TXC", "Y", "N", "N", "N", "N"));
         rows.add(entry("ROLE_VIEWER", "OM_SVC", "Y", "N", "N", "N", "N"));
         rows.add(entry("ROLE_VIEWER", "OM_AUTH", "N", "N", "N", "N", "N"));
         rows.add(entry("ROLE_VIEWER", "OM_AUDIT", "Y", "N", "N", "N", "N"));

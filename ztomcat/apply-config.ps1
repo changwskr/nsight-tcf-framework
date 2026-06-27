@@ -46,6 +46,17 @@ foreach ($legacy in @('zz-batch.war', 'zz-batch', 'batch.war', 'batch')) {
     }
 }
 
+# Removed business modules — stale WARs cause H2 lock errors on startup
+foreach ($legacy in @('bc', 'bd', 'bp', 'cc', 'cm', 'cs', 'ct')) {
+    foreach ($suffix in @('', '.war')) {
+        $p = Join-Path $CatalinaHome "webapps\$legacy$suffix"
+        if (Test-Path $p) {
+            Remove-Item -LiteralPath $p -Recurse -Force -ErrorAction SilentlyContinue
+            Write-Host "[ztomcat] Removed retired webapps/$legacy$suffix"
+        }
+    }
+}
+
 $warPath = $targetWar.Replace('\', '/')
 $batchXml = @"
 <?xml version="1.0" encoding="UTF-8"?>

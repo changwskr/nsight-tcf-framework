@@ -70,15 +70,22 @@ public class OmDatabaseMigration implements ApplicationRunner {
                 MERGE INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN) KEY (MENU_ID)
                 VALUES (?, ?, ?, ?, ?, ?)
                 """, "OM_DPL", "배포 관리", "/om/admin/deploy.html", "OM_GRP_SYS", 16, "Y");
+        jdbcTemplate.update("""
+                MERGE INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN) KEY (MENU_ID)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """, "OM_TXC", "거래통제 관리", "/om/admin/transaction-control.html", "OM_GRP_OPS", 3, "Y");
         ServiceCatalogSeedData.mergeAll(jdbcTemplate);
         seedAuthCodeCommonCodes();
         seedCacheNameCommonCodes();
         seedBusinessAuthCodes();
+        seedChannelAndBranchCommonCodes();
         repairCorruptedUtf8SeedData();
         ensureMenuHierarchy();
         normalizeMenuNullColumns();
         FunctionAuthSeedData.ensureTable(jdbcTemplate);
         FunctionAuthSeedData.mergeAll(jdbcTemplate);
+        ensureTransactionControlTable();
+        TransactionControlSeedData.mergeAll(jdbcTemplate);
         removeLegacyFunctionAuthIds();
         log.debug("OM schema migration applied.");
     }
@@ -157,7 +164,10 @@ public class OmDatabaseMigration implements ApplicationRunner {
                 Map.entry("CAT-069", "파일 메타 수정"),
                 Map.entry("CAT-070", "파일 삭제"),
                 Map.entry("CAT-071", "거래 I/O 목록 (레거시)"),
-                Map.entry("CAT-072", "거래 I/O 상세 (레거시)")
+                Map.entry("CAT-072", "거래 I/O 상세 (레거시)"),
+                Map.entry("CAT-097", "거래통제 조회"),
+                Map.entry("CAT-098", "거래통제 등록"),
+                Map.entry("CAT-099", "거래통제 삭제")
         );
         catalogDescriptions.forEach((catalogId, description) ->
                 jdbcTemplate.update(
@@ -213,6 +223,7 @@ public class OmDatabaseMigration implements ApplicationRunner {
         mergeCommonCode("AUTH_CODE", "ROLE_OM_SVC", "ServiceId 관리", 2, "서비스 카탈로그", ts);
         mergeCommonCode("AUTH_CODE", "ROLE_OM_DSH", "운영 대시보드", 3, "대시보드 조회", ts);
         mergeCommonCode("AUTH_CODE", "ROLE_OM_TXL", "거래로그", 4, "거래로그 조회/삭제", ts);
+        mergeCommonCode("AUTH_CODE", "ROLE_OM_TXC", "거래통제", 31, "거래통제 허용 목록", ts);
         mergeCommonCode("AUTH_CODE", "ROLE_OM_AUD", "감사로그", 5, "감사로그 조회", ts);
         mergeCommonCode("AUTH_CODE", "ROLE_OM_ERR", "오류코드", 6, "오류코드 관리", ts);
         mergeCommonCode("AUTH_CODE", "ROLE_OM_BAT", "배치", 7, "배치/스케줄", ts);
@@ -229,6 +240,17 @@ public class OmDatabaseMigration implements ApplicationRunner {
         mergeCommonCode("CACHE_NAME", "commonCode", "공통코드", 1, "공통코드 Cache (키=코드그룹)", ts);
         mergeCommonCode("CACHE_NAME", "serviceCatalog", "ServiceId 카탈로그", 2, "ServiceId 카탈로그 Cache", ts);
         mergeCommonCode("CACHE_NAME", "sessionRegion", "세션 영역", 3, "세션 Cache", ts);
+    }
+
+    /** 거래통제 화면 콤보 — CHANNEL_CODE, BRANCH_CODE */
+    private void seedChannelAndBranchCommonCodes() {
+        String ts = DateTimeUtil.nowKst();
+        mergeCommonCode("CHANNEL_CODE", "WEBTOP", "웹탑", 1, "웹 채널", ts);
+        mergeCommonCode("CHANNEL_CODE", "MOBILE", "모바일", 2, "모바일 채널", ts);
+        mergeCommonCode("CHANNEL_CODE", "BRANCH", "창구", 3, "영업점 창구", ts);
+        mergeCommonCode("CHANNEL_CODE", "CALL", "콜센터", 4, "전화 상담", ts);
+        mergeCommonCode("BRANCH_CODE", "000001", "본부", 1, "본부 영업점", ts);
+        mergeCommonCode("BRANCH_CODE", "001234", "강남지점", 2, "강남 영업점", ts);
     }
 
     private void mergeCommonCode(String codeGroup, String code, String codeName, int sortOrder,
@@ -386,6 +408,7 @@ public class OmDatabaseMigration implements ApplicationRunner {
         Map<String, String> childToParent = Map.ofEntries(
                 Map.entry("OM_DASH", "OM_GRP_OPS"),
                 Map.entry("OM_TX", "OM_GRP_OPS"),
+                Map.entry("OM_TXC", "OM_GRP_OPS"),
                 Map.entry("OM_SVC", "OM_GRP_OPS"),
                 Map.entry("OM_AUTH", "OM_GRP_OPS"),
                 Map.entry("OM_AUDIT", "OM_GRP_OPS"),
@@ -405,10 +428,11 @@ public class OmDatabaseMigration implements ApplicationRunner {
         Map<String, Integer> menuSort = Map.ofEntries(
                 Map.entry("OM_DASH", 1),
                 Map.entry("OM_TX", 2),
-                Map.entry("OM_SVC", 3),
-                Map.entry("OM_AUTH", 4),
-                Map.entry("OM_AUDIT", 5),
-                Map.entry("OM_SES", 6),
+                Map.entry("OM_TXC", 3),
+                Map.entry("OM_SVC", 4),
+                Map.entry("OM_AUTH", 5),
+                Map.entry("OM_AUDIT", 6),
+                Map.entry("OM_SES", 7),
                 Map.entry("OM_ERR", 11),
                 Map.entry("OM_BAT", 12),
                 Map.entry("OM_HLT", 13),
@@ -447,6 +471,79 @@ public class OmDatabaseMigration implements ApplicationRunner {
                        USE_YN = 'N'
                  WHERE MENU_ID = 'OM_DAU'
                 """);
+    }
+
+    private void ensureTransactionControlTable() {
+        Integer legacyColumnCount = jdbcTemplate.queryForObject("""
+                SELECT COUNT(*)
+                  FROM INFORMATION_SCHEMA.COLUMNS
+                 WHERE TABLE_NAME = 'TCF_TRANSACTION_CONTROL'
+                   AND COLUMN_NAME = 'TX_ID'
+                """, Integer.class);
+        if (legacyColumnCount != null && legacyColumnCount > 0) {
+            jdbcTemplate.execute("DROP TABLE IF EXISTS TCF_TRANSACTION_CONTROL");
+            log.info("Dropped legacy TCF_TRANSACTION_CONTROL table (status-log schema)");
+        }
+        jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS TCF_TRANSACTION_CONTROL (
+                    SERVICE_ID VARCHAR(100) NOT NULL,
+                    TRANSACTION_CODE VARCHAR(50) NOT NULL,
+                    BUSINESS_CODE VARCHAR(10) NOT NULL,
+                    SERVICE_NAME VARCHAR(200) NOT NULL,
+                    USER_ID VARCHAR(50) NOT NULL,
+                    CHANNEL_ID VARCHAR(30) NOT NULL,
+                    BRANCH_ID VARCHAR(30) NOT NULL,
+                    CONTROL_TYPE VARCHAR(20) NOT NULL DEFAULT 'FULL',
+                    BLOCK_YN CHAR(1) NOT NULL DEFAULT 'Y',
+                    PRIMARY KEY (
+                        SERVICE_ID,
+                        TRANSACTION_CODE,
+                        BUSINESS_CODE,
+                        SERVICE_NAME,
+                        USER_ID,
+                        CHANNEL_ID,
+                        BRANCH_ID
+                    )
+                )
+                """);
+        jdbcTemplate.execute("""
+                CREATE INDEX IF NOT EXISTS IDX_TCF_TX_CTRL_USER
+                ON TCF_TRANSACTION_CONTROL (USER_ID, CHANNEL_ID, BRANCH_ID)
+                """);
+        jdbcTemplate.execute("""
+                CREATE INDEX IF NOT EXISTS IDX_TCF_TX_CTRL_SVC
+                ON TCF_TRANSACTION_CONTROL (BUSINESS_CODE, SERVICE_ID, TRANSACTION_CODE)
+                """);
+        Integer controlTypeCount = jdbcTemplate.queryForObject("""
+                SELECT COUNT(*)
+                  FROM INFORMATION_SCHEMA.COLUMNS
+                 WHERE TABLE_NAME = 'TCF_TRANSACTION_CONTROL'
+                   AND COLUMN_NAME = 'CONTROL_TYPE'
+                """, Integer.class);
+        if (controlTypeCount == null || controlTypeCount == 0) {
+            jdbcTemplate.execute("""
+                    ALTER TABLE TCF_TRANSACTION_CONTROL
+                    ADD COLUMN IF NOT EXISTS CONTROL_TYPE VARCHAR(20) NOT NULL DEFAULT 'FULL'
+                    """);
+            jdbcTemplate.execute("""
+                    ALTER TABLE TCF_TRANSACTION_CONTROL
+                    ADD COLUMN IF NOT EXISTS BLOCK_YN CHAR(1) NOT NULL DEFAULT 'N'
+                    """);
+            jdbcTemplate.update("UPDATE TCF_TRANSACTION_CONTROL SET BLOCK_YN = 'N' WHERE BLOCK_YN IS NULL");
+            log.info("Migrated TCF_TRANSACTION_CONTROL to blocklist schema (CONTROL_TYPE, BLOCK_YN)");
+        }
+        seedTxControlTypeCommonCodes();
+    }
+
+    private void seedTxControlTypeCommonCodes() {
+        String ts = java.time.OffsetDateTime.now().toString();
+        mergeCommonCode("TX_CONTROL_TYPE", "GLOBAL", "전체 통제", 1, "모든 거래 통제", ts);
+        mergeCommonCode("TX_CONTROL_TYPE", "BUSINESS", "업무코드별 통제", 2, "businessCode 일치", ts);
+        mergeCommonCode("TX_CONTROL_TYPE", "SERVICE", "거래서비스ID별 통제", 3, "serviceId 일치", ts);
+        mergeCommonCode("TX_CONTROL_TYPE", "CHANNEL", "채널별 통제", 4, "channelId 일치", ts);
+        mergeCommonCode("TX_CONTROL_TYPE", "BRANCH", "브랜치별 통제", 5, "branchId 일치", ts);
+        mergeCommonCode("TX_CONTROL_TYPE", "USER", "사용자 통제", 6, "userId 일치", ts);
+        mergeCommonCode("TX_CONTROL_TYPE", "IP", "IP별 통제", 7, "clientIp 일치", ts);
     }
 
     private void removeLegacyFunctionAuthIds() {

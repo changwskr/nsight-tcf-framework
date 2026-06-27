@@ -14,14 +14,16 @@
 
 ## 주요 기능
 
-- OM 운영 Handler **40개** (`OM.*` serviceId)
+- OM 운영 Handler **40개+** (`OM.*` serviceId)
 - 로그인·세션·권한 (`OM.Auth.*`, `OM.Session.*`)
-- 마스터 CRUD: 사용자, ServiceId, 공통코드, 오류코드
+- 마스터 CRUD: 사용자, 권한그룹, 메뉴, **기능권한**, ServiceId, 공통코드, 오류코드
+- **데이터권한** 조회 (`OM.DataAuth.inquiry`) — user-auth 탭 통합
 - EhCache 공통코드 캐싱 (`tcf-cache` 연동)
-- 거래로그·감사로그·Health Check·배치·Cache 관리
+- 거래로그·감사로그·Health Check·배치·Cache·배포 관리
 - 운영 대시보드 (tcf-batch 수집 데이터 조회)
 - 환경설정 (Tomcat/bootRun 배포 모드별 런타임 값 표시)
 - 파일 업·다운로드 REST (`/ud/files`, TcfGateway 경유)
+- 기동 시 `OmDatabaseMigration` — 스키마·시드·기능권한 MERGE
 
 ## TCF Handler 예시
 
@@ -31,6 +33,10 @@
 | `OM.Dashboard.inquiry` | 운영 대시보드 |
 | `OM.SystemConfig.inquiry` | 환경설정 조회 |
 | `OM.User.inquiry` / `.save` / `.update` / `.delete` | 사용자 CRUD |
+| `OM.AuthGroup.inquiry` ~ `.delete` | 권한그룹 CRUD |
+| `OM.Menu.inquiry` ~ `.delete` | 메뉴 CRUD |
+| `OM.FunctionAuth.inquiry` ~ `.delete` | 기능권한 CRUD |
+| `OM.DataAuth.inquiry` | 데이터권한 조회 |
 | `OM.ServiceCatalog.inquiry` ~ `.delete` | ServiceId CRUD |
 | `OM.CommonCode.inquiry` ~ `.delete` | 공통코드 CRUD |
 | `OM.ErrorCode.inquiry` ~ `.delete` | 오류코드 CRUD |

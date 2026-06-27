@@ -5,7 +5,7 @@ set "JAVA_OPTS=%JAVA_OPTS% -Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstder
 if not defined JAVA_TOOL_OPTIONS set "JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8"
 if defined NSIGHT_TXLOG_PATH goto :apply_txlog_opts
 if not defined CATALINA_HOME goto :skip_txlog_opts
-for %%I in ("%CATALINA_HOME%\..\data\nsight-txlog") do set "NSIGHT_TXLOG_PATH=%%~fI"
+for %%I in ("%CATALINA_HOME%\..\..\data\nsight-txlog") do set "NSIGHT_TXLOG_PATH=%%~fI"
 :apply_txlog_opts
 if not defined NSIGHT_TXLOG_PATH goto :skip_txlog_opts
 set "CATALINA_OPTS=%CATALINA_OPTS% -Dnsight.txlog.path=%NSIGHT_TXLOG_PATH:\=/%"
