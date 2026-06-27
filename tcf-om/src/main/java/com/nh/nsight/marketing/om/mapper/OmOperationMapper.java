@@ -158,6 +158,8 @@ public interface OmOperationMapper {
 
     int insertAuthHistory(Map<String, Object> params);
 
+    int deleteAllAuthHistories();
+
     Map<String, Object> selectErrorCodeByCode(String errorCode);
 
     int mergeErrorCode(Map<String, Object> params);

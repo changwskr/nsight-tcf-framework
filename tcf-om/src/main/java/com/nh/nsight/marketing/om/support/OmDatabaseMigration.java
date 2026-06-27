@@ -120,6 +120,7 @@ public class OmDatabaseMigration implements ApplicationRunner {
                 Map.entry("CAT-022", "기능권한 조회"),
                 Map.entry("CAT-023", "데이터권한 조회"),
                 Map.entry("CAT-024", "권한이력 조회"),
+                Map.entry("CAT-100", "권한이력 전체 삭제"),
                 Map.entry("CAT-025", "Cache 조회"),
                 Map.entry("CAT-026", "Cache 삭제"),
                 Map.entry("CAT-027", "OM 로그인"),

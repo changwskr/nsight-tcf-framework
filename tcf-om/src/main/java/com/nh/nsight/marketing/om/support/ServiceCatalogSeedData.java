@@ -95,6 +95,8 @@ final class ServiceCatalogSeedData {
                     "OmDataAuthInquiryHandler", "ROLE_OM_AUTH", "N", 5, "Y", "데이터권한 조회"),
             entry("CAT-024", "OM", "OM.AuthHistory.inquiry", "OM-AHT-0001", "INQUIRY",
                     "OmAuthHistoryInquiryHandler", "ROLE_OM_AUTH", "Y", 10, "Y", "권한이력 조회"),
+            entry("CAT-100", "OM", "OM.AuthHistory.deleteAll", "OM-AHT-0002", "DELETE",
+                    "OmAuthHistoryDeleteAllHandler", "ROLE_OM_AUTH", "Y", 30, "Y", "권한이력 전체 삭제"),
             entry("CAT-025", "OM", "OM.Cache.inquiry", "OM-CCH-0001", "INQUIRY",
                     "OmCacheInquiryHandler", "ROLE_OM_CACHE", "N", 5, "Y", "Cache 조회"),
             entry("CAT-026", "OM", "OM.Cache.delete", "OM-CCH-0002", "DELETE",

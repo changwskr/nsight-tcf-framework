@@ -336,6 +336,10 @@ public class OmOperationDao {
         return mapper.insertAuthHistory(row);
     }
 
+    public int deleteAllAuthHistories() {
+        return mapper.deleteAllAuthHistories();
+    }
+
     public Map<String, Object> selectErrorCodeByCode(String errorCode) {
         return mapper.selectErrorCodeByCode(errorCode);
     }

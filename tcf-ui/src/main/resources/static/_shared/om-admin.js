@@ -95,6 +95,7 @@ window.OmAdmin = (function () {
     functionAuthDelete: { serviceId: 'OM.FunctionAuth.delete', transactionCode: 'OM-FAU-0005' },
     dataAuth: { serviceId: 'OM.DataAuth.inquiry', transactionCode: 'OM-DAU-0001' },
     authHistory: { serviceId: 'OM.AuthHistory.inquiry', transactionCode: 'OM-AHT-0001' },
+    authHistoryDeleteAll: { serviceId: 'OM.AuthHistory.deleteAll', transactionCode: 'OM-AHT-0002' },
     cache: { serviceId: 'OM.Cache.inquiry', transactionCode: 'OM-CCH-0001' },
     cacheDelete: { serviceId: 'OM.Cache.delete', transactionCode: 'OM-CCH-0002' },
     session: { serviceId: 'OM.Session.inquiry', transactionCode: 'OM-SES-0001' },
@@ -162,6 +163,7 @@ window.OmAdmin = (function () {
     'OM.FunctionAuth.delete': '기능권한 삭제',
     'OM.DataAuth.inquiry': '데이터권한 조회',
     'OM.AuthHistory.inquiry': '권한이력 조회',
+    'OM.AuthHistory.deleteAll': '권한이력 전체 삭제',
     'OM.Cache.inquiry': 'Cache 조회',
     'OM.Cache.delete': 'Cache 삭제',
     'OM.Session.inquiry': '세션 목록 조회',
@@ -718,7 +720,7 @@ window.OmAdmin = (function () {
       return 'om-admin.js가 오래된 버전일 수 있습니다. Ctrl+F5로 강력 새로고침하세요.';
     }
     if (msg.includes('등록되지 않은 serviceId') || msg.includes('OM.Dashboard.reset')
-        || msg.includes('OM.AuditLog.deleteAll')) {
+        || msg.includes('OM.AuditLog.deleteAll') || msg.includes('OM.AuthHistory.deleteAll')) {
       return 'gradle :tcf-om:bootRun 으로 tcf-om을 재기동하세요. (신규 Handler 등록 필요)';
     }
     const hint = targetUrl && targetUrl !== '-' ? ` (${targetUrl})` : '';

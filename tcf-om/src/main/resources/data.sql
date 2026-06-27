@@ -88,6 +88,7 @@ INSERT INTO OM_SERVICE_CATALOG (CATALOG_ID, BUSINESS_CODE, SERVICE_ID, TRANSACTI
 ('CAT-096', 'OM', 'OM.FunctionAuth.delete', 'OM-FAU-0005', 'DELETE', 'OmFunctionAuthDeleteHandler', 'ROLE_OM_AUTH', 'Y', 5, 'Y', '기능권한 삭제'),
 ('CAT-023', 'OM', 'OM.DataAuth.inquiry', 'OM-DAU-0001', 'INQUIRY', 'OmDataAuthInquiryHandler', 'ROLE_OM_AUTH', 'N', 5, 'Y', '데이터권한 조회'),
 ('CAT-024', 'OM', 'OM.AuthHistory.inquiry', 'OM-AHT-0001', 'INQUIRY', 'OmAuthHistoryInquiryHandler', 'ROLE_OM_AUTH', 'Y', 10, 'Y', '권한이력 조회'),
+('CAT-100', 'OM', 'OM.AuthHistory.deleteAll', 'OM-AHT-0002', 'DELETE', 'OmAuthHistoryDeleteAllHandler', 'ROLE_OM_AUTH', 'Y', 30, 'Y', '권한이력 전체 삭제'),
 ('CAT-025', 'OM', 'OM.Cache.inquiry', 'OM-CCH-0001', 'INQUIRY', 'OmCacheInquiryHandler', 'ROLE_OM_CACHE', 'N', 5, 'Y', 'Cache 조회'),
 ('CAT-026', 'OM', 'OM.Cache.delete', 'OM-CCH-0002', 'DELETE', 'OmCacheDeleteHandler', 'ROLE_OM_CACHE', 'Y', 10, 'Y', 'Cache 삭제'),
 ('CAT-027', 'OM', 'OM.Auth.login', 'OM-AUT-0002', 'EXECUTE', 'OmAuthLoginHandler', 'ROLE_OM_AUTH', 'Y', 5, 'Y', 'OM 로그인'),

@@ -847,6 +847,10 @@
                 #{beforeValue}, #{afterValue}, #{changeReason})
     </insert>
 
+    <delete id="deleteAllAuthHistories">
+        DELETE FROM OM_AUTH_HISTORY
+    </delete>
+
     <select id="selectErrorCodeByCode" parameterType="string" resultType="map">
         SELECT ERROR_CODE AS "errorCode", ERROR_CATEGORY AS "errorCategory",
                USER_MESSAGE AS "userMessage", OPERATOR_MESSAGE AS "operatorMessage",
