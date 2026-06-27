@@ -12,8 +12,10 @@
 
 ```text
 TCF.process(request)
-  ├─ STF.preProcess()        Header 검증, GUID/TraceId, 세션·권한, 멱등성, 거래 시작 로그
-  ├─ TransactionDispatcher   serviceId → TransactionHandler
+  ├─ STF.preProcess()        Header 검증, GUID/TraceId, 세션·권한, 멱등성
+  │                          거래통제(7필드) → Timeout 정책 → TimeoutContextHolder
+  ├─ OnlineTransactionTimeoutExecutor
+  │     └─ TransactionDispatcher   serviceId → TransactionHandler
   └─ ETF.success/fail/error  표준 응답, 감사·메트릭
 ```
 
@@ -26,6 +28,8 @@ TCF.process(request)
 | `dispatch` | `TransactionDispatcher` |
 | `transaction` | `TransactionHandler` 인터페이스 |
 | `context` | `TransactionContext`, `TransactionContextHolder` |
+| `control` | `TransactionControlService` — Header 7필드 거래통제 |
+| `timeout` | `TimeoutPolicyService`, `OnlineTransactionTimeoutExecutor`, `TimeoutExceptionResolver` |
 | `validation` | `StandardHeaderValidator` |
 | `security` | `SessionValidator`, `AuthorizationValidator` |
 | `idempotency` | `IdempotencyChecker` |
@@ -51,9 +55,11 @@ public class XxxHandler implements TransactionHandler {
 ## 먼저 볼 소스
 
 1. `processor/TCF.java`
-2. `message/StandardRequest.java`
-3. `dispatch/TransactionDispatcher.java`
-4. `transaction/TransactionHandler.java`
+2. `processor/STF.java`
+3. `timeout/OnlineTransactionTimeoutExecutor.java`
+4. `control/TransactionControlService.java`
+5. `message/StandardRequest.java`
+6. `dispatch/TransactionDispatcher.java`
 
 ## 빌드
 

@@ -14,8 +14,10 @@
 
 ## 주요 기능
 
-- OM 운영 Handler **40개+** (`OM.*` serviceId)
+- OM 운영 Handler **45개+** (`OM.*` serviceId)
 - 로그인·세션·권한 (`OM.Auth.*`, `OM.Session.*`)
+- **거래통제** CRUD (`OM.TransactionControl.*`) — Header 7필드 차단 규칙
+- **Timeout 정책** CRUD (`OM.TimeoutPolicy.*`) — 서비스별 timeout 설정
 - 마스터 CRUD: 사용자, 권한그룹, 메뉴, **기능권한**, ServiceId, 공통코드, 오류코드
 - **데이터권한** 조회 (`OM.DataAuth.inquiry`) — user-auth 탭 통합
 - EhCache 공통코드 캐싱 (`tcf-cache` 연동)
@@ -36,6 +38,8 @@
 | `OM.AuthGroup.inquiry` ~ `.delete` | 권한그룹 CRUD |
 | `OM.Menu.inquiry` ~ `.delete` | 메뉴 CRUD |
 | `OM.FunctionAuth.inquiry` ~ `.delete` | 기능권한 CRUD |
+| `OM.TransactionControl.inquiry` ~ `.delete` | 거래통제 CRUD |
+| `OM.TimeoutPolicy.inquiry` ~ `.delete` | Timeout 정책 CRUD |
 | `OM.DataAuth.inquiry` | 데이터권한 조회 |
 | `OM.ServiceCatalog.inquiry` ~ `.delete` | ServiceId CRUD |
 | `OM.CommonCode.inquiry` ~ `.delete` | 공통코드 CRUD |

@@ -19,6 +19,12 @@
 | `TcfAutoConfiguration` | Spring Boot 자동 구성 |
 | `TcfPrimaryDataSourceAutoConfiguration` | 다중 DS 환경 기본 DataSource |
 | `TcfTransactionLogDataSourceConfiguration` | H2 기반 공유 거래로그 DB |
+| `TcfTransactionControlConfiguration` | 거래통제 JDBC·스키마 자동 생성 |
+| `TcfTimeoutPolicyConfiguration` | Timeout 정책 JDBC·스키마 자동 생성 |
+| `TcfTimeoutTransactionManagementConfiguration` | `@Transactional` TX timeout AOP |
+| `TcfOnlineTimeoutConfiguration` | 온라인 timeout 워커 스레드 풀 |
+| `PolicyDrivenQueryTimeoutInterceptor` | MyBatis statement timeout |
+| `TcfDataSourceLifecycleConfiguration` | HikariCP 종료·풀 재사용 |
 | `NsightWarBootstrap` | WAR(Tomcat) 배포 시 context path·프로파일 초기화 |
 
 ## API 엔드포인트

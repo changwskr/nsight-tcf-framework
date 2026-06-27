@@ -30,9 +30,39 @@ OnlineTransactionController / TcfGateway
    ↓
 TCF.process()
    ├─ STF.preProcess()           Header 검증, GUID, 세션·권한, 멱등성
-   ├─ TransactionDispatcher      serviceId → TransactionHandler
-   └─ ETF.success/fail/error     표준 응답, 감사·메트릭
+   │                              거래통제(7필드) → Timeout 정책 조회
+   ├─ OnlineTransactionTimeoutExecutor
+   │     └─ TransactionDispatcher  serviceId → TransactionHandler (워커 스레드)
+   │                                · TX timeout AOP · MyBatis query timeout
+   └─ ETF.success/fail/error     표준 응답, 감사·메트릭 (E-TCF-TIME-* 포함)
 ```
+
+## 거래통제 · Timeout 정책
+
+Header **7필드** 기반 거래통제와 서비스별 Timeout은 **별도 테이블**로 관리합니다.
+
+| 구분 | 테이블 | 역할 |
+|------|--------|------|
+| 거래통제 | `TCF_TRANSACTION_CONTROL` | 7필드 일치 + `BLOCK_YN=Y` → 차단 (미등록은 허용) |
+| Timeout | `TCF_SERVICE_TIMEOUT_POLICY` | `serviceId` + `transactionCode` + `businessCode` PK 정책 |
+
+**Timeout 적용 (2026-06)**
+
+| 정책 | 적용 지점 |
+|------|-----------|
+| `ONLINE_TIMEOUT_SEC` | `OnlineTransactionTimeoutExecutor` — TCF dispatch 구간 |
+| `TX_TIMEOUT_SEC` | `@Transactional` AOP (`PolicyDrivenTransactionAttributeSource`) |
+| `DB_QUERY_TIMEOUT_SEC` | MyBatis interceptor (`PolicyDrivenQueryTimeoutInterceptor`) |
+
+설정 (`application.yml`):
+
+```yaml
+nsight.tcf:
+  transaction-control-enabled: true      # 거래통제 (기본 on)
+  timeout-policy-enabled: true           # Timeout 정책 (기본 on)
+```
+
+상세: [40-header-7-transaction-control.md](docs/architecture/40-header-7-transaction-control.md), [41-service-timeout-policy.md](docs/architecture/41-service-timeout-policy.md)
 
 ## 의존 방향
 
@@ -136,6 +166,8 @@ Tomcat 모드에서는 업무·OM·batch·UI 모두 **8080** 게이트웨이 con
 | 운영 대시보드 | `/ui/om/admin/dashboard.html` |
 | 거래로그 | `/ui/om/admin/transaction-log.html` |
 | ServiceId | `/ui/om/admin/service-catalog.html` |
+| **거래통제** | `/ui/om/admin/transaction-control.html` |
+| **Timeout 정책** | `/ui/om/admin/timeout-policy.html` |
 | **사용자 / 권한 / 메뉴 / 기능·데이터권한** | `/ui/om/admin/user-auth.html` |
 | 공통코드 | `/ui/om/admin/common-code.html` |
 | 권한이력 | `/ui/om/admin/auth-history.html` |
@@ -198,3 +230,5 @@ tcf-cicd\local\script\seed-function-auth.bat
 | 빌드·모듈 구조 | [docs/architecture/22-build-project.md](docs/architecture/22-build-project.md) |
 | 스크립트 | [docs/architecture/38-script.md](docs/architecture/38-script.md) |
 | Header 기반 거래통제 | [docs/architecture/39-header-transaction-control.md](docs/architecture/39-header-transaction-control.md) |
+| Header 7필드 거래통제 (구현) | [docs/architecture/40-header-7-transaction-control.md](docs/architecture/40-header-7-transaction-control.md) |
+| 서비스별 Timeout 정책 | [docs/architecture/41-service-timeout-policy.md](docs/architecture/41-service-timeout-policy.md) |
