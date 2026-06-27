@@ -1,79 +1,180 @@
 # tcf-gateway — 업무 라우팅 API Gateway
 
-JWT Access Token 검증(선택) 후 `tcf-om`으로 TCF 온라인 전문을 프록시합니다.  
-**기본(`jwt.enabled: false`)**: JWT 없이 OM `JSESSIONID` 쿠키만 전달·라우팅합니다.
+TCF 온라인 전문(`POST /{업무코드}/online`)을 단일 진입점에서 수신하고, **세션(JSESSIONID) 확인** 후 downstream 업무 WAS로 프록시합니다.
 
 | 항목 | 값 |
 |------|-----|
 | Gradle 모듈 | `tcf-gateway` |
+| 메인 클래스 | `com.nh.nsight.gateway.NsightGatewayApplication` |
 | bootRun 포트 | **8101** |
 | WAR | `gw.war` → ztomcat `/gw` |
 
-## 흐름
+## 역할
+
+`tcf-uj`(또는 기타 클라이언트)가 업무별 WAS에 직접 붙지 않고 gateway를 경유하도록 합니다.
 
 ```text
-브라우저 → tcf-uj (/api/gateway/om/online, 쿠키 전달)
-        → tcf-gateway (라우팅)
-        → tcf-om (/om/online)
+브라우저
+  → tcf-uj (:8102)  POST /api/relay/{code}/online  (Cookie: JSESSIONID)
+  → tcf-gateway (:8101 또는 /gw)  POST /{code}/online
+  → downstream WAS  POST /{code}/online  (예: sv-service :8086/sv/online)
 ```
 
-## 라우팅 구조
+> **인증 방식:** JWT 검증은 gateway에서 수행하지 않습니다. `GSF` 단계에서 `JSESSIONID` 쿠키 존재 여부로 로그인 상태를 확인합니다. (`nsight.gateway.auth.login-required`, 기본 `true`)
 
-업무별 개별 RouteService는 두지 않습니다. **`BusinessRouteService` 하나**가 `GatewayBusinessModules` 카탈로그(포트·경로)를 보고 모든 업무를 라우팅합니다.
+## 처리 흐름 (TCF 패턴)
 
 ```text
-XxxProxyController  →  AbstractBusinessProxyController  →  BusinessRouteService  →  downstream
-     /om/online              (공통 proxyOnline)              forwardOnline("OM", ...)
-     /sv/online                                                forwardOnline("SV", ...)
+XxxProxyController
+  → BusinessRouteService (파사드)
+    → GRF.forwardOnline
+      → GSF.preProcess
+          - GatewayBusinessModules 카탈로그 조회
+          - GatewaySessionValidator (JSESSIONID 확인)
+          - deploymentMode 기준 downstream URL 결정
+          - GatewayRequestEnricher (JWT Principal 있을 때 header 보강)
+      → GatewayRouteDispatcher.dispatch  (RestClient POST + Cookie 전달)
+      → GEF.success / authFail / httpError / connectionError
 ```
 
-| 업무 | bootRun 대상 |
-|------|-------------|
-| OM | `8097/om/online` |
-| IC | `8082/ic/online` |
-| SV | `8086/sv/online` |
-| … | `GatewayBusinessModules` 참조 |
+업무별 개별 RouteService는 두지 않습니다. **`BusinessRouteService` 하나**와 `GatewayBusinessModules` 카탈로그가 모든 업무를 라우팅합니다.
+
+## 패키지 구조
+
+| 패키지 | 주요 클래스 | 설명 |
+|--------|-------------|------|
+| `web` | `*ProxyController`, `AbstractBusinessProxyController` | 업무별 `POST /{code}/online` 엔드포인트 |
+| `service` | `BusinessRouteService`, `RouteResult` | GRF 진입 파사드 |
+| `processor` | `GRF`, `GSF`, `GEF`, `GatewayRouteDispatcher` | 라우팅·전처리·응답 조립 |
+| `catalog` | `GatewayBusinessModules` | 업무코드·포트·경로 카탈로그 |
+| `security` | `GatewaySessionValidator`, `GatewayAuthException` | JSESSIONID 로그인 확인 |
+| `config` | `GatewayProperties`, `GatewaySecurityConfiguration` | gateway 설정·Spring Security |
+| `support` | `GatewayRequestEnricher`, `GatewayProxyTrace` | 전문 보강·STF 스타일 trace 로그 |
+
+## 등록 업무 (GatewayBusinessModules)
+
+| 업무코드 | bootRun 포트 | online 경로 | downstream |
+|----------|-------------|-------------|------------|
+| EB | 8089 | `/eb/online` | eb-service |
+| EP | 8090 | `/ep/online` | ep-service |
+| IC | 8082 | `/ic/online` | ic-service |
+| MG | 8096 | `/mg/online` | mg-service |
+| MS | 8085 | `/ms/online` | ms-service |
+| OM | 8097 | `/om/online` | tcf-om |
+| PC | 8083 | `/pc/online` | pc-service |
+| PD | 8087 | `/pd/online` | pd-service |
+| SS | 8093 | `/ss/online` | ss-service |
+| SV | 8086 | `/sv/online` | sv-service |
+| JWT | 8100 | `/online` | tcf-jwt |
+
+미등록 업무코드(CC, BC 등)는 카탈로그·`*ProxyController` 추가가 필요합니다.
 
 ## 엔드포인트
 
 | 메서드 | 경로 | 설명 |
 |--------|------|------|
-| `POST` | `/om/online` | OM 온라인 거래 프록시 (기본: 쿠키 전달만, JWT 불필요) |
-| `POST` | `/eb/online` | EB 업무 프록시 → `eb-service` (8089) |
-| `POST` | `/ep/online` | EP 업무 프록시 → `ep-service` (8090) |
-| `POST` | `/ic/online` | IC 업무 프록시 → `ic-service` (8082) |
-| `POST` | `/mg/online` | MG 업무 프록시 → `mg-service` (8096) |
-| `POST` | `/ms/online` | MS 업무 프록시 → `ms-service` (8085) |
-| `POST` | `/pc/online` | PC 업무 프록시 → `pc-service` (8083) |
-| `POST` | `/pd/online` | PD 업무 프록시 → `pd-service` (8087) |
-| `POST` | `/ss/online` | SS 업무 프록시 → `ss-service` (8093) |
-| `POST` | `/sv/online` | SV 업무 프록시 → `sv-service` (8086) |
+| `POST` | `/{code}/online` | 업무별 온라인 거래 프록시 (`code`: om, sv, jwt …) |
 | `GET` | `/actuator/health` | 헬스체크 (인증 없음) |
+| `GET` | `/actuator/info` | 애플리케이션 정보 |
 
-## 사전 조건
+### Query 파라미터 (downstream URL 결정)
 
-1. `tcf-om` 기동 (8097 또는 Tomcat `/om`)
-2. (JWT 모드 시만) `tcf-jwt` 기동 + `nsight.gateway.jwt.enabled: true`
+`tcf-uj` relay가 gateway 호출 시 함께 전달합니다.
+
+| 파라미터 | 설명 | 예 |
+|----------|------|-----|
+| `deploymentMode` | `bootrun` 또는 `tomcat` | `bootrun` |
+| `bootrunHost` | bootRun 모드 호스트 | `http://127.0.0.1` |
+| `tomcatGatewayUrl` | Tomcat 모드 gateway 베이스 URL | `http://localhost:8080` |
+
+- **bootRun:** `http://127.0.0.1:{port}/{path}` (예: OM → `8097/om/online`)
+- **Tomcat:** `{tomcatGatewayUrl}/{path}` (예: OM → `http://localhost:8080/om/online`, gateway 자신은 `/gw`)
+
+## tcf-uj 연동
+
+`tcf-uj`의 `TransactionRelayService`는 **모든** `/api/relay/{code}/online` 요청을 gateway로 위임합니다.
+
+```text
+tcf-uj GatewayRelayService
+  → bootRun: http://127.0.0.1:8101/{code}/online
+  → Tomcat:  http://localhost:8080/gw/{code}/online
+```
+
+OM Admin·온라인 테스트·JWT Admin 화면 모두 동일 relay 경로를 사용합니다.
+
+> **미경유:** `/api/updownload/*`는 gateway를 거치지 않고 tcf-om(8097)에 직접 연결합니다.
+
+## 사전 조건 (로컬 bootRun)
+
+1. 대상 업무 WAS 기동 (예: `gradle :sv-service:bootRun`)
+2. OM Admin·세션 사용 시 **tcf-om** 기동 (8097) + OM 로그인
+3. **tcf-gateway** 기동 (8101)
+4. **tcf-uj** 기동 (8102)
+
+```bash
+# 예: SV 온라인 테스트
+gradle :sv-service:bootRun    # 8086
+gradle :tcf-om:bootRun        # 8097 (세션 발급용)
+gradle :tcf-gateway:bootRun   # 8101
+gradle :tcf-uj:bootRun        # 8102
+```
 
 ## 실행
 
 ```bash
+# Gradle
 gradle :tcf-gateway:bootRun
-tcf-gateway/scripts/run-local.bat
+
+# 스크립트 (모듈 scripts/)
+tcf-gateway\scripts\build.bat
+tcf-gateway\scripts\build.bat run
+tcf-gateway\scripts\run-local.bat
+tcf-gateway\scripts\deploy.bat
 ```
 
-## Tomcat
+## Tomcat 배포
 
 ```bash
-tcf-gateway/scripts/deploy.bat
-# POST http://localhost:8080/gw/om/online
-# (JWT 모드 시) Authorization: Bearer <accessToken>
+tcf-gateway\scripts\deploy.bat
+# 또는 ztomcat/deploy-wars.bat gw
+
+# 호출 예
+POST http://localhost:8080/gw/sv/online
+Cookie: JSESSIONID=...
+Content-Type: application/json
 ```
 
 ## 설정
 
-`application-local.yml`
+`application.yml`
 
 ```yaml
-nsight.gateway.jwt.jwk-set-uri: http://127.0.0.1:8100/.well-known/jwks.json
+nsight:
+  gateway:
+    auth:
+      login-required: true   # false 시 JSESSIONID 확인 생략
 ```
+
+`application-local.yml` — bootRun 포트
+
+```yaml
+server:
+  port: 8101
+```
+
+## 직접 호출 예 (curl)
+
+```bash
+curl -X POST http://localhost:8101/sv/online \
+  -H "Content-Type: application/json" \
+  -H "Cookie: JSESSIONID=<세션값>" \
+  -d @sv-service/src/main/resources/sample-requests/sv-sample-inquiry.json
+```
+
+## 관련 모듈
+
+| 모듈 | README |
+|------|--------|
+| tcf-uj (Relay UI) | [tcf-uj/README.md](../tcf-uj/README.md) |
+| tcf-jwt (JWT 발급) | [tcf-jwt/README.md](../tcf-jwt/README.md) |
+| TCF 처리 순서 | [docs/TCF_FRAMEWORK_GUIDE.md](../docs/TCF_FRAMEWORK_GUIDE.md) |
