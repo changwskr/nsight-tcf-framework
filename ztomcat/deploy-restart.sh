@@ -17,7 +17,8 @@ Usage: deploy-restart.sh [codes...] [options]
 일부 WAR:     Tomcat 유지 -> deploy -> autoDeploy (~15s) -> health 확인
 
 Codes (생략 또는 all = 19 WAR):
-  cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om batch ui
+  ic pc ms sv pd eb ep ss mg om ui jwt batch
+  (별칭: tcf-jwt → jwt)
 
 Options:
   --skip-verify   health 검증 생략

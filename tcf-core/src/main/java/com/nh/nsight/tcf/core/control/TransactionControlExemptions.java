@@ -23,13 +23,20 @@ public final class TransactionControlExemptions {
         if (isTimeoutPolicyAdmin(id)) {
             return true;
         }
+        if (isJwtAdmin(id)) {
+            return true;
+        }
         return isHealthCheck(id);
     }
 
     public static boolean isAuthBootstrap(String serviceId) {
         return "OM.Auth.login".equals(serviceId)
                 || "OM.Auth.logout".equals(serviceId)
-                || "OM.Auth.session".equals(serviceId);
+                || "OM.Auth.session".equals(serviceId)
+                || "JWT.Auth.login".equals(serviceId)
+                || "JWT.Auth.refresh".equals(serviceId)
+                || "JWT.Auth.revoke".equals(serviceId)
+                || "JWT.Auth.logout".equals(serviceId);
     }
 
     /** OM.TransactionControl.inquiry/save/update/delete — 거래통제 관리 화면 */
@@ -51,6 +58,18 @@ public final class TransactionControlExemptions {
             return false;
         }
         return serviceId.trim().startsWith("OM.TimeoutPolicy.");
+    }
+
+    /** JWT.Token / LoginHistory / RefreshToken / SecurityPolicy — JWT 관리 화면 */
+    public static boolean isJwtAdmin(String serviceId) {
+        if (!StringUtils.hasText(serviceId)) {
+            return false;
+        }
+        String id = serviceId.trim();
+        return id.startsWith("JWT.Token.")
+                || id.startsWith("JWT.LoginHistory.")
+                || id.startsWith("JWT.RefreshToken.")
+                || id.startsWith("JWT.SecurityPolicy.");
     }
 
     /** OM.HealthCheck.inquiry, OM.Deploy.healthCheck 및 *.HealthCheck.* 패턴 */

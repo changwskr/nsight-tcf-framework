@@ -48,6 +48,8 @@ if /i "%TARGET%"=="common" (
 )
 if /i "%TARGET%"=="ui" (call :append_task :tcf-ui:bootJar & goto :eof)
 if /i "%TARGET%"=="tcf-ui" (call :append_task :tcf-ui:bootJar & goto :eof)
+if /i "%TARGET%"=="uj" (call :append_task :tcf-uj:bootJar & goto :eof)
+if /i "%TARGET%"=="tcf-uj" (call :append_task :tcf-uj:bootJar & goto :eof)
 if /i "%TARGET%"=="batch" (call :append_task :tcf-batch:bootWar & goto :eof)
 if /i "%TARGET%"=="tcf-batch" (call :append_task :tcf-batch:bootWar & goto :eof)
 if /i "%TARGET%"=="services" (
@@ -65,6 +67,9 @@ if /i "%TARGET%"=="services" (
 )
 if /i "%TARGET%"=="tcf-om" (call :append_task :tcf-om:bootWar & goto :eof)
 if /i "%TARGET%"=="om" (call :append_task :tcf-om:bootWar & goto :eof)
+if /i "%TARGET%"=="gw" (call :append_task :tcf-gateway:bootWar & goto :eof)
+if /i "%TARGET%"=="gateway" (call :append_task :tcf-gateway:bootWar & goto :eof)
+if /i "%TARGET%"=="tcf-gateway" (call :append_task :tcf-gateway:bootWar & goto :eof)
 if /i "%TARGET%"=="tcf-util" (call :append_task :tcf-util:build & goto :eof)
 if /i "%TARGET%"=="tcf-core" (call :append_task :tcf-core:build & goto :eof)
 if /i "%TARGET%"=="tcf-web" (call :append_task :tcf-web:build & goto :eof)

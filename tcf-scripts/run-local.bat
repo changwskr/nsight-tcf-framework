@@ -61,14 +61,21 @@ if /i "%TARGET%"=="all" (
 )
 if /i "%TARGET%"=="ui" set "TARGET=tcf-ui"
 if /i "%TARGET%"=="tcf-ui" set "TARGET=tcf-ui"
+if /i "%TARGET%"=="uj" set "TARGET=tcf-uj"
+if /i "%TARGET%"=="tcf-uj" set "TARGET=tcf-uj"
 if /i "%TARGET%"=="tcf-om" set "TARGET=tcf-om"
 if /i "%TARGET%"=="batch" set "TARGET=tcf-batch"
 if /i "%TARGET%"=="tcf-batch" set "TARGET=tcf-batch"
+if /i "%TARGET%"=="jwt" set "TARGET=tcf-jwt"
+if /i "%TARGET%"=="tcf-jwt" set "TARGET=tcf-jwt"
+if /i "%TARGET%"=="gw" set "TARGET=tcf-gateway"
+if /i "%TARGET%"=="gateway" set "TARGET=tcf-gateway"
+if /i "%TARGET%"=="tcf-gateway" set "TARGET=tcf-gateway"
 if /i "%TARGET%"=="ud" set "TARGET=tcf-om"
 if /i "%TARGET%"=="common-updownload" set "TARGET=tcf-om"
 if /i "%TARGET%"=="om" set "TARGET=tcf-om"
 if /i not "%TARGET:~-8%"=="-service" (
-  if /i not "%TARGET%"=="tcf-ui" if /i not "%TARGET%"=="tcf-om" if /i not "%TARGET%"=="tcf-batch" set "TARGET=%TARGET%-service"
+  if /i not "%TARGET%"=="tcf-ui" if /i not "%TARGET%"=="tcf-uj" if /i not "%TARGET%"=="tcf-om" if /i not "%TARGET%"=="tcf-batch" if /i not "%TARGET%"=="tcf-jwt" if /i not "%TARGET%"=="tcf-gateway" set "TARGET=%TARGET%-service"
 )
 
 if %TARGET_COUNT%==1 set "RUN_FOREGROUND=%TARGET%"
@@ -107,6 +114,7 @@ echo.
 echo Targets:
 echo   sv ic     service code (ex: sv -^> sv-service bootRun)
 echo   ui        tcf-ui bootRun (port 8099)
+echo   uj        tcf-uj bootRun (port 8102)
 echo   om        tcf-om bootRun (port 8097)
 echo   batch     tcf-batch bootRun (port 8098)
 echo   ud        tcf-om bootRun (파일 업·다운로드 내장)

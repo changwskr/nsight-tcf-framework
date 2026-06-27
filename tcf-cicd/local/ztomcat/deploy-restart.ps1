@@ -16,8 +16,20 @@ $ZTomcatHome = Join-Path $FwRoot 'ztomcat'
 $SyncScript = Join-Path $CicdRoot 'scripts/sync-to-framework.ps1'
 $DeployScript = Join-Path (Join-Path $CicdRoot 'local/script') 'deploy-wars.ps1'
 
+function Normalize-DeployCode {
+    param([string]$Code)
+    $c = $Code.ToLowerInvariant()
+    switch ($c) {
+        'tcf-jwt' { return 'jwt' }
+        'tcf-om' { return 'om' }
+        'tcf-ui' { return 'ui' }
+        'tcf-batch' { return 'batch' }
+        default { return $c }
+    }
+}
+
 function Get-ZtomcatContextList {
-    return @('ic', 'pc', 'ms', 'sv', 'pd', 'eb', 'ep', 'ss', 'mg', 'om', 'ui', 'batch')
+    return @('ic', 'pc', 'ms', 'sv', 'pd', 'eb', 'ep', 'ss', 'mg', 'om', 'ui', 'jwt', 'batch')
 }
 
 function Show-Help {
@@ -33,8 +45,9 @@ Usage: deploy-restart.ps1 [codes...] [options]
       Tomcat WAR는 sync·setenv 모두 dev 프로파일을 사용합니다.
       전체 재기동 시 tcf-batch(zz-batch.war)는 나머지 18개 WAR 기동 후 마지막에 배포됩니다.
 
-Codes (생략 또는 all = 19 WAR 전체):
-  cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om batch ui
+Codes (생략 또는 all = 전체):
+  ic pc ms sv pd eb ep ss mg om ui jwt batch
+  (별칭: tcf-jwt → jwt, tcf-om → om, tcf-ui → ui, tcf-batch → batch)
 
 Options:
   -SkipSync     dev config sync 생략
@@ -56,7 +69,7 @@ function Resolve-Contexts {
     param([string[]]$InputCodes)
     $all = Get-ZtomcatContextList
     if (-not $InputCodes -or $InputCodes.Count -eq 0) { return @($all) }
-    $normalized = @($InputCodes | ForEach-Object { $_.ToLowerInvariant() })
+    $normalized = @($InputCodes | ForEach-Object { Normalize-DeployCode $_ })
     if ($normalized -contains 'all') { return @($all) }
     $ordered = @()
     foreach ($code in $all) {

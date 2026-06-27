@@ -36,6 +36,9 @@ $AllModules = @(
     @{ Module = 'mg-service';  Src = 'mg.war';       Dest = 'mg.war';       Ctx = 'mg' }
     @{ Module = 'tcf-om';      Src = 'tcf-om.war';   Dest = 'om.war';       Ctx = 'om' }
     @{ Module = 'tcf-ui';      Src = 'tcf-ui.war';   Dest = 'ui.war';       Ctx = 'ui' }
+    @{ Module = 'tcf-uj';      Src = 'tcf-uj.war';   Dest = 'uj.war';       Ctx = 'uj' }
+    @{ Module = 'tcf-jwt';     Src = 'jwt.war';      Dest = 'jwt.war';      Ctx = 'jwt' }
+    @{ Module = 'tcf-gateway'; Src = 'gw.war';       Dest = 'gw.war';       Ctx = 'gw' }
     @{ Module = 'tcf-batch';   Src = 'tcf-batch.war'; Dest = 'zz-batch.war'; Ctx = 'batch' }
 )
 
@@ -78,10 +81,11 @@ function Show-Help {
 
 Usage: deploy-wars.ps1 [codes...] [options]
 
-tcf-cicd 설정 sync -> WAR 빌드 -> ztomcat webapps 배포 (최대 12 context, workspace에 있는 모듈만).
+tcf-cicd 설정 sync -> WAR 빌드 -> ztomcat webapps 배포 (최대 13 context, workspace에 있는 모듈만).
 
 Codes (생략 또는 all = 전체):
-  ic pc ms sv pd eb ep ss mg om batch ui
+  ic pc ms sv pd eb ep ss mg om ui uj jwt gw batch
+  (별칭: tcf-jwt → jwt, tcf-gateway → gw, tcf-om → om, tcf-ui → ui, tcf-uj → uj, tcf-batch → batch)
 
 Options:
   -SyncProfile dev|local   framework sync 프로파일 (기본 dev — Tomcat setenv)
@@ -170,12 +174,27 @@ function Resolve-Gradle {
     throw 'gradle not found. Set GRADLE_HOME (quote paths with parentheses) or add gradle to PATH.'
 }
 
+function Normalize-CicdDeployCode {
+    param([string]$Code)
+    $c = $Code.ToLowerInvariant()
+    switch ($c) {
+        'tcf-jwt' { return 'jwt' }
+        'tcf-gateway' { return 'gw' }
+        'gateway' { return 'gw' }
+        'tcf-om' { return 'om' }
+        'tcf-ui' { return 'ui' }
+        'tcf-uj' { return 'uj' }
+        'tcf-batch' { return 'batch' }
+        default { return $c }
+    }
+}
+
 function Resolve-Modules {
     param([string[]]$InputCodes)
     if (-not $InputCodes -or $InputCodes.Count -eq 0) {
         return @(Filter-DeployableModules -Modules $AllModules)
     }
-    $normalized = @($InputCodes | ForEach-Object { $_.ToLowerInvariant() } | Where-Object {
+    $normalized = @($InputCodes | ForEach-Object { Normalize-CicdDeployCode $_ } | Where-Object {
         $_ -and -not $_.StartsWith('-')
     })
     if ($normalized -contains 'all') {

@@ -7,6 +7,7 @@ public class TcfUiProperties {
     private DeploymentMode deploymentMode = DeploymentMode.bootrun;
     private String tomcatGatewayUrl = "http://localhost:8080";
     private String bootrunHost = "http://127.0.0.1";
+    private boolean omGatewayEnabled = true;
 
     public DeploymentMode getDeploymentMode() {
         return deploymentMode;
@@ -30,6 +31,14 @@ public class TcfUiProperties {
 
     public void setBootrunHost(String bootrunHost) {
         this.bootrunHost = bootrunHost;
+    }
+
+    public boolean isOmGatewayEnabled() {
+        return omGatewayEnabled;
+    }
+
+    public void setOmGatewayEnabled(boolean omGatewayEnabled) {
+        this.omGatewayEnabled = omGatewayEnabled;
     }
 
     public enum DeploymentMode {

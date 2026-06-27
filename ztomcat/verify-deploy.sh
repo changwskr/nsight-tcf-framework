@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -uo pipefail
 
-contexts=(cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om batch ui)
+contexts=(ic pc ms sv pd eb ep ss mg om ui jwt batch)
 base="http://localhost:8080"
 
 echo "[ztomcat] Health check (GET /{context}/actuator/health)"

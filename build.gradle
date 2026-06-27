@@ -154,6 +154,6 @@ tasks.register('buildBusinessWars') {
 // ztomcat 전체 WAR (업무 + batch + ui): gradle buildZtomcatWars
 tasks.register('buildZtomcatWars') {
     group = 'build'
-    description = 'Build all WAR files for ztomcat (12 modules: business + tcf-batch + tcf-ui).'
-    dependsOn 'buildBusinessWars', ':tcf-batch:bootWar', ':tcf-ui:bootWar'
+    description = 'Build all WAR files for ztomcat (business + tcf-batch + tcf-ui + tcf-jwt).'
+    dependsOn 'buildBusinessWars', ':tcf-batch:bootWar', ':tcf-ui:bootWar', ':tcf-uj:bootWar', ':tcf-jwt:bootWar', ':tcf-gateway:bootWar'
 }

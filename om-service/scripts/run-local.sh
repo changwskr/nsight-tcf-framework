@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_HOME="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-MODULE="om-service"
+MODULE="tcf-om"
 
 resolve_gradle() {
   local home="${GRADLE_HOME_OVERRIDE:-${GRADLE_HOME:-}}"
@@ -21,7 +21,8 @@ resolve_gradle() {
 
 resolve_gradle
 
-echo "[om-run] gradle :${MODULE}:bootRun (port 8097)"
+echo "[om-run] om-service is legacy — running :${MODULE}:bootRun (port 8097)"
+echo "[om-run] Prefer: tcf-om/scripts/run-local.sh"
 (
   cd "${PROJECT_HOME}"
   "${GRADLE}" ":${MODULE}:bootRun"

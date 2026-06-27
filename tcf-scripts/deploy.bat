@@ -190,7 +190,7 @@ echo.
 echo Target webapps: !WEBAPPS!
 echo   ^(override: set TOMCAT_WEBAPPS=...^)
 echo.
-echo Codes: cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om batch ui
+echo Codes: ic pc ms sv pd eb ep ss mg om ui uj jwt gw batch
 echo Full 19 WAR: ztomcat\deploy-wars.bat all
 exit /b 0
 
@@ -210,10 +210,17 @@ if /i "!CODE!"=="tcf-om" call :add_entry tcf-om tcf-om.war om.war om & exit /b 0
 if /i "!CODE!"=="ud" call :add_entry tcf-om tcf-om.war om.war om & exit /b 0
 if /i "!CODE!"=="ui" call :add_entry tcf-ui tcf-ui.war ui.war ui & exit /b 0
 if /i "!CODE!"=="tcf-ui" call :add_entry tcf-ui tcf-ui.war ui.war ui & exit /b 0
+if /i "!CODE!"=="uj" call :add_entry tcf-uj tcf-uj.war uj.war uj & exit /b 0
+if /i "!CODE!"=="tcf-uj" call :add_entry tcf-uj tcf-uj.war uj.war uj & exit /b 0
+if /i "!CODE!"=="jwt" call :add_entry tcf-jwt jwt.war jwt.war jwt & exit /b 0
+if /i "!CODE!"=="tcf-jwt" call :add_entry tcf-jwt jwt.war jwt.war jwt & exit /b 0
+if /i "!CODE!"=="gw" call :add_entry tcf-gateway gw.war gw.war gw & exit /b 0
+if /i "!CODE!"=="gateway" call :add_entry tcf-gateway gw.war gw.war gw & exit /b 0
+if /i "!CODE!"=="tcf-gateway" call :add_entry tcf-gateway gw.war gw.war gw & exit /b 0
 if /i "!CODE!"=="batch" call :add_batch & exit /b 0
 if /i "!CODE!"=="tcf-batch" call :add_batch & exit /b 0
 echo [deploy] Unknown code: !CODE!
-echo [deploy] Codes: ic pc ms sv pd eb ep ss mg om batch ui
+echo [deploy] Codes: ic pc ms sv pd eb ep ss mg om ui jwt batch
 exit /b 1
 
 :add_entry

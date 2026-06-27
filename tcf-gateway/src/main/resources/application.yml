@@ -1,0 +1,28 @@
+server:
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  profiles:
+    default: local
+  application:
+    name: nsight-gateway
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+nsight:
+  gateway:
+    auth:
+      login-required: true

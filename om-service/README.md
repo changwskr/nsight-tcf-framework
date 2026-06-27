@@ -19,9 +19,14 @@
 
 ## 실행
 
+`om-service`는 Gradle에 포함되지 않습니다. **`tcf-om`** 을 사용하세요.
+
 ```bash
-gradle :om-service:bootRun
+gradle :tcf-om:bootRun
+tcf-om/scripts/run-local.bat
 ```
+
+`om-service/scripts/run-local.bat` 은 호환용으로 `:tcf-om:bootRun` 을 실행합니다.
 
 ## API
 

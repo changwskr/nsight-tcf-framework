@@ -18,24 +18,32 @@ ALL_MODULES=(
   mg-service:mg.war:mg.war:mg
   tcf-om:tcf-om.war:om.war:om
   tcf-ui:tcf-ui.war:ui.war:ui
+  tcf-jwt:jwt.war:jwt.war:jwt
   tcf-batch:tcf-batch.war:zz-batch.war:batch
 )
 
 usage() {
   cat <<'EOF'
 Usage:
-  deploy-wars.sh              Build and deploy all 12 WARs
+  deploy-wars.sh              Build and deploy all 13 WARs
   deploy-wars.sh all          Same as above
   deploy-wars.sh sv           Build and deploy one code (e.g. sv.war -> /sv)
   deploy-wars.sh sv ic om     Build and deploy multiple codes
 
-Codes: ic pc ms sv pd eb ep ss mg om batch ui
+Codes: ic pc ms sv pd eb ep ss mg om ui jwt batch
+  (별칭: tcf-jwt, tcf-om, tcf-ui, tcf-batch)
 EOF
 }
 
 resolve_entry() {
   local code
   code="$(echo "$1" | tr '[:upper:]' '[:lower:]')"
+  case "${code}" in
+    tcf-jwt) code="jwt" ;;
+    tcf-om) code="om" ;;
+    tcf-ui) code="ui" ;;
+    tcf-batch) code="batch" ;;
+  esac
   local entry module _src _dest ctx
   for entry in "${ALL_MODULES[@]}"; do
     IFS=':' read -r module _src _dest ctx <<< "${entry}"
@@ -45,7 +53,7 @@ resolve_entry() {
     fi
   done
   echo "[ztomcat] Unknown code: ${1}" >&2
-  echo "[ztomcat] Codes: ic pc ms sv pd eb ep ss mg om batch ui" >&2
+  echo "[ztomcat] Codes: ic pc ms sv pd eb ep ss mg om ui jwt batch" >&2
   return 1
 }
 

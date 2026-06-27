@@ -28,6 +28,7 @@ $script:CicdAllModules = @(
     @{ Module = 'mg-service';  Src = 'mg.war';        Dest = 'mg.war';        Ctx = 'mg' }
     @{ Module = 'tcf-om';      Src = 'tcf-om.war';    Dest = 'om.war';        Ctx = 'om' }
     @{ Module = 'tcf-ui';      Src = 'tcf-ui.war';    Dest = 'ui.war';        Ctx = 'ui' }
+    @{ Module = 'tcf-jwt';     Src = 'jwt.war';       Dest = 'jwt.war';       Ctx = 'jwt' }
     @{ Module = 'tcf-batch';   Src = 'tcf-batch.war'; Dest = 'zz-batch.war';   Ctx = 'batch' }
 )
 
@@ -70,7 +71,16 @@ function Resolve-CicdModules {
     if (-not $InputCodes -or $InputCodes.Count -eq 0) {
         return @(Get-CicdDeployableModules -Modules $script:CicdAllModules)
     }
-    $normalized = @($InputCodes | ForEach-Object { $_.ToLowerInvariant() })
+    $normalized = @($InputCodes | ForEach-Object {
+        $c = $_.ToLowerInvariant()
+        switch ($c) {
+            'tcf-jwt' { 'jwt' }
+            'tcf-om' { 'om' }
+            'tcf-ui' { 'ui' }
+            'tcf-batch' { 'batch' }
+            default { $c }
+        }
+    })
     if ($normalized -contains 'all') {
         return @(Get-CicdDeployableModules -Modules $script:CicdAllModules)
     }

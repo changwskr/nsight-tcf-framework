@@ -5,7 +5,7 @@ set "PROJECT_HOME=%~dp0..\.."
 for %%I in ("!PROJECT_HOME!") do set "PROJECT_HOME=%%~fI"
 set "GRADLE_HOME=C:\Programming(23-08-15)\gradle-8.10.1"
 set "GRADLE=!GRADLE_HOME!\bin\gradle.bat"
-set "MODULE=om-service"
+set "MODULE=tcf-om"
 
 if defined GRADLE_HOME_OVERRIDE set "GRADLE_HOME=!GRADLE_HOME_OVERRIDE!"
 if defined GRADLE_HOME set "GRADLE=!GRADLE_HOME!\bin\gradle.bat"
@@ -24,7 +24,9 @@ if not exist "!GRADLE!" (
 )
 
 cd /d "!PROJECT_HOME!"
-echo [om-run] gradle :!MODULE!:bootRun ^(port 8097^)
+chcp 65001 >nul
+set "JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8"
+echo [om-run] om-service is legacy - running :tcf-om:bootRun ^(port 8097^)
+echo [om-run] Prefer: tcf-om\scripts\run-local.bat
 call "!GRADLE!" :!MODULE!:bootRun
 exit /b %errorlevel%
-

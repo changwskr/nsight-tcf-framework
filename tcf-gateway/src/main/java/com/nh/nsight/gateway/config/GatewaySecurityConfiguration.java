@@ -1,0 +1,29 @@
+package com.nh.nsight.gateway.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+public class GatewaySecurityConfiguration {
+
+    private static final String[] PROXY_PATHS = {
+            "/om/**", "/eb/**", "/ep/**", "/ic/**", "/mg/**",
+            "/ms/**", "/pc/**", "/pd/**", "/ss/**", "/sv/**", "/jwt/**"
+    };
+
+    /** 세션 쿠키 라우팅 — gateway processor(GSF)에서 로그인 여부 확인 */
+    @Bean
+    public SecurityFilterChain gatewaySecurityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                        .requestMatchers(PROXY_PATHS).permitAll()
+                        .anyRequest().permitAll());
+        return http.build();
+    }
+}

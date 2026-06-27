@@ -12,8 +12,20 @@ $ZTomcatHome = Split-Path -Parent $MyInvocation.MyCommand.Path
 $FwRoot = (Resolve-Path (Join-Path $ZTomcatHome '..')).Path
 $CicdDeployScript = Join-Path $FwRoot 'tcf-cicd\local\script\deploy-wars.ps1'
 
+function Normalize-DeployCode {
+    param([string]$Code)
+    $c = $Code.ToLowerInvariant()
+    switch ($c) {
+        'tcf-jwt' { return 'jwt' }
+        'tcf-om' { return 'om' }
+        'tcf-ui' { return 'ui' }
+        'tcf-batch' { return 'batch' }
+        default { return $c }
+    }
+}
+
 function Get-ZtomcatContextList {
-    return @('ic', 'pc', 'ms', 'sv', 'pd', 'eb', 'ep', 'ss', 'mg', 'om', 'ui', 'batch')
+    return @('ic', 'pc', 'ms', 'sv', 'pd', 'eb', 'ep', 'ss', 'mg', 'om', 'ui', 'jwt', 'batch')
 }
 
 function Show-Help {
@@ -24,8 +36,9 @@ Usage: deploy-restart.ps1 [codes...] [options]
 전체(19 WAR): stop -> clean -> deploy(18) -> start -> deploy(batch) -> health 확인
 일부 WAR:     Tomcat 유지 -> deploy -> autoDeploy (~15s) -> health 확인
 
-Codes (생략 또는 all = 19 WAR 전체):
-  cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om batch ui
+Codes (생략 또는 all = 전체):
+  ic pc ms sv pd eb ep ss mg om ui jwt batch
+  (별칭: tcf-jwt → jwt, tcf-om → om, tcf-ui → ui, tcf-batch → batch)
 
 Options:
   -SkipVerify   health 폴링/검증 생략
@@ -48,7 +61,7 @@ function Resolve-Contexts {
     param([string[]]$InputCodes)
     $all = Get-ZtomcatContextList
     if (-not $InputCodes -or $InputCodes.Count -eq 0) { return @($all) }
-    $normalized = @($InputCodes | ForEach-Object { $_.ToLowerInvariant() })
+    $normalized = @($InputCodes | ForEach-Object { Normalize-DeployCode $_ })
     if ($normalized -contains 'all') { return @($all) }
     $ordered = @()
     foreach ($code in $all) {

@@ -7,6 +7,7 @@ import com.nh.nsight.tcf.ui.model.BusinessTransactionInfo;
 import com.nh.nsight.tcf.ui.model.RelayResult;
 import com.nh.nsight.tcf.ui.service.BusinessModuleCatalog;
 import com.nh.nsight.tcf.ui.service.BusinessTransactionCatalog;
+import com.nh.nsight.tcf.ui.service.GatewayRelayService;
 import com.nh.nsight.tcf.ui.service.TransactionRelayService;
 import com.nh.nsight.tcf.ui.service.TransactionRelayService.RelayOptions;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,13 +30,16 @@ public class TcfApiController {
     private final BusinessModuleCatalog catalog;
     private final BusinessTransactionCatalog transactionCatalog;
     private final TransactionRelayService relayService;
+    private final GatewayRelayService gatewayRelayService;
     private final TcfUiProperties properties;
 
     public TcfApiController(BusinessModuleCatalog catalog, BusinessTransactionCatalog transactionCatalog,
-                             TransactionRelayService relayService, TcfUiProperties properties) {
+                             TransactionRelayService relayService, GatewayRelayService gatewayRelayService,
+                             TcfUiProperties properties) {
         this.catalog = catalog;
         this.transactionCatalog = transactionCatalog;
         this.relayService = relayService;
+        this.gatewayRelayService = gatewayRelayService;
         this.properties = properties;
     }
 
@@ -96,7 +101,38 @@ public class TcfApiController {
         config.put("deploymentMode", properties.getDeploymentMode().name());
         config.put("tomcatGatewayUrl", properties.getTomcatGatewayUrl());
         config.put("bootrunHost", properties.getBootrunHost());
+        config.put("omGatewayEnabled", properties.isOmGatewayEnabled());
+        config.put("gatewayOmUrl", gatewayRelayService.resolveGatewayOmUrl(
+                new RelayOptions(properties.getDeploymentMode().name(), properties.getBootrunHost(),
+                        properties.getTomcatGatewayUrl())));
         return config;
+    }
+
+    @GetMapping("/gateway/om/target-url")
+    public Map<String, String> gatewayOmTargetUrl(
+            @RequestParam(value = "deploymentMode", required = false) String deploymentMode,
+            @RequestParam(value = "bootrunHost", required = false) String bootrunHost,
+            @RequestParam(value = "tomcatGatewayUrl", required = false) String tomcatGatewayUrl) {
+        RelayOptions options = new RelayOptions(deploymentMode, bootrunHost, tomcatGatewayUrl);
+        return Map.of("targetUrl", gatewayRelayService.resolveGatewayOmUrl(options));
+    }
+
+    @PostMapping("/gateway/om/online")
+    public RelayResult gatewayOmRelay(
+            @RequestBody String requestBody,
+            @RequestParam(value = "deploymentMode", required = false) String deploymentMode,
+            @RequestParam(value = "bootrunHost", required = false) String bootrunHost,
+            @RequestParam(value = "tomcatGatewayUrl", required = false) String tomcatGatewayUrl,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        RelayOptions options = new RelayOptions(deploymentMode, bootrunHost, tomcatGatewayUrl);
+        RelayResult result = gatewayRelayService.relayOm(
+                requestBody,
+                request.getHeader(HttpHeaders.AUTHORIZATION),
+                options,
+                request.getHeader("Cookie"));
+        applySetCookies(response, result);
+        return result;
     }
 
     @GetMapping("/business-modules/{code}/target-url")

@@ -5,6 +5,7 @@
 window.OmAdmin = (function () {
   const BUSINESS_CODE = 'OM';
   const SESSION_KEY = 'nsight.om.session';
+  const JWT_SESSION_KEY = 'nsight.jwt.session';
   const NAV_PRIMARY = [
     { id: 'dashboard', label: '운영 대시보드', href: '/om/admin/dashboard.html' },
     { id: 'transaction-log', label: '거래로그 조회', href: '/om/admin/transaction-log.html' },
@@ -196,8 +197,29 @@ window.OmAdmin = (function () {
     }
   });
 
-  let config = { deploymentMode: 'bootrun', bootrunHost: 'http://127.0.0.1', tomcatGatewayUrl: 'http://localhost:8080' };
+  let config = { deploymentMode: 'bootrun', bootrunHost: 'http://127.0.0.1', tomcatGatewayUrl: 'http://localhost:8080', omGatewayEnabled: true };
   let targetUrl = '-';
+
+  function getJwtSession() {
+    try {
+      const raw = sessionStorage.getItem(JWT_SESSION_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function isAuthTransaction(tx) {
+    return tx && tx.serviceId && String(tx.serviceId).startsWith('OM.Auth.');
+  }
+
+  function shouldUseOmGateway(tx) {
+    if (!config.omGatewayEnabled || isAuthTransaction(tx)) {
+      return false;
+    }
+    const jwt = getJwtSession();
+    return !!(jwt && jwt.accessToken);
+  }
 
   function todayIsoDate() {
     const now = new Date();
@@ -358,8 +380,20 @@ window.OmAdmin = (function () {
     if (location.pathname.endsWith('login.html')) {
       return null;
     }
+    await loadConfig();
+    const jwt = getJwtSession();
+    if (config.omGatewayEnabled && jwt && jwt.accessToken) {
+      setSession({
+        userId: jwt.userId,
+        userName: jwt.userName,
+        branchId: jwt.branchId,
+        authGroupId: jwt.authGroupId,
+        authGroupName: jwt.authGroupName,
+        authType: 'jwt'
+      });
+      return getSession();
+    }
     try {
-      await loadConfig();
       const { body } = await call('authSession', {}, 'INQUIRY');
       if (body.loggedIn) {
         return syncSessionFromBody(body);
@@ -464,8 +498,14 @@ window.OmAdmin = (function () {
       config.deploymentMode = data.deploymentMode || config.deploymentMode;
       config.bootrunHost = data.bootrunHost || config.bootrunHost;
       config.tomcatGatewayUrl = data.tomcatGatewayUrl || config.tomcatGatewayUrl;
+      config.omGatewayEnabled = data.omGatewayEnabled !== false;
+      config.gatewayOmUrl = data.gatewayOmUrl || config.gatewayOmUrl;
     }
-    const urlRes = await fetch(uiPath(`/api/business-modules/${BUSINESS_CODE}/target-url?${buildRelayQuery()}`));
+    const jwt = getJwtSession();
+    const targetPath = (config.omGatewayEnabled && jwt && jwt.accessToken)
+      ? `/api/gateway/om/target-url?${buildRelayQuery()}`
+      : `/api/business-modules/${BUSINESS_CODE}/target-url?${buildRelayQuery()}`;
+    const urlRes = await fetch(uiPath(targetPath));
     if (urlRes.ok) {
       const data = await urlRes.json();
       targetUrl = data.targetUrl || targetUrl;
@@ -542,6 +582,9 @@ window.OmAdmin = (function () {
     if (!tx || !tx.serviceId) {
       throw new Error(`거래 정의를 찾을 수 없습니다: ${txKey}. 브라우저 강력 새로고침(Ctrl+F5) 후 다시 시도하세요.`);
     }
+    if (shouldUseOmGateway(tx)) {
+      return callViaGateway(tx, body, processingType);
+    }
     const request = { header: buildHeader(tx, processingType), body: body || {} };
     const res = await relayFetch(`/api/relay/${BUSINESS_CODE}/online?${buildRelayQuery()}`, {
       method: 'POST',
@@ -562,6 +605,48 @@ window.OmAdmin = (function () {
         msg = isTomcatUiDeployment()
           ? 'tcf-om(/om)에 연결할 수 없습니다. Tomcat 기동 상태를 확인하세요.'
           : 'tcf-om(8097)에 연결할 수 없습니다. tcf-om을 먼저 실행하세요.';
+      }
+      await notifyTransactionError(payload, relay, msg || `HTTP ${relay.httpStatus}`);
+      throw new Error(msg || `HTTP ${relay.httpStatus}`);
+    }
+    if (payload.result && payload.result.resultCode && payload.result.resultCode !== 'S0000') {
+      const detail = payload.result.errorDetail ? ` (${payload.result.errorDetail})` : '';
+      const msg = (payload.result.errorMessage || payload.result.resultMessage || '거래 오류') + detail;
+      await notifyTransactionError(payload, relay, msg);
+      throw new Error(msg);
+    }
+    return { payload, relay, body: payload.body || {} };
+  }
+
+  async function callViaGateway(tx, body, processingType) {
+    const jwt = getJwtSession();
+    const request = { header: buildHeader(tx, processingType), body: body || {} };
+    const tokenType = jwt.tokenType || 'Bearer';
+    const res = await relayFetch(`/api/gateway/om/online?${buildRelayQuery()}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${tokenType} ${jwt.accessToken}`
+      },
+      credentials: 'include',
+      body: JSON.stringify(request)
+    });
+    const relay = await parseRelayResponse(res);
+    let payload;
+    try {
+      payload = JSON.parse(relay.responseBody);
+    } catch (e) {
+      throw new Error('응답 JSON 파싱 실패');
+    }
+    if (relay.httpStatus >= 400) {
+      let msg = payload.result?.errorMessage || payload.result?.message || payload.error;
+      if (!msg && relay.httpStatus === 401) {
+        msg = 'JWT 인증에 실패했습니다. JWT 포털에서 다시 로그인하세요.';
+      }
+      if (!msg && relay.httpStatus === 502) {
+        msg = isTomcatUiDeployment()
+          ? 'tcf-gateway(/gw) 또는 tcf-om(/om)에 연결할 수 없습니다.'
+          : 'tcf-gateway(8101) 또는 tcf-om(8097)에 연결할 수 없습니다.';
       }
       await notifyTransactionError(payload, relay, msg || `HTTP ${relay.httpStatus}`);
       throw new Error(msg || `HTTP ${relay.httpStatus}`);
@@ -739,7 +824,11 @@ window.OmAdmin = (function () {
 
   async function pingBackend() {
     try {
-      const res = await fetch(uiPath(`/api/business-modules/${BUSINESS_CODE}/target-url?${buildRelayQuery()}`));
+      const jwt = getJwtSession();
+      const targetPath = (config.omGatewayEnabled && jwt && jwt.accessToken)
+        ? `/api/gateway/om/target-url?${buildRelayQuery()}`
+        : `/api/business-modules/${BUSINESS_CODE}/target-url?${buildRelayQuery()}`;
+      const res = await fetch(uiPath(targetPath));
       if (!res.ok) return false;
       const data = await res.json();
       targetUrl = data.targetUrl || targetUrl;
