@@ -36,7 +36,9 @@ public class OnlineTransactionTimeoutExecutor {
                 ? policy.getOnlineTimeoutSec()
                 : TcfServiceTimeoutConstants.DEFAULT_ONLINE_TIMEOUT_SEC;
 
-        Future<Object> future = executorService.submit(() -> TimeoutThreadContext.callWithPropagatedContext(action));
+        TimeoutThreadContext.Snapshot contextSnapshot = TimeoutThreadContext.capture();
+        Future<Object> future = executorService.submit(
+                () -> TimeoutThreadContext.runWithSnapshot(contextSnapshot, action));
         try {
             return future.get(timeoutSec, TimeUnit.SECONDS);
         } catch (TimeoutException e) {
