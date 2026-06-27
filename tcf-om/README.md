@@ -90,6 +90,8 @@ curl -X POST http://localhost:8080/om/online \
 | bootRun | http://localhost:8099/om/admin/login.html |
 | ztomcat | http://localhost:8080/ui/om/admin/login.html |
 
+관련 설계안: [docs/설계자료/README.md](../docs/설계자료/README.md)
+
 ## 패키지 구조
 
 ```text

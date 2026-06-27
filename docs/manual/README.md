@@ -17,4 +17,5 @@
 | [lib-module.md](lib-module.md) | **라이브러리 모듈 참조** — 24 모듈 물리 경로, Gradle 캐시→WAR→Tomcat |
 
 아키텍처·모듈 구조 상세: [22-build-project.md](../architecture/22-build-project.md)  
+공식 설계안(Word): [설계자료/README.md](../설계자료/README.md)  
 스크립트 래퍼(`tcf-scripts`, `ztomcat`): [38-script.md](../architecture/38-script.md)

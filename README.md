@@ -1,117 +1,136 @@
 # NSIGHT TCF Framework
 
-NSIGHT HTTP/JSON 표준 전문 처리 구조를 **TCF(Transaction Control Framework)** 중심으로 구성한 멀티 모듈 Gradle 프로젝트입니다.
+NSIGHT HTTP/JSON **표준 전문**을 **TCF(Transaction Control Framework)** 로 처리하는 멀티 모듈 Gradle 프로젝트입니다.
+
+> 공식 설계안: [docs/설계자료/README.md](docs/설계자료/README.md)  
+> 구현 아키텍처: [docs/architecture/architecture.md](docs/architecture/architecture.md)
+
+## 핵심 설계 원칙
+
+1. **Handler 중심** — 업무 개발자는 `TransactionHandler` + `serviceId` 등록에 집중
+2. **공통 파이프라인** — Header 검증·세션·권한·거래통제·Timeout·로깅·응답 조립은 STF/TCF/ETF가 담당
+3. **업무 독립 WAR** — 9개 업무 + OM은 동일 패턴의 Spring Boot WAR
+4. **이중 배포** — 개발 `bootRun`(포트 분리) · 통합 `ztomcat`(8080 게이트웨이)
 
 ## 모듈 구조
 
 ```text
 nsight-tcf-framework
 ├─ tcf-util              공통 유틸 (Spring 없음)
-├─ tcf-core              TCF 엔진 (STF/TCF/ETF, Dispatcher)
-├─ tcf-web               HTTP 레이어 (/online, TcfGateway, 거래로그 DB, WAR 부트스트랩)
-├─ tcf-cache             EhCache / Spring Cache 공통 모듈
-├─ tcf-om                운영관리 + 파일 업·다운로드 (OM/UD)
-├─ tcf-batch             OM 대시보드 AP/DB/세션/배포 수집 배치
-├─ tcf-ui                거래 테스트 UI · OM 관리 포털 Relay
+├─ tcf-core              TCF 엔진 (STF/TCF/ETF, Dispatcher, 거래통제·Timeout)
+├─ tcf-web               HTTP (/online, TcfGateway, AutoConfiguration, 거래로그 DB)
+├─ tcf-cache             EhCache / Spring Cache
+├─ tcf-om                운영관리 OM + 파일 업·다운로드 UD
+├─ tcf-batch             AP/DB/세션/배포 수집 · 운영 대시보드 데이터
+├─ tcf-ui                거래 테스트 UI · OM Admin Relay
 ├─ tcf-scripts           빌드·실행·배포 스크립트
-├─ tcf-cicd              local/dev/prod Spring·Tomcat 설정 (SoT)
-├─ ztomcat               로컬 Tomcat 8080 WAR 배포 (12 context)
-└─ ic-service … mg-service   9개 업무 WAR (+ tcf-om)
+├─ tcf-cicd              local/dev/prod 설정 SoT
+├─ ztomcat               로컬 Tomcat 8080 (12 context)
+└─ ic-service … mg-service   9개 업무 WAR
 ```
 
-각 모듈 상세는 해당 디렉터리의 `README.md`를 참고하세요.
+| 모듈 | 산출물 | README |
+|------|--------|--------|
+| `tcf-core` | JAR | [tcf-core/README.md](tcf-core/README.md) |
+| `tcf-web` | JAR | [tcf-web/README.md](tcf-web/README.md) |
+| `tcf-cache` | JAR | [tcf-cache/README.md](tcf-cache/README.md) |
+| `tcf-om` | WAR `/om` | [tcf-om/README.md](tcf-om/README.md) |
+| `tcf-batch` | WAR `/batch` | [tcf-batch/README.md](tcf-batch/README.md) |
+| `tcf-ui` | WAR `/ui` | [tcf-ui/README.md](tcf-ui/README.md) |
+| `tcf-scripts` | 스크립트 | [tcf-scripts/README.md](tcf-scripts/README.md) |
+| `tcf-cicd` | 설정 | [tcf-cicd/README.md](tcf-cicd/README.md) |
+| `ztomcat` | Tomcat | [ztomcat/README.md](ztomcat/README.md) |
+
+**의존 방향:** `tcf-util → tcf-core → tcf-web → tcf-cache(선택) → 업무 서비스 / tcf-om / tcf-batch`
 
 ## TCF 처리 흐름
 
 ```text
 Client / tcf-ui / REST API
-   ↓
+   ↓  POST /{businessCode}/online  (StandardRequest: header + body)
 OnlineTransactionController / TcfGateway
    ↓
 TCF.process()
-   ├─ STF.preProcess()           Header 검증, GUID, 세션·권한, 멱등성
-   │                              거래통제(7필드) → Timeout 정책 조회
+   ├─ STF.preProcess()
+   │     Header 검증 · GUID/TraceId · 세션/권한 · 멱등성
+   │     거래통제(TCF_TRANSACTION_CONTROL) · Timeout 정책 조회
+   │     거래로그 INSERT (PROCESSING)
    ├─ OnlineTransactionTimeoutExecutor
-   │     └─ TransactionDispatcher  serviceId → TransactionHandler (워커 스레드)
-   │                                · TX timeout AOP · MyBatis query timeout
-   └─ ETF.success/fail/error     표준 응답, 감사·메트릭 (E-TCF-TIME-* 포함)
+   │     └─ TransactionDispatcher → TransactionHandler (serviceId)
+   │           Facade → Service → Rule → DAO/Mapper
+   │           · TX timeout AOP · MyBatis query timeout
+   └─ ETF.success / businessFail / systemError
+         StandardResponse · 감사·메트릭 · 거래로그 UPDATE
 ```
 
-## 거래통제 · Timeout 정책
+**ServiceId 형식:** `{업무코드}.{업무명}.{처리유형}` — 예) `SV.Customer.selectSummary`, `OM.User.inquiry`
 
-Header **7필드** 기반 거래통제와 서비스별 Timeout은 **별도 테이블**로 관리합니다.
+## 프레임워크 역량
 
-| 구분 | 테이블 | 역할 |
-|------|--------|------|
-| 거래통제 | `TCF_TRANSACTION_CONTROL` | 7필드 일치 + `BLOCK_YN=Y` → 차단 (미등록은 허용) |
-| Timeout | `TCF_SERVICE_TIMEOUT_POLICY` | `serviceId` + `transactionCode` + `businessCode` PK 정책 |
+| 영역 | 테이블 / 구성 | 적용 시점 | 설계안 |
+|------|---------------|-----------|--------|
+| 거래통제 | `TCF_TRANSACTION_CONTROL` | STF — 7필드 + `BLOCK_YN=Y` 차단 | [거래통제](docs/설계자료/NSIGHT%20거래통제%20설계안.docx) |
+| Timeout | `TCF_SERVICE_TIMEOUT_POLICY` | STF 조회 → Online/TX/MyBatis 적용 | [서비스별 Timeout](docs/설계자료/서비스별%20Timeout%20설계안.docx) |
+| 거래로그 | `TCF_TRANSACTION_LOG` | STF PROCESSING → ETF SUCCESS/FAIL | [거래로그](docs/설계자료/NSIGHT%20거래로그%20관리%20설계안.docx) |
+| 세션 | `SPRING_SESSION` (JDBC) | STF SessionValidator | [세션관리](docs/설계자료/NSIGHT%20TCF%20Framework%20세션관리%20설계안.docx) |
+| Cache | EhCache (`tcf-cache`) | 공통코드·ServiceId 등 | [Cache 관리](docs/설계자료/NSIGHT%20TCF%20Framework%20Cache%20관리%20설계안.docx) |
+| 오류코드 | `OM_ERROR_CODE` | ETF — `E-{DOMAIN}-{CATEGORY}-{NNNN}` | [오류코드·메시지](docs/설계자료/NSIGHT%20오류코드·메시지%20설계안.docx) |
+| ServiceId | `OM_SERVICE_CATALOG` | Dispatcher Handler 매핑 | [서비스 ID](docs/설계자료/NSIGHT%20서비스%20ID%20관리%20설계안.docx) |
 
-**Timeout 적용 (2026-06)**
+### Timeout 적용 (구현)
 
-| 정책 | 적용 지점 |
-|------|-----------|
-| `ONLINE_TIMEOUT_SEC` | `OnlineTransactionTimeoutExecutor` — TCF dispatch 구간 |
-| `TX_TIMEOUT_SEC` | `@Transactional` AOP (`PolicyDrivenTransactionAttributeSource`) |
-| `DB_QUERY_TIMEOUT_SEC` | MyBatis interceptor (`PolicyDrivenQueryTimeoutInterceptor`) |
-
-설정 (`application.yml`):
+| 정책 컬럼 | 적용 지점 |
+|-----------|-----------|
+| `ONLINE_TIMEOUT_SEC` | `OnlineTransactionTimeoutExecutor` — dispatch 구간 |
+| `TX_TIMEOUT_SEC` | `@Transactional` AOP |
+| `DB_QUERY_TIMEOUT_SEC` | MyBatis interceptor |
 
 ```yaml
 nsight.tcf:
-  transaction-control-enabled: true      # 거래통제 (기본 on)
-  timeout-policy-enabled: true           # Timeout 정책 (기본 on)
+  transaction-control-enabled: true
+  timeout-policy-enabled: true
 ```
 
 상세: [40-header-7-transaction-control.md](docs/architecture/40-header-7-transaction-control.md), [41-service-timeout-policy.md](docs/architecture/41-service-timeout-policy.md)
-
-## 의존 방향
-
-```text
-tcf-util → tcf-core → tcf-web → tcf-cache(선택) → 업무 서비스 / tcf-om / tcf-batch
-```
 
 ## 배포 모드
 
 | 모드 | 설명 | 대표 URL |
 |------|------|----------|
-| **bootRun** | 모듈별 독립 JVM·포트 | `http://localhost:8086/sv/online`, OM UI `8099` |
-| **ztomcat** | Tomcat 8080에 WAR 12개 | `http://localhost:8080/sv/online`, OM UI `/ui` |
+| **bootRun** | 모듈별 독립 JVM | `http://localhost:8086/sv/online`, OM UI `:8099` |
+| **ztomcat** | Tomcat 8080 · WAR 12개 | `http://localhost:8080/sv/online`, OM UI `/ui` |
 
 ```text
-ztomcat (8080)                    bootRun (별도 프로세스)
-────────────────                  ─────────────────────
-/ic … /mg  업무 9                 8082–8096  *-service
-/om        tcf-om                 8097       tcf-om
-/batch     tcf-batch              8098       tcf-batch
-/ui        tcf-ui                 8099       tcf-ui
+ztomcat (8080)              bootRun (별도 프로세스)
+────────────────            ─────────────────────
+/ic … /mg  업무 9           8082–8096  *-service
+/om        tcf-om           8097       tcf-om
+/batch     tcf-batch        8098       tcf-batch
+/ui        tcf-ui           8099       tcf-ui
 ```
 
-상세: [ztomcat/README.md](ztomcat/README.md)
+WAR 패키징: 각 WAR의 `WEB-INF/lib`에 `tcf-*` JAR 포함 (Tomcat `lib/` 공유 배치 아님).  
+상세: [배포관리 설계안](docs/설계자료/NSIGHT%20TCF%20Framework%20배포관리%20설계안.docx), [ztomcat/README.md](ztomcat/README.md)
 
 ## 빠른 시작
 
 ### bootRun
 
 ```bash
-# SV 업무 단독
-gradle :sv-service:bootRun
+gradle :sv-service:bootRun          # SV 업무
+gradle :tcf-om:bootRun              # OM (8097)
+gradle :tcf-batch:bootRun           # 배치 (8098)
+gradle :tcf-ui:bootRun              # UI (8099)
 
-# OM · 배치 · UI
-gradle :tcf-om:bootRun
-gradle :tcf-batch:bootRun
-gradle :tcf-ui:bootRun
-
-# 스크립트 (프로젝트 루트)
 tcf-scripts\run-local.bat sv
 tcf-scripts\run-local.bat tcf-om batch ui
 ```
 
-### ztomcat (Tomcat 8080)
+### ztomcat
 
 ```bat
 cd ztomcat
-h2-txlog.ps1 start          rem 공유 H2 TCP 9092 (선행 권장)
-install-tomcat.bat
+h2-txlog.ps1 start
 deploy-wars.bat all
 start.bat
 verify-deploy.ps1
@@ -122,95 +141,70 @@ verify-deploy.ps1
 ```bash
 gradle buildBusinessWars    # 업무 10 WAR (9 *-service + tcf-om)
 gradle buildZtomcatWars     # 12 WAR (+ tcf-batch, tcf-ui)
+tcf-scripts\build.bat ztomcat
 ```
 
-`tcf-scripts\build.bat ztomcat` — 위와 동일한 12 WAR 일괄 빌드
+## 포트 (bootRun)
 
-## 포트 요약 (bootRun)
+| 포트 | 모듈 | 포트 | 모듈 |
+|------|------|------|------|
+| 8082 | ic | 8089 | eb |
+| 8083 | pc | 8090 | ep |
+| 8085 | ms | 8093 | ss |
+| 8086 | sv | 8096 | mg |
+| 8087 | pd | 8097 | **tcf-om** |
+| | | 8098 | **tcf-batch** |
+| | | 8099 | **tcf-ui** |
 
-| 포트 | 모듈 | 비고 |
-|------|------|------|
-| 8082 | ic-service | |
-| 8083 | pc-service | |
-| 8085 | ms-service | |
-| 8086 | sv-service | |
-| 8087 | pd-service | |
-| 8089 | eb-service | |
-| 8090 | ep-service | |
-| 8093 | ss-service | |
-| 8096 | mg-service | |
-| 8097 | **tcf-om** | UD API 내장 |
-| 8098 | **tcf-batch** | 대시보드 수집 |
-| 8099 | **tcf-ui** | Relay · OM admin UI |
-
-Tomcat 모드에서는 업무·OM·batch·UI 모두 **8080** 게이트웨이 context path를 사용합니다.
+Tomcat 모드: 모든 context **8080**
 
 ## OM 관리 포털
 
-### bootRun
+| 모드 | 로그인 URL | 계정 |
+|------|------------|------|
+| bootRun | http://localhost:8099/om/admin/login.html | `admin01` / `nsight01!` |
+| ztomcat | http://localhost:8080/ui/om/admin/login.html | 동일 |
 
-1. `gradle :tcf-om:bootRun` (8097)
-2. `gradle :tcf-batch:bootRun` (8098) — 대시보드 수집
-3. `gradle :tcf-ui:bootRun` (8099)
-4. http://localhost:8099/om/admin/login.html (`admin01` / `nsight01!`)
+### 화면 (ztomcat 기준)
 
-### ztomcat
+| 구분 | 화면 | 경로 |
+|------|------|------|
+| **운영** | 대시보드 | `/ui/om/admin/dashboard.html` |
+| | 거래로그 | `/ui/om/admin/transaction-log.html` |
+| | 배치 | `/ui/om/admin/batch.html` |
+| | 배포 | `/ui/om/admin/deploy.html` |
+| | Cache | `/ui/om/admin/cache.html` |
+| | 세션 | `/ui/om/admin/session.html` |
+| | 환경설정 | `/ui/om/admin/system-config.html` |
+| **통제·정책** | ServiceId | `/ui/om/admin/service-catalog.html` |
+| | 거래통제 | `/ui/om/admin/transaction-control.html` |
+| | Timeout 정책 | `/ui/om/admin/timeout-policy.html` |
+| **권한·마스터** | 사용자/권한/메뉴/기능·데이터권한 | `/ui/om/admin/user-auth.html` |
+| | 공통코드 | `/ui/om/admin/common-code.html` |
+| | 오류코드 | `/ui/om/admin/error-code.html` |
+| | 권한이력 | `/ui/om/admin/auth-history.html` |
+| **파일** | 파일 관리 | `/ui/om/admin/file-management.html` |
 
-1. `ztomcat/h2-txlog.ps1 start` → `deploy-wars.bat all` → `start.bat`
-2. http://localhost:8080/ui/om/admin/login.html (`admin01` / `nsight01!`)
-
-### 주요 화면
-
-| 화면 | 경로 (ztomcat) |
-|------|----------------|
-| 운영 대시보드 | `/ui/om/admin/dashboard.html` |
-| 거래로그 | `/ui/om/admin/transaction-log.html` |
-| ServiceId | `/ui/om/admin/service-catalog.html` |
-| **거래통제** | `/ui/om/admin/transaction-control.html` |
-| **Timeout 정책** | `/ui/om/admin/timeout-policy.html` |
-| **사용자 / 권한 / 메뉴 / 기능·데이터권한** | `/ui/om/admin/user-auth.html` |
-| 공통코드 | `/ui/om/admin/common-code.html` |
-| 권한이력 | `/ui/om/admin/auth-history.html` |
-| 오류코드 | `/ui/om/admin/error-code.html` |
-| Cache | `/ui/om/admin/cache.html` |
-| 세션 | `/ui/om/admin/session.html` |
-| 배치 / 배포 | `/ui/om/admin/batch.html`, `deploy.html` |
-| 파일 관리 | `/ui/om/admin/file-management.html` |
-| 환경설정 | `/ui/om/admin/system-config.html` |
-
-**user-auth.html** 탭 구성: 사용자 · 권한그룹 · 메뉴 · 기능권한(CRUD) · 데이터권한(조회).  
-구 `function-auth.html`, `data-auth.html` URL은 `user-auth.html`로 리다이렉트됩니다.
+`user-auth.html` 탭: 사용자 · 권한그룹 · 메뉴 · 기능권한 · 데이터권한
 
 ## 샘플 호출
 
 ```bash
-# bootRun
-curl -X POST http://localhost:8086/sv/online \
-  -H "Content-Type: application/json" \
-  -d @tcf-ui/src/main/resources/sample-requests/sv-sample-inquiry.json
-
-# ztomcat
 curl -X POST http://localhost:8080/sv/online \
   -H "Content-Type: application/json" \
   -d @tcf-ui/src/main/resources/sample-requests/sv-sample-inquiry.json
 ```
 
-## 공유 H2 (거래로그 · OM)
-
-dev(ztomcat) 환경에서는 **H2 TCP 9092** + 파일 DB `data/nsight-txlog/nsight_om` 하나를 모든 WAR가 공유합니다.
+## 공유 H2 (거래로그 · OM · SESSION)
 
 | 환경 | 설정 |
 |------|------|
-| **H2 TCP 서버** | `ztomcat/h2-txlog.ps1 start` (baseDir: `data/nsight-txlog`) |
-| **JDBC (dev)** | `jdbc:h2:tcp://127.0.0.1:9092/./nsight_om` |
-| **bootRun** | Gradle `bootRun` → `nsight.txlog.path` = 프로젝트 `data/nsight-txlog` |
-| **ztomcat** | `ztomcat/conf/setenv.bat` → `-Dnsight.txlog.path={프로젝트}/data/nsight-txlog` |
+| H2 TCP | `ztomcat/h2-txlog.ps1 start` → TCP **9092** |
+| JDBC (dev) | `jdbc:h2:tcp://127.0.0.1:9092/./nsight_om` |
+| bootRun | `nsight.txlog.path` = `{프로젝트}/data/nsight-txlog` |
+| ztomcat | `ztomcat/conf/setenv.bat` → `-Dnsight.txlog.path=...` |
 
-기능권한 시드(51건 + 커스텀 권한그룹): om 기동 시 `OmDatabaseMigration` 자동 MERGE, 또는 수동:
-
-```bat
-tcf-cicd\local\script\seed-function-auth.bat
-```
+기능권한 시드: OM 기동 시 `OmDatabaseMigration` 자동 MERGE, 또는 `tcf-cicd\local\script\seed-function-auth.bat`
 
 ## 요구 사항
 
@@ -219,16 +213,28 @@ tcf-cicd\local\script\seed-function-auth.bat
 
 ## 문서
 
-| 구분 | 경로 |
+### 설계자료 (Word)
+
+| | |
+|--|--|
+| **설계안 전체 목록** | [docs/설계자료/README.md](docs/설계자료/README.md) |
+
+### 아키텍처 (Markdown)
+
+| 문서 | 경로 |
 |------|------|
-| **Gradle 명령어 매뉴얼** | [docs/manual/gradle.md](docs/manual/gradle.md) |
-| **환경변수 매뉴얼** | [docs/manual/environment-variables.md](docs/manual/environment-variables.md) |
-| **빌드 산출물·기동 파일** | [docs/manual/artifacts.md](docs/manual/artifacts.md) |
-| **라이브러리 모듈 참조** | [docs/manual/lib-module.md](docs/manual/lib-module.md) |
-| CI/CD 설정 (SoT) | [tcf-cicd/README.md](tcf-cicd/README.md) |
-| 아키텍처 | [docs/architecture/architecture.md](docs/architecture/architecture.md) |
-| 빌드·모듈 구조 | [docs/architecture/22-build-project.md](docs/architecture/22-build-project.md) |
+| 아키텍처 정의서 | [docs/architecture/architecture.md](docs/architecture/architecture.md) |
+| TCF 개발 가이드 | [docs/TCF_FRAMEWORK_GUIDE.md](docs/TCF_FRAMEWORK_GUIDE.md) |
+| 빌드·모듈 | [docs/architecture/22-build-project.md](docs/architecture/22-build-project.md) |
+| 거래통제 (7필드) | [docs/architecture/40-header-7-transaction-control.md](docs/architecture/40-header-7-transaction-control.md) |
+| Timeout 정책 | [docs/architecture/41-service-timeout-policy.md](docs/architecture/41-service-timeout-policy.md) |
 | 스크립트 | [docs/architecture/38-script.md](docs/architecture/38-script.md) |
-| Header 기반 거래통제 | [docs/architecture/39-header-transaction-control.md](docs/architecture/39-header-transaction-control.md) |
-| Header 7필드 거래통제 (구현) | [docs/architecture/40-header-7-transaction-control.md](docs/architecture/40-header-7-transaction-control.md) |
-| 서비스별 Timeout 정책 | [docs/architecture/41-service-timeout-policy.md](docs/architecture/41-service-timeout-policy.md) |
+
+### 운영 매뉴얼
+
+| 문서 | 경로 |
+|------|------|
+| Gradle 명령 | [docs/manual/gradle.md](docs/manual/gradle.md) |
+| 환경변수 | [docs/manual/environment-variables.md](docs/manual/environment-variables.md) |
+| 산출물·기동 | [docs/manual/artifacts.md](docs/manual/artifacts.md) |
+| CI/CD SoT | [tcf-cicd/README.md](tcf-cicd/README.md) |

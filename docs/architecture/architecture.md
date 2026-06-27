@@ -49,6 +49,7 @@
 | 라이브러리 모듈 참조 | [../manual/lib-module.md](../manual/lib-module.md) |
 | 모듈 재구성 이력 | [TCF_MODULE_RESTRUCTURE.md](../TCF_MODULE_RESTRUCTURE.md) |
 | 소스 인덱스 | [SOURCE_INDEX.md](../SOURCE_INDEX.md) |
+| **공식 설계안 (Word)** | [설계자료/README.md](../설계자료/README.md) |
 | Tomcat 배포 | [ztomcat/README.md](../../ztomcat/README.md) |
 
 ---
