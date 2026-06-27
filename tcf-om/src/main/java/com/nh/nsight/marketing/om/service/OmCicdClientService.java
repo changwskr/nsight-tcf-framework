@@ -1,4 +1,4 @@
-package com.nh.nsight.marketing.om.support;
+package com.nh.nsight.marketing.om.service;
 
 import com.nh.nsight.tcf.core.error.BusinessException;
 import java.io.IOException;
@@ -33,16 +33,19 @@ public class OmCicdClientService {
             @Value("${nsight.om.cicd.gradle-command:}") String gradleCommand) {
         Path cwd = Path.of(System.getProperty("user.dir")).toAbsolutePath().normalize();
         this.frameworkRoot = frameworkRootOverride == null || frameworkRootOverride.isBlank()
-                ? cwd : Path.of(frameworkRootOverride).toAbsolutePath().normalize();
+                ? cwd
+                : Path.of(frameworkRootOverride).toAbsolutePath().normalize();
         this.webappsDir = webappsDirOverride == null || webappsDirOverride.isBlank()
                 ? this.frameworkRoot.resolve("ztomcat/apache-tomcat-10.1.34/webapps")
                 : Path.of(webappsDirOverride).toAbsolutePath().normalize();
-        this.gatewayBaseUrl = gatewayBaseUrl.endsWith("/") ? gatewayBaseUrl.substring(0, gatewayBaseUrl.length() - 1) : gatewayBaseUrl;
+        this.gatewayBaseUrl = gatewayBaseUrl.endsWith("/") ? gatewayBaseUrl.substring(0, gatewayBaseUrl.length() - 1)
+                : gatewayBaseUrl;
         this.gradleCommand = resolveGradleCommand(gradleCommand, this.frameworkRoot);
         log.info("OM CICD gradle command: {}", this.gradleCommand);
     }
 
-    public record ModuleSpec(String moduleName, String warFileName, String deployWarName, String contextPath) {}
+    public record ModuleSpec(String moduleName, String warFileName, String deployWarName, String contextPath) {
+    }
 
     public ModuleSpec resolveModule(String businessCode, String moduleName) {
         if (moduleName != null && !moduleName.isBlank()) {
@@ -278,5 +281,6 @@ public class OmCicdClientService {
         return value.length() <= max ? value : value.substring(0, max) + "...";
     }
 
-    private record ProcessResult(int exitCode, String output, String commandLine) {}
+    private record ProcessResult(int exitCode, String output, String commandLine) {
+    }
 }

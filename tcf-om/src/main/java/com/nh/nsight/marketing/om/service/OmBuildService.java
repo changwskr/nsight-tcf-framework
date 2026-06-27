@@ -6,7 +6,6 @@ import com.nh.nsight.marketing.om.rule.OmDeployApprovalRule;
 import com.nh.nsight.marketing.om.rule.OmOperationRule;
 import com.nh.nsight.marketing.om.support.OmBodySupport;
 import com.nh.nsight.marketing.om.support.OmChangeRecorder;
-import com.nh.nsight.marketing.om.support.OmCicdClientService;
 import com.nh.nsight.tcf.util.DateTimeUtil;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -23,7 +22,7 @@ public class OmBuildService {
     private final OmCicdClientService cicdClient;
 
     public OmBuildService(OmOperationRule operationRule, OmDeployApprovalRule deployRule,
-                          OmDeployDao dao, OmChangeRecorder recorder, OmCicdClientService cicdClient) {
+            OmDeployDao dao, OmChangeRecorder recorder, OmCicdClientService cicdClient) {
         this.operationRule = operationRule;
         this.deployRule = deployRule;
         this.dao = dao;
@@ -131,7 +130,7 @@ public class OmBuildService {
     }
 
     private void insertHistory(Map<String, Object> request, String createdTime, String resultCode,
-                               String resultMessage, String healthUrl, String healthResult) {
+            String resultMessage, String healthUrl, String healthResult) {
         Map<String, Object> history = new HashMap<>();
         history.put("deployHistoryId", "DPH-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         history.put("deployRequestId", request.get("deployRequestId"));

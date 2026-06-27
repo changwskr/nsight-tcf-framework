@@ -1,7 +1,6 @@
 package com.nh.nsight.tcf.web.control;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
-import com.nh.nsight.tcf.core.control.TcfTransactionControlConstants;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +51,8 @@ public class TransactionControlSchemaInitializer {
 
     @PostConstruct
     public void init() {
-        String tableName = JdbcTransactionControlRepository.validateTableName(properties.getTransactionControlTableName());
+        String tableName = JdbcTransactionControlRepository
+                .validateTableName(properties.getTransactionControlTableName());
         dropLegacyTableIfNeeded(tableName);
         jdbcTemplate.execute(CREATE_TABLE_TEMPLATE.formatted(tableName));
         ensureBlockColumns(tableName);
