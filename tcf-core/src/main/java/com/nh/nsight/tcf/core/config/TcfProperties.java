@@ -2,6 +2,7 @@ package com.nh.nsight.tcf.core.config;
 
 import com.nh.nsight.tcf.core.control.TcfTransactionControlConstants;
 import com.nh.nsight.tcf.core.logging.TcfTransactionLogConstants;
+import com.nh.nsight.tcf.core.timeout.TcfServiceTimeoutConstants;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "nsight.tcf")
@@ -16,6 +17,9 @@ public class TcfProperties {
     private boolean transactionControlEnabled = true;
     private boolean transactionControlSchemaAutoInit = true;
     private String transactionControlTableName = TcfTransactionControlConstants.TABLE_NAME;
+    private boolean timeoutPolicyEnabled = true;
+    private boolean timeoutPolicySchemaAutoInit = true;
+    private String timeoutPolicyTableName = TcfServiceTimeoutConstants.TABLE_NAME;
     private final TransactionLogDataSource transactionLogDatasource = new TransactionLogDataSource();
 
     public boolean isSessionValidationEnabled() { return sessionValidationEnabled; }
@@ -38,6 +42,12 @@ public class TcfProperties {
     public void setTransactionControlSchemaAutoInit(boolean transactionControlSchemaAutoInit) { this.transactionControlSchemaAutoInit = transactionControlSchemaAutoInit; }
     public String getTransactionControlTableName() { return transactionControlTableName; }
     public void setTransactionControlTableName(String transactionControlTableName) { this.transactionControlTableName = transactionControlTableName; }
+    public boolean isTimeoutPolicyEnabled() { return timeoutPolicyEnabled; }
+    public void setTimeoutPolicyEnabled(boolean timeoutPolicyEnabled) { this.timeoutPolicyEnabled = timeoutPolicyEnabled; }
+    public boolean isTimeoutPolicySchemaAutoInit() { return timeoutPolicySchemaAutoInit; }
+    public void setTimeoutPolicySchemaAutoInit(boolean timeoutPolicySchemaAutoInit) { this.timeoutPolicySchemaAutoInit = timeoutPolicySchemaAutoInit; }
+    public String getTimeoutPolicyTableName() { return timeoutPolicyTableName; }
+    public void setTimeoutPolicyTableName(String timeoutPolicyTableName) { this.timeoutPolicyTableName = timeoutPolicyTableName; }
     public TransactionLogDataSource getTransactionLogDatasource() { return transactionLogDatasource; }
 
     public static class TransactionLogDataSource {

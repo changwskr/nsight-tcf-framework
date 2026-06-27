@@ -220,7 +220,15 @@ final class ServiceCatalogSeedData {
             entry("CAT-099", "OM", "OM.TransactionControl.delete", "OM-TXC-0003", "DELETE",
                     "OmTransactionControlDeleteHandler", "ROLE_OM_TXC", "Y", 5, "Y", "거래통제 삭제"),
             entry("CAT-100", "OM", "OM.TransactionControl.update", "OM-TXC-0004", "UPDATE",
-                    "OmTransactionControlUpdateHandler", "ROLE_OM_TXC", "Y", 5, "Y", "거래통제 수정")
+                    "OmTransactionControlUpdateHandler", "ROLE_OM_TXC", "Y", 5, "Y", "거래통제 수정"),
+            entry("CAT-101", "OM", "OM.TimeoutPolicy.inquiry", "OM-TMO-0001", "INQUIRY",
+                    "OmTimeoutPolicyInquiryHandler", "ROLE_OM_TMO", "N", 10, "Y", "Timeout 정책 조회"),
+            entry("CAT-102", "OM", "OM.TimeoutPolicy.save", "OM-TMO-0002", "UPDATE",
+                    "OmTimeoutPolicySaveHandler", "ROLE_OM_TMO", "Y", 5, "Y", "Timeout 정책 등록"),
+            entry("CAT-103", "OM", "OM.TimeoutPolicy.update", "OM-TMO-0003", "UPDATE",
+                    "OmTimeoutPolicyUpdateHandler", "ROLE_OM_TMO", "Y", 5, "Y", "Timeout 정책 수정"),
+            entry("CAT-104", "OM", "OM.TimeoutPolicy.delete", "OM-TMO-0004", "DELETE",
+                    "OmTimeoutPolicyDeleteHandler", "ROLE_OM_TMO", "Y", 5, "Y", "Timeout 정책 삭제")
     };
 
     static void mergeAll(JdbcTemplate jdbcTemplate) {

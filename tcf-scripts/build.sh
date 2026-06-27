@@ -85,6 +85,10 @@ resolve_target() {
     ui|tcf-ui) append :tcf-ui:bootJar ;;
     batch|tcf-batch) append :tcf-batch:bootWar ;;
     tcf-om|om) append :tcf-om:bootWar ;;
+    tcf-util) append :tcf-util:build ;;
+    tcf-core) append :tcf-core:build ;;
+    tcf-web) append :tcf-web:build ;;
+    tcf-cache) append :tcf-cache:build ;;
     services)
       for code in "${SERVICE_CODES[@]}"; do
         append ":${code}-service:build"

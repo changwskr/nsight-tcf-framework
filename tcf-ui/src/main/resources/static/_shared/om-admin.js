@@ -9,6 +9,7 @@ window.OmAdmin = (function () {
     { id: 'dashboard', label: '운영 대시보드', href: '/om/admin/dashboard.html' },
     { id: 'transaction-log', label: '거래로그 조회', href: '/om/admin/transaction-log.html' },
     { id: 'transaction-control', label: '거래통제 관리', href: '/om/admin/transaction-control.html' },
+    { id: 'timeout-policy', label: 'Timeout 정책', href: '/om/admin/timeout-policy.html' },
     { id: 'service-catalog', label: 'ServiceId 관리', href: '/om/admin/service-catalog.html' },
     { id: 'message-composer', label: '공통 전문 조립', href: '/om/admin/message-composer.html' },
     { id: 'user-auth', label: '사용자 / 권한 / 메뉴 / 기능·데이터권한', href: '/om/admin/user-auth.html' },
@@ -103,7 +104,11 @@ window.OmAdmin = (function () {
     transactionControl: { serviceId: 'OM.TransactionControl.inquiry', transactionCode: 'OM-TXC-0001' },
     transactionControlSave: { serviceId: 'OM.TransactionControl.save', transactionCode: 'OM-TXC-0002' },
     transactionControlDelete: { serviceId: 'OM.TransactionControl.delete', transactionCode: 'OM-TXC-0003' },
-    transactionControlUpdate: { serviceId: 'OM.TransactionControl.update', transactionCode: 'OM-TXC-0004' }
+    transactionControlUpdate: { serviceId: 'OM.TransactionControl.update', transactionCode: 'OM-TXC-0004' },
+    timeoutPolicy: { serviceId: 'OM.TimeoutPolicy.inquiry', transactionCode: 'OM-TMO-0001' },
+    timeoutPolicySave: { serviceId: 'OM.TimeoutPolicy.save', transactionCode: 'OM-TMO-0002' },
+    timeoutPolicyUpdate: { serviceId: 'OM.TimeoutPolicy.update', transactionCode: 'OM-TMO-0003' },
+    timeoutPolicyDelete: { serviceId: 'OM.TimeoutPolicy.delete', transactionCode: 'OM-TMO-0004' }
   };
 
   const TX_SERVICE_NAME = {
@@ -118,6 +123,10 @@ window.OmAdmin = (function () {
     'OM.TransactionControl.save': '거래통제 등록',
     'OM.TransactionControl.delete': '거래통제 삭제',
     'OM.TransactionControl.update': '거래통제 수정',
+    'OM.TimeoutPolicy.inquiry': 'Timeout 정책 조회',
+    'OM.TimeoutPolicy.save': 'Timeout 정책 등록',
+    'OM.TimeoutPolicy.update': 'Timeout 정책 수정',
+    'OM.TimeoutPolicy.delete': 'Timeout 정책 삭제',
     'OM.ServiceCatalog.inquiry': 'ServiceId 카탈로그',
     'OM.ServiceCatalog.save': 'ServiceId 등록',
     'OM.ServiceCatalog.detail': 'ServiceId 상세',
@@ -720,7 +729,8 @@ window.OmAdmin = (function () {
       return 'om-admin.js가 오래된 버전일 수 있습니다. Ctrl+F5로 강력 새로고침하세요.';
     }
     if (msg.includes('등록되지 않은 serviceId') || msg.includes('OM.Dashboard.reset')
-        || msg.includes('OM.AuditLog.deleteAll') || msg.includes('OM.AuthHistory.deleteAll')) {
+        || msg.includes('OM.AuditLog.deleteAll') || msg.includes('OM.AuthHistory.deleteAll')
+        || msg.includes('OM.TimeoutPolicy.')) {
       return 'gradle :tcf-om:bootRun 으로 tcf-om을 재기동하세요. (신규 Handler 등록 필요)';
     }
     const hint = targetUrl && targetUrl !== '-' ? ` (${targetUrl})` : '';

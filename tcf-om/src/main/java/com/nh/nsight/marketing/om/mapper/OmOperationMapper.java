@@ -182,6 +182,18 @@ public interface OmOperationMapper {
 
     int deleteTransactionControl(Map<String, Object> params);
 
+    List<Map<String, Object>> searchTimeoutPolicies(Map<String, Object> params);
+
+    int countTimeoutPolicies(Map<String, Object> params);
+
+    Map<String, Object> selectTimeoutPolicyByKey(Map<String, Object> params);
+
+    int insertTimeoutPolicy(Map<String, Object> params);
+
+    int updateTimeoutPolicy(Map<String, Object> params);
+
+    int deleteTimeoutPolicy(Map<String, Object> params);
+
     Map<String, Object> selectBatchJobById(String jobId);
 
     int insertBatchHistory(Map<String, Object> params);

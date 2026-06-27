@@ -8,6 +8,9 @@ import com.nh.nsight.tcf.core.message.StandardRequest;
 import com.nh.nsight.tcf.core.message.StandardResponse;
 import com.nh.nsight.tcf.core.dispatch.TransactionDispatcher;
 import com.nh.nsight.tcf.core.support.TcfConsoleLog;
+import com.nh.nsight.tcf.core.timeout.OnlineTransactionTimeoutExecutor;
+import com.nh.nsight.tcf.core.timeout.TimeoutContextHolder;
+import com.nh.nsight.tcf.core.timeout.TimeoutExceptionResolver;
 import java.util.Map;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
@@ -17,11 +20,16 @@ public class TCF {
     private final STF stf;
     private final TransactionDispatcher dispatcher;
     private final ETF etf;
+    private final OnlineTransactionTimeoutExecutor onlineTransactionTimeoutExecutor;
 
-    public TCF(STF stf, TransactionDispatcher dispatcher, ETF etf) {
+    public TCF(STF stf,
+               TransactionDispatcher dispatcher,
+               ETF etf,
+               OnlineTransactionTimeoutExecutor onlineTransactionTimeoutExecutor) {
         this.stf = stf;
         this.dispatcher = dispatcher;
         this.etf = etf;
+        this.onlineTransactionTimeoutExecutor = onlineTransactionTimeoutExecutor;
     }
 
     public StandardResponse<Object> process(StandardRequest<Map<String, Object>> request) {
@@ -36,7 +44,9 @@ public class TCF {
             TcfConsoleLog.println(" ======================================[TCF.process] STF END");
 
             TcfConsoleLog.println(" ======================================[TCF.process] DISPATCHER  START");
-            Object body = dispatcher.dispatch(request, context);
+            TransactionContext dispatchContext = context;
+            Object body = onlineTransactionTimeoutExecutor.execute(
+                    () -> dispatcher.dispatch(request, dispatchContext));
             TcfConsoleLog.println(" ======================================[TCF.process] DISPATCHER END");
 
             TcfConsoleLog.println(" ======================================[TCF.process] ETF START");
@@ -54,6 +64,14 @@ public class TCF {
             TcfConsoleLog.println(" ====================================[TCF.process] end (businessFail)");
             return response;
         } catch (Exception e) {
+            var timeoutError = TimeoutExceptionResolver.toBusinessException(e);
+            if (timeoutError.isPresent()) {
+                TcfConsoleLog.println(" =====================================[TCF.process] ETF.businessFail (timeout)");
+                StandardResponse<Object> response = etf.businessFail(request, timeoutError.get(), context);
+                logClientResponse(response);
+                TcfConsoleLog.println(" ====================================[TCF.process] end (timeoutFail)");
+                return response;
+            }
             TcfConsoleLog.println(" ===============================================[TCF.process] etf.systemError");
             StandardResponse<Object> response = etf.systemError(request, e, context);
             logClientResponse(response);
@@ -62,6 +80,7 @@ public class TCF {
         } finally {
             TcfConsoleLog.println(" ===============================================[TCF.process] cleanup");
             TransactionContextHolder.clear();
+            TimeoutContextHolder.clear();
             MDC.clear();
         }
     }

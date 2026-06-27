@@ -1,6 +1,8 @@
 package com.nh.nsight.tcf.web.config;
 
+import com.nh.nsight.tcf.web.datasource.TcfHikariDataSources;
 import javax.sql.DataSource;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -24,10 +26,14 @@ import org.springframework.context.annotation.Primary;
 @EnableConfigurationProperties(DataSourceProperties.class)
 public class TcfPrimaryDataSourceAutoConfiguration {
 
-    @Bean(name = "dataSource")
+    @Bean(name = "dataSource", destroyMethod = "close")
     @Primary
     @ConfigurationProperties(prefix = "spring.datasource.hikari")
     public DataSource dataSource(DataSourceProperties properties) {
-        return properties.initializeDataSourceBuilder().build();
+        DataSource dataSource = properties.initializeDataSourceBuilder().build();
+        if (dataSource instanceof HikariDataSource hikari) {
+            TcfHikariDataSources.configureForServletContainer(hikari, hikari.getPoolName());
+        }
+        return dataSource;
     }
 }

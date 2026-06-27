@@ -65,6 +65,10 @@ if /i "%TARGET%"=="services" (
 )
 if /i "%TARGET%"=="tcf-om" (call :append_task :tcf-om:bootWar & goto :eof)
 if /i "%TARGET%"=="om" (call :append_task :tcf-om:bootWar & goto :eof)
+if /i "%TARGET%"=="tcf-util" (call :append_task :tcf-util:build & goto :eof)
+if /i "%TARGET%"=="tcf-core" (call :append_task :tcf-core:build & goto :eof)
+if /i "%TARGET%"=="tcf-web" (call :append_task :tcf-web:build & goto :eof)
+if /i "%TARGET%"=="tcf-cache" (call :append_task :tcf-cache:build & goto :eof)
 
 set "SERVICE=%TARGET%"
 if /i not "%TARGET:~-8%"=="-service" set "SERVICE=%TARGET%-service"
@@ -109,6 +113,7 @@ echo   all      clean + buildBusinessWars (17 WAR)
 echo   wars     buildBusinessWars only
 echo   ztomcat  buildZtomcatWars (19 WAR: + batch + ui)
 echo   tcf      tcf-util, tcf-core, tcf-web
+echo   tcf-util tcf-core tcf-web tcf-cache  (library modules)
 echo   ui       tcf-ui bootJar
 echo   batch    tcf-batch bootWar
 echo   services all *-service modules + tcf-om bootWar

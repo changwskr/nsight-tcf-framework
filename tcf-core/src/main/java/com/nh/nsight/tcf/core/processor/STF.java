@@ -9,6 +9,7 @@ import com.nh.nsight.tcf.core.message.StandardHeader;
 import com.nh.nsight.tcf.core.message.StandardRequest;
 import com.nh.nsight.tcf.core.security.AuthorizationValidator;
 import com.nh.nsight.tcf.core.security.SessionValidator;
+import com.nh.nsight.tcf.core.timeout.TimeoutPolicyService;
 import com.nh.nsight.tcf.core.validation.StandardHeaderValidator;
 import com.nh.nsight.tcf.util.GuidGenerator;
 import java.util.Map;
@@ -23,6 +24,7 @@ public class STF {
     private final AuthorizationValidator authorizationValidator;
     private final IdempotencyChecker idempotencyChecker;
     private final TransactionControlService transactionControlService;
+    private final TimeoutPolicyService timeoutPolicyService;
     private final TransactionLogService transactionLogService;
 
     public STF(StandardHeaderValidator headerValidator,
@@ -30,12 +32,14 @@ public class STF {
                AuthorizationValidator authorizationValidator,
                IdempotencyChecker idempotencyChecker,
                TransactionControlService transactionControlService,
+               TimeoutPolicyService timeoutPolicyService,
                TransactionLogService transactionLogService) {
         this.headerValidator = headerValidator;
         this.sessionValidator = sessionValidator;
         this.authorizationValidator = authorizationValidator;
         this.idempotencyChecker = idempotencyChecker;
         this.transactionControlService = transactionControlService;
+        this.timeoutPolicyService = timeoutPolicyService;
         this.transactionLogService = transactionLogService;
     }
 
@@ -60,6 +64,8 @@ public class STF {
         authorizationValidator.validate(header);
         System.out.println(" ======================================================================[STF.preProcess] transactionControlService.check");
         transactionControlService.check(header);
+        System.out.println(" ======================================================================[STF.preProcess] timeoutPolicyService.resolveAndApply");
+        timeoutPolicyService.resolveAndApply(header, context);
         System.out.println(" ======================================================================[STF.preProcess] idempotencyChecker.checkAndMarkProcessing");
         idempotencyChecker.checkAndMarkProcessing(header);
         System.out.println(" ======================================================================[STF.preProcess] transactionLogService.start");

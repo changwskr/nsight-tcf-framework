@@ -18,6 +18,12 @@ public final class ErrorCode {
     public static final String TXCTRL_NOT_ALLOWED = "E-TCF-CTL-001";
     public static final String TXCTRL_DUPLICATE = "E-TCF-CTL-002";
     public static final String TXCTRL_UNAVAILABLE = "E-TCF-CTL-003";
+    public static final String TIMEOUT_ONLINE = "E-TCF-TIME-001";
+    public static final String TIMEOUT_TRANSACTION = "E-TCF-TIME-002";
+    public static final String TIMEOUT_DB_QUERY = "E-TCF-TIME-003";
+    public static final String TIMEOUT_DB_CONNECTION = "E-TCF-TIME-004";
+    public static final String TIMEOUT_EXTERNAL_CONNECT = "E-TCF-TIME-005";
+    public static final String TIMEOUT_EXTERNAL_READ = "E-TCF-TIME-006";
     public static final String BUSINESS_ERROR = "E-COM-BIZ-0001";
     public static final String SYSTEM_ERROR = "E-COM-SYS-0001";
 }

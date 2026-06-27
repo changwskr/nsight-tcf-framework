@@ -384,6 +384,30 @@ public class OmOperationDao {
         return mapper.deleteTransactionControl(key);
     }
 
+    public List<Map<String, Object>> searchTimeoutPolicies(Map<String, Object> criteria) {
+        return mapper.searchTimeoutPolicies(criteria);
+    }
+
+    public int countTimeoutPolicies(Map<String, Object> criteria) {
+        return mapper.countTimeoutPolicies(criteria);
+    }
+
+    public Map<String, Object> selectTimeoutPolicyByKey(Map<String, Object> key) {
+        return mapper.selectTimeoutPolicyByKey(key);
+    }
+
+    public int insertTimeoutPolicy(Map<String, Object> row) {
+        return mapper.insertTimeoutPolicy(row);
+    }
+
+    public int updateTimeoutPolicy(Map<String, Object> row) {
+        return mapper.updateTimeoutPolicy(row);
+    }
+
+    public int deleteTimeoutPolicy(Map<String, Object> key) {
+        return mapper.deleteTimeoutPolicy(key);
+    }
+
     public Map<String, Object> selectBatchJobById(String jobId) {
         return mapper.selectBatchJobById(jobId);
     }

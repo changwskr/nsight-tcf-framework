@@ -1034,6 +1034,102 @@
            AND BRANCH_ID = #{branchId}
     </delete>
 
+    <select id="searchTimeoutPolicies" parameterType="map" resultType="map">
+        SELECT SERVICE_ID AS "serviceId", TRANSACTION_CODE AS "transactionCode",
+               BUSINESS_CODE AS "businessCode", SERVICE_NAME AS "serviceName",
+               ONLINE_TIMEOUT_SEC AS "onlineTimeoutSec", TX_TIMEOUT_SEC AS "txTimeoutSec",
+               DB_QUERY_TIMEOUT_SEC AS "dbQueryTimeoutSec",
+               EXTERNAL_CONNECT_TIMEOUT_MS AS "externalConnectTimeoutMs",
+               EXTERNAL_READ_TIMEOUT_MS AS "externalReadTimeoutMs",
+               TIMEOUT_ACTION AS "timeoutAction", USE_YN AS "useYn", DESCRIPTION AS "description"
+          FROM TCF_SERVICE_TIMEOUT_POLICY
+         WHERE 1 = 1
+        <if test="serviceId != null and serviceId != ''">
+            AND SERVICE_ID LIKE '%' || #{serviceId} || '%'
+        </if>
+        <if test="transactionCode != null and transactionCode != ''">
+            AND TRANSACTION_CODE LIKE '%' || #{transactionCode} || '%'
+        </if>
+        <if test="businessCode != null and businessCode != ''">
+            AND BUSINESS_CODE = #{businessCode}
+        </if>
+        <if test="useYn != null and useYn != ''">
+            AND USE_YN = #{useYn}
+        </if>
+         ORDER BY BUSINESS_CODE, SERVICE_ID, TRANSACTION_CODE
+        <if test="pageSize != null and pageNo != null">
+            OFFSET (#{pageNo} - 1) * #{pageSize} ROWS FETCH NEXT #{pageSize} ROWS ONLY
+        </if>
+    </select>
+
+    <select id="countTimeoutPolicies" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM TCF_SERVICE_TIMEOUT_POLICY WHERE 1 = 1
+        <if test="serviceId != null and serviceId != ''">
+            AND SERVICE_ID LIKE '%' || #{serviceId} || '%'
+        </if>
+        <if test="transactionCode != null and transactionCode != ''">
+            AND TRANSACTION_CODE LIKE '%' || #{transactionCode} || '%'
+        </if>
+        <if test="businessCode != null and businessCode != ''">
+            AND BUSINESS_CODE = #{businessCode}
+        </if>
+        <if test="useYn != null and useYn != ''">
+            AND USE_YN = #{useYn}
+        </if>
+    </select>
+
+    <select id="selectTimeoutPolicyByKey" parameterType="map" resultType="map">
+        SELECT SERVICE_ID AS "serviceId", TRANSACTION_CODE AS "transactionCode",
+               BUSINESS_CODE AS "businessCode", SERVICE_NAME AS "serviceName",
+               ONLINE_TIMEOUT_SEC AS "onlineTimeoutSec", TX_TIMEOUT_SEC AS "txTimeoutSec",
+               DB_QUERY_TIMEOUT_SEC AS "dbQueryTimeoutSec",
+               EXTERNAL_CONNECT_TIMEOUT_MS AS "externalConnectTimeoutMs",
+               EXTERNAL_READ_TIMEOUT_MS AS "externalReadTimeoutMs",
+               TIMEOUT_ACTION AS "timeoutAction", USE_YN AS "useYn", DESCRIPTION AS "description"
+          FROM TCF_SERVICE_TIMEOUT_POLICY
+         WHERE SERVICE_ID = #{serviceId}
+           AND TRANSACTION_CODE = #{transactionCode}
+           AND BUSINESS_CODE = #{businessCode}
+    </select>
+
+    <insert id="insertTimeoutPolicy" parameterType="map">
+        INSERT INTO TCF_SERVICE_TIMEOUT_POLICY (
+            SERVICE_ID, TRANSACTION_CODE, BUSINESS_CODE, SERVICE_NAME,
+            ONLINE_TIMEOUT_SEC, TX_TIMEOUT_SEC, DB_QUERY_TIMEOUT_SEC,
+            EXTERNAL_CONNECT_TIMEOUT_MS, EXTERNAL_READ_TIMEOUT_MS,
+            TIMEOUT_ACTION, USE_YN, DESCRIPTION, CREATED_AT
+        ) VALUES (
+            #{serviceId}, #{transactionCode}, #{businessCode}, #{serviceName},
+            #{onlineTimeoutSec}, #{txTimeoutSec}, #{dbQueryTimeoutSec},
+            #{externalConnectTimeoutMs}, #{externalReadTimeoutMs},
+            #{timeoutAction}, #{useYn}, #{description}, CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <update id="updateTimeoutPolicy" parameterType="map">
+        UPDATE TCF_SERVICE_TIMEOUT_POLICY
+           SET SERVICE_NAME = #{serviceName},
+               ONLINE_TIMEOUT_SEC = #{onlineTimeoutSec},
+               TX_TIMEOUT_SEC = #{txTimeoutSec},
+               DB_QUERY_TIMEOUT_SEC = #{dbQueryTimeoutSec},
+               EXTERNAL_CONNECT_TIMEOUT_MS = #{externalConnectTimeoutMs},
+               EXTERNAL_READ_TIMEOUT_MS = #{externalReadTimeoutMs},
+               TIMEOUT_ACTION = #{timeoutAction},
+               USE_YN = #{useYn},
+               DESCRIPTION = #{description},
+               UPDATED_AT = CURRENT_TIMESTAMP
+         WHERE SERVICE_ID = #{serviceId}
+           AND TRANSACTION_CODE = #{transactionCode}
+           AND BUSINESS_CODE = #{businessCode}
+    </update>
+
+    <delete id="deleteTimeoutPolicy" parameterType="map">
+        DELETE FROM TCF_SERVICE_TIMEOUT_POLICY
+         WHERE SERVICE_ID = #{serviceId}
+           AND TRANSACTION_CODE = #{transactionCode}
+           AND BUSINESS_CODE = #{businessCode}
+    </delete>
+
     <select id="selectBatchJobById" parameterType="string" resultType="map">
         SELECT JOB_ID AS "jobId", JOB_NAME AS "jobName", BUSINESS_CODE AS "businessCode",
                CRON_EXPR AS "cronExpr", USE_YN AS "useYn", DESCRIPTION AS "description"

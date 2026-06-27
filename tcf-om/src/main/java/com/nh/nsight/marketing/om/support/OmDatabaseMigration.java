@@ -86,6 +86,7 @@ public class OmDatabaseMigration implements ApplicationRunner {
         FunctionAuthSeedData.mergeAll(jdbcTemplate);
         ensureTransactionControlTable();
         TransactionControlSeedData.mergeAll(jdbcTemplate);
+        TimeoutPolicySeedData.mergeAll(jdbcTemplate);
         removeLegacyFunctionAuthIds();
         log.debug("OM schema migration applied.");
     }
@@ -120,7 +121,12 @@ public class OmDatabaseMigration implements ApplicationRunner {
                 Map.entry("CAT-022", "기능권한 조회"),
                 Map.entry("CAT-023", "데이터권한 조회"),
                 Map.entry("CAT-024", "권한이력 조회"),
-                Map.entry("CAT-100", "권한이력 전체 삭제"),
+                Map.entry("CAT-100", "거래통제 수정"),
+                Map.entry("CAT-105", "권한이력 전체 삭제"),
+                Map.entry("CAT-101", "Timeout 정책 조회"),
+                Map.entry("CAT-102", "Timeout 정책 등록"),
+                Map.entry("CAT-103", "Timeout 정책 수정"),
+                Map.entry("CAT-104", "Timeout 정책 삭제"),
                 Map.entry("CAT-025", "Cache 조회"),
                 Map.entry("CAT-026", "Cache 삭제"),
                 Map.entry("CAT-027", "OM 로그인"),

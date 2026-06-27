@@ -2,10 +2,10 @@ package com.nh.nsight.tcf.web.config;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
 import com.nh.nsight.tcf.core.logging.H2DevDataSourceUrls;
+import com.nh.nsight.tcf.web.datasource.TcfHikariDataSources;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -23,17 +23,17 @@ public class TcfTransactionLogDataSourceConfiguration {
 
         private static final Logger log = LoggerFactory.getLogger(SeparateTransactionLogDataSourceConfiguration.class);
 
-        @Bean(name = "transactionLogDataSource")
+        @Bean(name = "transactionLogDataSource", destroyMethod = "close")
         public DataSource transactionLogDataSource(TcfProperties properties, Environment environment) {
             String url = resolveTransactionLogUrl(environment);
             log.info("Transaction log datasource url={}", url);
             TcfProperties.TransactionLogDataSource cfg = properties.getTransactionLogDatasource();
-            return DataSourceBuilder.create()
-                    .driverClassName(cfg.getDriverClassName())
-                    .url(url)
-                    .username(cfg.getUsername())
-                    .password(cfg.getPassword())
-                    .build();
+            return TcfHikariDataSources.create(
+                    cfg.getDriverClassName(),
+                    url,
+                    cfg.getUsername(),
+                    cfg.getPassword(),
+                    "nsight-txlog-hikari");
         }
 
         @Bean(name = "transactionLogJdbcTemplate")

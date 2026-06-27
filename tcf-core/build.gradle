@@ -7,4 +7,5 @@ dependencies {
     api 'com.fasterxml.jackson.core:jackson-annotations'
     api 'org.springframework.boot:spring-boot-starter'
     api 'org.springframework.boot:spring-boot-starter-validation'
+    testImplementation 'org.springframework:spring-tx'
 }

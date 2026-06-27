@@ -1,57 +1,63 @@
 package com.nh.nsight.tcf.web.config;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
-import com.nh.nsight.tcf.core.logging.H2DevDataSourceUrls;
+import com.nh.nsight.tcf.web.datasource.TcfDataSourceUrlSupport;
+import com.nh.nsight.tcf.web.datasource.TcfHikariDataSources;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.util.StringUtils;
 
 /**
  * 거래통제 규칙({@code TCF_TRANSACTION_CONTROL})은 OM과 동일한 nsight_om DB를 참조해야 한다.
- * DataSource는 Spring 빈으로 등록하지 않는다 — 다중 DataSource 시 PlatformTransactionManager 자동구성이 깨지는 것을 방지.
+ * primary와 URL이 같으면 풀을 재사용하고, 다르면 Spring이 종료 시 close()하는 별도 DataSource 빈을 등록한다.
  */
 @Configuration
 @ConditionalOnProperty(prefix = "nsight.tcf", name = "transaction-control-enabled", havingValue = "true", matchIfMissing = true)
 public class TcfTransactionControlDataSourceConfiguration {
 
-    private static final Logger log = LoggerFactory.getLogger(TcfTransactionControlDataSourceConfiguration.class);
+    @Configuration
+    @Conditional(TransactionControlReusesPrimaryCondition.class)
+    static class ReusePrimaryTransactionControlConfiguration {
 
-    @Bean(name = "transactionControlJdbcTemplate")
-    public JdbcTemplate transactionControlJdbcTemplate(TcfProperties properties, Environment environment) {
-        String url = resolveUrl(properties, environment);
-        log.info("Transaction control datasource url={}", url);
-        TcfProperties.TransactionLogDataSource cfg = properties.getTransactionLogDatasource();
-        DataSource dataSource = DataSourceBuilder.create()
-                .driverClassName(cfg.getDriverClassName())
-                .url(url)
-                .username(cfg.getUsername())
-                .password(cfg.getPassword())
-                .build();
-        return new JdbcTemplate(dataSource);
+        private static final Logger log = LoggerFactory.getLogger(ReusePrimaryTransactionControlConfiguration.class);
+
+        @Bean(name = "transactionControlJdbcTemplate")
+        public JdbcTemplate transactionControlJdbcTemplate(@Qualifier("dataSource") DataSource dataSource) {
+            log.info("Transaction control reuses primary datasource");
+            return new JdbcTemplate(dataSource);
+        }
     }
 
-    static String resolveUrl(TcfProperties properties, Environment environment) {
-        String explicit = environment.getProperty("nsight.tcf.transaction-control-datasource.url");
-        if (StringUtils.hasText(explicit)) {
-            return H2DevDataSourceUrls.resolveNsightOmUrl(environment, explicit.trim());
+    @Configuration
+    @Conditional(TransactionControlUsesSeparateDataSourceCondition.class)
+    static class SeparateTransactionControlConfiguration {
+
+        private static final Logger log = LoggerFactory.getLogger(SeparateTransactionControlConfiguration.class);
+
+        @Bean(name = "transactionControlDataSource", destroyMethod = "close")
+        public DataSource transactionControlDataSource(TcfProperties properties, Environment environment) {
+            String url = TcfDataSourceUrlSupport.resolveTransactionControlUrl(properties, environment);
+            log.info("Transaction control datasource url={}", url);
+            TcfProperties.TransactionLogDataSource cfg = properties.getTransactionLogDatasource();
+            return TcfHikariDataSources.create(
+                    cfg.getDriverClassName(),
+                    url,
+                    cfg.getUsername(),
+                    cfg.getPassword(),
+                    "nsight-tx-control-hikari");
         }
-        String txLog = environment.getProperty("nsight.tcf.transaction-log-datasource.url");
-        if (StringUtils.hasText(txLog)) {
-            return H2DevDataSourceUrls.resolveNsightOmUrl(environment, txLog.trim());
+
+        @Bean(name = "transactionControlJdbcTemplate")
+        public JdbcTemplate transactionControlJdbcTemplate(
+                @Qualifier("transactionControlDataSource") DataSource transactionControlDataSource) {
+            return new JdbcTemplate(transactionControlDataSource);
         }
-        if (!properties.getTransactionLogDatasource().isSeparate()) {
-            String primary = environment.getProperty("spring.datasource.url");
-            if (StringUtils.hasText(primary)) {
-                return H2DevDataSourceUrls.resolveNsightOmUrl(environment, primary.trim());
-            }
-        }
-        return H2DevDataSourceUrls.resolveNsightOmUrl(environment, null);
     }
 }

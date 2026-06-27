@@ -20,6 +20,9 @@ public final class TransactionControlExemptions {
         if (isTransactionControlPageSupport(id)) {
             return true;
         }
+        if (isTimeoutPolicyAdmin(id)) {
+            return true;
+        }
         return isHealthCheck(id);
     }
 
@@ -40,6 +43,14 @@ public final class TransactionControlExemptions {
     /** 거래통제 관리 화면 콤보(TX_CONTROL_TYPE, BUSINESS_CODE 등) 조회 */
     public static boolean isTransactionControlPageSupport(String serviceId) {
         return "OM.CommonCode.inquiry".equals(StringUtils.hasText(serviceId) ? serviceId.trim() : null);
+    }
+
+    /** OM.TimeoutPolicy.inquiry/save/update/delete — Timeout 정책 관리 화면 */
+    public static boolean isTimeoutPolicyAdmin(String serviceId) {
+        if (!StringUtils.hasText(serviceId)) {
+            return false;
+        }
+        return serviceId.trim().startsWith("OM.TimeoutPolicy.");
     }
 
     /** OM.HealthCheck.inquiry, OM.Deploy.healthCheck 및 *.HealthCheck.* 패턴 */
