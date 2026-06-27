@@ -1,3 +1,12 @@
-# local - bootRun (port 8101)
+# local — gateway bootRun :8100 → downstream 업무별 bootRun 포트
+#   EB:8089  EP:8090  IC:8082  MG:8096  MS:8085  OM:8097
+#   PC:8083  PD:8087  SS:8093  SV:8086  JWT:8110
 server:
-  port: 8101
+  port: 8100
+
+nsight:
+  gateway:
+    routing:
+      deployment-mode: bootrun
+      tomcat-base-url: http://localhost:8080
+      bootrun-host: http://127.0.0.1

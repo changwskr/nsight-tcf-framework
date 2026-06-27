@@ -1,6 +1,6 @@
-# local - bootRun (port 8100)
+# local - bootRun (port 8110, gateway :8100 과 분리)
 server:
-  port: 8100
+  port: 8110
 
 spring:
   application:
@@ -21,8 +21,8 @@ spring:
 nsight:
   security:
     jwt:
-      issuer-uri: http://127.0.0.1:8100
-      jwk-set-uri: http://127.0.0.1:8100/.well-known/jwks.json
+      issuer-uri: http://127.0.0.1:8110
+      jwk-set-uri: http://127.0.0.1:8110/.well-known/jwks.json
   tcf:
     transaction-log-schema-auto-init: true
     transaction-log-datasource:

@@ -20,7 +20,7 @@ public final class GatewayBusinessModules {
     public static final Module PD = new Module("PD", 8087);
     public static final Module SS = new Module("SS", 8093);
     public static final Module SV = new Module("SV", 8086);
-    public static final Module JWT = new Module("JWT", 8100, "/online");
+    public static final Module JWT = new Module("JWT", 8110, "/online");
 
     private static final Map<String, Module> BY_CODE = Arrays.stream(new Module[]{
             EB, EP, IC, MG, MS, OM, PC, PD, SS, SV, JWT

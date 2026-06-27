@@ -30,6 +30,14 @@ if /i "%~1"=="-h" goto :usage
 set "TASKS=:!MODULE!:bootWar"
 if /i "%~1"=="clean" set "TASKS=clean !TASKS!"
 if /i "%~1"=="run" set "TASKS=:!MODULE!:bootRun"
+if /i "%~1"=="run-local" (
+    set "TASKS=:!MODULE!:bootRun"
+    set "SPRING_PROFILES_ACTIVE=local"
+)
+if /i "%~1"=="run-dev" (
+    set "TASKS=:!MODULE!:bootRun"
+    set "SPRING_PROFILES_ACTIVE=dev"
+)
 
 echo [gw-build] Stop Gradle daemons...
 call gradle --stop >nul 2>&1
@@ -40,6 +48,8 @@ call "!GRADLE!" !TASKS!
 if errorlevel 1 exit /b %errorlevel%
 
 if /i "%~1"=="run" exit /b 0
+if /i "%~1"=="run-local" exit /b 0
+if /i "%~1"=="run-dev" exit /b 0
 
 set "WAR_FILE=!PROJECT_HOME!\!MODULE!\build\libs\gw.war"
 echo.
@@ -54,8 +64,10 @@ if exist "!WAR_FILE!" (
 exit /b 0
 
 :usage
-echo Usage: build.bat [clean^|run]
-echo   build.bat        Build gw.war
-echo   build.bat clean  clean + build
-echo   build.bat run    bootRun ^(port 8101^)
+echo Usage: build.bat [clean^|run^|run-local^|run-dev]
+echo   build.bat            Build gw.war
+echo   build.bat clean      clean + build
+echo   build.bat run        bootRun ^(SPRING_PROFILES_ACTIVE or default local^)
+echo   build.bat run-local  bootRun profile=local ^(8100 -^> 업무별 bootRun^)
+echo   build.bat run-dev    bootRun profile=dev ^(8100 -^> Tomcat 8080^)
 exit /b 0

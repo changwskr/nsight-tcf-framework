@@ -1,6 +1,6 @@
 // JWT 인증 + 업무 라우팅 API Gateway
 // 빌드: gradle :tcf-gateway:bootWar
-// 실행: gradle :tcf-gateway:bootRun  (포트 8101)
+// 실행: gradle :tcf-gateway:bootRun  (local:8100 / dev:8100)
 
 plugins {
     id 'org.springframework.boot'
@@ -21,4 +21,12 @@ bootWar {
 
 war {
     archiveFileName = 'gw.war'
+}
+
+bootRun {
+    def activeProfile = System.getenv('SPRING_PROFILES_ACTIVE') ?: project.findProperty('springProfilesActive')
+    if (activeProfile) {
+        args "--spring.profiles.active=${activeProfile}"
+        systemProperty 'spring.profiles.active', activeProfile
+    }
 }

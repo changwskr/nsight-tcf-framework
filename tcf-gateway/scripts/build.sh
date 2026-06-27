@@ -9,15 +9,20 @@ GRADLE="${GRADLE:-gradle}"
 TASK=":${MODULE}:bootWar"
 if [[ "${1:-}" == "clean" ]]; then
   TASK="clean ${TASK}"
-elif [[ "${1:-}" == "run" ]]; then
+elif [[ "${1:-}" == "run" || "${1:-}" == "run-local" || "${1:-}" == "run-dev" ]]; then
   TASK=":${MODULE}:bootRun"
+  if [[ "${1:-}" == "run-local" ]]; then
+    export SPRING_PROFILES_ACTIVE=local
+  elif [[ "${1:-}" == "run-dev" ]]; then
+    export SPRING_PROFILES_ACTIVE=dev
+  fi
 fi
 
 cd "${PROJECT_HOME}"
-echo "[gw-build] ${GRADLE} ${TASK}"
+echo "[gw-build] ${GRADLE} ${TASK} (SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-default})"
 "${GRADLE}" ${TASK}
 
-if [[ "${1:-}" == "run" ]]; then
+if [[ "${1:-}" == "run" || "${1:-}" == "run-local" || "${1:-}" == "run-dev" ]]; then
   exit 0
 fi
 

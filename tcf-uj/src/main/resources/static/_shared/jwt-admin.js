@@ -5,7 +5,7 @@
 window.JwtAdmin = (function () {
   const BUSINESS_CODE = 'JWT';
   const SESSION_KEY = 'nsight.jwt.session';
-  const LOCAL_PORT = 8100;
+  const LOCAL_PORT = 8110;
   const CONTEXT_PATH = '/jwt';
 
   const NAV = [
@@ -253,7 +253,7 @@ window.JwtAdmin = (function () {
       if (!msg && relay.httpStatus === 502) {
         msg = isTomcatUiDeployment()
           ? 'tcf-jwt(/jwt)에 연결할 수 없습니다. Tomcat 기동 상태를 확인하세요.'
-          : 'tcf-jwt(8100)에 연결할 수 없습니다. tcf-jwt를 먼저 실행하세요.';
+          : 'tcf-jwt(8110)에 연결할 수 없습니다. tcf-jwt를 먼저 실행하세요.';
       }
       await notifyTransactionError(payload, relay, msg || `HTTP ${relay.httpStatus}`);
       throw new Error(msg || `HTTP ${relay.httpStatus}`);
@@ -487,7 +487,7 @@ window.JwtAdmin = (function () {
       ? `릴레이 대상: <code>${targetUrl}</code>`
       : isTomcatUiDeployment()
       ? 'Tomcat(8080)에서 /jwt, /uj WAR 배포를 확인하세요.'
-      : 'tcf-jwt(포트 8100)와 tcf-uj(8102)를 함께 기동했는지 확인하세요.';
+      : 'tcf-jwt(포트 8110)와 tcf-uj(8102)를 함께 기동했는지 확인하세요.';
     container.innerHTML = `<div class="om-alert error">${message}<br><small>${hint}</small></div>`;
   }
 

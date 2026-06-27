@@ -17,7 +17,7 @@ import org.springframework.web.client.RestClientResponseException;
 
 @Service
 public class GatewayRelayService {
-    private static final int GATEWAY_LOCAL_PORT = 8101;
+    private static final int GATEWAY_LOCAL_PORT = 8100;
     private static final String GATEWAY_CONTEXT = "/gw";
 
     private final TcfUjProperties properties;
@@ -148,7 +148,7 @@ public class GatewayRelayService {
 
     private String connectionErrorJson(String businessCode, String targetUrl, String message) {
         return """
-                {"error":"%s","targetUrl":"%s","businessCode":"%s","hint":"tcf-gateway(8101 또는 /gw) 기동 상태를 확인하세요."}
+                {"error":"%s","targetUrl":"%s","businessCode":"%s","hint":"tcf-gateway(8100 또는 /gw) 기동 상태를 확인하세요."}
                 """.formatted(escapeJson(message), escapeJson(targetUrl), businessCode.toUpperCase(Locale.ROOT));
     }
 

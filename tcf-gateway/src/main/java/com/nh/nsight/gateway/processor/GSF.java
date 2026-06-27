@@ -2,6 +2,7 @@ package com.nh.nsight.gateway.processor;
 
 import com.nh.nsight.gateway.catalog.GatewayBusinessModules;
 import com.nh.nsight.gateway.catalog.GatewayBusinessModules.Module;
+import com.nh.nsight.gateway.config.GatewayProperties;
 import com.nh.nsight.gateway.security.GatewaySessionValidator;
 import com.nh.nsight.gateway.support.GatewayProxyTrace;
 import com.nh.nsight.gateway.support.GatewayRequestEnricher;
@@ -13,10 +14,13 @@ import org.springframework.util.StringUtils;
 public class GSF {
     private static final String PHASE = "GSF.preProcess";
 
+    private final GatewayProperties properties;
     private final GatewaySessionValidator sessionValidator;
     private final GatewayRequestEnricher enricher;
 
-    public GSF(GatewaySessionValidator sessionValidator, GatewayRequestEnricher enricher) {
+    public GSF(GatewayProperties properties, GatewaySessionValidator sessionValidator,
+               GatewayRequestEnricher enricher) {
+        this.properties = properties;
         this.sessionValidator = sessionValidator;
         this.enricher = enricher;
     }
@@ -35,10 +39,17 @@ public class GSF {
             Module module = GatewayBusinessModules.require(businessCode);
 
             GatewayProxyTrace.log(PHASE, "sessionValidator.validate");
-            sessionValidator.validate(businessCode, cookieHeader);
+            sessionValidator.validate(businessCode, cookieHeader, requestBody);
 
             GatewayProxyTrace.log(PHASE, "resolveOnlineUrl");
-            String targetUrl = resolveOnlineUrl(module, deploymentMode, bootrunHost, tomcatGatewayUrl);
+            String mode = effectiveDeploymentMode(deploymentMode);
+            String host = effectiveBootrunHost(bootrunHost);
+            String tomcatBase = effectiveTomcatBaseUrl(tomcatGatewayUrl);
+            GatewayProxyTrace.log(PHASE, "routing deploymentMode=" + mode
+                    + " bootrunHost=" + host
+                    + " tomcatBaseUrl=" + tomcatBase
+                    + " ignoreRequestParams=" + properties.getRouting().isIgnoreRequestParams());
+            String targetUrl = resolveOnlineUrl(module, mode, host, tomcatBase);
             GatewayProxyTrace.log(PHASE, "targetUrl=" + targetUrl);
             GatewayProxyTrace.log(PHASE, "enricher.enrich");
             String enrichedBody = enricher.enrich(requestBody, jwt);
@@ -50,24 +61,38 @@ public class GSF {
     }
 
     private String resolveOnlineUrl(Module module, String deploymentMode, String bootrunHost, String tomcatGatewayUrl) {
-        if ("JWT".equals(module.code())) {
-            if ("tomcat".equalsIgnoreCase(deploymentMode)) {
-                String base = StringUtils.hasText(tomcatGatewayUrl) ? tomcatGatewayUrl : "http://localhost:8080";
-                return trimTrailingSlash(base) + "/jwt/online";
-            }
-            if (StringUtils.hasText(bootrunHost)) {
-                return trimTrailingSlash(bootrunHost) + ":8100/online";
-            }
-            return "http://127.0.0.1:8100/online";
-        }
         if ("tomcat".equalsIgnoreCase(deploymentMode)) {
             String base = StringUtils.hasText(tomcatGatewayUrl) ? tomcatGatewayUrl : "http://localhost:8080";
+            if ("JWT".equals(module.code())) {
+                return trimTrailingSlash(base) + "/jwt/online";
+            }
             return trimTrailingSlash(base) + module.tomcatOnlinePath();
         }
         if (StringUtils.hasText(bootrunHost)) {
             return trimTrailingSlash(bootrunHost) + ":" + module.bootrunPort() + module.tomcatOnlinePath();
         }
         return module.defaultBootrunOnlineUrl();
+    }
+
+    private String effectiveDeploymentMode(String deploymentMode) {
+        if (!properties.getRouting().isIgnoreRequestParams() && StringUtils.hasText(deploymentMode)) {
+            return deploymentMode;
+        }
+        return properties.getRouting().getDeploymentMode().name();
+    }
+
+    private String effectiveBootrunHost(String bootrunHost) {
+        if (!properties.getRouting().isIgnoreRequestParams() && StringUtils.hasText(bootrunHost)) {
+            return bootrunHost;
+        }
+        return properties.getRouting().getBootrunHost();
+    }
+
+    private String effectiveTomcatBaseUrl(String tomcatGatewayUrl) {
+        if (!properties.getRouting().isIgnoreRequestParams() && StringUtils.hasText(tomcatGatewayUrl)) {
+            return tomcatGatewayUrl;
+        }
+        return properties.getRouting().getTomcatBaseUrl();
     }
 
     private String trimTrailingSlash(String value) {

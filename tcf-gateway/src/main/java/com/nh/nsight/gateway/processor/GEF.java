@@ -2,6 +2,7 @@ package com.nh.nsight.gateway.processor;
 
 import com.nh.nsight.gateway.security.GatewayAuthException;
 import com.nh.nsight.gateway.service.RouteResult;
+import com.nh.nsight.gateway.support.GatewayLoginSessionSupport;
 import com.nh.nsight.gateway.support.GatewayProxyTrace;
 import java.util.List;
 import java.util.Locale;
@@ -12,19 +13,33 @@ import org.springframework.web.client.RestClientResponseException;
 public class GEF {
     private static final String PHASE = "GEF";
 
+    ///////////////////////////////////////////////////////////////////////////
+    /// Login Session Support
+    ////////////////////////////////////////////////////////////////////////////
+    private final GatewayLoginSessionSupport loginSessionSupport;
+
+    public GEF(GatewayLoginSessionSupport loginSessionSupport) {
+        this.loginSessionSupport = loginSessionSupport;
+    }
+
     public RouteResult success(RouteContext context, GatewayForwardResponse response) {
         String phase = PHASE + ".success";
         GatewayProxyTrace.start(phase);
         GatewayProxyTrace.log(phase, "targetUrl=" + context.targetUrl());
         GatewayProxyTrace.log(phase, "httpStatus=" + response.httpStatus() + " elapsedMs=" + response.elapsedMs());
+
+        if (response.httpStatus() >= 200 && response.httpStatus() < 300) {
+            GatewayProxyTrace.log(phase, ">>>>>>>> tryStoreOmLogin session store >>>>>>>>>>>> ");
+            loginSessionSupport.tryStoreOmLogin(context.enrichedBody(), response.responseBody())
+                    .ifPresent(user -> loginSessionSupport.printLoginSession(phase, user));
+        }
         GatewayProxyTrace.log(phase, "RouteResult");
         RouteResult result = new RouteResult(
                 context.targetUrl(),
                 response.httpStatus(),
                 response.elapsedMs(),
                 response.responseBody(),
-                response.setCookies()
-        );
+                response.setCookies());
         GatewayProxyTrace.end(phase);
         return result;
     }
@@ -42,8 +57,7 @@ public class GEF {
                 error.httpStatus(),
                 elapsedMs,
                 authErrorJson(businessCode, error),
-                List.of()
-        );
+                List.of());
         GatewayProxyTrace.end(phase);
         return result;
     }
@@ -62,8 +76,7 @@ public class GEF {
                 error.getStatusCode().value(),
                 System.currentTimeMillis() - context.startedAtMillis(),
                 error.getResponseBodyAsString(),
-                setCookies
-        );
+                setCookies);
         GatewayProxyTrace.end(phase);
         return result;
     }
@@ -79,14 +92,14 @@ public class GEF {
                 502,
                 System.currentTimeMillis() - context.startedAtMillis(),
                 connectionErrorJson(context, error.getMessage()),
-                List.of()
-        );
+                List.of());
         GatewayProxyTrace.end(phase);
         return result;
     }
 
     private String authErrorJson(String businessCode, GatewayAuthException error) {
-        String safeMessage = error.getMessage() == null ? "" : error.getMessage().replace("\\", "\\\\").replace("\"", "\\\"");
+        String safeMessage = error.getMessage() == null ? ""
+                : error.getMessage().replace("\\", "\\\\").replace("\"", "\\\"");
         return """
                 {"error":"%s","businessCode":"%s","hint":"gateway 인증에 실패했습니다."}
                 """.formatted(safeMessage, businessCode.toUpperCase(Locale.ROOT));
@@ -94,7 +107,8 @@ public class GEF {
 
     private String connectionErrorJson(RouteContext context, String message) {
         String safeMessage = message == null ? "" : message.replace("\\", "\\\\").replace("\"", "\\\"");
-        String safeUrl = context.targetUrl() == null ? "" : context.targetUrl().replace("\\", "\\\\").replace("\"", "\\\"");
+        String safeUrl = context.targetUrl() == null ? ""
+                : context.targetUrl().replace("\\", "\\\\").replace("\"", "\\\"");
         return """
                 {"error":"%s","targetUrl":"%s","hint":"%s(포트 %d 또는 /%s) 기동 상태를 확인하세요."}
                 """.formatted(
@@ -102,7 +116,6 @@ public class GEF {
                 safeUrl,
                 context.module().serviceHint(),
                 context.module().bootrunPort(),
-                context.module().code().toLowerCase(Locale.ROOT)
-        );
+                context.module().code().toLowerCase(Locale.ROOT));
     }
 }
