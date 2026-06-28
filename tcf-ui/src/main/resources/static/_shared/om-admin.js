@@ -853,9 +853,15 @@ window.OmAdmin = (function () {
     }
   }
 
+  function resolveUpdownloadDeploymentMode() {
+    if (isTomcatUiDeployment()) return 'tomcat';
+    if (config.omGatewayEnabled !== false) return 'tomcat';
+    return config.deploymentMode || 'bootrun';
+  }
+
   function updownloadQuery(extra) {
     const params = new URLSearchParams({
-      deploymentMode: isTomcatUiDeployment() ? 'tomcat' : (config.deploymentMode || 'bootrun'),
+      deploymentMode: resolveUpdownloadDeploymentMode(),
       bootrunHost: config.bootrunHost,
       tomcatGatewayUrl: config.tomcatGatewayUrl || 'http://localhost:8080'
     });

@@ -35,11 +35,19 @@ public class UpdownloadRelayService {
     }
 
     public String resolveBaseUrl(RelayOptions options) {
-        BusinessModuleInfo module = catalog.findByCode(BUSINESS_CODE);
-        if (resolveMode(options) == TcfUjProperties.DeploymentMode.tomcat) {
+        if (usesTomcatOmEndpoint(options)) {
             return trimTrailingSlash(resolveTomcatGateway(options)) + "/om";
         }
+        BusinessModuleInfo module = catalog.findByCode(BUSINESS_CODE);
         return trimTrailingSlash(resolveBootrunHost(options)) + ":" + module.localPort();
+    }
+
+    /** OM이 gateway→Tomcat(/om)일 때 updownload도 동일 WAR의 /ud/files 를 사용한다. */
+    private boolean usesTomcatOmEndpoint(RelayOptions options) {
+        if (properties.isOmGatewayEnabled()) {
+            return true;
+        }
+        return resolveMode(options) == TcfUjProperties.DeploymentMode.tomcat;
     }
 
     public String relayUpload(MultipartFile file, String userId, String description, String businessCode,
@@ -166,18 +174,21 @@ public class UpdownloadRelayService {
 
     private String connectionErrorJson(String targetUrl, Exception e) {
         String message = e.getMessage() == null ? "대상 서비스에 연결할 수 없습니다." : e.getMessage();
+        String hint = usesTomcatOmEndpoint(null)
+                ? "Tomcat(8080) /om WAR 배포 및 /om/ud/files API를 확인하세요."
+                : "tcf-om(8097)을 기동했는지 확인하세요.";
         return """
                 {
                   "header": { "businessCode": "UD" },
                   "body": {
                     "error": "%s",
                     "targetUrl": "%s",
-                    "hint": "tcf-om(8097)을 기동했는지 확인하세요.",
+                    "hint": "%s",
                     "files": [],
                     "totalCount": 0
                   }
                 }
-                """.formatted(escapeJson(message), escapeJson(targetUrl));
+                """.formatted(escapeJson(message), escapeJson(targetUrl), escapeJson(hint));
     }
 
     private TcfUjProperties.DeploymentMode resolveMode(RelayOptions options) {

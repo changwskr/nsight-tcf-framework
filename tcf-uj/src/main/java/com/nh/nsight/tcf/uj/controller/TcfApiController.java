@@ -104,7 +104,7 @@ public class TcfApiController {
         config.put("gatewayOmUrl", gatewayRelayService.resolveGatewayOmUrl(
                 new RelayOptions(properties.getDeploymentMode().name(), properties.getBootrunHost(),
                         properties.getTomcatGatewayUrl())));
-        config.put("omGatewayEnabled", true);
+        config.put("omGatewayEnabled", properties.isOmGatewayEnabled());
         return config;
     }
 

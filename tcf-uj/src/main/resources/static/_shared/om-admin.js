@@ -209,7 +209,7 @@ window.OmAdmin = (function () {
     }
   });
 
-  let config = { deploymentMode: 'bootrun', bootrunHost: 'http://127.0.0.1', tomcatGatewayUrl: 'http://localhost:8080' };
+  let config = { deploymentMode: 'bootrun', bootrunHost: 'http://127.0.0.1', tomcatGatewayUrl: 'http://localhost:8080', omGatewayEnabled: true };
   let targetUrl = '-';
 
   function todayIsoDate() {
@@ -478,6 +478,7 @@ window.OmAdmin = (function () {
       config.bootrunHost = data.bootrunHost || config.bootrunHost;
       config.tomcatGatewayUrl = data.tomcatGatewayUrl || config.tomcatGatewayUrl;
       config.gatewayOmUrl = data.gatewayOmUrl || config.gatewayOmUrl;
+      config.omGatewayEnabled = data.omGatewayEnabled !== false;
     }
     const targetPath = `/api/business-modules/${BUSINESS_CODE}/target-url?${buildRelayQuery()}`;
     const urlRes = await fetch(uiPath(targetPath));
@@ -732,9 +733,15 @@ window.OmAdmin = (function () {
     }
   }
 
+  function resolveUpdownloadDeploymentMode() {
+    if (isTomcatUiDeployment()) return 'tomcat';
+    if (config.omGatewayEnabled !== false) return 'tomcat';
+    return config.deploymentMode || 'bootrun';
+  }
+
   function updownloadQuery(extra) {
     const params = new URLSearchParams({
-      deploymentMode: isTomcatUiDeployment() ? 'tomcat' : (config.deploymentMode || 'bootrun'),
+      deploymentMode: resolveUpdownloadDeploymentMode(),
       bootrunHost: config.bootrunHost,
       tomcatGatewayUrl: config.tomcatGatewayUrl || 'http://localhost:8080'
     });
