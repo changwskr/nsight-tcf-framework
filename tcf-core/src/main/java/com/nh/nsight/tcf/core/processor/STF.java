@@ -9,6 +9,7 @@ import com.nh.nsight.tcf.core.message.StandardHeader;
 import com.nh.nsight.tcf.core.message.StandardRequest;
 import com.nh.nsight.tcf.core.security.AuthorizationValidator;
 import com.nh.nsight.tcf.core.security.SessionValidator;
+import com.nh.nsight.tcf.core.support.TcfConsoleLog;
 import com.nh.nsight.tcf.core.timeout.TimeoutPolicyService;
 import com.nh.nsight.tcf.core.validation.StandardHeaderValidator;
 import com.nh.nsight.tcf.util.GuidGenerator;
@@ -28,12 +29,12 @@ public class STF {
     private final TransactionLogService transactionLogService;
 
     public STF(StandardHeaderValidator headerValidator,
-               SessionValidator sessionValidator,
-               AuthorizationValidator authorizationValidator,
-               IdempotencyChecker idempotencyChecker,
-               TransactionControlService transactionControlService,
-               TimeoutPolicyService timeoutPolicyService,
-               TransactionLogService transactionLogService) {
+            SessionValidator sessionValidator,
+            AuthorizationValidator authorizationValidator,
+            IdempotencyChecker idempotencyChecker,
+            TransactionControlService transactionControlService,
+            TimeoutPolicyService timeoutPolicyService,
+            TransactionLogService transactionLogService) {
         this.headerValidator = headerValidator;
         this.sessionValidator = sessionValidator;
         this.authorizationValidator = authorizationValidator;
@@ -43,34 +44,46 @@ public class STF {
         this.transactionLogService = transactionLogService;
     }
 
-    public TransactionContext preProcess(StandardRequest<Map<String, Object>> request) {
-        System.out.println("\n ======================================================================[STF.preProcess] start");
-        System.out.println(" ======================================================================[STF.preProcess] headerValidator.validate");
-        headerValidator.validate(request);
+    public TransactionContext preProcess(StandardRequest<Map<String, Object>> request, StandardHeader clientHeader) {
+        TcfConsoleLog.println("=====================================================[STF.preProcess] start");
         StandardHeader header = request.getHeader();
+        if (clientHeader == null) {
+            clientHeader = StandardHeader.copyOf(header);
+        }
+        TcfConsoleLog.println(
+                " =====================================================[STF.preProcess] headerValidator.validate");
+        headerValidator.validate(request);
         if (!StringUtils.hasText(header.getGuid())) {
             header.setGuid(GuidGenerator.newGuid());
         }
         if (!StringUtils.hasText(header.getTraceId())) {
             header.setTraceId(GuidGenerator.newTraceId());
         }
-        System.out.println(" ======================================================================[STF.preProcess] guid/traceId assigned");
-        TransactionContext context = new TransactionContext(header);
+        clientHeader.applyGeneratedCorrelationIdsFrom(header);
+        TcfConsoleLog.println(
+                " =====================================================[STF.preProcess] guid/traceId assigned");
+        TransactionContext context = new TransactionContext(header, clientHeader);
         TransactionContextHolder.set(context);
         putMdc(header);
-        System.out.println(" ======================================================================[STF.preProcess] sessionValidator.validate");
+        TcfConsoleLog.println(
+                " =====================================================[STF.preProcess] sessionValidator.validate");
         sessionValidator.validate(header);
-        System.out.println(" ======================================================================[STF.preProcess] authorizationValidator.validate");
+        TcfConsoleLog.println(
+                " =====================================================[STF.preProcess] authorizationValidator.validate");
         authorizationValidator.validate(header);
-        System.out.println(" ======================================================================[STF.preProcess] transactionControlService.check");
+        TcfConsoleLog.println(
+                " =====================================================[STF.preProcess] transactionControlService.check");
         transactionControlService.check(header);
-        System.out.println(" ======================================================================[STF.preProcess] timeoutPolicyService.resolveAndApply");
+        TcfConsoleLog.println(
+                " =====================================================[STF.preProcess] timeoutPolicyService.resolveAndApply");
         timeoutPolicyService.resolveAndApply(header, context);
-        System.out.println(" ======================================================================[STF.preProcess] idempotencyChecker.checkAndMarkProcessing");
+        TcfConsoleLog.println(
+                " =====================================================[STF.preProcess] idempotencyChecker.checkAndMarkProcessing");
         idempotencyChecker.checkAndMarkProcessing(header);
-        System.out.println(" ======================================================================[STF.preProcess] transactionLogService.start");
+        TcfConsoleLog.println(
+                " =====================================================[STF.preProcess] transactionLogService.start");
         transactionLogService.start(context);
-        System.out.println(" ======================================================================[STF.preProcess] end");
+        TcfConsoleLog.println(" =====================================================[STF.preProcess] end");
         return context;
     }
 

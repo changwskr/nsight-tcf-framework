@@ -4,6 +4,7 @@ import com.nh.nsight.tcf.core.error.BusinessException;
 import com.nh.nsight.tcf.core.error.ErrorCode;
 import com.nh.nsight.tcf.core.message.StandardHeader;
 import com.nh.nsight.tcf.core.message.StandardRequest;
+import com.nh.nsight.tcf.core.message.catalog.TcfStandardMessageCatalog;
 import com.nh.nsight.tcf.core.support.TcfConsoleLog;
 import java.util.Map;
 import org.springframework.stereotype.Component;
@@ -20,16 +21,10 @@ public class StandardHeaderValidator {
         StandardHeader header = request.getHeader();
         TcfConsoleLog.step("HeaderValidator", "validate", "header.normalize");
         header.normalize();
-        TcfConsoleLog.step("HeaderValidator", "validate", "required serviceId");
-        required(header.getServiceId(), "serviceId");
-        TcfConsoleLog.step("HeaderValidator", "validate", "required businessCode");
-        required(header.getBusinessCode(), "businessCode");
-        TcfConsoleLog.step("HeaderValidator", "validate", "required transactionCode");
-        required(header.getTransactionCode(), "transactionCode");
-        TcfConsoleLog.step("HeaderValidator", "validate", "required processingType");
-        required(header.getProcessingType(), "processingType");
-        TcfConsoleLog.step("HeaderValidator", "validate", "required channelId");
-        required(header.getChannelId(), "channelId");
+        for (String fieldKey : TcfStandardMessageCatalog.requiredRequestHeaderFieldKeys()) {
+            TcfConsoleLog.step("HeaderValidator", "validate", "required " + fieldKey);
+            required(TcfStandardMessageCatalog.readHeaderField(header, fieldKey), fieldKey);
+        }
         TcfConsoleLog.boundary("HeaderValidator", "validate", "END");
     }
 

@@ -1,6 +1,7 @@
 package com.nh.nsight.marketing.om.dao;
 
 import com.nh.nsight.marketing.om.mapper.OmOperationMapper;
+import java.sql.Clob;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -470,6 +471,105 @@ public class OmOperationDao {
 
     public int deleteExpiredSpringSessions(long now) {
         return mapper.deleteExpiredSpringSessions(now);
+    }
+
+    public List<Map<String, Object>> searchMessageStructs(Map<String, Object> criteria) {
+        return mapper.searchMessageStructs(criteria);
+    }
+
+    public int countMessageStructs(Map<String, Object> criteria) {
+        return mapper.countMessageStructs(criteria);
+    }
+
+    public Map<String, Object> selectMessageStructById(String structId) {
+        return normalizeMessageStructRow(mapper.selectMessageStructById(structId));
+    }
+
+    public Map<String, Object> selectMessageStructByCode(String structCode) {
+        return normalizeMessageStructRow(mapper.selectMessageStructByCode(structCode));
+    }
+
+    public List<Map<String, Object>> searchMessageFieldsByStructId(String structId) {
+        return mapper.searchMessageFieldsByStructId(structId).stream()
+                .map(this::normalizeMessageFieldRow)
+                .toList();
+    }
+
+    public int insertMessageStruct(Map<String, Object> row) {
+        return mapper.insertMessageStruct(row);
+    }
+
+    public int updateMessageStruct(Map<String, Object> row) {
+        return mapper.updateMessageStruct(row);
+    }
+
+    public int disableMessageStruct(Map<String, Object> key) {
+        return mapper.disableMessageStruct(key);
+    }
+
+    public int deleteMessageFieldsByStructId(String structId) {
+        return mapper.deleteMessageFieldsByStructId(structId);
+    }
+
+    public int insertMessageField(Map<String, Object> row) {
+        return mapper.insertMessageField(row);
+    }
+
+    private Map<String, Object> normalizeMessageStructRow(Map<String, Object> row) {
+        if (row == null) {
+            return null;
+        }
+        row.put("sampleJson", toJsonSafeString(row.get("sampleJson")));
+        return row;
+    }
+
+    private Map<String, Object> normalizeMessageFieldRow(Map<String, Object> row) {
+        if (row == null) {
+            return null;
+        }
+        row.put("maxLength", toInteger(row.get("maxLength")));
+        row.put("sortOrder", toInteger(row.get("sortOrder")));
+        return row;
+    }
+
+    private static String toJsonSafeString(Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof Clob clob) {
+            return readClob(clob);
+        }
+        if (value instanceof String text) {
+            return text.isBlank() ? null : text;
+        }
+        return String.valueOf(value);
+    }
+
+    private static Integer toInteger(Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof Number number) {
+            return number.intValue();
+        }
+        try {
+            return Integer.parseInt(String.valueOf(value));
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private static String readClob(Clob clob) {
+        try {
+            long length = clob.length();
+            if (length <= 0) {
+                return null;
+            }
+            int size = length > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) length;
+            return clob.getSubString(1, size);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
 

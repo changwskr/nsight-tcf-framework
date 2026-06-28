@@ -40,6 +40,46 @@ public class StandardHeader implements Serializable {
         }
     }
 
+    /** STF 처리 전 클라이언트 Header 값 보존용 복사본. */
+    public static StandardHeader copyOf(StandardHeader source) {
+        if (source == null) {
+            return null;
+        }
+        StandardHeader copy = new StandardHeader();
+        copy.setSystemId(source.getSystemId());
+        copy.setBusinessCode(source.getBusinessCode());
+        copy.setServiceId(source.getServiceId());
+        copy.setServiceName(source.getServiceName());
+        copy.setTransactionCode(source.getTransactionCode());
+        copy.setProcessingType(source.getProcessingType());
+        copy.setGuid(source.getGuid());
+        copy.setTraceId(source.getTraceId());
+        copy.setChannelId(source.getChannelId());
+        copy.setUserId(source.getUserId());
+        copy.setBranchId(source.getBranchId());
+        copy.setCenterId(source.getCenterId());
+        copy.setRequestTime(source.getRequestTime());
+        copy.setClientIp(source.getClientIp());
+        copy.setIdempotencyKey(source.getIdempotencyKey());
+        return copy;
+    }
+
+    /**
+     * 클라이언트가 보내지 않은 guid/traceId만 서버 처리값으로 보완한다.
+     * normalize 등 기타 필드는 클라이언트 원본을 유지한다.
+     */
+    public void applyGeneratedCorrelationIdsFrom(StandardHeader processed) {
+        if (processed == null) {
+            return;
+        }
+        if ((guid == null || guid.isBlank()) && processed.getGuid() != null && !processed.getGuid().isBlank()) {
+            guid = processed.getGuid();
+        }
+        if ((traceId == null || traceId.isBlank()) && processed.getTraceId() != null && !processed.getTraceId().isBlank()) {
+            traceId = processed.getTraceId();
+        }
+    }
+
     public String safeServiceId() {
         return Objects.toString(serviceId, "UNKNOWN");
     }

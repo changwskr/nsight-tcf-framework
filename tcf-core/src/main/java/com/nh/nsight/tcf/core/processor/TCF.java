@@ -23,9 +23,9 @@ public class TCF {
     private final OnlineTransactionTimeoutExecutor onlineTransactionTimeoutExecutor;
 
     public TCF(STF stf,
-               TransactionDispatcher dispatcher,
-               ETF etf,
-               OnlineTransactionTimeoutExecutor onlineTransactionTimeoutExecutor) {
+            TransactionDispatcher dispatcher,
+            ETF etf,
+            OnlineTransactionTimeoutExecutor onlineTransactionTimeoutExecutor) {
         this.stf = stf;
         this.dispatcher = dispatcher;
         this.etf = etf;
@@ -34,51 +34,51 @@ public class TCF {
 
     public StandardResponse<Object> process(StandardRequest<Map<String, Object>> request) {
         TransactionContext context = null;
-        TcfConsoleLog
-                .println("\n ====================================================================[TCF.process] start");
+        StandardHeader clientHeader = StandardHeader.copyOf(request == null ? null : request.getHeader());
+        System.out.println("======================================================[TCF.process] start");
         try {
             logClientRequest(request);
 
-            TcfConsoleLog.println(" ======================================[TCF.process] STF START");
-            context = stf.preProcess(request);
-            TcfConsoleLog.println(" ======================================[TCF.process] STF END");
+            System.out.println(" ============================[TCF.process] STF START");
+            context = stf.preProcess(request, clientHeader);
+            System.out.println(" ============================[TCF.process] STF END");
 
-            TcfConsoleLog.println(" ======================================[TCF.process] DISPATCHER  START");
+            System.out.println(" ============================[TCF.process] DISPATCHER  START");
             TransactionContext dispatchContext = context;
             Object body = onlineTransactionTimeoutExecutor.execute(
                     () -> dispatcher.dispatch(request, dispatchContext));
-            TcfConsoleLog.println(" ======================================[TCF.process] DISPATCHER END");
+            System.out.println(" ============================[TCF.process] DISPATCHER END");
 
-            TcfConsoleLog.println(" ======================================[TCF.process] ETF START");
-            StandardResponse<Object> response = etf.success(request, body, context);
-            TcfConsoleLog.println(" ======================================[TCF.process] ETF END");
+            System.out.println(" ============================[TCF.process] ETF START");
+            StandardResponse<Object> response = etf.success(request, body, context, clientHeader);
+            System.out.println(" ============================[TCF.process] ETF END");
 
             logClientResponse(response);
-            TcfConsoleLog.println(
-                    " =============================================================[TCF.process] end (success)");
+            System.out.println(" ========================================================[TCF.process] end (success)");
             return response;
         } catch (BusinessException e) {
-            TcfConsoleLog.println(" =====================================[TCF.process] ETF.businessFail START");
-            StandardResponse<Object> response = etf.businessFail(request, e, context);
+            System.out.println(" ============================[TCF.process] ETF.businessFail START");
+            StandardResponse<Object> response = etf.businessFail(request, e, context, clientHeader);
             logClientResponse(response);
-            TcfConsoleLog.println(" ====================================[TCF.process] end (businessFail)");
+            System.out.println(" ============================[TCF.process] end (businessFail)");
             return response;
         } catch (Exception e) {
             var timeoutError = TimeoutExceptionResolver.toBusinessException(e);
             if (timeoutError.isPresent()) {
-                TcfConsoleLog.println(" =====================================[TCF.process] ETF.businessFail (timeout)");
-                StandardResponse<Object> response = etf.businessFail(request, timeoutError.get(), context);
+                System.out.println(" ========================[TCF.process] ETF.businessFail (timeout)");
+                StandardResponse<Object> response = etf.businessFail(request, timeoutError.get(), context,
+                        clientHeader);
                 logClientResponse(response);
-                TcfConsoleLog.println(" ====================================[TCF.process] end (timeoutFail)");
+                System.out.println(" =======================[TCF.process] end (timeoutFail)");
                 return response;
             }
-            TcfConsoleLog.println(" ===============================================[TCF.process] etf.systemError");
-            StandardResponse<Object> response = etf.systemError(request, e, context);
+            System.out.println(" ===========================[TCF.process] etf.systemError");
+            StandardResponse<Object> response = etf.systemError(request, e, context, clientHeader);
             logClientResponse(response);
-            TcfConsoleLog.println(" ===============================================[TCF.process] end (systemError)");
+            System.out.println(" ==========================================[TCF.process] end (systemError)");
             return response;
         } finally {
-            TcfConsoleLog.println(" ===============================================[TCF.process] cleanup");
+            System.out.println(" =========================================[TCF.process] cleanup");
             TransactionContextHolder.clear();
             TimeoutContextHolder.clear();
             MDC.clear();
@@ -86,63 +86,62 @@ public class TCF {
     }
 
     private void logClientRequest(StandardRequest<Map<String, Object>> request) {
-        TcfConsoleLog
-                .println(" ======================================[TCF.logClientRequest] client request (incoming)");
+        System.out.println(" ======================================[TCF.logClientRequest] client request (incoming)");
         if (request == null) {
-            TcfConsoleLog.println("  request=null");
+            System.out.println("  request=null");
             return;
         }
         StandardHeader header = request.getHeader();
         if (header == null) {
-            TcfConsoleLog.println("  [header] null");
+            System.out.println("  [header] null");
         } else {
-            TcfConsoleLog.println("  [header]");
-            TcfConsoleLog.println("    systemId=" + header.getSystemId());
-            TcfConsoleLog.println("    businessCode=" + header.getBusinessCode());
-            TcfConsoleLog.println("    serviceId=" + header.getServiceId());
-            TcfConsoleLog.println("    transactionCode=" + header.getTransactionCode());
-            TcfConsoleLog.println("    processingType=" + header.getProcessingType());
-            TcfConsoleLog.println("    guid=" + header.getGuid());
-            TcfConsoleLog.println("    traceId=" + header.getTraceId());
-            TcfConsoleLog.println("    channelId=" + header.getChannelId());
-            TcfConsoleLog.println("    userId=" + header.getUserId());
-            TcfConsoleLog.println("    branchId=" + header.getBranchId());
-            TcfConsoleLog.println("    centerId=" + header.getCenterId());
-            TcfConsoleLog.println("    requestTime=" + header.getRequestTime());
-            TcfConsoleLog.println("    clientIp=" + header.getClientIp());
-            TcfConsoleLog.println("    idempotencyKey=" + header.getIdempotencyKey());
+            System.out.println("  [header]");
+            printHeaderFields(header);
         }
-        TcfConsoleLog.println("  [body]");
-        TcfConsoleLog.println(formatPayload(request.getBody()));
+        System.out.println("  [body]");
+        System.out.println(formatPayload(request.getBody()));
     }
 
     private void logClientResponse(StandardResponse<Object> response) {
-        TcfConsoleLog
-                .println(" ======================================[TCF.logClientRequest] client response (outgoing)");
+        System.out.println(" ======================================[TCF.logClientResponse] client response (outgoing)");
         if (response == null) {
-            TcfConsoleLog.println("  response=null");
+            System.out.println("  response=null");
             return;
         }
         StandardHeader header = response.getHeader();
         if (header == null) {
-            TcfConsoleLog.println("  [header] null");
+            System.out.println("  [header] null");
         } else {
-            TcfConsoleLog.println("  [header]");
-            TcfConsoleLog.println("    businessCode=" + header.getBusinessCode());
-            TcfConsoleLog.println("    serviceId=" + header.getServiceId());
-            TcfConsoleLog.println("    transactionCode=" + header.getTransactionCode());
-            TcfConsoleLog.println("    guid=" + header.getGuid());
-            TcfConsoleLog.println("    traceId=" + header.getTraceId());
+            System.out.println("  [header] (client echo)");
+            printHeaderFields(header);
         }
         if (response.getResult() != null) {
-            TcfConsoleLog.println("  [result]");
-            TcfConsoleLog.println("    resultCode=" + response.getResult().getResultCode());
-            TcfConsoleLog.println("    resultMessage=" + response.getResult().getResultMessage());
-            TcfConsoleLog.println("    errorCode=" + response.getResult().getErrorCode());
-            TcfConsoleLog.println("    errorMessage=" + response.getResult().getErrorMessage());
+            System.out.println("  [result]");
+            System.out.println("resultCode=" + response.getResult().getResultCode());
+            System.out.println("resultMessage=" + response.getResult().getResultMessage());
+            System.out.println("errorCode=" + response.getResult().getErrorCode());
+            System.out.println("errorMessage=" + response.getResult().getErrorMessage());
         }
-        TcfConsoleLog.println("  [body]");
-        TcfConsoleLog.println(formatPayload(response.getBody()));
+        System.out.println("  [body]");
+        System.out.println(formatPayload(response.getBody()));
+    }
+
+    private void printHeaderFields(StandardHeader header) {
+        System.out.println("systemId=" + header.getSystemId());
+        System.out.println("businessCode=" + header.getBusinessCode());
+        System.out.println("serviceId=" + header.getServiceId());
+        System.out.println("serviceName=" + header.getServiceName());
+        System.out.println("transactionCode=" + header.getTransactionCode());
+        System.out.println("processingType=" + header.getProcessingType());
+        System.out.println("guid=" + header.getGuid());
+        System.out.println("traceId=" + header.getTraceId());
+        System.out.println("channelId=" + header.getChannelId());
+        System.out.println("userId=" + header.getUserId());
+        System.out.println("branchId=" + header.getBranchId());
+        System.out.println("centerId=" + header.getCenterId());
+        System.out.println("requestTime=" + header.getRequestTime());
+        System.out.println("clientIp=" + header.getClientIp());
+        System.out.println("idempotencyKey=" + header.getIdempotencyKey());
     }
 
     private String formatPayload(Object value) {

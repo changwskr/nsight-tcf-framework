@@ -23,7 +23,7 @@ TCF.process(request)
 
 | 패키지 | 설명 |
 |--------|------|
-| `message` | `StandardRequest`, `StandardResponse`, `StandardHeader`, `Result` |
+| `message` | `StandardRequest`, `StandardResponse`, `StandardHeader`, `Result`, `TcfStandardMessageCatalog` |
 | `processor` | `TCF`, `STF`, `ETF` |
 | `dispatch` | `TransactionDispatcher` |
 | `transaction` | `TransactionHandler` 인터페이스 |

@@ -1,6 +1,14 @@
 package com.nh.nsight.tcf.util;
 
-public final class MaskingUtils {
+import com.nh.nsight.tcf.util.meta.CopiedFrom;
+import com.nh.nsight.tcf.util.meta.CopiedUtilityFlag;
+import com.nh.nsight.tcf.util.meta.UtilCategory;
+
+@CopiedFrom(module = "tcf-util", sourceClass = "MaskingUtils", category = UtilCategory.MASKING, nativeUtility = true)
+public final class MaskingUtils implements CopiedUtilityFlag {
+
+    public static final String COPIED_FROM_MODULE = "tcf-util";
+    public static final String COPIED_FROM_CLASS = "MaskingUtils";
     private MaskingUtils() {}
 
     public static String maskCustomerId(String value) {

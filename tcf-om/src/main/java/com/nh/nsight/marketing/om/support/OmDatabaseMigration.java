@@ -74,6 +74,10 @@ public class OmDatabaseMigration implements ApplicationRunner {
                 MERGE INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN) KEY (MENU_ID)
                 VALUES (?, ?, ?, ?, ?, ?)
                 """, "OM_TXC", "거래통제 관리", "/om/admin/transaction-control.html", "OM_GRP_OPS", 3, "Y");
+        jdbcTemplate.update("""
+                MERGE INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN) KEY (MENU_ID)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """, "OM_MSG", "전문구조 관리", "/om/admin/message-structure.html", "OM_GRP_OPS", 5, "Y");
         ServiceCatalogSeedData.mergeAll(jdbcTemplate);
         seedAuthCodeCommonCodes();
         seedCacheNameCommonCodes();
@@ -87,6 +91,8 @@ public class OmDatabaseMigration implements ApplicationRunner {
         ensureTransactionControlTable();
         TransactionControlSeedData.mergeAll(jdbcTemplate);
         TimeoutPolicySeedData.mergeAll(jdbcTemplate);
+        ensureMessageStructTables();
+        MessageStructureSeedData.mergeAll(jdbcTemplate);
         removeLegacyFunctionAuthIds();
         log.debug("OM schema migration applied.");
     }
@@ -228,6 +234,7 @@ public class OmDatabaseMigration implements ApplicationRunner {
         String ts = DateTimeUtil.nowKst();
         mergeCommonCode("AUTH_CODE", "ROLE_OM_AUTH", "OM 인증/권한", 1, "사용자·메뉴·세션·권한", ts);
         mergeCommonCode("AUTH_CODE", "ROLE_OM_SVC", "ServiceId 관리", 2, "서비스 카탈로그", ts);
+        mergeCommonCode("AUTH_CODE", "ROLE_OM_MSG", "전문구조", 32, "표준 전문 Header/Body/Result 필드 정의", ts);
         mergeCommonCode("AUTH_CODE", "ROLE_OM_DSH", "운영 대시보드", 3, "대시보드 조회", ts);
         mergeCommonCode("AUTH_CODE", "ROLE_OM_TXL", "거래로그", 4, "거래로그 조회/삭제", ts);
         mergeCommonCode("AUTH_CODE", "ROLE_OM_TXC", "거래통제", 31, "거래통제 허용 목록", ts);
@@ -551,6 +558,48 @@ public class OmDatabaseMigration implements ApplicationRunner {
         mergeCommonCode("TX_CONTROL_TYPE", "BRANCH", "브랜치별 통제", 5, "branchId 일치", ts);
         mergeCommonCode("TX_CONTROL_TYPE", "USER", "사용자 통제", 6, "userId 일치", ts);
         mergeCommonCode("TX_CONTROL_TYPE", "IP", "IP별 통제", 7, "clientIp 일치", ts);
+    }
+
+    private void ensureMessageStructTables() {
+        jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS OM_MESSAGE_STRUCT (
+                    STRUCT_ID VARCHAR(64) NOT NULL,
+                    STRUCT_CODE VARCHAR(80) NOT NULL,
+                    BUSINESS_CODE VARCHAR(10),
+                    SERVICE_ID VARCHAR(100),
+                    TRANSACTION_CODE VARCHAR(50),
+                    MESSAGE_TYPE VARCHAR(20) NOT NULL,
+                    SEGMENT_TYPE VARCHAR(20) NOT NULL,
+                    STRUCT_NAME VARCHAR(200) NOT NULL,
+                    DESCRIPTION VARCHAR(500),
+                    SAMPLE_JSON CLOB,
+                    USE_YN CHAR(1) DEFAULT 'Y',
+                    PRIMARY KEY (STRUCT_ID)
+                )
+                """);
+        jdbcTemplate.execute("""
+                CREATE UNIQUE INDEX IF NOT EXISTS IDX_OM_MSG_STRUCT_CODE ON OM_MESSAGE_STRUCT (STRUCT_CODE)
+                """);
+        jdbcTemplate.execute("""
+                CREATE TABLE IF NOT EXISTS OM_MESSAGE_FIELD (
+                    FIELD_ID VARCHAR(64) NOT NULL,
+                    STRUCT_ID VARCHAR(64) NOT NULL,
+                    FIELD_KEY VARCHAR(100) NOT NULL,
+                    FIELD_LABEL VARCHAR(200),
+                    DATA_TYPE VARCHAR(20) NOT NULL DEFAULT 'STRING',
+                    REQUIRED_YN CHAR(1) DEFAULT 'N',
+                    MAX_LENGTH INT,
+                    DEFAULT_VALUE VARCHAR(500),
+                    SAMPLE_VALUE VARCHAR(500),
+                    VALIDATION_RULE VARCHAR(200),
+                    DESCRIPTION VARCHAR(500),
+                    SORT_ORDER INT DEFAULT 0,
+                    PRIMARY KEY (FIELD_ID)
+                )
+                """);
+        jdbcTemplate.execute("""
+                CREATE INDEX IF NOT EXISTS IDX_OM_MSG_FIELD_STRUCT ON OM_MESSAGE_FIELD (STRUCT_ID, SORT_ORDER)
+                """);
     }
 
     private void removeLegacyFunctionAuthIds() {

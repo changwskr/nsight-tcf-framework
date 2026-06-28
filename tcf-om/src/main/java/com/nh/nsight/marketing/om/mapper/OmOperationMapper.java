@@ -225,5 +225,25 @@ public interface OmOperationMapper {
     int countExpiredSpringSessions(long now);
 
     int deleteExpiredSpringSessions(long now);
+
+    List<Map<String, Object>> searchMessageStructs(Map<String, Object> params);
+
+    int countMessageStructs(Map<String, Object> params);
+
+    Map<String, Object> selectMessageStructById(String structId);
+
+    Map<String, Object> selectMessageStructByCode(String structCode);
+
+    List<Map<String, Object>> searchMessageFieldsByStructId(String structId);
+
+    int insertMessageStruct(Map<String, Object> params);
+
+    int updateMessageStruct(Map<String, Object> params);
+
+    int disableMessageStruct(Map<String, Object> params);
+
+    int deleteMessageFieldsByStructId(String structId);
+
+    int insertMessageField(Map<String, Object> params);
 }
 

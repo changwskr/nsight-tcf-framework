@@ -228,7 +228,19 @@ final class ServiceCatalogSeedData {
             entry("CAT-103", "OM", "OM.TimeoutPolicy.update", "OM-TMO-0003", "UPDATE",
                     "OmTimeoutPolicyUpdateHandler", "ROLE_OM_TMO", "Y", 5, "Y", "Timeout 정책 수정"),
             entry("CAT-104", "OM", "OM.TimeoutPolicy.delete", "OM-TMO-0004", "DELETE",
-                    "OmTimeoutPolicyDeleteHandler", "ROLE_OM_TMO", "Y", 5, "Y", "Timeout 정책 삭제")
+                    "OmTimeoutPolicyDeleteHandler", "ROLE_OM_TMO", "Y", 5, "Y", "Timeout 정책 삭제"),
+            entry("CAT-105", "OM", "OM.MessageStructure.inquiry", "OM-MSG-0001", "INQUIRY",
+                    "OmMessageStructureInquiryHandler", "ROLE_OM_MSG", "N", 10, "Y", "전문구조 조회"),
+            entry("CAT-106", "OM", "OM.MessageStructure.detail", "OM-MSG-0002", "INQUIRY",
+                    "OmMessageStructureDetailHandler", "ROLE_OM_MSG", "N", 5, "Y", "전문구조 상세"),
+            entry("CAT-107", "OM", "OM.MessageStructure.frameworkInquiry", "OM-MSG-0003", "INQUIRY",
+                    "OmMessageStructureFrameworkInquiryHandler", "ROLE_OM_MSG", "N", 5, "Y", "TCF 표준 전문 템플릿"),
+            entry("CAT-108", "OM", "OM.MessageStructure.save", "OM-MSG-0004", "UPDATE",
+                    "OmMessageStructureSaveHandler", "ROLE_OM_MSG", "Y", 5, "Y", "전문구조 등록"),
+            entry("CAT-109", "OM", "OM.MessageStructure.update", "OM-MSG-0005", "UPDATE",
+                    "OmMessageStructureUpdateHandler", "ROLE_OM_MSG", "Y", 5, "Y", "전문구조 수정"),
+            entry("CAT-110", "OM", "OM.MessageStructure.delete", "OM-MSG-0006", "DELETE",
+                    "OmMessageStructureDeleteHandler", "ROLE_OM_MSG", "Y", 5, "Y", "전문구조 삭제")
     };
 
     static void mergeAll(JdbcTemplate jdbcTemplate) {

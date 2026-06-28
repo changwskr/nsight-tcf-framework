@@ -2,6 +2,11 @@ package com.nh.nsight.tcf.util.tpmutil;
 
 import com.nh.nsight.tcf.util.DateTimeUtil;
 import com.nh.nsight.tcf.util.GuidGenerator;
+import com.nh.nsight.tcf.util.json.TpcJsonEscapeUtils;
+import com.nh.nsight.tcf.util.meta.CopiedFrom;
+import com.nh.nsight.tcf.util.meta.CopiedUtilityFlag;
+import com.nh.nsight.tcf.util.meta.UtilCategory;
+import com.nh.nsight.tcf.util.string.TcfStringUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
@@ -21,7 +26,11 @@ import java.util.Map;
  * <li>tomcat: {@code {gatewayUrl}/{업무코드 소문자}/online}</li>
  * </ul>
  */
-public final class tpcutil {
+@CopiedFrom(module = "tcf-util", sourceClass = "tpcutil", category = UtilCategory.TPM, nativeUtility = true)
+public final class tpcutil implements CopiedUtilityFlag {
+
+    public static final String COPIED_FROM_MODULE = "tcf-util";
+    public static final String COPIED_FROM_CLASS = "tpcutil";
 
     private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(5))
@@ -151,7 +160,7 @@ public final class tpcutil {
     }
 
     private static String nullToEmpty(String value) {
-        return value == null ? "" : value;
+        return TcfStringUtils.nullToEmpty(value);
     }
 
     private static String connectionErrorJson(
@@ -172,10 +181,7 @@ public final class tpcutil {
     }
 
     private static String escapeJson(String value) {
-        if (value == null) {
-            return "";
-        }
-        return value.replace("\\", "\\\\").replace("\"", "\\\"");
+        return TpcJsonEscapeUtils.escapeJson(value);
     }
 
     public record ExecuteParams(

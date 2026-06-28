@@ -1226,4 +1226,122 @@
     <delete id="deleteExpiredSpringSessions" parameterType="long">
         DELETE FROM SPRING_SESSION WHERE EXPIRY_TIME &lt;= #{value}
     </delete>
+
+    <sql id="messageStructSearchWhere">
+        <if test="structCode != null and structCode != ''">
+            AND STRUCT_CODE LIKE '%' || #{structCode} || '%'
+        </if>
+        <if test="businessCode != null and businessCode != ''">
+            AND BUSINESS_CODE = #{businessCode}
+        </if>
+        <if test="serviceId != null and serviceId != ''">
+            AND SERVICE_ID LIKE '%' || #{serviceId} || '%'
+        </if>
+        <if test="messageType != null and messageType != ''">
+            AND MESSAGE_TYPE = #{messageType}
+        </if>
+        <if test="segmentType != null and segmentType != ''">
+            AND SEGMENT_TYPE = #{segmentType}
+        </if>
+        <if test="useYn != null and useYn != ''">
+            AND USE_YN = #{useYn}
+        </if>
+    </sql>
+
+    <select id="searchMessageStructs" parameterType="map" resultType="map">
+        SELECT STRUCT_ID AS "structId", STRUCT_CODE AS "structCode",
+               BUSINESS_CODE AS "businessCode", SERVICE_ID AS "serviceId",
+               TRANSACTION_CODE AS "transactionCode", MESSAGE_TYPE AS "messageType",
+               SEGMENT_TYPE AS "segmentType", STRUCT_NAME AS "structName",
+               DESCRIPTION AS "description", USE_YN AS "useYn"
+          FROM OM_MESSAGE_STRUCT
+         WHERE 1 = 1
+        <include refid="messageStructSearchWhere"/>
+         ORDER BY STRUCT_CODE
+        <if test="pageSize != null">
+            OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
+        </if>
+    </select>
+
+    <select id="countMessageStructs" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+          FROM OM_MESSAGE_STRUCT
+         WHERE 1 = 1
+        <include refid="messageStructSearchWhere"/>
+    </select>
+
+    <select id="selectMessageStructById" parameterType="string" resultType="map">
+        SELECT STRUCT_ID AS "structId", STRUCT_CODE AS "structCode",
+               BUSINESS_CODE AS "businessCode", SERVICE_ID AS "serviceId",
+               TRANSACTION_CODE AS "transactionCode", MESSAGE_TYPE AS "messageType",
+               SEGMENT_TYPE AS "segmentType", STRUCT_NAME AS "structName",
+               DESCRIPTION AS "description", CAST(SAMPLE_JSON AS VARCHAR(4000)) AS "sampleJson", USE_YN AS "useYn"
+          FROM OM_MESSAGE_STRUCT
+         WHERE STRUCT_ID = #{structId}
+    </select>
+
+    <select id="selectMessageStructByCode" parameterType="string" resultType="map">
+        SELECT STRUCT_ID AS "structId", STRUCT_CODE AS "structCode",
+               BUSINESS_CODE AS "businessCode", SERVICE_ID AS "serviceId",
+               TRANSACTION_CODE AS "transactionCode", MESSAGE_TYPE AS "messageType",
+               SEGMENT_TYPE AS "segmentType", STRUCT_NAME AS "structName",
+               DESCRIPTION AS "description", CAST(SAMPLE_JSON AS VARCHAR(4000)) AS "sampleJson", USE_YN AS "useYn"
+          FROM OM_MESSAGE_STRUCT
+         WHERE STRUCT_CODE = #{structCode}
+    </select>
+
+    <select id="searchMessageFieldsByStructId" parameterType="string" resultType="map">
+        SELECT FIELD_ID AS "fieldId", STRUCT_ID AS "structId", FIELD_KEY AS "fieldKey",
+               FIELD_LABEL AS "fieldLabel", DATA_TYPE AS "dataType", REQUIRED_YN AS "requiredYn",
+               MAX_LENGTH AS "maxLength", DEFAULT_VALUE AS "defaultValue",
+               SAMPLE_VALUE AS "sampleValue", VALIDATION_RULE AS "validationRule",
+               DESCRIPTION AS "description", SORT_ORDER AS "sortOrder"
+          FROM OM_MESSAGE_FIELD
+         WHERE STRUCT_ID = #{structId}
+         ORDER BY SORT_ORDER, FIELD_KEY
+    </select>
+
+    <insert id="insertMessageStruct" parameterType="map">
+        INSERT INTO OM_MESSAGE_STRUCT (
+            STRUCT_ID, STRUCT_CODE, BUSINESS_CODE, SERVICE_ID, TRANSACTION_CODE,
+            MESSAGE_TYPE, SEGMENT_TYPE, STRUCT_NAME, DESCRIPTION, SAMPLE_JSON, USE_YN
+        ) VALUES (
+            #{structId}, #{structCode}, #{businessCode}, #{serviceId}, #{transactionCode},
+            #{messageType}, #{segmentType}, #{structName}, #{description}, #{sampleJson}, #{useYn}
+        )
+    </insert>
+
+    <update id="updateMessageStruct" parameterType="map">
+        UPDATE OM_MESSAGE_STRUCT
+           SET BUSINESS_CODE = #{businessCode},
+               SERVICE_ID = #{serviceId},
+               TRANSACTION_CODE = #{transactionCode},
+               MESSAGE_TYPE = #{messageType},
+               SEGMENT_TYPE = #{segmentType},
+               STRUCT_NAME = #{structName},
+               DESCRIPTION = #{description},
+               SAMPLE_JSON = #{sampleJson},
+               USE_YN = #{useYn}
+         WHERE STRUCT_ID = #{structId}
+    </update>
+
+    <update id="disableMessageStruct" parameterType="map">
+        UPDATE OM_MESSAGE_STRUCT
+           SET USE_YN = 'N'
+         WHERE STRUCT_ID = #{structId}
+    </update>
+
+    <delete id="deleteMessageFieldsByStructId" parameterType="string">
+        DELETE FROM OM_MESSAGE_FIELD WHERE STRUCT_ID = #{structId}
+    </delete>
+
+    <insert id="insertMessageField" parameterType="map">
+        INSERT INTO OM_MESSAGE_FIELD (
+            FIELD_ID, STRUCT_ID, FIELD_KEY, FIELD_LABEL, DATA_TYPE, REQUIRED_YN,
+            MAX_LENGTH, DEFAULT_VALUE, SAMPLE_VALUE, VALIDATION_RULE, DESCRIPTION, SORT_ORDER
+        ) VALUES (
+            #{fieldId}, #{structId}, #{fieldKey}, #{fieldLabel}, #{dataType}, #{requiredYn},
+            #{maxLength}, #{defaultValue}, #{sampleValue}, #{validationRule}, #{description}, #{sortOrder}
+        )
+    </insert>
 </mapper>
