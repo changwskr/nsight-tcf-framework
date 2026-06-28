@@ -7,10 +7,10 @@ import com.nh.nsight.gateway.route.GatewayRouteNotFoundException;
 import com.nh.nsight.gateway.route.model.GatewayRoute;
 import com.nh.nsight.gateway.route.service.GatewayRouteResolver;
 import com.nh.nsight.gateway.security.GatewaySessionValidator;
+import com.nh.nsight.gateway.session.model.GatewaySessionContext;
+import com.nh.nsight.gateway.session.support.GatewaySessionRequestEnricher;
 import com.nh.nsight.gateway.support.GatewayProxyTrace;
-import com.nh.nsight.gateway.support.GatewayRequestEnricher;
 import java.util.Locale;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,20 +19,20 @@ public class GSF {
 
     private final GatewayProperties properties;
     private final GatewaySessionValidator sessionValidator;
-    private final GatewayRequestEnricher enricher;
+    private final GatewaySessionRequestEnricher sessionRequestEnricher;
     private final GatewayRouteResolver routeResolver;
 
     public GSF(GatewayProperties properties, GatewaySessionValidator sessionValidator,
-               GatewayRequestEnricher enricher, GatewayRouteResolver routeResolver) {
+               GatewaySessionRequestEnricher sessionRequestEnricher,
+               GatewayRouteResolver routeResolver) {
         this.properties = properties;
         this.sessionValidator = sessionValidator;
-        this.enricher = enricher;
+        this.sessionRequestEnricher = sessionRequestEnricher;
         this.routeResolver = routeResolver;
     }
 
     public RouteContext preProcess(String businessCode,
                                    String requestBody,
-                                   Jwt jwt,
                                    String cookieHeader,
                                    String deploymentMode,
                                    String bootrunHost,
@@ -49,16 +49,24 @@ public class GSF {
             Module module = moduleFromRoute(route);
             String targetUrl = route.targetUrl();
             GatewayProxyTrace.log(PHASE, "routeTableHit routeId=" + route.routeId()
-                    + " targetUrl=" + targetUrl);
+                    + " targetUrl=" + targetUrl
+                    + " connectTimeoutMs=" + route.connectTimeoutMs()
+                    + " readTimeoutMs=" + route.readTimeoutMs());
 
             GatewayProxyTrace.log(PHASE, "sessionValidator.validate");
-            sessionValidator.validate(businessCode, cookieHeader, requestBody);
+            GatewaySessionContext sessionContext = sessionValidator.validate(businessCode, cookieHeader, requestBody);
 
             GatewayProxyTrace.log(PHASE, "targetUrl=" + targetUrl);
-            GatewayProxyTrace.log(PHASE, "enricher.enrich");
-            String enrichedBody = enricher.enrich(requestBody, jwt);
+            GatewayProxyTrace.log(PHASE, "sessionRequestEnricher.enrich");
+            String enrichedBody = sessionRequestEnricher.enrich(requestBody, sessionContext);
             GatewayProxyTrace.log(PHASE, "RouteContext");
-            return new RouteContext(module, targetUrl, enrichedBody, System.currentTimeMillis());
+            return new RouteContext(
+                    module,
+                    targetUrl,
+                    enrichedBody,
+                    System.currentTimeMillis(),
+                    route.connectTimeoutMs(),
+                    route.readTimeoutMs());
         } finally {
             GatewayProxyTrace.end(PHASE);
         }

@@ -3,7 +3,7 @@ package com.nh.nsight.gateway.processor;
 import com.nh.nsight.gateway.route.GatewayRouteNotFoundException;
 import com.nh.nsight.gateway.security.GatewayAuthException;
 import com.nh.nsight.gateway.service.RouteResult;
-import com.nh.nsight.gateway.support.GatewayLoginSessionSupport;
+import com.nh.nsight.gateway.session.service.GatewaySessionRegistry;
 import com.nh.nsight.gateway.support.GatewayProxyTrace;
 import java.util.List;
 import java.util.Locale;
@@ -17,10 +17,10 @@ public class GEF {
     ///////////////////////////////////////////////////////////////////////////
     /// Login Session Support
     ////////////////////////////////////////////////////////////////////////////
-    private final GatewayLoginSessionSupport loginSessionSupport;
+    private final GatewaySessionRegistry sessionRegistry;
 
-    public GEF(GatewayLoginSessionSupport loginSessionSupport) {
-        this.loginSessionSupport = loginSessionSupport;
+    public GEF(GatewaySessionRegistry sessionRegistry) {
+        this.sessionRegistry = sessionRegistry;
     }
 
     public RouteResult success(RouteContext context, GatewayForwardResponse response) {
@@ -30,9 +30,8 @@ public class GEF {
         GatewayProxyTrace.log(phase, "httpStatus=" + response.httpStatus() + " elapsedMs=" + response.elapsedMs());
 
         if (response.httpStatus() >= 200 && response.httpStatus() < 300) {
-            GatewayProxyTrace.log(phase, ">>>>>>>> tryStoreOmLogin session store >>>>>>>>>>>> ");
-            loginSessionSupport.tryStoreOmLogin(context.enrichedBody(), response.responseBody())
-                    .ifPresent(user -> loginSessionSupport.printLoginSession(phase, user));
+            GatewayProxyTrace.log(phase, ">>>>>>>> registerSessionDb on login >>>>>>>>>>>> ");
+            sessionRegistry.tryRegisterOmLogin(context.enrichedBody(), response.responseBody(), response.setCookies());
         }
         GatewayProxyTrace.log(phase, "RouteResult");
         RouteResult result = new RouteResult(

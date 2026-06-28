@@ -6,8 +6,6 @@ import com.nh.nsight.gateway.support.GatewayProxyTrace;
 import com.nh.nsight.gateway.web.support.ProxyResponseSupport;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,7 +26,6 @@ public abstract class AbstractBusinessProxyController {
     @PostMapping("/online")
     public ResponseEntity<String> proxyOnline(
             @RequestBody String requestBody,
-            @AuthenticationPrincipal Jwt jwt,
             HttpServletRequest request,
             @RequestParam(value = "deploymentMode", required = false) String deploymentMode,
             @RequestParam(value = "bootrunHost", required = false) String bootrunHost,
@@ -42,7 +39,6 @@ public abstract class AbstractBusinessProxyController {
         RouteResult result = routeService.forwardOnline(
                 businessCode,
                 requestBody,
-                jwt,
                 request.getHeader("Cookie"),
                 deploymentMode,
                 bootrunHost,

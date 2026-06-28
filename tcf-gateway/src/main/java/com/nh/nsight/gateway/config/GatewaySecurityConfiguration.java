@@ -16,7 +16,7 @@ public class GatewaySecurityConfiguration {
             "/ms/**", "/pc/**", "/pd/**", "/ss/**", "/sv/**", "/jwt/**"
     };
 
-    /** 세션 쿠키 라우팅 — gateway processor(GSF)에서 로그인 여부 확인 */
+    /** STATELESS — Gateway HttpSession 미사용, SESSIONDB 쿠키만 GSF에서 검증·전달 */
     @Bean
     public SecurityFilterChain gatewaySecurityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)

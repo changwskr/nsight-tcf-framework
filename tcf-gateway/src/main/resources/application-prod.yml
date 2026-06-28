@@ -5,7 +5,5 @@ nsight:
     route-table:
       cache-enabled: true
       cache-ttl-seconds: 60
-    jwt:
-      jwk-set-uri: ${NSIGHT_JWT_JWK_SET_URI:http://localhost:8080/jwt/.well-known/jwks.json}
     om:
       tomcat-online-path: /om/online

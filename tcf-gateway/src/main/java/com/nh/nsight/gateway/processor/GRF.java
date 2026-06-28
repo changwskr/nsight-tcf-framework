@@ -4,7 +4,7 @@ import com.nh.nsight.gateway.route.GatewayRouteNotFoundException;
 import com.nh.nsight.gateway.security.GatewayAuthException;
 import com.nh.nsight.gateway.service.RouteResult;
 import com.nh.nsight.gateway.support.GatewayProxyTrace;
-import org.springframework.security.oauth2.jwt.Jwt;
+import com.nh.nsight.gateway.txlog.service.GatewayTransactionLogRecorder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
 
@@ -15,26 +15,30 @@ public class GRF {
     private final GSF gsf;
     private final GatewayRouteDispatcher dispatcher;
     private final GEF gef;
+    private final GatewayTransactionLogRecorder transactionLogRecorder;
 
-    public GRF(GSF gsf, GatewayRouteDispatcher dispatcher, GEF gef) {
+    public GRF(GSF gsf, GatewayRouteDispatcher dispatcher, GEF gef,
+               GatewayTransactionLogRecorder transactionLogRecorder) {
         this.gsf = gsf;
         this.dispatcher = dispatcher;
         this.gef = gef;
+        this.transactionLogRecorder = transactionLogRecorder;
     }
 
     public RouteResult forwardOnline(String businessCode,
                                      String requestBody,
-                                     Jwt jwt,
                                      String cookieHeader,
                                      String deploymentMode,
                                      String bootrunHost,
                                      String tomcatGatewayUrl) {
         GatewayProxyTrace.start(PHASE);
         RouteContext context = null;
+        RouteResult result = null;
+        String logPhase = null;
         try {
             GatewayProxyTrace.log(PHASE, "GSF.preProcess START");
             context = gsf.preProcess(
-                    businessCode, requestBody, jwt, cookieHeader, deploymentMode, bootrunHost, tomcatGatewayUrl);
+                    businessCode, requestBody, cookieHeader, deploymentMode, bootrunHost, tomcatGatewayUrl);
             GatewayProxyTrace.log(PHASE, "GSF.preProcess END");
 
             GatewayProxyTrace.log(PHASE, "GatewayRouteDispatcher.dispatch START");
@@ -42,17 +46,20 @@ public class GRF {
             GatewayProxyTrace.log(PHASE, "GatewayRouteDispatcher.dispatch END");
 
             GatewayProxyTrace.log(PHASE, "GEF.success START");
-            RouteResult result = gef.success(context, response);
+            result = gef.success(context, response);
+            logPhase = "SUCCESS";
             GatewayProxyTrace.log(PHASE, "GEF.success END");
             return result;
         } catch (GatewayRouteNotFoundException e) {
             GatewayProxyTrace.log(PHASE, "GEF.routeNotFound START");
-            RouteResult result = gef.routeNotFound(e);
+            result = gef.routeNotFound(e);
+            logPhase = "ROUTE_NOT_FOUND";
             GatewayProxyTrace.log(PHASE, "GEF.routeNotFound END");
             return result;
         } catch (GatewayAuthException e) {
             GatewayProxyTrace.log(PHASE, "GEF.authFail START");
-            RouteResult result = gef.authFail(businessCode, context, e);
+            result = gef.authFail(businessCode, context, e);
+            logPhase = "AUTH_FAIL";
             GatewayProxyTrace.log(PHASE, "GEF.authFail END");
             return result;
         } catch (RestClientResponseException e) {
@@ -60,7 +67,8 @@ public class GRF {
                 throw e;
             }
             GatewayProxyTrace.log(PHASE, "GEF.httpError START");
-            RouteResult result = gef.httpError(context, e);
+            result = gef.httpError(context, e);
+            logPhase = "HTTP_ERROR";
             GatewayProxyTrace.log(PHASE, "GEF.httpError END");
             return result;
         } catch (Exception e) {
@@ -68,10 +76,12 @@ public class GRF {
                 throw e;
             }
             GatewayProxyTrace.log(PHASE, "GEF.connectionError START");
-            RouteResult result = gef.connectionError(context, e);
+            result = gef.connectionError(context, e);
+            logPhase = "CONNECTION_ERROR";
             GatewayProxyTrace.log(PHASE, "GEF.connectionError END");
             return result;
         } finally {
+            transactionLogRecorder.record(businessCode, requestBody, cookieHeader, context, result, logPhase);
             GatewayProxyTrace.end(PHASE);
         }
     }

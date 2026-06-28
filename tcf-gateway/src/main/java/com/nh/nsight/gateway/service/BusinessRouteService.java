@@ -1,7 +1,6 @@
 package com.nh.nsight.gateway.service;
 
 import com.nh.nsight.gateway.processor.GRF;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,7 +13,6 @@ public class BusinessRouteService {
 
     public RouteResult forwardOnline(String businessCode,
                                      String requestBody,
-                                     Jwt jwt,
                                      String cookieHeader,
                                      String deploymentMode,
                                      String bootrunHost,
@@ -22,7 +20,6 @@ public class BusinessRouteService {
         return grf.forwardOnline(
                 businessCode,
                 requestBody,
-                jwt,
                 cookieHeader,
                 deploymentMode,
                 bootrunHost,

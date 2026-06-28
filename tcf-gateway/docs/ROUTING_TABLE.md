@@ -130,6 +130,15 @@ WHERE ENV_CODE = :envCode
 | 운영 변경 | DB 직접 수정 금지, 관리화면 또는 승인된 배포 절차 |
 | 화면 표시 | PRD → "운용" |
 
+## Timeout 적용
+
+| 컬럼 | Relay 동작 |
+|------|------------|
+| `CONNECT_TIMEOUT_MS` | downstream TCP 연결 대기 (기본 3000ms) |
+| `READ_TIMEOUT_MS` | downstream 응답 수신 대기 (기본 5000ms) |
+
+`GatewayRouteDispatcher`가 `RouteContext`의 timeout으로 `RestClient`를 생성해 요청마다 적용합니다.
+
 ## 라우팅 원칙
 
 Gateway는 **TCF_GATEWAY_ROUTE만** 사용합니다. `deployment-mode`, catalog, query 파라미터 fallback은 없습니다.

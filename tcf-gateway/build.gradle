@@ -1,4 +1,4 @@
-// JWT 인증 + 업무 라우팅 API Gateway
+// SESSIONDB 세션 관문 + 업무 라우팅 API Gateway
 // 빌드: gradle :tcf-gateway:bootWar
 // 실행: gradle :tcf-gateway:bootRun  (local:8100 / dev:8100)
 
@@ -11,7 +11,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     runtimeOnly 'com.h2database:h2'
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'

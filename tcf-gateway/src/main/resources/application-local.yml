@@ -7,3 +7,9 @@ nsight:
     env-code: LOCAL
     route-table:
       cache-enabled: false
+    session-datasource:
+      # tcf-om SPRING_SESSION — URL 옵션은 tcf-om application-local.yml 과 동일하게 유지
+      url: jdbc:h2:file:./data/nsight-txlog/nsight_om;MODE=Oracle;AUTO_SERVER=TRUE;DATABASE_TO_UPPER=false
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver

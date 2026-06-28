@@ -1,17 +1,17 @@
 package com.nh.nsight.gateway.route.config;
 
 import jakarta.annotation.PostConstruct;
+import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.stereotype.Component;
-
-import javax.sql.DataSource;
 
 @Component
 public class GatewayRouteSchemaInitializer {
     private final DataSource dataSource;
 
-    public GatewayRouteSchemaInitializer(DataSource dataSource) {
+    public GatewayRouteSchemaInitializer(@Qualifier("gatewayRouteDataSource") DataSource dataSource) {
         this.dataSource = dataSource;
     }
 

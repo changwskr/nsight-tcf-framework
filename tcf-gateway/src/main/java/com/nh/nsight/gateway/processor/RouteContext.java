@@ -7,7 +7,9 @@ public record RouteContext(
         Module module,
         String targetUrl,
         String enrichedBody,
-        long startedAtMillis
+        long startedAtMillis,
+        int connectTimeoutMs,
+        int readTimeoutMs
 ) {
     private static final String PHASE = "RouteContext";
 
@@ -15,6 +17,8 @@ public record RouteContext(
         GatewayProxyTrace.start(PHASE);
         GatewayProxyTrace.log(PHASE, "module=" + module.code()
                 + " targetUrl=" + targetUrl
+                + " connectTimeoutMs=" + connectTimeoutMs
+                + " readTimeoutMs=" + readTimeoutMs
                 + " startedAtMillis=" + startedAtMillis);
         GatewayProxyTrace.end(PHASE);
     }
