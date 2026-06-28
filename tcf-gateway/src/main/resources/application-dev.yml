@@ -1,11 +1,10 @@
-# dev — gateway bootRun :8100 → ztomcat downstream :8080
+# dev — gateway bootRun :8100 → TCF_GATEWAY_ROUTE (ENV_CODE=DEV)
 server:
   port: 8100
 
 nsight:
   gateway:
-    routing:
-      deployment-mode: tomcat
-      tomcat-base-url: http://localhost:8080
-      bootrun-host: http://127.0.0.1
-      ignore-request-params: true
+    env-code: DEV
+    route-table:
+      cache-enabled: true
+      cache-ttl-seconds: 30

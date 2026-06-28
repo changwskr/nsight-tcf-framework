@@ -3,6 +3,7 @@ package com.nh.nsight.gateway.catalog;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -10,6 +11,8 @@ public final class GatewayBusinessModules {
     private GatewayBusinessModules() {
     }
 
+    public static final Module CC = new Module("CC", 8081);
+    public static final Module BC = new Module("BC", 8084);
     public static final Module EB = new Module("EB", 8089);
     public static final Module EP = new Module("EP", 8090);
     public static final Module IC = new Module("IC", 8082);
@@ -23,15 +26,16 @@ public final class GatewayBusinessModules {
     public static final Module JWT = new Module("JWT", 8110, "/online");
 
     private static final Map<String, Module> BY_CODE = Arrays.stream(new Module[]{
-            EB, EP, IC, MG, MS, OM, PC, PD, SS, SV, JWT
+            CC, BC, EB, EP, IC, MG, MS, OM, PC, PD, SS, SV, JWT
     }).collect(Collectors.toUnmodifiableMap(module -> module.code(), Function.identity()));
 
+    public static Optional<Module> find(String code) {
+        return Optional.ofNullable(BY_CODE.get(code.toUpperCase(Locale.ROOT)));
+    }
+
     public static Module require(String code) {
-        Module module = BY_CODE.get(code.toUpperCase(Locale.ROOT));
-        if (module == null) {
-            throw new IllegalArgumentException("지원하지 않는 업무코드입니다: " + code);
-        }
-        return module;
+        return find(code).orElseThrow(() ->
+                new IllegalArgumentException("지원하지 않는 업무코드입니다: " + code));
     }
 
     public record Module(String code, int bootrunPort, String onlinePath) {

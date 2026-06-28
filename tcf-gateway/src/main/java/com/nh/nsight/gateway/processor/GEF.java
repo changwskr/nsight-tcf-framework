@@ -1,5 +1,6 @@
 package com.nh.nsight.gateway.processor;
 
+import com.nh.nsight.gateway.route.GatewayRouteNotFoundException;
 import com.nh.nsight.gateway.security.GatewayAuthException;
 import com.nh.nsight.gateway.service.RouteResult;
 import com.nh.nsight.gateway.support.GatewayLoginSessionSupport;
@@ -40,6 +41,21 @@ public class GEF {
                 response.elapsedMs(),
                 response.responseBody(),
                 response.setCookies());
+        GatewayProxyTrace.end(phase);
+        return result;
+    }
+
+    public RouteResult routeNotFound(GatewayRouteNotFoundException error) {
+        String phase = PHASE + ".routeNotFound";
+        GatewayProxyTrace.start(phase);
+        GatewayProxyTrace.log(phase, "envCode=" + error.envCode() + " businessCode=" + error.businessCode());
+        GatewayProxyTrace.log(phase, "RouteResult");
+        RouteResult result = new RouteResult(
+                "",
+                404,
+                0L,
+                routeNotFoundJson(error),
+                List.of());
         GatewayProxyTrace.end(phase);
         return result;
     }
@@ -97,6 +113,17 @@ public class GEF {
         return result;
     }
 
+    private String routeNotFoundJson(GatewayRouteNotFoundException error) {
+        return """
+                {"error":"%s","envCode":"%s","businessCode":"%s","hint":"TCF_GATEWAY_ROUTE에 ENV_CODE=%s, BUSINESS_CODE=%s 라우팅을 등록하세요."}
+                """.formatted(
+                error.getMessage().replace("\\", "\\\\").replace("\"", "\\\""),
+                error.envCode(),
+                error.businessCode(),
+                error.envCode(),
+                error.businessCode());
+    }
+
     private String authErrorJson(String businessCode, GatewayAuthException error) {
         String safeMessage = error.getMessage() == null ? ""
                 : error.getMessage().replace("\\", "\\\\").replace("\"", "\\\"");
@@ -109,13 +136,12 @@ public class GEF {
         String safeMessage = message == null ? "" : message.replace("\\", "\\\\").replace("\"", "\\\"");
         String safeUrl = context.targetUrl() == null ? ""
                 : context.targetUrl().replace("\\", "\\\\").replace("\"", "\\\"");
+        String hint = context.module().bootrunPort() > 0
+                ? "%s(포트 %d) 기동 상태를 확인하세요.".formatted(
+                context.module().serviceHint(), context.module().bootrunPort())
+                : "downstream Target(%s) 기동 상태를 확인하세요.".formatted(safeUrl);
         return """
-                {"error":"%s","targetUrl":"%s","hint":"%s(포트 %d 또는 /%s) 기동 상태를 확인하세요."}
-                """.formatted(
-                safeMessage,
-                safeUrl,
-                context.module().serviceHint(),
-                context.module().bootrunPort(),
-                context.module().code().toLowerCase(Locale.ROOT));
+                {"error":"%s","targetUrl":"%s","hint":"%s"}
+                """.formatted(safeMessage, safeUrl, hint.replace("\\", "\\\\").replace("\"", "\\\""));
     }
 }

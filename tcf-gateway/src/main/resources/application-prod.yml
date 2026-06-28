@@ -1,6 +1,10 @@
-# prod
+# prod (운용) — ENV_CODE=PRD
 nsight:
   gateway:
+    env-code: PRD
+    route-table:
+      cache-enabled: true
+      cache-ttl-seconds: 60
     jwt:
       jwk-set-uri: ${NSIGHT_JWT_JWK_SET_URI:http://localhost:8080/jwt/.well-known/jwks.json}
     om:

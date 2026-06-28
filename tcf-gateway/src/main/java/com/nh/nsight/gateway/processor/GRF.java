@@ -1,5 +1,6 @@
 package com.nh.nsight.gateway.processor;
 
+import com.nh.nsight.gateway.route.GatewayRouteNotFoundException;
 import com.nh.nsight.gateway.security.GatewayAuthException;
 import com.nh.nsight.gateway.service.RouteResult;
 import com.nh.nsight.gateway.support.GatewayProxyTrace;
@@ -43,6 +44,11 @@ public class GRF {
             GatewayProxyTrace.log(PHASE, "GEF.success START");
             RouteResult result = gef.success(context, response);
             GatewayProxyTrace.log(PHASE, "GEF.success END");
+            return result;
+        } catch (GatewayRouteNotFoundException e) {
+            GatewayProxyTrace.log(PHASE, "GEF.routeNotFound START");
+            RouteResult result = gef.routeNotFound(e);
+            GatewayProxyTrace.log(PHASE, "GEF.routeNotFound END");
             return result;
         } catch (GatewayAuthException e) {
             GatewayProxyTrace.log(PHASE, "GEF.authFail START");

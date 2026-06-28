@@ -11,6 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class GatewaySecurityConfiguration {
 
     private static final String[] PROXY_PATHS = {
+            "/cc/**", "/bc/**",
             "/om/**", "/eb/**", "/ep/**", "/ic/**", "/mg/**",
             "/ms/**", "/pc/**", "/pd/**", "/ss/**", "/sv/**", "/jwt/**"
     };
@@ -22,6 +23,7 @@ public class GatewaySecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                        .requestMatchers("/admin/**", "/api/admin/**", "/h2-console/**").permitAll()
                         .requestMatchers(PROXY_PATHS).permitAll()
                         .anyRequest().permitAll());
         return http.build();

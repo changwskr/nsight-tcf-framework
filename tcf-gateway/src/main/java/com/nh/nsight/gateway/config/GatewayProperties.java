@@ -4,8 +4,27 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "nsight.gateway")
 public class GatewayProperties {
+    /** LOCAL / DEV / PRD — TCF_GATEWAY_ROUTE.ENV_CODE 조회 기준 */
+    private String envCode = "LOCAL";
     private Auth auth = new Auth();
     private Routing routing = new Routing();
+    private RouteTable routeTable = new RouteTable();
+
+    public String getEnvCode() {
+        return envCode;
+    }
+
+    public void setEnvCode(String envCode) {
+        this.envCode = envCode;
+    }
+
+    public RouteTable getRouteTable() {
+        return routeTable;
+    }
+
+    public void setRouteTable(RouteTable routeTable) {
+        this.routeTable = routeTable;
+    }
 
     public Auth getAuth() {
         return auth;
@@ -81,5 +100,26 @@ public class GatewayProperties {
 
     public enum DeploymentMode {
         bootrun, tomcat
+    }
+
+    public static class RouteTable {
+        private boolean cacheEnabled = false;
+        private long cacheTtlSeconds = 30;
+
+        public boolean isCacheEnabled() {
+            return cacheEnabled;
+        }
+
+        public void setCacheEnabled(boolean cacheEnabled) {
+            this.cacheEnabled = cacheEnabled;
+        }
+
+        public long getCacheTtlSeconds() {
+            return cacheTtlSeconds;
+        }
+
+        public void setCacheTtlSeconds(long cacheTtlSeconds) {
+            this.cacheTtlSeconds = cacheTtlSeconds;
+        }
     }
 }
