@@ -1,7 +1,7 @@
 package com.nh.nsight.auth.jwt.support;
 
 import com.nh.nsight.auth.jwt.config.JwtRuntimePolicy;
-import com.nh.nsight.auth.jwt.dao.JwtTokenDao;
+import com.nh.nsight.auth.jwt.persistence.dao.JwtTokenDao;
 import com.nimbusds.jwt.SignedJWT;
 import java.sql.Timestamp;
 import java.time.Instant;

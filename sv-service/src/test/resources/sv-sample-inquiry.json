@@ -3,6 +3,7 @@
     "systemId": "NSIGHT-MP",
     "businessCode": "SV",
     "serviceId": "SV.Sample.inquiry",
+    "serviceName": "SV 샘플 조회",
     "transactionCode": "SV-INQ-0001",
     "processingType": "INQUIRY",
     "guid": "",

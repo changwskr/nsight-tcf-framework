@@ -2,8 +2,8 @@ package com.nh.nsight.tcf.web.config;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
 import com.nh.nsight.tcf.core.control.TransactionControlRepository;
-import com.nh.nsight.tcf.web.control.JdbcTransactionControlRepository;
-import com.nh.nsight.tcf.web.control.TransactionControlSchemaInitializer;
+import com.nh.nsight.tcf.web.persistence.dao.JdbcTransactionControlRepository;
+import com.nh.nsight.tcf.web.persistence.dao.TransactionControlSchemaInitializer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;

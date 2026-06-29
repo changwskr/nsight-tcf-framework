@@ -1,7 +1,7 @@
 package com.nh.nsight.tcf.web.config;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
-import com.nh.nsight.tcf.web.timeout.PolicyDrivenTransactionAttributeSource;
+import com.nh.nsight.tcf.web.application.rule.PolicyDrivenTransactionAttributeSource;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

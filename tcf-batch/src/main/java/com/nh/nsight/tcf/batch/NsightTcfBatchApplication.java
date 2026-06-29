@@ -1,6 +1,6 @@
 package com.nh.nsight.tcf.batch;
 
-import com.nh.nsight.tcf.web.boot.NsightWarBootstrap;
+import com.nh.nsight.tcf.web.support.NsightWarBootstrap;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;

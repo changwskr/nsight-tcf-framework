@@ -1,7 +1,7 @@
 package com.nh.nsight.tcf.web.config;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
-import com.nh.nsight.tcf.web.datasource.TcfDataSourceUrlSupport;
+import com.nh.nsight.tcf.web.support.TcfDataSourceUrlSupport;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;

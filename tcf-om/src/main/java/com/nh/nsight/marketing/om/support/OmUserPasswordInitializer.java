@@ -1,6 +1,6 @@
 package com.nh.nsight.marketing.om.support;
 
-import com.nh.nsight.marketing.om.dao.OmOperationDao;
+import com.nh.nsight.marketing.om.persistence.dao.OmOperationDao;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

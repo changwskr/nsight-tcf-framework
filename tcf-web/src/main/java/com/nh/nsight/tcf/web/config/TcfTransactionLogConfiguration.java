@@ -2,8 +2,8 @@ package com.nh.nsight.tcf.web.config;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
 import com.nh.nsight.tcf.core.logging.TransactionLogRepository;
-import com.nh.nsight.tcf.web.logging.JdbcTransactionLogRepository;
-import com.nh.nsight.tcf.web.logging.TransactionLogSchemaInitializer;
+import com.nh.nsight.tcf.web.persistence.dao.JdbcTransactionLogRepository;
+import com.nh.nsight.tcf.web.persistence.dao.TransactionLogSchemaInitializer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;

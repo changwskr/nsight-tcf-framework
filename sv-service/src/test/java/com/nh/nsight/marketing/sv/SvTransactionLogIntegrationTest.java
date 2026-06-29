@@ -8,6 +8,7 @@ import com.nh.nsight.tcf.core.logging.TransactionLogRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
@@ -25,6 +26,7 @@ class SvTransactionLogIntegrationTest {
     private ObjectProvider<TransactionLogRepository> repositoryProvider;
 
     @Autowired
+    @Qualifier("transactionLogJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
 
     @Autowired

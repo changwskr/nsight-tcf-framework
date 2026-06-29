@@ -12,11 +12,20 @@
 
 NSIGHT 마케팅 플랫폼 **Event Processing (EP)** 업무 서비스입니다. 모든 거래는 TCF 파이프라인(`POST /online` 또는 `POST /ep/online`)을 통해 처리됩니다.
 
-## 샘플 거래
+## 거래
 
-| serviceId | 설명 |
-|-----------|------|
-| `EP.Sample.inquiry` | 샘플 조회 |
+| serviceId | transactionCode | 설명 |
+|-----------|-----------------|------|
+| `EP.Sample.inquiry` | — | 샘플 조회 |
+| `EP.UserEvent.receive` | EP-EVT-001 | EB 배치 이벤트 수신 → `EP_USER_EVENT` 저장 |
+
+## EB 연동
+
+`eb-service` 배치가 `POST /ep/online` 으로 `EP.UserEvent.receive` 를 호출합니다. body 예:
+
+```json
+{ "eventId": "EVT001", "eventType": "USER_CREATED", "userId": "U001" }
+```
 
 ## 실행
 
