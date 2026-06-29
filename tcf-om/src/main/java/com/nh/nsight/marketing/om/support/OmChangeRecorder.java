@@ -2,7 +2,7 @@ package com.nh.nsight.marketing.om.support;
 
 import com.nh.nsight.tcf.core.context.TransactionContext;
 import com.nh.nsight.tcf.util.DateTimeUtil;
-import com.nh.nsight.marketing.om.dao.OmOperationDao;
+import com.nh.nsight.marketing.om.persistence.dao.OmOperationDao;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;

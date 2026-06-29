@@ -1,7 +1,7 @@
 package com.nh.nsight.auth.jwt.support;
 
-import com.nh.nsight.auth.jwt.dao.JwtTokenDao;
-import com.nh.nsight.auth.jwt.mapper.JwtTokenMapper;
+import com.nh.nsight.auth.jwt.persistence.dao.JwtTokenDao;
+import com.nh.nsight.auth.jwt.persistence.mapper.JwtTokenMapper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

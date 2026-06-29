@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.nh.nsight.auth.jwt.mapper.JwtAdminMapper">
+<mapper namespace="com.nh.nsight.auth.jwt.persistence.mapper.JwtAdminMapper">
 
     <sql id="jwtTokenWhere">
         <where>

@@ -12,11 +12,30 @@
 
 NSIGHT 마케팅 플랫폼 **Event Bridge (EB)** 업무 서비스입니다. 모든 거래는 TCF 파이프라인(`POST /online` 또는 `POST /eb/online`)을 통해 처리됩니다.
 
-## 샘플 거래
+## 거래
 
-| serviceId | 설명 |
-|-----------|------|
-| `EB.Sample.inquiry` | 샘플 조회 |
+| serviceId | transactionCode | 설명 |
+|-----------|-----------------|------|
+| `EB.Sample.inquiry` | EB-INQ-0001 | 샘플 조회 |
+| `EB.User.inquiry` | EB-USR-0002 | 사용자 목록 조회 (최근 이벤트 포함) |
+| `EB.User.create` | EB-USR-0001 | 사용자 등록 + `EB_EVENT`(READY) 생성 |
+| `EB.Event.inquiry` | EB-EVT-0001 | Outbox 이벤트 목록·상태 집계 조회 |
+| `EB.Batch.inquiry` | EB-BAT-0001 | EP 발행 배치 설정·상태 집계 조회 |
+
+## EB → EP 이벤트 발행 (Outbox)
+
+```text
+EB.User.create  →  EB_USER + EB_EVENT(READY)
+@Scheduled 배치  →  POST ep-service /ep/online (EP.UserEvent.receive)
+성공/실패        →  EB_EVENT = SENT / FAIL
+```
+
+| 테이블 | 역할 |
+|--------|------|
+| `EB_USER` | 사용자 정보 |
+| `EB_EVENT` | EP 발행 대기 (`READY` / `SENT` / `FAIL`) |
+
+로컬 설정: `application-local.yml` → `nsight.eb.event-publish` (기본 60초, EP URL `8090`)
 
 ## 실행
 
@@ -28,7 +47,12 @@ tcf-scripts/run-local.bat eb
 ## API
 
 ```bash
-# bootRun
+# 사용자 등록 (이벤트 READY 생성)
+curl -X POST http://localhost:8089/eb/online \
+  -H "Content-Type: application/json" \
+  -d "{\"header\":{\"businessCode\":\"EB\",\"serviceId\":\"EB.User.create\",\"transactionCode\":\"EB-USR-0001\",\"processingType\":\"CREATE\",\"channelId\":\"WEBTOP\"},\"body\":{\"userId\":\"U001\",\"userName\":\"홍길동\",\"branchId\":\"001\"}}"
+
+# 샘플 조회
 curl -X POST http://localhost:8089/eb/online \
   -H "Content-Type: application/json" \
   -d @tcf-ui/src/main/resources/sample-requests/eb-sample-inquiry.json

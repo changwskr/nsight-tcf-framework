@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.nh.nsight.marketing.eb.mapper.EbSampleMapper">
+<mapper namespace="com.nh.nsight.marketing.eb.persistence.mapper.EbSampleMapper">
     <select id="selectSample" parameterType="map" resultType="map">
         SELECT
             #{sampleKey} AS SAMPLE_KEY,

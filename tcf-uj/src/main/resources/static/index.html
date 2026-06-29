@@ -34,8 +34,11 @@
         const jwtAdminLink = code === 'JWT'
           ? `<a href="/${lower}/admin/token.html">JWT 인증 포털</a>`
           : '';
-        const updownloadLink = code === 'UD'
-          ? `<a href="/${lower}/updownload.html">파일 관리</a>`
+        const ebUserLink = code === 'EB'
+          ? `<a href="/${lower}/user-management.html">사용자 관리</a>`
+          : '';
+        const ebEventLink = code === 'EB'
+          ? `<a href="/${lower}/event-monitor.html">이벤트·배치 모니터</a>`
           : '';
         return `
           <article class="hub-card">
@@ -47,6 +50,8 @@
               ${omAdminLink}
               ${jwtAdminLink}
               ${updownloadLink}
+              ${ebUserLink}
+              ${ebEventLink}
             </div>
           </article>
         `;

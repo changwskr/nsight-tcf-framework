@@ -1,7 +1,7 @@
 package com.nh.nsight.tcf.web.config;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
-import com.nh.nsight.tcf.web.mybatis.PolicyDrivenQueryTimeoutInterceptor;
+import com.nh.nsight.tcf.web.support.PolicyDrivenQueryTimeoutInterceptor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;

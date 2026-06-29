@@ -1,6 +1,6 @@
 package com.nh.nsight.tcf.web.config;
 
-import com.nh.nsight.tcf.web.datasource.TcfHikariDataSources;
+import com.nh.nsight.tcf.web.support.TcfHikariDataSources;
 import javax.sql.DataSource;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.autoconfigure.AutoConfiguration;

@@ -1,8 +1,8 @@
 package com.nh.nsight.tcf.web.config;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
-import com.nh.nsight.tcf.web.datasource.TcfDataSourceUrlSupport;
-import com.nh.nsight.tcf.web.datasource.TcfHikariDataSources;
+import com.nh.nsight.tcf.web.support.TcfDataSourceUrlSupport;
+import com.nh.nsight.tcf.web.support.TcfHikariDataSources;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
