@@ -4,6 +4,7 @@
 |------|-----|
 | Gradle 모듈 | `pc-service` |
 | 업무코드 | `PC` |
+| 메인 클래스 | `com.nh.nsight.marketing.pc.NsightPcServiceApplication` |
 | bootRun 포트 | **8083** |
 | WAR (bootWar) | `pc.war` |
 | Tomcat context | `/pc` |
@@ -51,3 +52,22 @@ curl -X POST http://localhost:8080/pc/online \
 ## 의존성
 
 `tcf-util`, `tcf-core`, `tcf-web`
+
+## 패키지 구조
+
+```text
+com.nh.nsight.marketing.pc
+├── NsightPcServiceApplication       # extends NsightWarBootstrap
+├── application/
+│   ├── service/       PcSampleService
+│   └── rule/          PcSampleRule
+├── config/
+├── entry/
+│   ├── handler/       PcSampleInquiryHandler
+│   └── facade/        PcSampleFacade
+└── persistence/
+    ├── dao/           PcSampleDao
+    └── mapper/        PcSampleMapper
+
+처리 흐름: entry/handler → entry/facade → application/service → application/rule → persistence
+```

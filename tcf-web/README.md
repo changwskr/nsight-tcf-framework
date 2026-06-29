@@ -25,7 +25,22 @@
 | `TcfOnlineTimeoutConfiguration` | 온라인 timeout 워커 스레드 풀 |
 | `PolicyDrivenQueryTimeoutInterceptor` | MyBatis statement timeout |
 | `TcfDataSourceLifecycleConfiguration` | HikariCP 종료·풀 재사용 |
-| `NsightWarBootstrap` | WAR(Tomcat) 배포 시 context path·프로파일 초기화 |
+| `NsightWarBootstrap` | WAR(Tomcat) 배포 시 context path·프로파일 초기화 (`com.nh.nsight.tcf.web.support`) |
+
+## 패키지 구조
+
+```text
+com.nh.nsight.tcf.web
+├── config/                  TcfAutoConfiguration, DataSource·Timeout·TransactionControl
+├── entry/
+│   ├── web/                 OnlineTransactionController, GlobalStandardExceptionHandler, GuidMdcCleanupFilter
+│   └── facade/              TcfGateway (REST·multipart → TCF.process)
+├── application/rule/        PolicyDrivenTransactionExecutor, PolicyDrivenTransactionAttributeSource
+├── persistence/
+│   ├── dao/                 JdbcTransactionLogRepository, JdbcTimeoutPolicyRepository, JdbcTransactionControlRepository
+│   └── mapper/              MyBatis mapper 패키지
+└── support/                 NsightWarBootstrap, PolicyDrivenQueryTimeoutInterceptor, MappedStatementSupport
+```
 
 ## API 엔드포인트
 

@@ -38,8 +38,12 @@ tcf-om/scripts/run-local.bat
 
 | 모듈 | 설명 |
 |------|------|
-| `tcf-om` | TCF 마이그레이션 완료본 (**권장**) — OM Admin 22 서비스, UD 내장 |
-| `om-service` | 샘플 Handler만 포함한 레거시 모듈 |
+| `tcf-om` | TCF 마이그레이션 완료본 (**권장**) — OM Admin 22 서비스, UD 내장, **6계층 패키지** |
+| `om-service` | 샘플 Handler만 포함한 레거시 모듈 (Gradle·CI/CD 미포함) |
+
+## 패키지 구조 (tcf-om 기준)
+
+레거시 `om-service`는 flat 패키지(`handler/`, `service/` 등)를 사용합니다. 신규 개발·배포는 **`tcf-om`** 의 6계층 구조를 따르세요. 상세: [tcf-om/README.md](../tcf-om/README.md)
 
 ## 의존성
 

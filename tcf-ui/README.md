@@ -51,11 +51,11 @@ gradle :tcf-om:bootRun       # bootRun: OM 8097
 ```text
 com.nh.nsight.tcf.ui
 ├── NsightTcfUiApplication
-├── catalog/                    BusinessModuleDefinitions
-├── controller/                 TcfApiController, UpdownloadApiController, EtcApiController
-├── service/                    Relay·카탈로그
-├── web/                        UiTomcatHtmlRewriteFilter (/ui context HTML 보정)
-└── model/
+├── application/service/     BusinessModuleCatalog, BusinessTransactionCatalog
+├── client/                  TransactionRelayService, GatewayRelayService, UpdownloadRelayService
+├── config/                  TcfUiProperties, TcfUiConfiguration
+├── entry/web/               TcfApiController, UpdownloadApiController, UiTomcatHtmlRewriteFilter
+└── support/                 BusinessModuleDefinitions, BusinessModuleInfo, RelayResult
 ```
 
 ## 설정

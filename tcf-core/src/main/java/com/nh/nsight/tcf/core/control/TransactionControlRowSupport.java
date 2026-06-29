@@ -38,6 +38,7 @@ public final class TransactionControlRowSupport {
         return row;
     }
 
+    @SuppressWarnings("deprecation")
     public static String extractTarget(String controlType, Map<String, ?> row) {
         if (row == null) {
             return "";

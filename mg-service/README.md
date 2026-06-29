@@ -4,6 +4,7 @@
 |------|-----|
 | Gradle 모듈 | `mg-service` |
 | 업무코드 | `MG` |
+| 메인 클래스 | `com.nh.nsight.marketing.mg.NsightMgServiceApplication` |
 | bootRun 포트 | **8096** |
 | WAR (bootWar) | `mg.war` |
 | Tomcat context | `/mg` |
@@ -51,3 +52,22 @@ curl -X POST http://localhost:8080/mg/online \
 ## 의존성
 
 `tcf-util`, `tcf-core`, `tcf-web`
+
+## 패키지 구조
+
+```text
+com.nh.nsight.marketing.mg
+├── NsightMgServiceApplication       # extends NsightWarBootstrap
+├── application/
+│   ├── service/       MgSampleService
+│   └── rule/          MgSampleRule
+├── config/
+├── entry/
+│   ├── handler/       MgSampleInquiryHandler
+│   └── facade/        MgSampleFacade
+└── persistence/
+    ├── dao/           MgSampleDao
+    └── mapper/        MgSampleMapper
+
+처리 흐름: entry/handler → entry/facade → application/service → application/rule → persistence
+```

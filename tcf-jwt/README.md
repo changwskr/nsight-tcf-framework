@@ -7,7 +7,7 @@ RS256 JWT Access/Refresh Token 발급·갱신·폐기를 담당하는 TCF 독립
 | Gradle 모듈 | `tcf-jwt` |
 | 업무코드 | `JWT` |
 | 메인 클래스 | `com.nh.nsight.auth.jwt.NsightJwtServiceApplication` |
-| bootRun 포트 | **8100** |
+| bootRun 포트 | **8110** (local — gateway :8100 과 분리) |
 | WAR | `jwt.war` → ztomcat `/jwt` |
 
 ## ServiceId
@@ -36,7 +36,7 @@ tcf-jwt\scripts\run-local.bat
 tcf-jwt\scripts\deploy.bat
 
 gradle :tcf-jwt:bootRun
-curl -X POST http://localhost:8100/online \
+curl -X POST http://localhost:8110/online \
   -H "Content-Type: application/json" \
   -d @tcf-jwt/src/main/resources/sample-requests/jwt-auth-login.json
 ```
@@ -46,3 +46,22 @@ curl -X POST http://localhost:8100/online \
 `GET /.well-known/jwks.json` — RS256 공개키 (Resource Server 검증용)
 
 로컬 테스트 계정: `admin01` / `nsight01!`
+
+## 패키지 구조
+
+```text
+com.nh.nsight.auth.jwt
+├── NsightJwtServiceApplication      # extends NsightWarBootstrap
+├── application/service/     JwtAuthService, JwtAdminService
+├── config/                  JwtKeyConfiguration, JwtSecurityConfiguration, JwtSchemaInitializer
+├── entry/
+│   ├── handler/       JwtAuthLoginHandler, JwtAuthRefreshHandler, JwtAuthRevokeHandler, …
+│   ├── facade/        JwtAuthFacade, JwtAdminFacade
+│   └── web/           JwkSetController (/.well-known/jwks.json)
+├── persistence/
+│   ├── dao/           JwtTokenDao, JwtAdminDao
+│   └── mapper/        JwtTokenMapper, JwtAdminMapper
+└── support/           JwtTokenIssuer, JwtTokenStore, JwtSupport
+
+처리 흐름: entry/handler → entry/facade → application/service → persistence
+```

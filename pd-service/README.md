@@ -4,6 +4,7 @@
 |------|-----|
 | Gradle 모듈 | `pd-service` |
 | 업무코드 | `PD` |
+| 메인 클래스 | `com.nh.nsight.marketing.pd.NsightPdServiceApplication` |
 | bootRun 포트 | **8087** |
 | WAR (bootWar) | `pd.war` |
 | Tomcat context | `/pd` |
@@ -51,3 +52,22 @@ curl -X POST http://localhost:8080/pd/online \
 ## 의존성
 
 `tcf-util`, `tcf-core`, `tcf-web`
+
+## 패키지 구조
+
+```text
+com.nh.nsight.marketing.pd
+├── NsightPdServiceApplication       # extends NsightWarBootstrap
+├── application/
+│   ├── service/       PdSampleService
+│   └── rule/          PdSampleRule
+├── config/
+├── entry/
+│   ├── handler/       PdSampleInquiryHandler
+│   └── facade/        PdSampleFacade
+└── persistence/
+    ├── dao/           PdSampleDao
+    └── mapper/        PdSampleMapper
+
+처리 흐름: entry/handler → entry/facade → application/service → application/rule → persistence
+```

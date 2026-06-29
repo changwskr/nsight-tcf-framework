@@ -86,6 +86,21 @@ curl -X POST http://localhost:8080/batch/jobs/ap-status/run
 4. `curl -X POST http://localhost:8098/batch/jobs/ap-status/run`
 5. http://localhost:8099/om/admin/dashboard.html
 
+## 패키지 구조
+
+```text
+com.nh.nsight.tcf.batch
+├── NsightTcfBatchApplication        # extends NsightWarBootstrap
+├── application/
+│   ├── service/       ApStatusCollectService, DbStatusCollectService, SessionStatusCollectService, DeployStatusCollectService
+│   └── scheduler/     ApStatusCollectScheduler, DbStatusCollectScheduler, …
+├── client/            ApMetricsClient, DbMetricsClient, SessionMetricsClient, DeployMetricsClient
+├── config/            ApStatusBatchProperties, DbStatusBatchProperties, …
+├── entry/web/         ApStatusBatchController, DbStatusBatchController, … (POST /batch/jobs/*/run)
+├── persistence/repository/  OmDashboardStatusRepository
+└── support/           BatchDatabaseMigration, ScheduledCollectSupport, DashboardCollectStartupRunner
+```
+
 ## 로컬 검증 (ztomcat)
 
 1. `ztomcat/deploy-wars.bat all` + `start.bat`

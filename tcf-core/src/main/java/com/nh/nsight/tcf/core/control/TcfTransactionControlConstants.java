@@ -11,7 +11,8 @@ public final class TcfTransactionControlConstants {
     public static final String CONTROL_TYPE_BRANCH = "BRANCH";
     public static final String CONTROL_TYPE_USER = "USER";
     public static final String CONTROL_TYPE_IP = "IP";
-    /** @deprecated 레거시 7필드 일치 — 신규 등록 시 사용하지 않음 */
+    /** 레거시 7필드 일치 — 신규 등록 시 사용하지 않음 */
+    @Deprecated
     public static final String CONTROL_TYPE_FULL = "FULL";
     public static final String GLOBAL_WILDCARD = "*";
     public static final String BLOCK_YES = "Y";

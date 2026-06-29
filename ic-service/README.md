@@ -4,6 +4,7 @@
 |------|-----|
 | Gradle 모듈 | `ic-service` |
 | 업무코드 | `IC` |
+| 메인 클래스 | `com.nh.nsight.marketing.ic.NsightIcServiceApplication` |
 | bootRun 포트 | **8082** |
 | WAR (bootWar) | `ic.war` |
 | Tomcat context | `/ic` |
@@ -51,3 +52,22 @@ curl -X POST http://localhost:8080/ic/online \
 ## 의존성
 
 `tcf-util`, `tcf-core`, `tcf-web`
+
+## 패키지 구조
+
+```text
+com.nh.nsight.marketing.ic
+├── NsightIcServiceApplication       # extends NsightWarBootstrap
+├── application/
+│   ├── service/       IcSampleService
+│   └── rule/          IcSampleRule
+├── config/
+├── entry/
+│   ├── handler/       IcSampleInquiryHandler
+│   └── facade/        IcSampleFacade
+└── persistence/
+    ├── dao/           IcSampleDao
+    └── mapper/        IcSampleMapper
+
+처리 흐름: entry/handler → entry/facade → application/service → application/rule → persistence
+```

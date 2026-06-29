@@ -4,6 +4,7 @@
 |------|-----|
 | Gradle 모듈 | `ms-service` |
 | 업무코드 | `MS` |
+| 메인 클래스 | `com.nh.nsight.marketing.ms.NsightMsServiceApplication` |
 | bootRun 포트 | **8085** |
 | WAR (bootWar) | `ms.war` |
 | Tomcat context | `/ms` |
@@ -51,3 +52,22 @@ curl -X POST http://localhost:8080/ms/online \
 ## 의존성
 
 `tcf-util`, `tcf-core`, `tcf-web`
+
+## 패키지 구조
+
+```text
+com.nh.nsight.marketing.ms
+├── NsightMsServiceApplication       # extends NsightWarBootstrap
+├── application/
+│   ├── service/       MsSampleService
+│   └── rule/          MsSampleRule
+├── config/
+├── entry/
+│   ├── handler/       MsSampleInquiryHandler
+│   └── facade/        MsSampleFacade
+└── persistence/
+    ├── dao/           MsSampleDao
+    └── mapper/        MsSampleMapper
+
+처리 흐름: entry/handler → entry/facade → application/service → application/rule → persistence
+```

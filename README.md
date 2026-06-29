@@ -22,7 +22,10 @@ nsight-tcf-framework
 ├─ tcf-cache             EhCache / Spring Cache
 ├─ tcf-om                운영관리 OM + 파일 업·다운로드 UD
 ├─ tcf-batch             AP/DB/세션/배포 수집 · 운영 대시보드 데이터
-├─ tcf-ui                거래 테스트 UI · OM Admin Relay
+├─ tcf-ui                거래 테스트 UI · OM Admin Relay (bootRun :8099)
+├─ tcf-uj                gateway 경유 테스트 UI (bootRun :8102)
+├─ tcf-gateway           API Gateway · SESSIONDB 관문 (bootRun :8100)
+├─ tcf-jwt               JWT 발급·검증 (bootRun :8110, WAR /jwt)
 ├─ tcf-scripts           빌드·실행·배포 스크립트
 ├─ tcf-cicd              local/dev/prod 설정 SoT
 ├─ ztomcat               로컬 Tomcat 8080 (12 context)
@@ -37,18 +40,63 @@ nsight-tcf-framework
 | `tcf-om` | WAR `/om` | [tcf-om/README.md](tcf-om/README.md) |
 | `tcf-batch` | WAR `/batch` | [tcf-batch/README.md](tcf-batch/README.md) |
 | `tcf-ui` | WAR `/ui` | [tcf-ui/README.md](tcf-ui/README.md) |
+| `tcf-uj` | WAR `/uj` | [tcf-uj/README.md](tcf-uj/README.md) |
+| `tcf-gateway` | WAR `/gw` | [tcf-gateway/README.md](tcf-gateway/README.md) |
+| `tcf-jwt` | WAR `/jwt` | [tcf-jwt/README.md](tcf-jwt/README.md) |
 | `tcf-scripts` | 스크립트 | [tcf-scripts/README.md](tcf-scripts/README.md) |
 | `tcf-cicd` | 설정 | [tcf-cicd/README.md](tcf-cicd/README.md) |
 | `ztomcat` | Tomcat | [ztomcat/README.md](ztomcat/README.md) |
 
-**의존 방향:** `tcf-util → tcf-core → tcf-web → tcf-cache(선택) → 업무 서비스 / tcf-om / tcf-batch`
+### 업무 WAR (`*-service`)
+
+| 모듈 | 업무코드 | README |
+|------|----------|--------|
+| `ic-service` | IC | [ic-service/README.md](ic-service/README.md) |
+| `pc-service` | PC | [pc-service/README.md](pc-service/README.md) |
+| `ms-service` | MS | [ms-service/README.md](ms-service/README.md) |
+| `sv-service` | SV | [sv-service/README.md](sv-service/README.md) |
+| `pd-service` | PD | [pd-service/README.md](pd-service/README.md) |
+| `eb-service` | EB | [eb-service/README.md](eb-service/README.md) |
+| `ep-service` | EP | [ep-service/README.md](ep-service/README.md) |
+| `ss-service` | SS | [ss-service/README.md](ss-service/README.md) |
+| `mg-service` | MG | [mg-service/README.md](mg-service/README.md) |
+
+레거시 `om-service`는 [om-service/README.md](om-service/README.md) 참고 — 배포·개발은 **`tcf-om`** 사용.
+
+**의존 방향:** `tcf-util → tcf-core → tcf-web → tcf-cache(선택) → 업무 서비스 / tcf-om / tcf-batch / tcf-jwt / tcf-gateway`
+
+## 업무 WAR 패키지 규약 (6계층)
+
+업무 모듈(`*-service`, `tcf-om`, `tcf-jwt` 등)은 eb-service 기준 **6계층** 패키지를 사용합니다.
+
+```text
+com.nh.nsight.marketing.{업무}   (또는 com.nh.nsight.auth.jwt, com.nh.nsight.gateway)
+├── application/
+│   ├── service/       업무 Service
+│   ├── rule/          업무 Rule
+│   └── scheduler/     @Scheduled (해당 시)
+├── client/            외부 WAS·API Client (해당 시)
+├── config/            Spring 설정·Properties
+├── entry/
+│   ├── handler/       TransactionHandler (serviceId 등록)
+│   ├── facade/        Handler → Service 위임
+│   └── web/           REST Controller·Filter (해당 시)
+├── persistence/
+│   ├── dao/           JDBC DAO
+│   └── mapper/        MyBatis Mapper
+└── support/           상수·도메인 헬퍼
+
+처리 흐름: entry/handler → entry/facade → application/service → application/rule → persistence/dao|mapper
+```
+
+WAR 메인 클래스는 `com.nh.nsight.tcf.web.support.NsightWarBootstrap`를 상속합니다 (`tcf-web`, 구 `boot` 패키지).
 
 ## TCF 처리 흐름
 
 ```text
 Client / tcf-ui / REST API
    ↓  POST /{businessCode}/online  (StandardRequest: header + body)
-OnlineTransactionController / TcfGateway
+OnlineTransactionController / TcfGateway (entry/web · entry/facade)
    ↓
 TCF.process()
    ├─ STF.preProcess()
@@ -57,7 +105,7 @@ TCF.process()
    │     거래로그 INSERT (PROCESSING)
    ├─ OnlineTransactionTimeoutExecutor
    │     └─ TransactionDispatcher → TransactionHandler (serviceId)
-   │           Facade → Service → Rule → DAO/Mapper
+   │           entry/facade → application/service → application/rule → persistence/dao|mapper
    │           · TX timeout AOP · MyBatis query timeout
    └─ ETF.success / businessFail / systemError
          StandardResponse · 감사·메트릭 · 거래로그 UPDATE
@@ -155,6 +203,9 @@ tcf-scripts\build.bat ztomcat
 | 8087 | pd | 8097 | **tcf-om** |
 | | | 8098 | **tcf-batch** |
 | | | 8099 | **tcf-ui** |
+| | | 8100 | **tcf-gateway** |
+| | | 8102 | **tcf-uj** |
+| | | 8110 | **tcf-jwt** |
 
 Tomcat 모드: 모든 context **8080**
 

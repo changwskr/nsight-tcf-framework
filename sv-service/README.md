@@ -4,6 +4,7 @@
 |------|-----|
 | Gradle 모듈 | `sv-service` |
 | 업무코드 | `SV` |
+| 메인 클래스 | `com.nh.nsight.marketing.sv.NsightSvServiceApplication` |
 | bootRun 포트 | **8086** |
 | WAR (bootWar) | `sv.war` |
 | Tomcat context | `/sv` |
@@ -51,3 +52,22 @@ curl -X POST http://localhost:8080/sv/online \
 ## 의존성
 
 `tcf-util`, `tcf-core`, `tcf-web`
+
+## 패키지 구조
+
+```text
+com.nh.nsight.marketing.sv
+├── NsightSvServiceApplication       # extends NsightWarBootstrap
+├── application/
+│   ├── service/       SvSampleService
+│   └── rule/          SvSampleRule
+├── config/
+├── entry/
+│   ├── handler/       SvSampleInquiryHandler
+│   └── facade/        SvSampleFacade
+└── persistence/
+    ├── dao/           SvSampleDao
+    └── mapper/        SvSampleMapper
+
+처리 흐름: entry/handler → entry/facade → application/service → application/rule → persistence
+```

@@ -6,6 +6,7 @@ final class MappedStatementSupport {
 
     private MappedStatementSupport() {}
 
+    @SuppressWarnings("deprecation")
     static MappedStatement copyWithTimeout(MappedStatement source, int timeoutSec) {
         MappedStatement.Builder builder = new MappedStatement.Builder(
                 source.getConfiguration(), source.getId(), source.getSqlSource(), source.getSqlCommandType());

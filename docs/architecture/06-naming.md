@@ -63,21 +63,24 @@ com.nh.nsight.marketing.{businessCodeLower}
 - `com.nh.nsight.marketing.om`
 - `com.nh.nsight.marketing.cc`
 
-### 3.2 계층 패키지
+### 3.2 계층 패키지 (6계층)
 
 | 패키지 | 역할 | 예 |
 |--------|------|----|
-| `controller` | HTTP API 진입점 (표준/비표준) | `OmUpdownloadFileController` |
-| `handler` | TCF 거래 진입점 (`serviceId`) | `OmErrorCodeUpdateHandler` |
-| `facade` | 트랜잭션 경계·유스케이스 조합 | `OmErrorCodeFacade` |
-| `service` | 도메인 처리 | `OmErrorCodeService` |
-| `rule` | 검증 규칙 | `OmOperationRule` |
-| `dao` | 영속 접근 추상화 | `OmOperationDao` |
-| `mapper` | MyBatis 매퍼 인터페이스 | `OmOperationMapper` |
+| `entry.web` | HTTP API 진입점 (표준/비표준) | `OmUpdownloadFileController`, `TcfApiController` |
+| `entry.handler` | TCF 거래 진입점 (`serviceId`) | `OmErrorCodeUpdateHandler` |
+| `entry.facade` | 트랜잭션 경계·유스케이스 조합 | `OmErrorCodeFacade` |
+| `application.service` | 도메인 처리 | `OmErrorCodeService` |
+| `application.rule` | 검증 규칙 | `OmOperationRule` |
+| `application.scheduler` | `@Scheduled` 배치 | `EbEventPublishScheduler` |
+| `client` | 외부 WAS·API Client | `EpOnlineClient`, `GatewayRouteDispatcher` |
+| `persistence.dao` | 영속 접근 추상화 | `OmOperationDao` |
+| `persistence.mapper` | MyBatis 매퍼 인터페이스 | `OmOperationMapper` |
 | `config` | 설정 클래스 | `OmUpdownloadConfiguration` |
 | `support` | 보조 기능(마이그레이션/헬퍼) | `OmDatabaseMigration` |
 
-> `controller`는 TCF 표준 거래보다 비표준 REST(예: 파일 업로드)에서 주로 사용한다.
+> `entry.web`는 TCF 표준 거래(`POST /online`)보다 비표준 REST(파일 업로드, UI Relay API)에서 주로 사용한다.  
+> 프레임워크 공통 HTTP: `tcf-web`의 `entry.web.OnlineTransactionController`, `entry.facade.TcfGateway`
 
 ---
 
@@ -412,10 +415,10 @@ sql id   : upd01
 |------|------|
 | `docs/architecture/01-application-layer.md` | 계층 구조·역할 |
 | `tcf-core/.../dispatch/TransactionDispatcher.java` | `serviceId` 라우팅 |
-| `tcf-om/.../handler/*` | Handler 네이밍 실사례 |
-| `tcf-om/.../service/OmErrorCodeService.java` | Service 네이밍 실사례 |
-| `tcf-om/.../dao/OmOperationDao.java` | DAO 메서드 네이밍 |
-| `tcf-om/.../mapper/OmOperationMapper.java` | Mapper 메서드 네이밍 |
+| `tcf-om/.../entry/handler/*` | Handler 네이밍 실사례 |
+| `tcf-om/.../application/service/OmErrorCodeService.java` | Service 네이밍 실사례 |
+| `tcf-om/.../persistence/dao/OmOperationDao.java` | DAO 메서드 네이밍 |
+| `tcf-om/.../persistence/mapper/OmOperationMapper.java` | Mapper 메서드 네이밍 |
 | `tcf-ui/src/main/resources/sample-requests/` | 샘플 JSON 파일명 규칙 |
 
 ---
@@ -425,3 +428,4 @@ sql id   : upd01
 | 일자 | 변경 내용 |
 |------|-----------|
 | 2026-06 | 최초 작성 — 계층/SQL/serviceId/errorCode 네이밍 표준화 |
+| 2026-06 | 6계층 패키지(entry/application/persistence/client) 반영 |

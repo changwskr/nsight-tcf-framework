@@ -39,6 +39,8 @@ TCF.process(request)
 
 ## Handler 구현 규약
 
+업무 WAR에서는 Handler를 **`entry.handler`** 패키지에 둡니다 (6계층 규약). 아래는 최소 예시입니다.
+
 ```java
 @Component
 public class XxxHandler implements TransactionHandler {

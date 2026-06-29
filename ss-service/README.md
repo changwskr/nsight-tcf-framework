@@ -4,6 +4,7 @@
 |------|-----|
 | Gradle 모듈 | `ss-service` |
 | 업무코드 | `SS` |
+| 메인 클래스 | `com.nh.nsight.marketing.ss.NsightSsServiceApplication` |
 | bootRun 포트 | **8093** |
 | WAR (bootWar) | `ss.war` |
 | Tomcat context | `/ss` |
@@ -51,3 +52,22 @@ curl -X POST http://localhost:8080/ss/online \
 ## 의존성
 
 `tcf-util`, `tcf-core`, `tcf-web`
+
+## 패키지 구조
+
+```text
+com.nh.nsight.marketing.ss
+├── NsightSsServiceApplication       # extends NsightWarBootstrap
+├── application/
+│   ├── service/       SsSampleService
+│   └── rule/          SsSampleRule
+├── config/
+├── entry/
+│   ├── handler/       SsSampleInquiryHandler
+│   └── facade/        SsSampleFacade
+└── persistence/
+    ├── dao/           SsSampleDao
+    └── mapper/        SsSampleMapper
+
+처리 흐름: entry/handler → entry/facade → application/service → application/rule → persistence
+```

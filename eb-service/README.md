@@ -4,6 +4,7 @@
 |------|-----|
 | Gradle 모듈 | `eb-service` |
 | 업무코드 | `EB` |
+| 메인 클래스 | `com.nh.nsight.marketing.eb.NsightEbServiceApplication` |
 | bootRun 포트 | **8089** |
 | WAR (bootWar) | `eb.war` |
 | Tomcat context | `/eb` |
@@ -75,3 +76,25 @@ curl -X POST http://localhost:8080/eb/online \
 ## 의존성
 
 `tcf-util`, `tcf-core`, `tcf-web`
+
+## 패키지 구조
+
+```text
+com.nh.nsight.marketing.eb
+├── NsightEbServiceApplication       # extends NsightWarBootstrap
+├── application/
+│   ├── service/       EbUserService, EbEventService, EbEventPublishService, EbBatchService
+│   ├── rule/          EbUserRule, EbEventRule, EbSampleRule
+│   └── scheduler/     EbEventPublishScheduler (Outbox → EP 발행)
+├── client/            EpOnlineClient (POST ep-service /ep/online)
+├── config/            EbSchedulerConfiguration, EbEventPublishProperties
+├── entry/
+│   ├── handler/       EbSampleInquiryHandler, EbUserCreateHandler, …
+│   └── facade/        EbSampleFacade, EbUserFacade, EbEventFacade, EbBatchFacade
+├── persistence/
+│   ├── dao/           EbUserDao, EbEventDao, EbSampleDao
+│   └── mapper/        EbUserMapper, EbEventMapper, EbSampleMapper
+└── support/           EbEventStatus
+
+처리 흐름: entry/handler → entry/facade → application/service → application/rule → persistence
+```

@@ -27,6 +27,9 @@ tcf-scripts/run-local.sh <target>
 |------|-----------|
 | `sv`, `sv-service` | sv-service |
 | `tcf-ui`, `ui` | tcf-ui (8099) |
+| `uj`, `tcf-uj` | tcf-uj (8102) |
+| `gw`, `tcf-gateway` | tcf-gateway (8100) |
+| `jwt`, `tcf-jwt` | tcf-jwt (8110) |
 | `tcf-om`, `om`, `ud` | tcf-om (8097, UD API 내장) |
 | `batch`, `tcf-batch` | tcf-batch (8098) |
 | `all` | 9개 *-service + tcf-om 일괄 기동 (각각 새 창) |
@@ -101,8 +104,11 @@ tcf-scripts\deploy.bat batch ui
 | tcf-om | 8097 |
 | tcf-batch | 8098 |
 | tcf-ui | 8099 |
+| tcf-uj | 8102 |
+| tcf-gateway | 8100 |
+| tcf-jwt | 8110 |
 
-Tomcat(ztomcat) 모드: 모든 context **8080** — `/ic` … `/mg`, `/om`, `/batch`, `/ui`
+Tomcat(ztomcat) 모드: 모든 context **8080** — `/ic` … `/mg`, `/om`, `/batch`, `/ui`, `/uj`, `/gw`, `/jwt`
 
 ## Gradle 직접 호출
 

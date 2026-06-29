@@ -24,7 +24,7 @@
 - 거래로그·감사로그·Health Check·배치·Cache·배포 관리
 - 운영 대시보드 (tcf-batch 수집 데이터 조회)
 - 환경설정 (Tomcat/bootRun 배포 모드별 런타임 값 표시)
-- 파일 업·다운로드 REST (`/ud/files`, TcfGateway 경유)
+- 파일 업·다운로드 REST (`/ud/files`, `entry/web/OmUpdownloadFileController`, TcfGateway 경유)
 - 기동 시 `OmDatabaseMigration` — 스키마·시드·기능권한 MERGE
 
 ## TCF Handler 예시
@@ -96,15 +96,23 @@ curl -X POST http://localhost:8080/om/online \
 
 ```text
 com.nh.nsight.marketing.om
-├── handler/       TransactionHandler (serviceId 등록)
-├── facade/        업무 Facade
-├── service/       업무 Service (+ OmCommonCodeCacheService)
-├── dao/           JDBC/MyBatis DAO
-├── mapper/        MyBatis Mapper 인터페이스
-├── rule/          업무 규칙 검증
-├── support/       DB 마이그레이션, 세션, Health, OmSystemConfigRuntimeSupport
-├── updownload/    UD 파일 API (tcf-om 내장)
-└── config/        Spring Session, 스케줄, 비밀번호
+├── NsightTcfOmApplication              # extends NsightWarBootstrap
+├── application/
+│   ├── service/       OmUserService, OmAuthService, …
+│   ├── rule/          OmOperationRule, OmDeployApprovalRule, …
+│   └── scheduler/     OmSessionCleanupScheduler
+├── client/            OmBatchRemoteClient, OmCicdClientService
+├── config/            Spring Session, 스케줄, UD Properties
+├── entry/
+│   ├── handler/       OM.* TransactionHandler (45개+)
+│   ├── facade/        업무 Facade
+│   └── web/           OmUpdownloadFileController (UD REST)
+├── persistence/
+│   ├── dao/           JDBC/MyBatis DAO
+│   └── mapper/        MyBatis Mapper
+└── support/           OmDatabaseMigration, 시드·Health
+
+처리 흐름: entry/handler → entry/facade → application/service → application/rule → persistence
 ```
 
 ## om-service와의 관계

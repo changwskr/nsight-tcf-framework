@@ -4,6 +4,7 @@
 |------|-----|
 | Gradle 모듈 | `ep-service` |
 | 업무코드 | `EP` |
+| 메인 클래스 | `com.nh.nsight.marketing.ep.NsightEpServiceApplication` |
 | bootRun 포트 | **8090** |
 | WAR (bootWar) | `ep.war` |
 | Tomcat context | `/ep` |
@@ -60,3 +61,22 @@ curl -X POST http://localhost:8080/ep/online \
 ## 의존성
 
 `tcf-util`, `tcf-core`, `tcf-web`
+
+## 패키지 구조
+
+```text
+com.nh.nsight.marketing.ep
+├── NsightEpServiceApplication       # extends NsightWarBootstrap
+├── application/
+│   ├── service/       EpSampleService, EpUserEventService
+│   └── rule/          EpSampleRule, EpUserEventRule
+├── config/
+├── entry/
+│   ├── handler/       EpSampleInquiryHandler, EpUserEventReceiveHandler
+│   └── facade/        EpSampleFacade, EpUserEventFacade
+└── persistence/
+    ├── dao/           EpSampleDao, EpUserEventDao
+    └── mapper/        EpSampleMapper, EpUserEventMapper
+
+처리 흐름: entry/handler → entry/facade → application/service → application/rule → persistence
+```

@@ -132,8 +132,8 @@ tcf-cicd/scripts/apply-tomcat-config.sh prod
 
 ## 관리 대상 모듈
 
-**플랫폼:** `tcf-web`, `tcf-cache`, `tcf-core`, `tcf-om`, `tcf-batch`, `tcf-ui`  
-**업무:** `cc-service` … `mg-service`, `om-service` (17)
+**플랫폼:** `tcf-web`, `tcf-cache`, `tcf-core`, `tcf-om`, `tcf-batch`, `tcf-ui`, `tcf-uj`, `tcf-gateway`, `tcf-jwt`  
+**업무:** `ic-service` … `mg-service`, `eb-service`, `ep-service` (9) — **`tcf-om`이 OM·UD 담당** (`om-service`는 레거시, CI/CD 미포함)
 
 `application.yml`(공통)은 **framework 모듈**에 유지합니다.  
 `tcf-cicd`는 **`application-{local,dev,prod}.yml`** 만 관리합니다.
