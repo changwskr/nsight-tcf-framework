@@ -19,6 +19,11 @@ public class OmAuthFacade {
         return service.login(body, context);
     }
 
+    @Transactional(timeout = 5)
+    public Map<String, Object> ssoLogin(Map<String, Object> body, TransactionContext context) {
+        return service.ssoLogin(body, context);
+    }
+
     @Transactional(readOnly = true, timeout = 5)
     public Map<String, Object> session(Map<String, Object> body, TransactionContext context) {
         return service.session(context);

@@ -1,6 +1,29 @@
 # tcf-cicd 공통 경로·Gradle·모듈 정의 (dot-source)
 $ErrorActionPreference = 'Stop'
 
+function Set-CicdJdk21 {
+    $candidates = @(
+        (Join-Path $env:USERPROFILE '.jdks\temurin-21.0.4')
+    )
+    $candidates += Get-ChildItem 'C:\Program Files\Eclipse Adoptium' -Directory -Filter 'jdk-21*' -ErrorAction SilentlyContinue |
+        ForEach-Object { $_.FullName }
+
+    foreach ($jdk in $candidates) {
+        if (Test-Path (Join-Path $jdk 'bin\java.exe')) {
+            $env:JAVA_HOME = $jdk
+            if ($env:Path -notlike "*$jdk\bin*") {
+                $env:Path = "$jdk\bin;$env:Path"
+            }
+            return
+        }
+    }
+    if (-not $env:JAVA_HOME) {
+        Write-Warning '[cicd] JDK 21 not found. Set JAVA_HOME or install temurin-21.0.4.'
+    }
+}
+
+Set-CicdJdk21
+
 if (-not $PSScriptRoot) {
     $PSScriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 }

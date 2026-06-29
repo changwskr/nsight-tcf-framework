@@ -99,6 +99,7 @@ INSERT INTO OM_SERVICE_CATALOG (CATALOG_ID, BUSINESS_CODE, SERVICE_ID, TRANSACTI
 ('CAT-027', 'OM', 'OM.Auth.login', 'OM-AUT-0002', 'EXECUTE', 'OmAuthLoginHandler', 'ROLE_OM_AUTH', 'Y', 5, 'Y', 'OM 로그인'),
 ('CAT-028', 'OM', 'OM.Auth.logout', 'OM-AUT-0003', 'EXECUTE', 'OmAuthLogoutHandler', 'ROLE_OM_AUTH', 'Y', 5, 'Y', 'OM 로그아웃'),
 ('CAT-029', 'OM', 'OM.Auth.session', 'OM-AUT-0004', 'INQUIRY', 'OmAuthSessionInquiryHandler', 'ROLE_OM_AUTH', 'N', 5, 'Y', 'OM 세션 조회'),
+('CAT-106', 'OM', 'OM.Auth.ssoLogin', 'OM-AUT-0005', 'EXECUTE', 'OmAuthSsoLoginHandler', 'ROLE_OM_AUTH', 'Y', 5, 'Y', 'OM SSO 로그인'),
 ('CAT-030', 'OM', 'OM.Session.inquiry', 'OM-SES-0001', 'INQUIRY', 'OmSessionInquiryHandler', 'ROLE_OM_AUTH', 'Y', 10, 'Y', '세션 목록 조회'),
 ('CAT-031', 'OM', 'OM.Session.delete', 'OM-SES-0002', 'DELETE', 'OmSessionDeleteHandler', 'ROLE_OM_AUTH', 'Y', 5, 'Y', '세션 강제 종료'),
 ('CAT-032', 'OM', 'OM.User.detail', 'OM-USR-0002', 'INQUIRY', 'OmUserDetailHandler', 'ROLE_OM_AUTH', 'N', 5, 'Y', '사용자 상세'),

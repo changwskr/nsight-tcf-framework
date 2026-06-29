@@ -11,3 +11,4 @@ nsight:
     deployment-mode: bootrun
     tomcat-gateway-url: http://localhost:8080
     bootrun-host: http://127.0.0.1
+    om-gateway-enabled: false

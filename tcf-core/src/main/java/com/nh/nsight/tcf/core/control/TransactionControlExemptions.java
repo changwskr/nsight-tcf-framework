@@ -31,9 +31,11 @@ public final class TransactionControlExemptions {
 
     public static boolean isAuthBootstrap(String serviceId) {
         return "OM.Auth.login".equals(serviceId)
+                || "OM.Auth.ssoLogin".equals(serviceId)
                 || "OM.Auth.logout".equals(serviceId)
                 || "OM.Auth.session".equals(serviceId)
                 || "JWT.Auth.login".equals(serviceId)
+                || "JWT.Auth.ssoIssue".equals(serviceId)
                 || "JWT.Auth.refresh".equals(serviceId)
                 || "JWT.Auth.revoke".equals(serviceId)
                 || "JWT.Auth.logout".equals(serviceId);

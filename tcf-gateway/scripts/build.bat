@@ -1,8 +1,9 @@
-@echo off
+﻿@echo off
 setlocal enabledelayedexpansion
 
 set "PROJECT_HOME=%~dp0..\.."
 for %%I in ("!PROJECT_HOME!") do set "PROJECT_HOME=%%~fI"
+if exist "!PROJECT_HOME!\scripts\env-jdk21.bat" call "!PROJECT_HOME!\scripts\env-jdk21.bat"
 set "GRADLE_HOME=C:\Programming(23-08-15)\gradle-8.10.1"
 set "GRADLE=!GRADLE_HOME!\bin\gradle.bat"
 set "MODULE=tcf-gateway"
@@ -68,6 +69,6 @@ echo Usage: build.bat [clean^|run^|run-local^|run-dev]
 echo   build.bat            Build gw.war
 echo   build.bat clean      clean + build
 echo   build.bat run        bootRun ^(SPRING_PROFILES_ACTIVE or default local^)
-echo   build.bat run-local  bootRun profile=local ^(8100 -^> 업무별 bootRun^)
+echo   build.bat run-local  bootRun profile=local ^(8100 -^> ?낅Т蹂?bootRun^)
 echo   build.bat run-dev    bootRun profile=dev ^(8100 -^> Tomcat 8080^)
 exit /b 0

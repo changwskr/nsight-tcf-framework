@@ -15,6 +15,7 @@ RS256 JWT Access/Refresh Token 발급·갱신·폐기를 담당하는 TCF 독립
 | serviceId | 설명 |
 |-----------|------|
 | `JWT.Auth.login` | 로그인 → Access + Refresh Token 발급 |
+| `JWT.Auth.ssoIssue` | SSO 완료 사용자 JWT pair 발급 (`tcf-om` 내부 호출 전용) |
 | `JWT.Auth.refresh` | Refresh Token 갱신 (Rotation) |
 | `JWT.Auth.revoke` | Access Token 폐기 (Denylist) |
 | `JWT.Auth.logout` | Access + Refresh Token 폐기 |

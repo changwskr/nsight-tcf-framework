@@ -1,5 +1,6 @@
 package com.nh.nsight.auth.jwt.config;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,8 +8,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.sql.DataSource;
+
 @Configuration
-@EnableConfigurationProperties(JwtSecurityProperties.class)
+@EnableConfigurationProperties({JwtSecurityProperties.class, JwtInternalCallProperties.class})
 public class JwtAutoConfiguration {
 
     @Bean
@@ -17,8 +20,9 @@ public class JwtAutoConfiguration {
     }
 
     @Bean
-    public JwtSchemaInitializer jwtSchemaInitializer(JdbcTemplate jdbcTemplate, JwtSecurityProperties properties) {
-        JwtSchemaInitializer initializer = new JwtSchemaInitializer(jdbcTemplate, properties);
+    public JwtSchemaInitializer jwtSchemaInitializer(@Qualifier("dataSource") DataSource dataSource,
+                                                     JwtSecurityProperties properties) {
+        JwtSchemaInitializer initializer = new JwtSchemaInitializer(new JdbcTemplate(dataSource), properties);
         initializer.init();
         return initializer;
     }

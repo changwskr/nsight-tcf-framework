@@ -205,6 +205,8 @@ class TransactionControlExemptionsTest {
     @Test
     void exemptsAuthAndHealthCheckTogether() {
         assertTrue(TransactionControlExemptions.isExempt("OM.Auth.login"));
+        assertTrue(TransactionControlExemptions.isExempt("OM.Auth.ssoLogin"));
+        assertTrue(TransactionControlExemptions.isExempt("JWT.Auth.ssoIssue"));
         assertTrue(TransactionControlExemptions.isExempt("OM.HealthCheck.inquiry"));
         assertFalse(TransactionControlExemptions.isExempt("SV.Sample.inquiry"));
     }

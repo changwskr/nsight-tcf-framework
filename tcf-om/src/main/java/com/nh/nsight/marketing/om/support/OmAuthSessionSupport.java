@@ -16,12 +16,16 @@ public class OmAuthSessionSupport {
     public static final String SESSION_USER = "OM_SESSION_USER";
 
     public HttpSession createSession(Map<String, Object> user) {
+        return createSession(user, null, null);
+    }
+
+    public HttpSession createSession(Map<String, Object> user, String loginType, String channelId) {
         HttpServletRequest request = currentRequest()
                 .orElseThrow(() -> new IllegalStateException("HTTP 요청 컨텍스트가 없습니다."));
         HttpSession session = request.getSession(true);
         String userId = stringValue(user, "userId");
         session.setAttribute(FindByIndexNameSessionRepository.PRINCIPAL_NAME_INDEX_NAME, userId);
-        session.setAttribute(SESSION_USER, toSessionUser(user));
+        session.setAttribute(SESSION_USER, toSessionUser(user, loginType, channelId));
         return session;
     }
 
@@ -60,17 +64,29 @@ public class OmAuthSessionSupport {
             body.put("branchId", user.branchId());
             body.put("authGroupId", user.authGroupId());
             body.put("authGroupName", user.authGroupName());
+            if (user.loginType() != null) {
+                body.put("loginType", user.loginType());
+            }
+            if (user.channelId() != null) {
+                body.put("channelId", user.channelId());
+            }
         }
         return body;
     }
 
     private OmSessionUser toSessionUser(Map<String, Object> user) {
+        return toSessionUser(user, null, null);
+    }
+
+    private OmSessionUser toSessionUser(Map<String, Object> user, String loginType, String channelId) {
         return new OmSessionUser(
                 stringValue(user, "userId"),
                 stringValue(user, "userName"),
                 stringValue(user, "branchId"),
                 stringValue(user, "authGroupId"),
-                stringValue(user, "authGroupName")
+                stringValue(user, "authGroupName"),
+                loginType,
+                channelId
         );
     }
 
@@ -91,7 +107,9 @@ public class OmAuthSessionSupport {
             String userName,
             String branchId,
             String authGroupId,
-            String authGroupName
+            String authGroupName,
+            String loginType,
+            String channelId
     ) implements Serializable {
     }
 }

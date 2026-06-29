@@ -1,9 +1,11 @@
 package com.nh.nsight.marketing.om.application.service;
 
+import com.nh.nsight.marketing.om.client.OmJwtSsoClient;
 import com.nh.nsight.marketing.om.persistence.dao.OmOperationDao;
 import com.nh.nsight.marketing.om.application.rule.OmOperationRule;
 import com.nh.nsight.marketing.om.support.OmAuthSessionSupport;
 import com.nh.nsight.marketing.om.support.OmBodySupport;
+import com.nh.nsight.marketing.om.support.OmSsoTokenValidator;
 import com.nh.nsight.tcf.core.context.TransactionContext;
 import com.nh.nsight.tcf.core.error.BusinessException;
 import com.nh.nsight.tcf.util.DateTimeUtil;
@@ -20,13 +22,18 @@ public class OmAuthService {
     private final OmOperationDao dao;
     private final PasswordEncoder passwordEncoder;
     private final OmAuthSessionSupport sessionSupport;
+    private final OmSsoTokenValidator ssoTokenValidator;
+    private final OmJwtSsoClient jwtSsoClient;
 
     public OmAuthService(OmOperationRule rule, OmOperationDao dao, PasswordEncoder passwordEncoder,
-                         OmAuthSessionSupport sessionSupport) {
+                         OmAuthSessionSupport sessionSupport, OmSsoTokenValidator ssoTokenValidator,
+                         OmJwtSsoClient jwtSsoClient) {
         this.rule = rule;
         this.dao = dao;
         this.passwordEncoder = passwordEncoder;
         this.sessionSupport = sessionSupport;
+        this.ssoTokenValidator = ssoTokenValidator;
+        this.jwtSsoClient = jwtSsoClient;
     }
 
     public Map<String, Object> login(Map<String, Object> body, TransactionContext context) {
@@ -60,6 +67,47 @@ public class OmAuthService {
                 sessionSupport.currentUser().orElse(null), true));
         result.put("screen", "OM 로그인");
         result.put("sessionId", session.getId());
+        return result;
+    }
+
+    public Map<String, Object> ssoLogin(Map<String, Object> body, TransactionContext context) {
+        rule.validateOperation(context);
+        String userId = ssoTokenValidator.validateAndResolveUserId(body);
+
+        Map<String, Object> user = dao.selectUserForLogin(userId);
+        if (user == null || !"Y".equalsIgnoreCase(String.valueOf(user.get("useYn")))) {
+            throw new BusinessException("E-OM-SSO-0001", "SSO 사용자를 찾을 수 없습니다.");
+        }
+
+        String now = DateTimeUtil.nowKst();
+        Map<String, Object> update = new HashMap<>();
+        update.put("userId", userId);
+        update.put("lastLoginTime", now);
+        dao.updateUserLastLoginTime(update);
+
+        String channelId = context.getHeader() != null ? context.getHeader().getChannelId() : null;
+        if (channelId == null || channelId.isBlank()) {
+            channelId = OmBodySupport.stringValue(body, "channelId");
+        }
+        if (channelId == null || channelId.isBlank()) {
+            channelId = "WEBTOP";
+        }
+
+        HttpSession session = sessionSupport.createSession(user, "SSO", channelId);
+        user.put("lastLoginTime", now);
+
+        Map<String, Object> tokenBody = jwtSsoClient.issueSsoToken(user, body, context);
+
+        Map<String, Object> result = new LinkedHashMap<>(sessionSupport.toSessionBody(
+                sessionSupport.currentUser().orElse(null), true));
+        result.put("screen", "OM SSO 로그인");
+        result.put("loginType", "SSO");
+        result.put("channelId", channelId);
+        result.put("sessionId", session.getId());
+        result.put("accessToken", tokenBody.get("accessToken"));
+        result.put("refreshToken", tokenBody.get("refreshToken"));
+        result.put("tokenType", tokenBody.getOrDefault("tokenType", "Bearer"));
+        result.put("expiresIn", tokenBody.get("expiresIn"));
         return result;
     }
 

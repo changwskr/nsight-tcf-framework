@@ -40,6 +40,11 @@ nsight:
       driver-class-name: org.h2.Driver
   om:
     batch-service-url: http://127.0.0.1:8098/batch
+    sso:
+      mock-enabled: true
+      jwt-service-url: http://127.0.0.1:8110
+      internal-shared-secret: nsight-local-jwt-internal-secret
+      internal-service-name: tcf-om
     cicd:
       gradle-command: C:/Programming(23-08-15)/gradle-8.10.1/bin/gradle.bat
   updownload:

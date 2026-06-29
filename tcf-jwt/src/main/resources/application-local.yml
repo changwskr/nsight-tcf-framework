@@ -23,6 +23,14 @@ nsight:
     jwt:
       issuer-uri: http://127.0.0.1:8110
       jwk-set-uri: http://127.0.0.1:8110/.well-known/jwks.json
+      internal:
+        shared-secret: nsight-local-jwt-internal-secret
+        allowed-service: tcf-om
+        timestamp-skew-seconds: 180
+        allowed-ips:
+          - 127.0.0.1
+          - 0:0:0:0:0:0:0:1
+          - ::1
   tcf:
     transaction-log-schema-auto-init: true
     transaction-log-datasource:

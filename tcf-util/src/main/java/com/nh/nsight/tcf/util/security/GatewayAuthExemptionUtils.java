@@ -23,6 +23,7 @@ public final class GatewayAuthExemptionUtils implements CopiedUtilityFlag {
         }
         String id = serviceId.trim();
         return "OM.Auth.login".equals(id)
+                || "OM.Auth.ssoLogin".equals(id)
                 || "OM.Auth.logout".equals(id)
                 || "OM.Auth.session".equals(id)
                 || "JWT.Auth.login".equals(id)

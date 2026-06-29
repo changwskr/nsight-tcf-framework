@@ -107,6 +107,8 @@ final class ServiceCatalogSeedData {
                     "OmAuthLogoutHandler", "ROLE_OM_AUTH", "Y", 5, "Y", "OM 로그아웃"),
             entry("CAT-029", "OM", "OM.Auth.session", "OM-AUT-0004", "INQUIRY",
                     "OmAuthSessionInquiryHandler", "ROLE_OM_AUTH", "N", 5, "Y", "OM 세션 조회"),
+            entry("CAT-106", "OM", "OM.Auth.ssoLogin", "OM-AUT-0005", "EXECUTE",
+                    "OmAuthSsoLoginHandler", "ROLE_OM_AUTH", "Y", 5, "Y", "OM SSO 로그인"),
             entry("CAT-030", "OM", "OM.Session.inquiry", "OM-SES-0001", "INQUIRY",
                     "OmSessionInquiryHandler", "ROLE_OM_AUTH", "Y", 10, "Y", "세션 목록 조회"),
             entry("CAT-031", "OM", "OM.Session.delete", "OM-SES-0002", "DELETE",

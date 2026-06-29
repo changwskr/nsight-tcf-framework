@@ -4,6 +4,7 @@ import com.nh.nsight.auth.jwt.config.JwtRuntimePolicy;
 import com.nh.nsight.auth.jwt.config.JwtSecurityProperties;
 import com.nh.nsight.auth.jwt.persistence.dao.JwtTokenDao;
 import com.nh.nsight.auth.jwt.support.JwtClientContext;
+import com.nh.nsight.auth.jwt.support.JwtInternalCallValidator;
 import com.nh.nsight.auth.jwt.support.JwtSupport;
 import com.nh.nsight.auth.jwt.support.JwtTokenIssuer;
 import com.nh.nsight.auth.jwt.support.JwtTokenStore;
@@ -27,10 +28,12 @@ public class JwtAuthService {
     private final JwtRuntimePolicy runtimePolicy;
     private final JwtAdminService adminService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtInternalCallValidator internalCallValidator;
 
     public JwtAuthService(JwtTokenDao dao, JwtTokenIssuer tokenIssuer, JwtTokenStore tokenStore,
                           JwtSecurityProperties properties, JwtRuntimePolicy runtimePolicy,
-                          JwtAdminService adminService, PasswordEncoder passwordEncoder) {
+                          JwtAdminService adminService, PasswordEncoder passwordEncoder,
+                          JwtInternalCallValidator internalCallValidator) {
         this.dao = dao;
         this.tokenIssuer = tokenIssuer;
         this.tokenStore = tokenStore;
@@ -38,6 +41,7 @@ public class JwtAuthService {
         this.runtimePolicy = runtimePolicy;
         this.adminService = adminService;
         this.passwordEncoder = passwordEncoder;
+        this.internalCallValidator = internalCallValidator;
     }
 
     public Map<String, Object> login(Map<String, Object> body, TransactionContext context) {
@@ -67,6 +71,37 @@ public class JwtAuthService {
             adminService.recordLoginHistory(userId, "FAIL", e.getMessage(), context);
             throw e;
         }
+    }
+
+    public Map<String, Object> ssoIssue(Map<String, Object> body, TransactionContext context) {
+        try {
+            internalCallValidator.validate(body);
+        } catch (BusinessException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BusinessException("E-JWT-INT-0001", "내부 호출 검증에 실패했습니다.");
+        }
+
+        JwtSupport.requireField(body, "userId");
+        String userId = JwtSupport.stringValue(body, "userId");
+        Map<String, Object> user = resolveSsoUser(body);
+
+        String now = DateTimeUtil.nowKst();
+        if (dao.selectUserForLogin(userId) != null) {
+            dao.updateUserLastLoginTime(Map.of("userId", userId, "lastLoginTime", now));
+        }
+
+        String auditNote = "issuer=" + JwtSupport.stringValue(body, "issuer")
+                + ", assertion=" + JwtSupport.stringValue(body, "ssoAssertionId");
+        adminService.recordLoginHistory(userId, "SSO_SUCCESS", auditNote, context);
+
+        Map<String, Object> result = issueTokenPair(user, JwtClientContext.channelId(context),
+                JwtClientContext.clientIp(context), null);
+        result.put("authType", "sso-jwt");
+        result.put("issuer", JwtSupport.stringValue(body, "issuer"));
+        result.put("ssoSubject", JwtSupport.stringValue(body, "ssoSubject"));
+        result.put("ssoAssertionId", JwtSupport.stringValue(body, "ssoAssertionId"));
+        return result;
     }
 
     public Map<String, Object> refresh(Map<String, Object> body, TransactionContext context) {
@@ -142,6 +177,26 @@ public class JwtAuthService {
         result.put("businessCode", "JWT");
         result.put("loggedOut", true);
         return result;
+    }
+
+    private Map<String, Object> resolveSsoUser(Map<String, Object> body) {
+        String userId = JwtSupport.stringValue(body, "userId");
+        Map<String, Object> stored = dao.selectUserForLogin(userId);
+        if (stored != null && "Y".equalsIgnoreCase(String.valueOf(stored.get("useYn")))) {
+            return stored;
+        }
+        String issuer = JwtSupport.stringValue(body, "issuer");
+        if (issuer == null || !issuer.startsWith("OM-SSO")) {
+            throw new BusinessException("E-JWT-AUTH-0001", "SSO 사용자를 찾을 수 없습니다.");
+        }
+        Map<String, Object> trusted = new LinkedHashMap<>();
+        trusted.put("userId", userId);
+        trusted.put("userName", JwtSupport.stringValue(body, "userName"));
+        trusted.put("branchId", JwtSupport.stringValue(body, "branchId"));
+        trusted.put("authGroupId", JwtSupport.stringValue(body, "authGroupId"));
+        trusted.put("authGroupName", JwtSupport.stringValue(body, "authGroupName"));
+        trusted.put("useYn", "Y");
+        return trusted;
     }
 
     private Map<String, Object> issueTokenPair(Map<String, Object> user, String channelId,

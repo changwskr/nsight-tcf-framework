@@ -38,6 +38,7 @@ window.OmAdmin = (function () {
 
   const TX = {
     authLogin: { serviceId: 'OM.Auth.login', transactionCode: 'OM-AUT-0002' },
+    authSsoLogin: { serviceId: 'OM.Auth.ssoLogin', transactionCode: 'OM-AUT-0005' },
     authLogout: { serviceId: 'OM.Auth.logout', transactionCode: 'OM-AUT-0003' },
     authSession: { serviceId: 'OM.Auth.session', transactionCode: 'OM-AUT-0004' },
     dashboard: { serviceId: 'OM.Dashboard.inquiry', transactionCode: 'OM-DSH-0001' },
@@ -121,6 +122,7 @@ window.OmAdmin = (function () {
 
   const TX_SERVICE_NAME = {
     'OM.Auth.login': 'OM 로그인',
+    'OM.Auth.ssoLogin': 'OM SSO 로그인',
     'OM.Auth.logout': 'OM 로그아웃',
     'OM.Auth.session': 'OM 세션 조회',
     'OM.Dashboard.inquiry': '운영 대시보드',
@@ -231,7 +233,14 @@ window.OmAdmin = (function () {
       return false;
     }
     const jwt = getJwtSession();
-    return !!(jwt && jwt.accessToken);
+    if (!jwt || !jwt.accessToken) {
+      return false;
+    }
+    // SSO 로그인: OM 세션(JSESSIONID) Relay 우선 — gateway(8100) 미기동 시에도 OM Admin 동작
+    if (jwt.loginType === 'SSO') {
+      return false;
+    }
+    return true;
   }
 
   function todayIsoDate() {
@@ -383,9 +392,24 @@ window.OmAdmin = (function () {
       authGroupId: body.authGroupId,
       authGroupName: body.authGroupName,
       sessionId: body.sessionId,
-      lastLoginTime: body.lastLoginTime
+      lastLoginTime: body.lastLoginTime,
+      loginType: body.loginType || 'PASSWORD'
     };
     setSession(session);
+    if (body.accessToken) {
+      sessionStorage.setItem(JWT_SESSION_KEY, JSON.stringify({
+        userId: body.userId,
+        userName: body.userName,
+        branchId: body.branchId,
+        authGroupId: body.authGroupId,
+        authGroupName: body.authGroupName,
+        accessToken: body.accessToken,
+        refreshToken: body.refreshToken,
+        tokenType: body.tokenType || 'Bearer',
+        expiresIn: body.expiresIn,
+        loginType: body.loginType || 'SSO'
+      }));
+    }
     return session;
   }
 
@@ -395,7 +419,17 @@ window.OmAdmin = (function () {
     }
     await loadConfig();
     const jwt = getJwtSession();
-    if (config.omGatewayEnabled && jwt && jwt.accessToken) {
+    if (jwt && jwt.loginType === 'SSO') {
+      try {
+        const { body } = await call('authSession', {}, 'INQUIRY');
+        if (body.loggedIn) {
+          return syncSessionFromBody(body);
+        }
+      } catch (e) {
+        /* OM 세션 없음 — 아래 JWT/gateway 또는 로그인 화면으로 */
+      }
+    }
+    if (config.omGatewayEnabled && jwt && jwt.accessToken && jwt.loginType !== 'SSO') {
       setSession({
         userId: jwt.userId,
         userName: jwt.userName,
@@ -515,7 +549,7 @@ window.OmAdmin = (function () {
       config.gatewayOmUrl = data.gatewayOmUrl || config.gatewayOmUrl;
     }
     const jwt = getJwtSession();
-    const targetPath = (config.omGatewayEnabled && jwt && jwt.accessToken)
+    const targetPath = (config.omGatewayEnabled && jwt && jwt.accessToken && jwt.loginType !== 'SSO')
       ? `/api/gateway/om/target-url?${buildRelayQuery()}`
       : `/api/business-modules/${BUSINESS_CODE}/target-url?${buildRelayQuery()}`;
     const urlRes = await fetch(uiPath(targetPath));
@@ -568,6 +602,67 @@ window.OmAdmin = (function () {
     }
     syncSessionFromBody(body);
     return body;
+  }
+
+  async function ssoLogin(ssoToken, ssoSubject, options) {
+    const opts = options || {};
+    const tx = TX.authSsoLogin;
+    const request = {
+      header: {
+        ...buildHeader(tx, 'EXECUTE'),
+        userId: ssoSubject || opts.userId || 'GUEST',
+        branchId: opts.branchId || '',
+        channelId: opts.channelId || 'WEBTOP',
+        serviceName: resolveServiceName(tx) || 'OM SSO 로그인'
+      },
+      body: {
+        ssoToken,
+        ssoSubject,
+        userId: opts.userId || ssoSubject,
+        ssoAssertionId: opts.ssoAssertionId,
+        channelId: opts.channelId || 'WEBTOP'
+      }
+    };
+    const res = await relayFetch(`/api/relay/${BUSINESS_CODE}/online?${buildRelayQuery()}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(request)
+    });
+    const relay = await parseRelayResponse(res);
+    let payload;
+    try {
+      payload = JSON.parse(relay.responseBody);
+    } catch (e) {
+      throw new Error('응답 JSON 파싱 실패');
+    }
+    if (relay.httpStatus >= 400) {
+      const msg = payload.result?.errorMessage || payload.result?.message || payload.error
+          || `HTTP ${relay.httpStatus}`;
+      throw new Error(msg);
+    }
+    if (payload.result && payload.result.resultCode && payload.result.resultCode !== 'S0000') {
+      throw new Error(payload.result.errorMessage || payload.result.resultMessage || 'SSO 로그인에 실패했습니다.');
+    }
+    const body = payload.body || {};
+    if (!body.loggedIn) {
+      throw new Error('SSO 로그인에 실패했습니다.');
+    }
+    syncSessionFromBody(body);
+    return body;
+  }
+
+  /** local/dev: IdP 없이 mock SSO token으로 OM.Auth.ssoLogin 호출 */
+  async function mockSsoLogin(userId, options) {
+    const subject = (userId || 'admin01').trim();
+    const assertionId = 'SSO-ASSERTION-' + newGuid();
+    const ssoToken = 'SSO-MOCK-TOKEN-' + Date.now() + '-' + subject;
+    return ssoLogin(ssoToken, subject, {
+      ...(options || {}),
+      userId: subject,
+      ssoAssertionId: assertionId,
+      channelId: (options && options.channelId) || 'WEBTOP'
+    });
   }
 
   async function relayMessage(businessCode, request) {
@@ -838,7 +933,7 @@ window.OmAdmin = (function () {
   async function pingBackend() {
     try {
       const jwt = getJwtSession();
-      const targetPath = (config.omGatewayEnabled && jwt && jwt.accessToken)
+      const targetPath = (config.omGatewayEnabled && jwt && jwt.accessToken && jwt.loginType !== 'SSO')
         ? `/api/gateway/om/target-url?${buildRelayQuery()}`
         : `/api/business-modules/${BUSINESS_CODE}/target-url?${buildRelayQuery()}`;
       const res = await fetch(uiPath(targetPath));
@@ -1121,7 +1216,7 @@ window.OmAdmin = (function () {
     todayIsoDate, todaySystemDate, newGuid, nowIsoKst, field, uiPath,
     buildStandardHeader, relayMessage,
     chipForHealth, chipForResult,
-    getSession, setSession, clearSession, requireAuth, logout, login,
+    getSession, setSession, clearSession, syncSessionFromBody, requireAuth, logout, login, ssoLogin, mockSsoLogin,
     inquiry, mutate, call, initPage, renderPagination, showError, showErrorBanner, showErrorPopup, loadConfig,
     isTomcatUiDeployment, resolveBatchServiceUrl, resolveBatchLabel,
     updownloadQuery, updownloadBaseUrl, updownloadList, updownloadUpload, updownloadDelete, updownloadDownloadUrl,

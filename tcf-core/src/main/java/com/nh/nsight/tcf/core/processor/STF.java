@@ -45,12 +45,12 @@ public class STF {
     }
 
     public TransactionContext preProcess(StandardRequest<Map<String, Object>> request, StandardHeader clientHeader) {
-        TcfConsoleLog.println("=====================================================[STF.preProcess] start");
+        System.out.println("=====================================================[STF.preProcess] start");
         StandardHeader header = request.getHeader();
         if (clientHeader == null) {
             clientHeader = StandardHeader.copyOf(header);
         }
-        TcfConsoleLog.println(
+        System.out.println(
                 " =====================================================[STF.preProcess] headerValidator.validate");
         headerValidator.validate(request);
         if (!StringUtils.hasText(header.getGuid())) {
@@ -60,30 +60,30 @@ public class STF {
             header.setTraceId(GuidGenerator.newTraceId());
         }
         clientHeader.applyGeneratedCorrelationIdsFrom(header);
-        TcfConsoleLog.println(
+        System.out.println(
                 " =====================================================[STF.preProcess] guid/traceId assigned");
         TransactionContext context = new TransactionContext(header, clientHeader);
         TransactionContextHolder.set(context);
         putMdc(header);
-        TcfConsoleLog.println(
+        System.out.println(
                 " =====================================================[STF.preProcess] sessionValidator.validate");
         sessionValidator.validate(header);
-        TcfConsoleLog.println(
+        System.out.println(
                 " =====================================================[STF.preProcess] authorizationValidator.validate");
         authorizationValidator.validate(header);
-        TcfConsoleLog.println(
+        System.out.println(
                 " =====================================================[STF.preProcess] transactionControlService.check");
         transactionControlService.check(header);
-        TcfConsoleLog.println(
+        System.out.println(
                 " =====================================================[STF.preProcess] timeoutPolicyService.resolveAndApply");
         timeoutPolicyService.resolveAndApply(header, context);
-        TcfConsoleLog.println(
+        System.out.println(
                 " =====================================================[STF.preProcess] idempotencyChecker.checkAndMarkProcessing");
         idempotencyChecker.checkAndMarkProcessing(header);
-        TcfConsoleLog.println(
+        System.out.println(
                 " =====================================================[STF.preProcess] transactionLogService.start");
         transactionLogService.start(context);
-        TcfConsoleLog.println(" =====================================================[STF.preProcess] end");
+        System.out.println(" =====================================================[STF.preProcess] end");
         return context;
     }
 

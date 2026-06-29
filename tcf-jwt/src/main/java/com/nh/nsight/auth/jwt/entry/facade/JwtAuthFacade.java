@@ -20,6 +20,11 @@ public class JwtAuthFacade {
     }
 
     @Transactional(timeout = 5)
+    public Map<String, Object> ssoIssue(Map<String, Object> body, TransactionContext context) {
+        return service.ssoIssue(body, context);
+    }
+
+    @Transactional(timeout = 5)
     public Map<String, Object> refresh(Map<String, Object> body, TransactionContext context) {
         return service.refresh(body, context);
     }
