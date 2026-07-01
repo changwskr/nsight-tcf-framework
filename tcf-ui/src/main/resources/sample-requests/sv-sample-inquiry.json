@@ -20,7 +20,8 @@
     "clientIp": "10.10.10.10"
   },
   "body": {
-    "sampleKey": "SV-SAMPLE",
-    "baseDate": "20260614"
+    "pageNo": 1,
+    "pageSize": 10,
+    "sampleKey": "A00"
   }
 }

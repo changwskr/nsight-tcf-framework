@@ -43,6 +43,9 @@
         const ebEventLink = code === 'EB'
           ? `<a href="/${lower}/event-monitor.html">이벤트·배치 모니터</a>`
           : '';
+        const svSampleLink = code === 'SV'
+          ? `<a href="/${lower}/sample-list.html">샘플 목록 (페이징)</a>`
+          : '';
         return `
           <article class="hub-card">
             <h2>${code} <span class="group-tag">${module.group}</span></h2>
@@ -55,6 +58,7 @@
               ${updownloadLink}
               ${ebUserLink}
               ${ebEventLink}
+              ${svSampleLink}
             </div>
           </article>
         `;

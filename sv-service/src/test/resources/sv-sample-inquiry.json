@@ -17,7 +17,8 @@
     "idempotencyKey": "SV-INQ-0001-U123456-001"
   },
   "body": {
-    "sampleKey": "A001",
-    "customerId": "CUST0000001"
+    "pageNo": 1,
+    "pageSize": 10,
+    "sampleKey": "A00"
   }
 }

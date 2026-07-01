@@ -18,4 +18,9 @@ public class EpUserEventFacade {
     public Map<String, Object> receive(Map<String, Object> body, TransactionContext context) {
         return service.receive(body, context);
     }
+
+    @Transactional(readOnly = true, timeout = 5)
+    public Map<String, Object> inquiry(Map<String, Object> body, TransactionContext context) {
+        return service.inquiry(body, context);
+    }
 }

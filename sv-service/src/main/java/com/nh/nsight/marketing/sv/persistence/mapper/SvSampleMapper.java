@@ -1,9 +1,12 @@
 package com.nh.nsight.marketing.sv.persistence.mapper;
 
+import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface SvSampleMapper {
-    Map<String, Object> selectSample(Map<String, Object> condition);
+    List<Map<String, Object>> searchSamples(Map<String, Object> criteria);
+
+    int countSamples(Map<String, Object> criteria);
 }

@@ -3,9 +3,33 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.nh.nsight.marketing.sv.persistence.mapper.SvSampleMapper">
-    <select id="selectSample" parameterType="map" resultType="map">
-        SELECT
-            #{sampleKey} AS SAMPLE_KEY,
-            'SV Sample' AS SAMPLE_NAME
+
+    <sql id="sampleColumns">
+        SAMPLE_KEY AS sampleKey,
+        SAMPLE_NAME AS sampleName,
+        CREATED_AT AS createdAt
+    </sql>
+
+    <sql id="sampleSearchWhere">
+        <where>
+            <if test="sampleKey != null and sampleKey != ''">
+                AND SAMPLE_KEY LIKE CONCAT('%', #{sampleKey}, '%')
+            </if>
+        </where>
+    </sql>
+
+    <select id="searchSamples" parameterType="map" resultType="map">
+        SELECT <include refid="sampleColumns"/>
+          FROM SV_SAMPLE
+        <include refid="sampleSearchWhere"/>
+         ORDER BY SAMPLE_KEY
+         OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
     </select>
+
+    <select id="countSamples" parameterType="map" resultType="int">
+        SELECT COUNT(1)
+          FROM SV_SAMPLE
+        <include refid="sampleSearchWhere"/>
+    </select>
+
 </mapper>

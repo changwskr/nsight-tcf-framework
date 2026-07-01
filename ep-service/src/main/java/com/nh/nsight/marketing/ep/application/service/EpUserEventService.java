@@ -7,6 +7,7 @@ import com.nh.nsight.marketing.ep.persistence.dao.EpUserEventDao;
 import com.nh.nsight.marketing.ep.application.rule.EpUserEventRule;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,14 @@ public class EpUserEventService {
     public EpUserEventService(EpUserEventRule rule, EpUserEventDao dao) {
         this.rule = rule;
         this.dao = dao;
+    }
+
+    public Map<String, Object> inquiry(Map<String, Object> body, TransactionContext context) {
+        rule.validateInquiry(body);
+        Map<String, Object> criteria = rule.buildSearchCriteria(body);
+        List<Map<String, Object>> list = dao.searchReceivedEvents(criteria);
+        int totalCount = dao.countReceivedEvents(criteria);
+        return buildPagedResult(context, criteria, list, totalCount);
     }
 
     @Transactional(timeout = 5)
@@ -68,5 +77,26 @@ public class EpUserEventService {
             System.out.println("========== [EP-EVENT] END receive (EP.UserEvent.receive / EpUserEventService.receive) eventId="
                     + eventId + " ==========");
         }
+    }
+
+    private Map<String, Object> buildPagedResult(
+            TransactionContext context,
+            Map<String, Object> criteria,
+            List<Map<String, Object>> list,
+            int totalCount) {
+        int pageNo = (int) criteria.get("pageNo");
+        int pageSize = (int) criteria.get("pageSize");
+        int totalPage = totalCount == 0 ? 0 : (totalCount + pageSize - 1) / pageSize;
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("businessCode", "EP");
+        result.put("serviceId", context.getHeader().getServiceId());
+        result.put("guid", context.getHeader().getGuid());
+        result.put("list", list);
+        result.put("pageNo", pageNo);
+        result.put("pageSize", pageSize);
+        result.put("totalCount", totalCount);
+        result.put("totalPage", totalPage);
+        return result;
     }
 }

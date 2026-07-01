@@ -1,0 +1,6 @@
+INSERT INTO SV_SAMPLE (SAMPLE_KEY, SAMPLE_NAME) VALUES
+('A001', 'SV 샘플 01'),
+('A002', 'SV 샘플 02'),
+('A003', 'SV 샘플 03'),
+('B001', 'SV 샘플 04'),
+('B002', 'SV 샘플 05');

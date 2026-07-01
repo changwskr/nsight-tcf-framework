@@ -1,18 +1,23 @@
 package com.nh.nsight.marketing.sv.persistence.dao;
 
-import java.time.OffsetDateTime;
-import java.util.LinkedHashMap;
+import com.nh.nsight.marketing.sv.persistence.mapper.SvSampleMapper;
+import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class SvSampleDao {
-    public Map<String, Object> selectSample(Map<String, Object> condition) {
-        Map<String, Object> row = new LinkedHashMap<>();
-        row.put("sampleKey", condition.getOrDefault("sampleKey", "SAMPLE"));
-        row.put("sampleName", "SingleView sample response");
-        row.put("database", "RDW/ADW mapper hook");
-        row.put("createdAt", OffsetDateTime.now().toString());
-        return row;
+    private final SvSampleMapper mapper;
+
+    public SvSampleDao(SvSampleMapper mapper) {
+        this.mapper = mapper;
+    }
+
+    public List<Map<String, Object>> searchSamples(Map<String, Object> criteria) {
+        return mapper.searchSamples(criteria);
+    }
+
+    public int countSamples(Map<String, Object> criteria) {
+        return mapper.countSamples(criteria);
     }
 }

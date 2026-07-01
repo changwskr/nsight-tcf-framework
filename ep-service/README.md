@@ -18,6 +18,7 @@ NSIGHT 마케팅 플랫폼 **Event Processing (EP)** 업무 서비스입니다. 
 | serviceId | transactionCode | 설명 |
 |-----------|-----------------|------|
 | `EP.Sample.inquiry` | — | 샘플 조회 |
+| `EP.UserEvent.inquiry` | — | 수신 이벤트 목록 (페이징) |
 | `EP.UserEvent.receive` | EP-EVT-001 | EB 배치 이벤트 수신 → `EP_USER_EVENT` 저장 |
 
 ## EB 연동
@@ -72,7 +73,7 @@ com.nh.nsight.marketing.ep
 │   └── rule/          EpSampleRule, EpUserEventRule
 ├── config/
 ├── entry/
-│   ├── handler/       EpSampleInquiryHandler, EpUserEventReceiveHandler
+│   ├── handler/       EpSampleInquiryHandler, EpUserEventInquiryHandler, EpUserEventReceiveHandler
 │   └── facade/        EpSampleFacade, EpUserEventFacade
 └── persistence/
     ├── dao/           EpSampleDao, EpUserEventDao
