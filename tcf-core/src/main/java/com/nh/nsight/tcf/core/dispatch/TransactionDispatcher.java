@@ -29,6 +29,10 @@ public class TransactionDispatcher {
             TcfConsoleLog.step("Dispatcher", "init", "register", handler.serviceId());
             log.info("Registered NSIGHT handler. serviceId={}", handler.serviceId());
         }
+        System.out.println(" ============================[Dispatcher] handlerMap dump (size=" + handlerMap.size() + ")");
+        handlerMap.forEach((serviceId, mappedHandler) ->
+                System.out.println("    " + serviceId + " -> " + mappedHandler.getClass().getName()));
+        System.out.println(" ============================[Dispatcher] handlerMap dump end");
         TcfConsoleLog.boundary("Dispatcher", "init", "END", "handlers=" + handlerMap.size());
     }
 

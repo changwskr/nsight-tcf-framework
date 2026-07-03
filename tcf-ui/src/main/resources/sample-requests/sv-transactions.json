@@ -4,6 +4,14 @@
     "sampleFile": "sv-sample-inquiry.json"
   },
   {
+    "label": "Customer Summary Inquiry",
+    "sampleFile": "sv-customer-summary.json"
+  },
+  {
+    "label": "IC Sample Inquiry (SV→IC 연동)",
+    "sampleFile": "sv-integration-icsample.json"
+  },
+  {
     "label": "Customer Detail Inquiry",
     "sampleRequest": {
       "header": {

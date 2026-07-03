@@ -3,6 +3,7 @@
     "systemId": "NSIGHT-MP",
     "businessCode": "IC",
     "serviceId": "IC.Sample.inquiry",
+    "serviceName": "IC 샘플 조회",
     "transactionCode": "IC-INQ-0001",
     "processingType": "INQUIRY",
     "guid": "",

@@ -37,7 +37,8 @@ INSERT INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, U
 
 INSERT INTO OM_SERVICE_CATALOG (CATALOG_ID, BUSINESS_CODE, SERVICE_ID, TRANSACTION_CODE, PROCESSING_TYPE, HANDLER_CLASS, AUTH_CODE, AUDIT_YN, TIMEOUT_SEC, USE_YN, DESCRIPTION) VALUES
 ('CAT-001', 'SV', 'SV.Sample.inquiry', 'SV-INQ-0001', 'INQUIRY', 'SvSampleInquiryHandler', 'ROLE_SV_INQ', 'N', 5, 'Y', 'SV 샘플 조회'),
-('CAT-002', 'SV', 'SV.Customer.selectSummary', 'SV-INQ-0002', 'INQUIRY', 'SvCustomerSummaryHandler', 'ROLE_SV_INQ', 'Y', 5, 'Y', '고객요약 조회'),
+('CAT-002', 'SV', 'SV.Customer.selectSummary', 'SV-INQ-0002', 'INQUIRY', 'SvCustomerSummaryHandler', 'ROLE_SV_INQ', 'Y', 3, 'Y', '고객요약 조회'),
+('CAT-075', 'SV', 'SV.Integration.icSample', 'SV-INT-0001', 'INQUIRY', 'SvIcSampleHandler', 'ROLE_SV_INQ', 'N', 5, 'Y', 'SV→IC 연동 샘플 조회'),
 ('CAT-003', 'OM', 'OM.Dashboard.inquiry', 'OM-DSH-0001', 'INQUIRY', 'OmDashboardInquiryHandler', 'ROLE_OM_DSH', 'N', 5, 'Y', '운영 대시보드'),
 ('CAT-073', 'OM', 'OM.Dashboard.reset', 'OM-DSH-0002', 'EXECUTE', 'OmDashboardResetHandler', 'ROLE_OM_DSH', 'Y', 60, 'Y', '대시보드 스냅샷 DB 초기화'),
 ('CAT-004', 'OM', 'OM.TransactionLog.inquiry', 'OM-TXL-0001', 'INQUIRY', 'OmTransactionLogInquiryHandler', 'ROLE_OM_TXL', 'N', 10, 'Y', '거래로그 조회'),
@@ -117,6 +118,7 @@ INSERT INTO OM_SERVICE_CATALOG (CATALOG_ID, BUSINESS_CODE, SERVICE_ID, TRANSACTI
 ('CAT-045', 'OM', 'OM.Sample.inquiry', 'OM-INQ-0001', 'INQUIRY', 'OmSampleInquiryHandler', 'ROLE_OM_AUTH', 'N', 5, 'Y', 'OM 샘플 조회'),
 ('CAT-046', 'CC', 'CC.Sample.inquiry', 'CC-INQ-0001', 'INQUIRY', 'CcSampleInquiryHandler', 'ROLE_CC_INQ', 'N', 5, 'Y', 'CC 샘플 조회'),
 ('CAT-047', 'IC', 'IC.Sample.inquiry', 'IC-INQ-0001', 'INQUIRY', 'IcSampleInquiryHandler', 'ROLE_IC_INQ', 'N', 5, 'Y', 'IC 샘플 조회'),
+('CAT-074', 'IC', 'IC.Customer.inquiry', 'IC-INQ-0002', 'INQUIRY', 'IcCustomerInquiryHandler', 'ROLE_IC_INQ', 'Y', 5, 'Y', 'IC 고객상세 조회(SV 연동)'),
 ('CAT-048', 'PC', 'PC.Sample.inquiry', 'PC-INQ-0001', 'INQUIRY', 'PcSampleInquiryHandler', 'ROLE_PC_INQ', 'N', 5, 'Y', 'PC 샘플 조회'),
 ('CAT-049', 'BC', 'BC.Sample.inquiry', 'BC-INQ-0001', 'INQUIRY', 'BcSampleInquiryHandler', 'ROLE_BC_INQ', 'N', 5, 'Y', 'BC 샘플 조회'),
 ('CAT-050', 'MS', 'MS.Sample.inquiry', 'MS-INQ-0001', 'INQUIRY', 'MsSampleInquiryHandler', 'ROLE_MS_INQ', 'N', 5, 'Y', 'MS 샘플 조회'),
@@ -156,8 +158,14 @@ INSERT INTO OM_AUDIT_LOG (AUDIT_ID, AUDIT_TIME, USER_ID, BRANCH_ID, CUSTOMER_NO,
 ('AUD-003', '2026-06-14T09:55:00+09:00', 'view01', '001234', 'CUST-0099', 'CUSTOMER_INQUIRY', '고객정보 조회', '민원', 'FAIL', '10.10.10.11');
 
 INSERT INTO OM_ERROR_CODE (ERROR_CODE, ERROR_CATEGORY, USER_MESSAGE, OPERATOR_MESSAGE, ACTION_GUIDE, NOTIFY_TARGET, USE_YN) VALUES
+('E-SV-VAL-0001', 'VALIDATION', '고객번호는 필수입니다.', '고객요약 조회 customerNo 누락', '요청 body customerNo 확인', '개발팀', 'Y'),
+('E-SV-VAL-0002', 'VALIDATION', '고객번호 길이가 올바르지 않습니다.', '고객요약 조회 customerNo 길이 초과', 'customerNo 20자리 이하 확인', '개발팀', 'Y'),
+('E-SV-TIME-0001', 'SYS', '고객정보 조회가 지연되고 있습니다. 잠시 후 다시 시도하십시오.', '고객요약 조회 Timeout(3초 초과)', 'RDW 응답·SQL 튜닝 확인', '운영팀/개발팀', 'Y'),
 ('E-SV-DB-0001', 'DB', '일시적으로 조회할 수 없습니다.', '고객요약 조회 DB 오류', 'RDW 연결 및 SQL 확인', '운영팀', 'Y'),
 ('E-SV-BIZ-0001', 'BIZ', '조회 결과가 없습니다.', '고객요약 조회 결과 0건', '조건 확인 후 재조회', '업무팀', 'Y'),
+('E-TCF-IF-0001', 'SYS', '연동 서비스 응답이 지연되고 있습니다. 잠시 후 다시 시도하십시오.', '서비스 간 연동 Timeout(read/connect)', '대상 서비스 상태·타임아웃 설정 확인', '운영팀/개발팀', 'Y'),
+('E-TCF-IF-0002', 'SYS', '연동 서비스에 일시적으로 접속할 수 없습니다.', '서비스 간 연동 연결 실패(대상 다운/설정 누락)', '대상 서비스 기동·nsight.integration 설정 확인', '운영팀/개발팀', 'Y'),
+('E-TCF-MSG-0001', 'SYS', '연동 응답 처리 중 오류가 발생했습니다.', '서비스 간 연동 응답 전문 형식 오류', '대상 서비스 응답 전문 규격 확인', '개발팀', 'Y'),
 ('E-MG-TMO-0001', 'SYS', '처리 시간이 초과되었습니다.', '메시지 발송 Timeout', 'MG AP 스레드·외부 연동 확인', '운영팀/개발팀', 'Y'),
 ('E-OM-BIZ-0001', 'BIZ', '요청을 처리할 수 없습니다.', 'OM 업무코드 검증 실패', 'businessCode=OM 확인', '개발팀', 'Y'),
 ('E-OM-AUTH-0001', 'AUTH', '접근 권한이 없습니다.', '관리자 권한 부족', '권한그룹 확인', '보안팀', 'Y'),

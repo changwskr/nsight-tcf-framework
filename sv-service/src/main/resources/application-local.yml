@@ -19,6 +19,15 @@ spring:
       enabled: true
 
 nsight:
+  integration:
+    default-timeout-ms: 3000
+    services:
+      IC:
+        base-url: http://127.0.0.1:8082
+        context-path: /ic
+        online-path: /online
+        connect-timeout-ms: 1000
+        read-timeout-ms: 3000
   tcf:
     transaction-log-schema-auto-init: true
     transaction-control-datasource:
