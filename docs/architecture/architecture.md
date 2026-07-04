@@ -104,10 +104,13 @@ nsight-tcf-framework
 ├─ [Platform Services]
 │   ├─ tcf-om            운영관리(OM) + 파일 업·다운로드(UD)
 │   ├─ tcf-batch         OM 대시보드 상태 수집 배치
-│   └─ tcf-ui            거래 테스트 UI · OM Admin Relay
+│   ├─ tcf-ui            거래 테스트 UI · OM Admin Relay
+│   ├─ tcf-uj            Gateway 경유 테스트 UI
+│   ├─ tcf-gateway       API Gateway (라우팅·세션/JWT 관문)
+│   └─ tcf-jwt           JWT 발급·JWKS
 │
 ├─ [Business Domain]
-│   └─ cc-service … mg-service   16개 업무 WAR
+│   └─ ic … mg (9개 *-service)   ※ 목표 확장: cc … ct 포함 17업무
 │
 ├─ [Legacy]
 │   └─ om-service        레거시 OM (tcf-om 권장)
@@ -126,12 +129,16 @@ tcf-core
    ↑
 tcf-web ──→ tcf-cache (선택)
    ↑
-   ├── *-service (cc … mg)
+   ├── *-service (ic … mg, 9개)
    ├── tcf-om
-   └── tcf-batch
+   ├── tcf-batch
+   ├── tcf-gateway
+   ├── tcf-jwt
+   └── tcf-uj
 
 tcf-ui  ──(HTTP Relay)──→ *-service / tcf-om
-tcf-batch ──(JDBC MERGE)──→ 공유 H2 (tcf-om DB)
+       ──(OM JWT)───────→ tcf-gateway → tcf-om
+tcf-uj  ──(Gateway)────→ tcf-gateway → *-service
 ```
 
 | 모듈 | 산출물 | 역할 |
@@ -280,27 +287,31 @@ public class SvSampleHandler implements TransactionHandler {
 | 구분 | bootRun | ztomcat (Tomcat 8080) |
 |------|---------|------------------------|
 | 목적 | 모듈 단위 개발·디버깅 | 운영 유사 통합 테스트 |
-| 프로세스 | JVM per module | 단일 Tomcat, WAR 19개 |
+| 프로세스 | JVM per module | 단일 Tomcat, **deploy-wars.sh 13 WAR** |
 | 업무 URL | `http://localhost:8086/sv/online` | `http://localhost:8080/sv/online` |
 | OM API | `:8097/om/online` | `:8080/om/online` |
 | OM UI | `:8099/om/admin/...` | `:8080/ui/om/admin/...` |
 | Batch | `:8098/batch/jobs/...` | `:8080/batch/jobs/...` |
 | Spring Profile | **`local`** | **`dev`** (ztomcat) / **`prod`** (운영) |
 
-### 6.2 ztomcat Context 맵 (19 WAR)
+### 6.2 ztomcat Context 맵 (`deploy-wars.sh` — 13 WAR)
 
 | Context | Gradle 모듈 | WAR 파일 |
 |---------|-------------|----------|
-| `/cc` … `/mg` | `cc-service` … `mg-service` | `cc.war` … `mg.war` |
+| `/ic` … `/mg` | `ic-service` … `mg-service` (9개) | `ic.war` … `mg.war` |
 | `/om` | `tcf-om` | `om.war` |
 | `/batch` | `tcf-batch` | `batch.war` |
 | `/ui` | `tcf-ui` | `ui.war` |
+| `/jwt` | `tcf-jwt` | `jwt.war` |
+
+bootRun 전용(ztomcat deploy 미포함): `tcf-gateway`(:8100, `/gw` 목표), `tcf-uj`(:8102).
 
 빌드 태스크:
 
 ```bash
-gradle buildBusinessWars   # 17 WAR (16 업무 + tcf-om)
-gradle buildZtomcatWars    # 19 WAR (+ tcf-batch, tcf-ui)
+gradle buildBusinessWars   # 10 WAR (9 업무 + tcf-om)
+gradle buildZtomcatWars    # 15 WAR (+ batch, ui, uj, jwt, gateway)
+ztomcat/deploy-wars.sh all # 13 WAR 배포 (uj·gateway 제외)
 ```
 
 ### 6.3 WAR 부트스트랩
@@ -509,7 +520,7 @@ OM Cache 관리: `OM.Cache.inquiry` / `OM.Cache.delete`
 
 ## 12. 물리 배포 참고 (운영 연계)
 
-로컬 `ztomcat`은 단일 Tomcat 인스턴스에 19 WAR를 올리는 **개발·통합 테스트** 모델이다.
+로컬 `ztomcat`은 단일 Tomcat 인스턴스에 **13 WAR**(`deploy-wars.sh`)를 올리는 **개발·통합 테스트** 모델이다.
 
 운영 환경에서는 일반적으로:
 
@@ -521,29 +532,27 @@ OM Cache 관리: `OM.Cache.inquiry` / `OM.Cache.delete`
 
 ---
 
-## 13. 업무 코드·포트 매핑 (bootRun)
+## 13. 업무 코드·포트 매핑 (bootRun, `settings.gradle` 기준)
 
-| 코드 | 모듈 | 포트 | Context |
-|------|------|------|---------|
-| CC | cc-service | 8081 | /cc |
+| 코드 | 모듈 | 포트 | ztomcat Context |
+|------|------|------|-----------------|
 | IC | ic-service | 8082 | /ic |
 | PC | pc-service | 8083 | /pc |
-| BC | bc-service | 8084 | /bc |
 | MS | ms-service | 8085 | /ms |
 | SV | sv-service | 8086 | /sv |
 | PD | pd-service | 8087 | /pd |
-| CM | cm-service | 8088 | /cm |
 | EB | eb-service | 8089 | /eb |
 | EP | ep-service | 8090 | /ep |
-| BP | bp-service | 8091 | /bp |
-| BD | bd-service | 8092 | /bd |
 | SS | ss-service | 8093 | /ss |
-| CS | cs-service | 8094 | /cs |
-| CT | ct-service | 8095 | /ct |
 | MG | mg-service | 8096 | /mg |
 | OM | tcf-om | 8097 | /om |
 | BATCH | tcf-batch | 8098 | /batch |
-| UI | tcf-ui | 8099 | /ui |
+| UI | tcf-ui | 8099 | /ui (bootRun context 없음) |
+| GW | tcf-gateway | 8100 | bootRun only |
+| UJ | tcf-uj | 8102 | bootRun only |
+| JWT | tcf-jwt | 8110 | /jwt |
+
+> **목표 확장:** cc(8081), bc(8084), cm(8088), bp(8091), bd(8092), cs(8094), ct(8095) 등 — 저장소에 모듈 미포함.
 
 ---
 
@@ -557,7 +566,7 @@ OM Cache 관리: `OM.Cache.inquiry` / `OM.Cache.delete`
 | ADR-04 | tcf-om으로 OM·UD 통합 | om-service 레거시 축소 |
 | ADR-05 | tcf-batch 분리 | 수집 부하·스케줄 OM 본체와 분리 |
 | ADR-06 | tcf-ui Relay | CORS·브라우저에서 다중 업무 테스트 |
-| ADR-07 | ztomcat 19 WAR | 운영 context path 통합 검증 |
+| ADR-07 | ztomcat 13 WAR (`deploy-wars.sh`) | 운영 context path 통합 검증 |
 | ADR-08 | 공유 H2 `nsight.txlog.path` | bootRun/Tomcat/Batch DB 일치 |
 
 ---
@@ -566,4 +575,5 @@ OM Cache 관리: `OM.Cache.inquiry` / `OM.Cache.delete`
 
 | 일자 | 버전 | 변경 내용 |
 |------|------|-----------|
-| 2026-06 | 1.0 | 최초 작성 — 19 WAR ztomcat, tcf-batch 대시보드, 이중 배포 모드 반영 |
+| 2026-06 | 1.0 | 최초 작성 — ztomcat 배포, tcf-batch 대시보드, 이중 배포 모드 반영 |
+| 2026-07 | 1.1 | 모듈 수·포트·Gateway JWT — `settings.gradle` / `deploy-wars.sh` 기준 정정 |

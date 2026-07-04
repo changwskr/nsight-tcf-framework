@@ -33,7 +33,7 @@ GitLab → MR → Runner → Gradle(Test) → WAR → Artifact
 | 모드 | 설명 |
 |------|------|
 | bootRun | 개발 |
-| ztomcat | Tomcat 8080, 12 Context 검증 |
+| ztomcat | Tomcat 8080, **13 WAR** 검증 (`deploy-wars.sh`) |
 | 운영 | 17 WAR (목표), Apache VIP → Tomcat Cluster |
 
 WAR: `WEB-INF/lib` tcf-* JAR 내장.

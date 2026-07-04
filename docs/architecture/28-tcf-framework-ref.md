@@ -43,7 +43,7 @@ tcf-cache (선택)      tcf-batch
    ↑
 tcf-om  ←── HTTP ── tcf-ui (Relay, 정적 UI)
 
-*-service (업무 16) ──→ tcf-web (+ tcf-core transitively)
+*-service (업무 9) ──→ tcf-web (+ tcf-core transitively)
 
 tcf-cicd ──sync──→ {모듈}/application-{profile}.yml, ztomcat/setenv.*
 tcf-scripts ──invoke──→ gradle, ztomcat (설정 SoT 아님)

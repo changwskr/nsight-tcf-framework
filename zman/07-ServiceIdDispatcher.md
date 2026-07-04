@@ -14,13 +14,13 @@
 
 ## URL vs serviceId (7.4)
 
-동일 `POST /sv/online`:
+동일 업무 WAR당 `POST /{code}/online` 하나, **serviceId**로 Handler 분기:
 
-| serviceId | Handler |
-|-----------|---------|
-| `SV.Customer.selectSummary` | SvCustomerHandler |
-| `SV.Sample.inquiry` | SvSampleHandler |
-| `IC.Customer.inquiry` | IcCustomerHandler (ic WAR) |
+| URL | serviceId | Handler |
+|-----|-----------|---------|
+| `POST /sv/online` | `SV.Customer.selectSummary` | SvCustomerHandler |
+| `POST /sv/online` | `SV.Sample.inquiry` | SvSampleHandler |
+| `POST /ic/online` | `IC.Customer.inquiry` | IcCustomerHandler |
 
 ## Dispatcher 위치 (7.3)
 

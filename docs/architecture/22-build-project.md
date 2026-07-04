@@ -47,45 +47,31 @@ nsight-tcf-framework/
 │   ├── tcf-web               HTTP·DS·MyBatis·AutoConfig
 │   └── tcf-cache             EhCache
 │
-├── [실행 모듈 — Spring Boot WAR]
-│   ├── tcf-om                운영·UD (8097)
-│   ├── tcf-batch             배치 수집 (8098)
-│   ├── tcf-ui                Relay UI (8099)
-│   ├── cc-service … mg-service   업무 16 (8081~8096)
-│   └── om-service            레거시 OM (미배포, 8097 충돌)
+├── [실행 모듈 — Spring Boot WAR/JAR]
+│   ├── tcf-om, tcf-batch, tcf-ui, tcf-uj, tcf-gateway, tcf-jwt
+│   ├── ic-service … mg-service   업무 9개
+│   └── om-service            레거시 OM (미배포)
 │
 ├── tcf-scripts/              빌드·run 래퍼
 └── ztomcat/                  Tomcat WAR 배포
 ```
 
-### 2.1 서브프로젝트 목록 (24개)
+### 2.1 서브프로젝트 목록 (`settings.gradle` 기준)
 
-| # | Gradle 경로 | 유형 | bootRun | bootWar | 배포 파이프라인 |
-|---|-------------|------|---------|---------|-----------------|
-| 1 | `:tcf-util` | lib | ✕ | ✕ | — |
-| 2 | `:tcf-core` | lib | ✕ | ✕ | — |
-| 3 | `:tcf-web` | lib | ✕ | ✕ | — |
-| 4 | `:tcf-cache` | lib | ✕ | ✕ | — |
-| 5 | `:cc-service` | WAR | ● 8081 | `cc.war` | ● |
-| 6 | `:ic-service` | WAR | ● 8082 | `ic.war` | ● |
-| 7 | `:pc-service` | WAR | ● 8083 | `pc.war` | ● |
-| 8 | `:bc-service` | WAR | ● 8084 | `bc.war` | ● |
-| 9 | `:ms-service` | WAR | ● 8085 | `ms.war` | ● |
-| 10 | `:sv-service` | WAR | ● 8086 | `sv.war` | ● |
-| 11 | `:pd-service` | WAR | ● 8087 | `pd.war` | ● |
-| 12 | `:cm-service` | WAR | ● 8088 | `cm.war` | ● |
-| 13 | `:eb-service` | WAR | ● 8089 | `eb.war` | ● |
-| 14 | `:ep-service` | WAR | ● 8090 | `ep.war` | ● |
-| 15 | `:bp-service` | WAR | ● 8091 | `bp.war` | ● |
-| 16 | `:bd-service` | WAR | ● 8092 | `bd.war` | ● |
-| 17 | `:ss-service` | WAR | ● 8093 | `ss.war` | ● |
-| 18 | `:cs-service` | WAR | ● 8094 | `cs.war` | ● |
-| 19 | `:ct-service` | WAR | ● 8095 | `ct.war` | ● |
-| 20 | `:mg-service` | WAR | ● 8096 | `mg.war` | ● |
-| 21 | `:tcf-om` | WAR | ● 8097 | `tcf-om.war` | ● |
-| 22 | `:tcf-batch` | WAR/JAR | ● 8098 | `tcf-batch.war` | ● |
-| 23 | `:tcf-ui` | WAR/JAR | ● 8099 | `tcf-ui.war` | ● |
-| 24 | `:om-service` | WAR | ● 8097 | `om.war` | ✕ 레거시 |
+| # | Gradle 경로 | 유형 | bootRun 포트 | ztomcat deploy |
+|---|-------------|------|-------------|----------------|
+| 1–4 | `tcf-util`, `tcf-core`, `tcf-web`, `tcf-cache` | lib | — | — |
+| 5 | `tcf-eai` | lib | — | — |
+| 6–11 | `ic` … `mg` *-service (9개) | WAR | 8082~8096 | ● |
+| 12 | `tcf-om` | WAR | 8097 | ● |
+| 13 | `tcf-batch` | WAR | 8098 | ● |
+| 14 | `tcf-ui` | WAR/JAR | 8099 | ● |
+| 15 | `tcf-gateway` | WAR | 8100 | bootRun only |
+| 16 | `tcf-uj` | WAR/JAR | 8102 | bootRun only |
+| 17 | `tcf-jwt` | WAR | 8110 | ● |
+| 18 | `om-service` | WAR | — | ✕ 레거시 |
+
+> cc~ct 등 **목표 17업무** 중 미구현 모듈은 설계 문서에만 존재. 상세 포트: [docs/manual/README.md](../manual/README.md).
 
 ---
 
@@ -97,9 +83,9 @@ tcf-util
           └── tcf-web ─────────────────────────┐
                   └── tcf-cache (선택)         │
                          └── tcf-om            │
-                                               ├── *-service (×16)
+                                               ├── *-service (×9)
 tcf-core ── tcf-web ── tcf-batch               │
-tcf-ui (독립, TCF JAR 없음)                    │
+tcf-ui / tcf-uj / tcf-gateway / tcf-jwt       │
 om-service (레거시, tcf-web)                   │
 ```
 

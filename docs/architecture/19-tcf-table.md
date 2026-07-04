@@ -17,7 +17,7 @@ NSIGHT TCF Framework는 **모듈별로 DB 사용 범위가 다르다**.
 | 구분 | 모듈 수 | DB 특성 | 테이블 |
 |------|---------|---------|--------|
 | **공유 운영 DB** | `tcf-om`, `tcf-batch` | H2 file (`nsight_om`) | OM·UD·세션·거래로그 등 **23개** |
-| **거래로그만 공유** | 16개 업무 WAR | 업무 H2 mem + 거래로그 file DS | `TCF_TX_LOG` (쓰기) |
+| **거래로그만 공유** | 9개 업무 WAR (목표 17) | 업무 H2 mem + 거래로그 file DS | `TCF_TX_LOG` (쓰기) |
 | **DB 미사용** | `tcf-ui`, `tcf-cache`, `tcf-core` | — | 없음 |
 | **레거시** | `om-service` | 업무 H2 mem | 없음 (샘플만) |
 

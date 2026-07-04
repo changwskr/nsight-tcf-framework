@@ -58,7 +58,7 @@ StandardResponse JSON
 
 ## 2.3 Business
 
-- `cc-service` ~ `mg-service` 16개 업무 WAR
+- `cc-service` ~ `mg-service` **목표 17업무** — 현재 저장소 **9개** (`ic` … `mg`)
 - 동일한 BTF 패턴 (Handler/Facade/Service/Rule/DAO/Mapper) — [35-BTF.md](35-BTF.md)
 
 ---
@@ -280,7 +280,7 @@ E-{영역}-{분류}-{번호}
 | 모드 | 특징 |
 |------|------|
 | `bootRun` | 모듈별 개별 포트 개발/디버깅 |
-| `ztomcat` | 8080 단일 게이트웨이 + 19 WAR 통합 검증 |
+| `ztomcat` | 8080 단일 게이트웨이 + **13 WAR** 통합 검증 (`deploy-wars.sh`) |
 
 예:
 

@@ -111,7 +111,7 @@ Linux/macOS: `{PROJECT}` = `settings.gradle` 있는 clone 루트, `{GRADLE_USER}
 │       └── build/libs/tcf-cache-1.0.0-SNAPSHOT.jar
 │
 ├── [실행 모듈 — WAR / bootJar]
-│   ├── cc-service/ … mg-service/      ← 업무 16 (각 {code}.war)
+│   ├── ic-service/ … mg-service/      ← 업무 9 (각 {code}.war)
 │   │   ├── src/main/java/...
 │   │   ├── src/main/resources/application-*.yml
 │   │   └── build/
@@ -150,7 +150,7 @@ Linux/macOS: `{PROJECT}` = `settings.gradle` 있는 clone 루트, `{GRADLE_USER}
         ├── logs/
         └── webapps/                   ← ③ WAR·exploded (18 context + ROOT)
             ├── cc.war | cc/
-            ├── … (업무 16)
+            ├── … (업무 9)
             ├── om.war | om/
             ├── ui.war | ui/
             └── (legacy zz-batch.war 있을 수 있음 — deploy-wars가 정리)
@@ -310,7 +310,7 @@ WEB-INF/
   … (총 ~50개)
 ```
 
-업무 16 context는 **동일한 NSIGHT lib 3개 + 유사한 Maven lib 세트**입니다.  
+업무 9 context는 **동일한 NSIGHT lib 3개 + 유사한 Maven lib 세트**입니다.  
 `om`은 `tcf-cache` 추가, `ui`는 TCF lib 없음, `batch`는 MyBatis·session 일부 생략.
 
 ---
@@ -618,7 +618,7 @@ gradle :tcf-util:build :tcf-core:build :tcf-web:build :sv-service:bootWar
 ztomcat 전체:
 
 ```text
-gradle buildZtomcatWars    # 19 WAR — 각 WAR마다 위와 동일하게 WEB-INF/lib 구성
+gradle buildZtomcatWars    # 15 WAR 빌드 — 각 WAR마다 위와 동일하게 WEB-INF/lib 구성
 ```
 
 ---

@@ -66,7 +66,7 @@ NSIGHT TCF 스크립트는 목적에 따라 3계층으로 구성된다.
 
 - 단일 인자: 포그라운드 실행
 - 복수 인자: 새 창(백그라운드) 분산 실행
-- `all`: 업무 16개 + `tcf-om` 일괄 기동
+- `all`: 업무 9개 + `tcf-om` 일괄 기동
 
 지원 별칭:
 
@@ -156,7 +156,7 @@ cc ic pc bc ms sv pd cm eb ep bp bd ss cs ct mg om batch ui
 | `:module:bootRun` | `run-local`, 모듈 `run-local` | 개발 실행 |
 | `:module:bootWar` | 모듈 `build`/`deploy` | WAR 산출 |
 | `buildBusinessWars` | `tcf-scripts/build wars`, `deploy` | 17 WAR |
-| `buildZtomcatWars` | `ztomcat/deploy-wars all`, `tcf-scripts/build ztomcat` | 19 WAR |
+| `buildZtomcatWars` | `ztomcat/deploy-wars all`, `tcf-scripts/build ztomcat` | 15 WAR 빌드 / 13 배포 |
 
 즉, 스크립트는 “사람 친화 명령”, Gradle은 “실행 엔진” 역할을 담당한다.
 
@@ -259,7 +259,7 @@ ztomcat/verify-deploy
 | `tcf-scripts/build.*` | 빌드 표준 |
 | `tcf-scripts/deploy.*` | Tomcat 배포 래퍼 |
 | `ztomcat/README.md` | 통합 배포 절차 |
-| `ztomcat/deploy-wars.*` | 19 WAR 배포 |
+| `ztomcat/deploy-wars.*` | **13 WAR** 배포 |
 | `ztomcat/deploy-restart.*` | 원클릭 재배포 |
 | `*/scripts/` | 모듈별 스크립트 |
 

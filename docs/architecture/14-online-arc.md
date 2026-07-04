@@ -262,7 +262,7 @@ UI(:8099) → OM(:8097)/SV(:8086)/... 직접 포트 호출
 UI(:8080/ui) → /api/relay/{code}/online → :8080/{context}/online
 ```
 
-19개 WAR가 단일 게이트웨이 8080 하위 context로 라우팅된다.
+19개 WAR가 단일 게이트웨이 8080 하위 context로 라우팅된다. (`deploy-wars.sh` 기준 **13 WAR** 배포, uj·gateway는 bootRun)
 
 ---
 

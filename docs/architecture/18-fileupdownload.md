@@ -25,7 +25,7 @@ NSIGHT TCF의 파일 업·다운로드(이하 **UD**)는 **하이브리드 REST*
 핵심 설계 이유:
 
 1. **multipart·바이너리**는 JSON 전문 파이프라인에 맞지 않음
-2. **공통 파일 저장소**를 OM(`tcf-om`)에 두어 16개 업무 WAR이 각각 파일 API를 중복 구현하지 않음
+2. **공통 파일 저장소**를 OM(`tcf-om`)에 두어 업무 WAR(현재 9개)이 각각 파일 API를 중복 구현하지 않음
 3. 브라우저는 **`tcf-ui` Relay**로 CORS·배포 모드(bootRun/Tomcat) 차이를 흡수
 
 비즈니스 코드 `UD`는 `BusinessModuleDefinitions`에서 `tcf-om:8097`에 매핑된다.  

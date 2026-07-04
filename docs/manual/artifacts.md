@@ -175,7 +175,7 @@ Gradle이 `:tcf-util` → `:tcf-core` → `:tcf-web` → `:sv-service` 순으로
 
 ### 5.2 ztomcat (Tomcat 8080 통합)
 
-**19개 WAR + Tomcat 설치본 + 설정**이 필요합니다.
+**13개 WAR** (`deploy-wars.sh`) + Tomcat 설치본 + 설정이 필요합니다.
 
 #### Tomcat 설치 (최초 1회)
 
@@ -337,17 +337,17 @@ Maven lib·NSIGHT lib의 **①②③ 단계·모듈별 포함表**는 [lib-modul
 - [ ] `gradle :sv-service:bootRun` (내부적으로 lib JAR 빌드)
 - [ ] (선택) `data/nsight-txlog/` — txlog 사용 시
 
-### B. ztomcat 19 context 전체
+### B. ztomcat 13 context (`deploy-wars.sh`)
 
 - [ ] `ztomcat/apache-tomcat-10.1.34/` (install-tomcat)
-- [ ] `webapps/` — 업무 16 + `om.war` + `ui.war`
+- [ ] `webapps/` — 업무 9 + `om.war` + `ui.war` + `jwt.war` + `batch.war`
 - [ ] `wars/zz-batch.war` + `conf/Catalina/localhost/batch.xml`
 - [ ] `conf/setenv.*` → JDK 21, `-Dspring.profiles.active=dev`, `NSIGHT_TXLOG_PATH`
 - [ ] `data/nsight-txlog/` (OM·batch DB 공유)
 
 ### C. 운영 Tomcat (prod)
 
-- [ ] 동일 WAR 19개 (또는 필요 context만)
+- [ ] 동일 WAR 13개 (또는 필요 context만)
 - [ ] `setenv.prod.*` — `spring.profiles.active=prod`, `NSIGHT_GATEWAY_BASE_URL`, `NSIGHT_*_DB_*`
 - [ ] Oracle JDBC 드라이버 JAR
 - [ ] 거래로그·업무 DB (Oracle), UD 스토리지 경로

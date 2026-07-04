@@ -17,7 +17,7 @@ NSIGHT TCF는 **이중 배포 모델**을 가진다.
 | 모델 | 목적 | 특징 |
 |------|------|------|
 | `bootRun` | 개발·디버깅 | 모듈별 독립 JVM/포트 |
-| `ztomcat` | 통합·운영 유사 검증 | 단일 Tomcat 8080 + WAR 19개 |
+| `ztomcat` | 통합·운영 유사 검증 | 단일 Tomcat 8080 + **deploy-wars 13 WAR** |
 
 핵심 철학:
 
@@ -32,10 +32,13 @@ NSIGHT TCF는 **이중 배포 모델**을 가진다.
 ## 2.1 bootRun 토폴로지
 
 ```text
-8081~8096 : 업무 WAR(*-service)
+8082,8083,8085~8087,8089~8090,8093,8096 : 업무 WAR (9개 *-service)
 8097      : tcf-om
 8098      : tcf-batch
 8099      : tcf-ui
+8100      : tcf-gateway
+8102      : tcf-uj
+8110      : tcf-jwt
 ```
 
 특징:
@@ -47,12 +50,15 @@ NSIGHT TCF는 **이중 배포 모델**을 가진다.
 ## 2.2 ztomcat 토폴로지
 
 ```text
-Tomcat 8080
-  /cc ... /mg   (업무 16)
-  /om           (tcf-om)
-  /batch        (tcf-batch)
-  /ui           (tcf-ui)
+Tomcat 8080  (deploy-wars.sh — 13 WAR)
+  /ic … /mg   (업무 9)
+  /om         (tcf-om)
+  /batch      (tcf-batch)
+  /ui         (tcf-ui)
+  /jwt        (tcf-jwt)
 ```
+
+bootRun 전용: gateway :8100, uj :8102
 
 특징:
 
@@ -68,12 +74,13 @@ Tomcat 8080
 
 | 코드 | 모듈 | WAR | Context |
 |------|------|-----|---------|
-| `cc` ~ `mg` | `*-service` | `{code}.war` | `/{code}` |
+| `ic` … `mg` | `*-service` (9개) | `{code}.war` | `/{code}` |
 | `om` | `tcf-om` | `tcf-om.war` → `om.war` | `/om` |
 | `batch` | `tcf-batch` | `tcf-batch.war` → `batch.war` | `/batch` |
 | `ui` | `tcf-ui` | `tcf-ui.war` → `ui.war` | `/ui` |
+| `jwt` | `tcf-jwt` | `jwt.war` | `/jwt` |
 
-총 19개 WAR(업무 16 + 플랫폼 3)를 기준으로 배포한다.
+`ztomcat/deploy-wars.sh` 기준 **13 WAR** 배포. `gradle buildZtomcatWars`는 uj·gateway 포함 **15 WAR** 빌드 가능.
 
 ## 3.2 부트스트랩 구조
 
@@ -90,8 +97,8 @@ Tomcat 8080
 
 | 명령 | 의미 |
 |------|------|
-| `gradle buildBusinessWars` | 17 WAR(업무 16 + tcf-om) |
-| `gradle buildZtomcatWars` | 19 WAR(+ tcf-batch, tcf-ui) |
+| `gradle buildBusinessWars` | 10 WAR (9 업무 + tcf-om) |
+| `gradle buildZtomcatWars` | 15 WAR (+ batch, ui, uj, jwt, gateway) |
 | `gradle :{module}:bootWar` | 단일 모듈 WAR 빌드 |
 | `gradle :{module}:bootRun` | 단일 모듈 개발 실행 |
 

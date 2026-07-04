@@ -60,7 +60,7 @@ tcf-util → tcf-core → tcf-web → (*-service | tcf-om | tcf-batch)
 | 프로파일 | 활성화 시점 | 주요 효과 |
 |----------|-------------|-----------|
 | `local` | bootRun 기본 (`application.yml`, `tcf-batch` `application-local.yml`) | 모듈별 포트, H2 로컬, UI `deployment-mode: bootrun` |
-| `dev` | ztomcat `setenv` — `-Dspring.profiles.active=dev` | 게이트웨이 8080, 파일 로깅, 19 WAR 수집·Relay |
+| `dev` | ztomcat `setenv` — `-Dspring.profiles.active=dev` | 게이트웨이 8080, 파일 로깅, **13 WAR** 배포·Actuator 수집 |
 | `prod` | 운영 Tomcat — `-Dspring.profiles.active=prod` | `dev` 설정 + `NSIGHT_GATEWAY_BASE_URL` 등 운영 URL |
 
 `prod`는 프로파일 그룹으로 `dev`를 함께 로드한다 (`tcf-web` `spring.profiles.group.prod`).
@@ -289,7 +289,7 @@ public class NsightTcfBatchApplication extends NsightWarBootstrap
 | Scheduling | `ApStatusCollectScheduler` 등 4종 `@Scheduled` |
 | Profile `local` | `spring.servlet.context-path: /batch` |
 | Profile `local` | 소수 모듈 Actuator 타겟 (OM, SV, CC, MG, UI, BATCH) |
-| Profile `dev` / `prod` | 19 WAR 전체 게이트웨이 경로 타겟 |
+| Profile `dev` / `prod` | ztomcat **13 WAR** + bootRun gateway/uj |
 | Batch | `nsight.batch.*` — cron, job-id, targets, timeouts |
 
 **전용 빈**: `BatchClientConfiguration` → `RestTemplate` (AP 수집 타임아웃).
@@ -407,7 +407,7 @@ public class NsightTcfBatchApplication extends NsightWarBootstrap
 
 | 패턴 | 모듈 | 클래스 |
 |------|------|--------|
-| `NsightWarBootstrap` 상속 | 업무 16, `tcf-om`, `tcf-batch` | `configure(SpringApplicationBuilder)` |
+| `NsightWarBootstrap` 상속 | 업무 9, `tcf-om`, `tcf-batch` | `configure(SpringApplicationBuilder)` |
 | `SpringBootServletInitializer` 직접 | `tcf-ui` | `configure` 오버라이드 |
 
 외부 Tomcat은 `ztomcat` + `setenv` JVM 옵션으로 프로파일·인코딩·타임존(`Asia/Seoul`) 통일.

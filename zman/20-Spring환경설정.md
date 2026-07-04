@@ -20,9 +20,8 @@ Git 형상관리, 서버 직접 수정 ❌, Secret = 환경변수.
 src/main/resources/
 ├── application.yml
 ├── application-local.yml | -dev | -stg | -prd
-├── application-datasource.yml
-├── application-session.yml
-├── application-tcf.yml
+├── application-datasource.yml   (일부 모듈)
+├── application-tcf.yml          (일부 모듈)
 ├── application-gateway.yml
 ├── application-jwt.yml
 ├── application-cache.yml
@@ -65,7 +64,7 @@ Gateway `ENV_CODE`와 Route 연동 (9장).
 
 ## Spring Session JDBC (20.9)
 
-`application-session.yml` — store-type: jdbc, timeout
+`tcf-om/application.yml` — `spring.session.store-type: jdbc`, `spring.session.timeout: 60m`
 
 ## MyBatis (20.10)
 

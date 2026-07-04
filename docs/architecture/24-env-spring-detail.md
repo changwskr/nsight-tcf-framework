@@ -85,7 +85,7 @@ logging:
 | `logging.file.name` | WAR별 롤링 파일 (`nsight-nsight-sv-service.log` 등) |
 | `${CATALINA_BASE}` | ztomcat 기동 시 Tomcat 로그 디렉터리 |
 
-**적용 대상:** `tcf-web`을 의존하는 모든 WAR (업무 16 + `tcf-om` + `tcf-batch`). `tcf-ui`는 `tcf-web` 미의존 → 이 파일 미적용.
+**적용 대상:** `tcf-web`을 의존하는 모든 WAR (업무 9 + `tcf-om` + `tcf-batch`). `tcf-ui`는 `tcf-web` 미의존 → 이 파일 미적용.
 
 ---
 
@@ -385,7 +385,7 @@ nsight:
 
 **경로:** `tcf-batch/src/main/resources/application-dev.yml`
 
-ztomcat 통합 시 **19 WAR 전체**를 `${nsight.gateway.base-url}/{context}`로 수집한다. 파일이 길어 핵심만 요약하고, 원문은 저장소를 참조한다.
+ztomcat 통합 시 **`deploy-wars.sh` 13 WAR**를 `${nsight.gateway.base-url}/{context}`로 수집한다.
 
 **헤더·게이트웨이**
 
@@ -411,7 +411,7 @@ nsight:
 | 구분 | local | dev / prod |
 |------|-------|------------|
 | AP URL | `http://127.0.0.1:{port}` | `${nsight.gateway.base-url}/{ctx}` |
-| 대상 수 | 4 AP + UI + BATCH 등 | 19 WAR 전체 |
+| 대상 수 | 4 AP + UI + BATCH 등 | **13 WAR** (deploy) / 15 (buildZtomcatWars) |
 | 기동 수집 지연 | `0` | `420000` ms (7분) |
 | WAR 파일명 | `tcf-om.war`, `sv.war` | `om.war`, `batch.war`, `ui.war` (ztomcat rename) |
 

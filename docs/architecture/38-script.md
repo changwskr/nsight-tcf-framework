@@ -132,7 +132,7 @@ tcf-scripts\build.bat sv cc
 
 `build-all.bat` / `build-all.sh` → 내부적으로 `build.bat all` 호출.
 
-> `ztomcat` 19 WAR 전체는 `gradle buildZtomcatWars` — `build.bat`에 별칭 없음. `tcf-cicd/local/script/build-all.ps1 -Target wars` 또는 `ztomcat/deploy-wars all` 사용.
+> `ztomcat` **13 WAR** 배포는 `ztomcat/deploy-wars all`. 빌드는 `gradle buildZtomcatWars`(15 WAR).
 
 ### 3.3 `deploy` — WAR → Tomcat webapps
 
@@ -179,7 +179,7 @@ tcf-scripts\curl-sample.bat sv
 |------|-----|
 | Tomcat | 10.1.34 (Jakarta / Servlet 6) |
 | JDK | **21 필수** |
-| WAR | 업무 16 + tcf-om + tcf-batch + tcf-ui |
+| WAR | 업무 9 + tcf-om + tcf-batch + tcf-ui + tcf-jwt (deploy 13) |
 
 ### 4.1 스크립트 목록
 
@@ -407,7 +407,7 @@ tcf-scripts\run-local.bat tcf-om batch ui
 
 브라우저: `http://localhost:8099/om/admin/dashboard.html`
 
-### 11.3 Tomcat 통합 (19 WAR)
+### 11.3 Tomcat 통합 (deploy-wars 13 WAR)
 
 ```bat
 cd ztomcat

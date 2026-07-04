@@ -53,7 +53,8 @@
 | 8102 | `tcf-uj` |
 | 8110 | `tcf-jwt` |
 
-Tomcat(ztomcat): 모든 context **8080** — `/ic` … `/mg`, `/om`, `/batch`, `/ui`, `/uj`, `/gw`, `/jwt`
+Tomcat(ztomcat): `deploy-wars.sh` 기준 **13 WAR** on **8080** — `/ic` … `/mg`, `/om`, `/batch`, `/ui`, `/jwt`  
+bootRun 전용: `tcf-gateway`(:8100), `tcf-uj`(:8102)
 
 ---
 

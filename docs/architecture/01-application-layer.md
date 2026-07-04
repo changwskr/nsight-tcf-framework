@@ -353,7 +353,7 @@ tcfGateway.invoke(
 
 ## 5. 모듈 유형별 적용
 
-### 5.1 업무 서비스 (`cc-service` … `mg-service`)
+### 5.1 업무 서비스 (`ic-service` … `mg-service`, 현재 9개)
 
 ```text
 표준 6계층: Handler → Facade → Service → Rule → DAO → Mapper
