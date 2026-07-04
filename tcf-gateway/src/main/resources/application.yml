@@ -48,6 +48,12 @@ nsight:
         user-session-check: true
         header-user-check: true
         header-user-strict: false
+      jwt:
+        enabled: false
+        jwk-set-uri:
+        issuer: NSIGHT-AUTH
+        audience: NSIGHT-MP
+        header-user-strict: false
     user-session-sync:
       enabled: true
       fixed-rate-ms: 10000

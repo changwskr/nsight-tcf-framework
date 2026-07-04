@@ -37,6 +37,9 @@ public class GatewayRouteDispatcher {
                         if (StringUtils.hasText(cookieHeader)) {
                             headers.set(HttpHeaders.COOKIE, cookieHeader);
                         }
+                        if (StringUtils.hasText(context.authorizationHeader())) {
+                            headers.set(HttpHeaders.AUTHORIZATION, context.authorizationHeader());
+                        }
                     })
                     .body(context.enrichedBody())
                     .exchange((request, response) -> {

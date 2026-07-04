@@ -8,7 +8,8 @@ public record RouteContext(
         String enrichedBody,
         long startedAtMillis,
         int connectTimeoutMs,
-        int readTimeoutMs
+        int readTimeoutMs,
+        String authorizationHeader
 ) {
     private static final String PHASE = "RouteContext";
 

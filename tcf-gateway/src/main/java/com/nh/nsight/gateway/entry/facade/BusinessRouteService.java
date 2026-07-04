@@ -15,6 +15,7 @@ public class BusinessRouteService {
     public RouteResult forwardOnline(String businessCode,
                                      String requestBody,
                                      String cookieHeader,
+                                     String authorizationHeader,
                                      String deploymentMode,
                                      String bootrunHost,
                                      String tomcatGatewayUrl) {
@@ -22,6 +23,7 @@ public class BusinessRouteService {
                 businessCode,
                 requestBody,
                 cookieHeader,
+                authorizationHeader,
                 deploymentMode,
                 bootrunHost,
                 tomcatGatewayUrl

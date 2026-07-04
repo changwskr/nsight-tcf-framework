@@ -5,6 +5,7 @@ import com.nh.nsight.gateway.support.RouteResult;
 import com.nh.nsight.gateway.support.GatewayProxyTrace;
 import com.nh.nsight.gateway.support.ProxyResponseSupport;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +41,7 @@ public abstract class AbstractBusinessProxyController {
                 businessCode,
                 requestBody,
                 request.getHeader("Cookie"),
+                request.getHeader(HttpHeaders.AUTHORIZATION),
                 deploymentMode,
                 bootrunHost,
                 tomcatGatewayUrl

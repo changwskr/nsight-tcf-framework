@@ -82,7 +82,8 @@ management:
 |-----|------|
 | `GET /api/business-modules` | 업무 모듈 목록 |
 | `GET /api/business-modules/{code}/target-url` | Relay 대상 URL |
-| `POST /api/relay/{code}/online` | 온라인 거래 Relay |
+| `POST /api/relay/{code}/online` | 온라인 거래 Relay (Cookie 세션) |
+| `POST /api/gateway/om/online` | OM Gateway Relay (JWT Bearer) |
 | `GET /api/config` | UI 설정 조회 |
 | `POST /api/updownload/upload` | 파일 업로드 Relay (tcf-om) |
 
@@ -91,9 +92,20 @@ management:
 | 파일 | 설명 |
 |------|------|
 | `static/_shared/ui-context.js` | bootRun/Tomcat context path (`/ui`) 자동 보정 |
-| `static/_shared/om-admin.js` | OM Admin API Relay (`uiPath()`, `relayFetch()`) |
+| `static/_shared/om-admin.js` | OM Admin API Relay (`uiPath()`, `relayFetch()`, JWT·Gateway 분기) |
 
 Tomcat `/ui` 배포 시 API·정적 경로에 `/ui` 접두가 자동 적용됩니다.
+
+## OM Admin 인증·Relay 분기 (`om-admin.js`)
+
+| 로그인 유형 | OM 업무 거래 경로 | 인증 수단 |
+|-------------|-------------------|-----------|
+| **일반 로그인** (`OM.Auth.login`) | `/api/relay/om/online` | `JSESSIONID` 쿠키 |
+| **SSO** (`OM.Auth.ssoLogin`) | `/api/relay/om/online` | `JSESSIONID` 쿠키 (JWT는 sessionStorage 보관만) |
+| **JWT 로그인** (`loginType !== 'SSO'`) | `/api/gateway/om/online` | `Authorization: Bearer` + Gateway JWT 검증 |
+| **인증 거래** (`OM.Auth.*`) | `/api/relay/om/online` | 항상 직접 relay (Gateway 미경유) |
+
+JWT 토큰은 `sessionStorage` 키 `nsight.jwt.session`에 보관됩니다. JWT Gateway 모드 사용 시 `tcf-jwt`(:8110)와 `tcf-gateway`(:8100, `local` 프로필 JWT enabled)가 필요합니다.
 
 ## 거래 테스트 화면
 

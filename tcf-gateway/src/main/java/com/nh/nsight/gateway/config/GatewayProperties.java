@@ -87,6 +87,7 @@ public class GatewayProperties {
         /** true 시 JSESSIONID/NSIGHTSID 쿠키(로그인) 필수 */
         private boolean loginRequired = true;
         private SessionValidation sessionValidation = new SessionValidation();
+        private Jwt jwt = new Jwt();
 
         public boolean isLoginRequired() {
             return loginRequired;
@@ -102,6 +103,82 @@ public class GatewayProperties {
 
         public void setSessionValidation(SessionValidation sessionValidation) {
             this.sessionValidation = sessionValidation;
+        }
+
+        public Jwt getJwt() {
+            return jwt;
+        }
+
+        public void setJwt(Jwt jwt) {
+            this.jwt = jwt;
+        }
+    }
+
+    /** Bearer JWT 검증 (tcf-jwt JWKS). Authorization 헤더가 있으면 쿠키 세션 검증 대신 사용 */
+    public static class Jwt {
+        private boolean enabled = false;
+        private String jwkSetUri;
+        private String issuer = "NSIGHT-AUTH";
+        private String audience = "NSIGHT-MP";
+        private String headerName = "Authorization";
+        private String tokenPrefix = "Bearer";
+        /** true 시 header.userId vs JWT claim 불일치 시 401 */
+        private boolean headerUserStrict = false;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public String getJwkSetUri() {
+            return jwkSetUri;
+        }
+
+        public void setJwkSetUri(String jwkSetUri) {
+            this.jwkSetUri = jwkSetUri;
+        }
+
+        public String getIssuer() {
+            return issuer;
+        }
+
+        public void setIssuer(String issuer) {
+            this.issuer = issuer;
+        }
+
+        public String getAudience() {
+            return audience;
+        }
+
+        public void setAudience(String audience) {
+            this.audience = audience;
+        }
+
+        public String getHeaderName() {
+            return headerName;
+        }
+
+        public void setHeaderName(String headerName) {
+            this.headerName = headerName;
+        }
+
+        public String getTokenPrefix() {
+            return tokenPrefix;
+        }
+
+        public void setTokenPrefix(String tokenPrefix) {
+            this.tokenPrefix = tokenPrefix;
+        }
+
+        public boolean isHeaderUserStrict() {
+            return headerUserStrict;
+        }
+
+        public void setHeaderUserStrict(boolean headerUserStrict) {
+            this.headerUserStrict = headerUserStrict;
         }
     }
 

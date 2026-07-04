@@ -10,12 +10,13 @@
 ```
 브라우저 (tcf-uj)
   → POST /{code}/online  (Cookie: JSESSIONID)
+  → POST /api/gateway/om/online  (Authorization: Bearer — JWT 모드)
   → TCF_GATEWAY_ROUTE 조회 (ENV + BUSINESS_CODE)
   → downstream WAS  POST /{code}/online
 ```
 
 - **세션을 소유하지 않음** — SESSIONDB(`SPRING_SESSION` + `TCF_USER_SESSION`) 검증·전달만
-- **JWT 미사용** — 쿠키 4단계 검증
+- **이중 인증** — `Bearer` 있으면 JWT(JWKS), 없으면 쿠키 4단계 검증. JWT **발급**은 tcf-jwt
 - Target URL은 **라우팅 테이블만** 참조 (query 파라미터로 URL 결정 ❌)
 
 ---
@@ -54,8 +55,8 @@ curl "http://localhost:8100/api/admin/routes?envCode=LOCAL"
 *ProxyController
   → BusinessRouteService (facade)
     → GRF.forwardOnline
-      → GSF.preProcess (라우팅 조회 + GatewaySessionValidator)
-      → GatewayRouteDispatcher (RestClient + Cookie 전달)
+      → GSF.preProcess (라우팅 조회 + GatewayAuthenticationService)
+      → GatewayRouteDispatcher (RestClient + Cookie·Authorization 전달)
       → GEF (응답 변환)
 ```
 
@@ -94,6 +95,11 @@ nsight:
     auth:
       login-required: true
       session-validation:    # 2~4단계 on/off
+      jwt:                     # Bearer 검증 (발급은 tcf-jwt)
+        enabled: false         # local 프로필: true
+        jwk-set-uri: http://127.0.0.1:8110/.well-known/jwks.json
+        issuer: NSIGHT-AUTH
+        audience: NSIGHT-MP
     session-datasource:      # SPRING_SESSION (tcf-om H2 공유)
 ```
 

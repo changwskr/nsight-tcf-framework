@@ -16,7 +16,8 @@
 | businessCode → Target WAR | SSL 종료 (→ Apache) |
 | Cookie/JSESSIONID Relay | Sticky Session (→ Apache/L4) |
 | SESSIONDB 4단계 검증 | 업무 serviceId Dispatcher |
-| TCF_GATEWAY_TX_LOG | JWT 발급 (→ tcf-jwt) |
+| Bearer JWT 검증 (선택, JWKS) | JWT **발급** (→ tcf-jwt) |
+| TCF_GATEWAY_TX_LOG | |
 
 | 항목 | 값 |
 |------|-----|
@@ -42,8 +43,8 @@ sequenceDiagram
     UJ->>GW: POST /sv/online + Cookie
     GW->>RT: ENV + BUSINESS_CODE
     RT-->>GW: TARGET_URL
-    GW->>SE: Session 4-step validate
-    GW->>WAS: POST /sv/online + same Cookie
+    GW->>SE: Session 4-step validate (또는 JWT JWKS)
+    GW->>WAS: POST /sv/online + Cookie / Authorization
     WAS-->>GW: StandardResponse + Set-Cookie
     GW-->>UJ: Response + Set-Cookie
     UJ-->>B: Response
@@ -60,9 +61,9 @@ sequenceDiagram
       → GSF.preProcess (support)
           ① TCF_GATEWAY_ROUTE 조회
           ② 미등록 → 404 GatewayRouteNotFoundException
-          ③ GatewaySessionValidator (4단계)
+          ③ GatewayAuthenticationService — Bearer → JWT / 없음 → 4단계 세션
           ④ GatewaySessionRequestEnricher (header 보정)
-      → GatewayRouteDispatcher (client) — RestClient POST
+      → GatewayRouteDispatcher (client) — RestClient POST + Cookie·Authorization
       → GEF — success / authFail / routeNotFound / httpError
       → GatewayTransactionLogRecorder — TCF_GATEWAY_TX_LOG
 ```
@@ -73,7 +74,7 @@ sequenceDiagram
 |--------|-------------|
 | entry/web | *ProxyController, Gateway*AdminController |
 | entry/facade | BusinessRouteService |
-| application/service | GatewayRouteAdminService, GatewaySessionRegistry |
+| application/service | GatewayRouteAdminService, GatewayAuthenticationService, GatewayJwtValidator, GatewaySessionRegistry |
 | application/rule | GatewaySessionValidator, GatewayAuthExemptions |
 | client | GatewayRouteDispatcher |
 | persistence/dao | GatewayRouteDao, UserSessionDao |
@@ -153,12 +154,21 @@ Gateway는 **세션을 소유하지 않음**.
 
 `GatewayUserSessionSyncScheduler` — TCF_USER_SESSION ↔ SPRING_SESSION 주기 동기 (기본 10초)
 
+### 5.4 JWT 검증 (선택)
+
+`nsight.gateway.auth.jwt.enabled=true` 시 `Authorization: Bearer` → tcf-jwt JWKS(`/.well-known/jwks.json`)로 RS256 검증. issuer `NSIGHT-AUTH`, audience `NSIGHT-MP`. Bearer 없으면 5.1 쿠키 4단계로 폴백.
+
+| 오류 | 원인 |
+|------|------|
+| authFail (세션) | 쿠키 4단계 실패 |
+| authFail (JWT) | Bearer 만료·서명 실패·issuer/audience 불일치 |
+
 ---
 
 ## 6. Gateway vs TCF Dispatcher
 
 | | Gateway | Dispatcher |
-|---|---------|------------|
+|---|---|---------|
 | Key | businessCode | serviceId |
 | Layer | WAR 앞 | WAR 내부 STF 뒤 |
 | Config | TCF_GATEWAY_ROUTE | Handler Registry |
@@ -196,7 +206,7 @@ Gateway는 **세션을 소유하지 않음**.
 | 오류 | 원인 |
 |------|------|
 | 404 Route Not Found | Catalog 미등록 |
-| authFail | 세션 4단계 실패 |
+| authFail | 세션 4단계 또는 JWT 검증 실패 |
 | connectionError | Target DOWN |
 | httpError | downstream 5xx |
 

@@ -105,6 +105,7 @@ Gateway는 **업무 WAR와 분리된 독립 프로세스(WAR)** 이다.
 | -------------------- | --------------------------------------------------------------------------- |
 | **라우팅**           | `TCF_GATEWAY_ROUTE` — `ENV_CODE` + `BUSINESS_CODE` → Target URL             |
 | **세션 관문**        | SESSIONDB 조회·검증·Cookie 전달·header 보정                                 |
+| **JWT 관문**         | `Authorization: Bearer` → tcf-jwt JWKS 검증 (선택, `auth.jwt.enabled`)      |
 | **프록시**           | RestClient POST, Connect/Read Timeout 적용                                  |
 | **관리**             | `/admin/routes.html`, `/admin/transaction-log.html`, `/admin/sessions.html` |
 | **Gateway 거래로그** | `TCF_GATEWAY_TX_LOG` — 관문 통과 이력                                       |
@@ -114,15 +115,16 @@ Gateway는 **업무 WAR와 분리된 독립 프로세스(WAR)** 이다.
 | 항목                                 | 담당                                         |
 | ------------------------------------ | -------------------------------------------- |
 | HttpSession/JSESSIONID **발급·소유** | OM·업무 WAS (Spring Session)                 |
-| JWT 발급·검증                        | **하지 않음** (tcf-jwt 별도, Gateway 미사용) |
+| JWT **발급**                         | tcf-jwt (Gateway는 발급하지 않음)            |
+| JWT **검증** (Gateway 경유)          | tcf-gateway (`nsight.gateway.auth.jwt`, 선택) |
 | TCF Handler 실행                     | downstream WAS                               |
 | 업무 DB(RDW/ADW) 접근                | downstream WAS                               |
 | 파일 업·다운로드                     | tcf-om 직접                                  |
 
 ### 2.4 설계 원칙 (확정)
 
-> **Gateway = SESSIONDB 기반 관문.**  
-> 세션을 소유하지 않고, 쿠키를 검증·전달·통제만 수행한다.
+> **Gateway = SESSIONDB·JWT 기반 관문.**  
+> 세션을 소유하지 않고, 쿠키 또는 Bearer를 검증·전달·통제만 수행한다.
 
 ---
 

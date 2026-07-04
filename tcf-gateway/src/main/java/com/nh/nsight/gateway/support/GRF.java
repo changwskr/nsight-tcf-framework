@@ -27,6 +27,7 @@ public class GRF {
     public RouteResult forwardOnline(String businessCode,
                                      String requestBody,
                                      String cookieHeader,
+                                     String authorizationHeader,
                                      String deploymentMode,
                                      String bootrunHost,
                                      String tomcatGatewayUrl) {
@@ -37,7 +38,8 @@ public class GRF {
         try {
             GatewayProxyTrace.log(PHASE, "GSF.preProcess START");
             context = gsf.preProcess(
-                    businessCode, requestBody, cookieHeader, deploymentMode, bootrunHost, tomcatGatewayUrl);
+                    businessCode, requestBody, cookieHeader, authorizationHeader,
+                    deploymentMode, bootrunHost, tomcatGatewayUrl);
             GatewayProxyTrace.log(PHASE, "GSF.preProcess END");
 
             GatewayProxyTrace.log(PHASE, "GatewayRouteDispatcher.dispatch START");

@@ -1,6 +1,6 @@
 package com.nh.nsight.gateway.support;
 
-import com.nh.nsight.gateway.application.rule.GatewaySessionValidator;
+import com.nh.nsight.gateway.application.service.GatewayAuthenticationService;
 import com.nh.nsight.gateway.application.service.GatewayRouteResolver;
 import com.nh.nsight.gateway.config.GatewayProperties;
 import com.nh.nsight.gateway.support.GatewayBusinessModules.Module;
@@ -12,15 +12,15 @@ public class GSF {
     private static final String PHASE = "GSF.preProcess";
 
     private final GatewayProperties properties;
-    private final GatewaySessionValidator sessionValidator;
+    private final GatewayAuthenticationService authenticationService;
     private final GatewaySessionRequestEnricher sessionRequestEnricher;
     private final GatewayRouteResolver routeResolver;
 
-    public GSF(GatewayProperties properties, GatewaySessionValidator sessionValidator,
+    public GSF(GatewayProperties properties, GatewayAuthenticationService authenticationService,
                GatewaySessionRequestEnricher sessionRequestEnricher,
                GatewayRouteResolver routeResolver) {
         this.properties = properties;
-        this.sessionValidator = sessionValidator;
+        this.authenticationService = authenticationService;
         this.sessionRequestEnricher = sessionRequestEnricher;
         this.routeResolver = routeResolver;
     }
@@ -28,6 +28,7 @@ public class GSF {
     public RouteContext preProcess(String businessCode,
                                    String requestBody,
                                    String cookieHeader,
+                                   String authorizationHeader,
                                    String deploymentMode,
                                    String bootrunHost,
                                    String tomcatGatewayUrl) {
@@ -47,8 +48,9 @@ public class GSF {
                     + " connectTimeoutMs=" + route.connectTimeoutMs()
                     + " readTimeoutMs=" + route.readTimeoutMs());
 
-            GatewayProxyTrace.log(PHASE, "sessionValidator.validate");
-            GatewaySessionContext sessionContext = sessionValidator.validate(businessCode, cookieHeader, requestBody);
+            GatewayProxyTrace.log(PHASE, "authenticationService.authenticate");
+            GatewaySessionContext sessionContext = authenticationService.authenticate(
+                    businessCode, cookieHeader, authorizationHeader, requestBody);
 
             GatewayProxyTrace.log(PHASE, "targetUrl=" + targetUrl);
             GatewayProxyTrace.log(PHASE, "sessionRequestEnricher.enrich");
@@ -60,7 +62,8 @@ public class GSF {
                     enrichedBody,
                     System.currentTimeMillis(),
                     route.connectTimeoutMs(),
-                    route.readTimeoutMs());
+                    route.readTimeoutMs(),
+                    authorizationHeader);
         } finally {
             GatewayProxyTrace.end(PHASE);
         }

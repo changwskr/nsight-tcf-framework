@@ -25,7 +25,7 @@ nsight-tcf-framework
 ├─ tcf-ui                거래 테스트 UI · OM Admin Relay (bootRun :8099)
 ├─ tcf-uj                gateway 경유 테스트 UI (bootRun :8102)
 ├─ tcf-gateway           API Gateway · SESSIONDB 관문 (bootRun :8100)
-├─ tcf-jwt               JWT 발급·검증 (bootRun :8110, WAR /jwt)
+├─ tcf-jwt               JWT 발급·JWKS (bootRun :8110, WAR /jwt) — 검증은 Gateway
 ├─ tcf-scripts           빌드·실행·배포 스크립트
 ├─ tcf-cicd              local/dev/prod 설정 SoT
 ├─ ztomcat               로컬 Tomcat 8080 (12 context)
