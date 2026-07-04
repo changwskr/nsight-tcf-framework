@@ -228,7 +228,7 @@ Gateway 라우팅 테이블(`TCF_GATEWAY_ROUTE`)의 `ROUTE_GROUP_CODE`와 동일
 
 ```text
 URL path / Gateway     → businessCode   (TCF_GATEWAY_ROUTE.BUSINESS_CODE)
-TCF Dispatcher         → serviceId      (Handler.serviceId())
+TCF Dispatcher         → serviceId      (Handler.serviceIds())
 OM·통제·카탈로그      → serviceId + transactionCode
 ```
 

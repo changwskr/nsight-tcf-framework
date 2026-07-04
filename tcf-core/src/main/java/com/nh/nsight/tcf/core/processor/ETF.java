@@ -36,59 +36,59 @@ public class ETF {
 
     public StandardResponse<Object> success(StandardRequest<Map<String, Object>> request, Object body,
             TransactionContext context, StandardHeader clientHeader) {
-        TcfConsoleLog.println("==============================[ETF.success] start");
+        System.out.println("==============================[ETF.success] start");
         StandardHeader header = responseHeaderOf(request, context, clientHeader);
         if (context != null) {
             StandardHeader processingHeader = context.getHeader();
-            TcfConsoleLog.println(" ==============================[ETF.success] idempotencyChecker.markSuccess");
+            System.out.println(" ==============================[ETF.success] idempotencyChecker.markSuccess");
             idempotencyChecker.markSuccess(processingHeader);
-            TcfConsoleLog.println(" ==============================[ETF.success] transactionLogService.end");
+            System.out.println(" ==============================[ETF.success] transactionLogService.end");
             transactionLogService.end(context, "S0000", null);
-            TcfConsoleLog.println(" ==============================[ETF.success] auditLogService.audit");
+            System.out.println(" ==============================[ETF.success] auditLogService.audit");
             auditLogService.audit(context, "S0000");
-            TcfConsoleLog.println(" ==============================[ETF.success] metricService.record");
+            System.out.println(" ==============================[ETF.success] metricService.record");
             metricService.record(context, "S0000");
         }
-        TcfConsoleLog.println(" ==============================[ETF.success] end");
+        System.out.println(" ==============================[ETF.success] end");
         return StandardResponse.success(header, body);
     }
 
     public StandardResponse<Object> businessFail(StandardRequest<Map<String, Object>> request, BusinessException e,
             TransactionContext context, StandardHeader clientHeader) {
-        TcfConsoleLog.println("\n ==============================[ETF.businessFail] start");
+        System.out.println("\n ==============================[ETF.businessFail] start");
         StandardHeader header = responseHeaderOf(request, context, clientHeader);
         if (context != null) {
             StandardHeader processingHeader = context.getHeader();
-            TcfConsoleLog.println(" ==============================[ETF.businessFail] idempotencyChecker.markFail");
+            System.out.println(" ==============================[ETF.businessFail] idempotencyChecker.markFail");
             idempotencyChecker.markFail(processingHeader);
-            TcfConsoleLog.println(" ==============================[ETF.businessFail] transactionLogService.end");
+            System.out.println(" ==============================[ETF.businessFail] transactionLogService.end");
             transactionLogService.end(context, "E0001", e.getErrorCode());
-            TcfConsoleLog.println(" ==============================[ETF.businessFail] auditLogService.audit");
+            System.out.println(" ==============================[ETF.businessFail] auditLogService.audit");
             auditLogService.audit(context, "E0001");
-            TcfConsoleLog.println(" ==============================[ETF.businessFail] metricService.record");
+            System.out.println(" ==============================[ETF.businessFail] metricService.record");
             metricService.record(context, "E0001");
         }
-        TcfConsoleLog.println(" ==============================[ETF.businessFail] end");
+        System.out.println(" ==============================[ETF.businessFail] end");
         return StandardResponse.fail(header, e.getErrorCode(), e.getMessage(), null);
     }
 
     public StandardResponse<Object> systemError(StandardRequest<Map<String, Object>> request, Exception e,
             TransactionContext context, StandardHeader clientHeader) {
-        TcfConsoleLog.println("\n ==============================[ETF.systemError] start");
+        System.out.println("\n ==============================[ETF.systemError] start");
         StandardHeader header = responseHeaderOf(request, context, clientHeader);
         log.error("TCF system error. serviceId={}", header == null ? null : header.getServiceId(), e);
         if (context != null) {
             StandardHeader processingHeader = context.getHeader();
-            TcfConsoleLog.println(" ==============================[ETF.systemError] idempotencyChecker.markFail");
+            System.out.println(" ==============================[ETF.systemError] idempotencyChecker.markFail");
             idempotencyChecker.markFail(processingHeader);
-            TcfConsoleLog.println(" ==============================[ETF.systemError] transactionLogService.end");
+            System.out.println(" ==============================[ETF.systemError] transactionLogService.end");
             transactionLogService.end(context, "E0001", ErrorCode.SYSTEM_ERROR);
-            TcfConsoleLog.println(" ==============================[ETF.systemError] auditLogService.audit");
+            System.out.println(" ==============================[ETF.systemError] auditLogService.audit");
             auditLogService.audit(context, "E0001");
-            TcfConsoleLog.println(" ==============================[ETF.systemError] metricService.record");
+            System.out.println(" ==============================[ETF.systemError] metricService.record");
             metricService.record(context, "E0001");
         }
-        TcfConsoleLog.println(" ==============================[ETF.systemError] end");
+        System.out.println(" ==============================[ETF.systemError] end");
         return StandardResponse.fail(header, ErrorCode.SYSTEM_ERROR, "시스템 오류가 발생했습니다.", e.getClass().getSimpleName());
     }
 

@@ -68,7 +68,7 @@ com.nh.nsight.marketing.{businessCodeLower}
 | 패키지 | 역할 | 예 |
 |--------|------|----|
 | `entry.web` | HTTP API 진입점 (표준/비표준) | `OmUpdownloadFileController`, `TcfApiController` |
-| `entry.handler` | TCF 거래 진입점 (`serviceId`) | `OmErrorCodeUpdateHandler` |
+| `entry.handler` | TCF 거래 진입점 (`serviceIds`, 도메인당 1개) | `OmErrorCodeHandler` |
 | `entry.facade` | 트랜잭션 경계·유스케이스 조합 | `OmErrorCodeFacade` |
 | `application.service` | 도메인 처리 | `OmErrorCodeService` |
 | `application.rule` | 검증 규칙 | `OmOperationRule` |
@@ -106,19 +106,20 @@ com.nh.nsight.marketing.{businessCodeLower}
 ### 4.2 Handler
 
 ```text
-{Business}{Domain}{Action}Handler
+{Business}{Domain}Handler
 ```
 
 예:
 
-- `SvSampleInquiryHandler`
-- `OmErrorCodeUpdateHandler`
-- `OmTransactionLogInquiryHandler`
+- `SvSampleHandler`
+- `OmErrorCodeHandler`
+- `OmTransactionLogHandler`
 
 규칙:
 
-- `Action`은 `serviceId` 마지막 토큰과 의미를 맞춘다 (`inquiry/save/update/delete/execute`)
-- Handler 1개는 원칙적으로 `serviceId()` 1개만 담당
+- **핸들러는 도메인(application Service)당 1개**를 원칙으로 한다 (`{Business}{Domain}Handler`)
+- 한 도메인의 여러 거래(`inquiry/save/update/delete/execute`)는 `serviceIds()`로 선언하고 `doHandle` 내부에서 `serviceId` 기준으로 분기한다
+- 단일 거래만 담당하는 경우 `serviceId()` 하나만 재정의해도 된다 (하위호환)
 
 ### 4.3 Facade
 
@@ -254,7 +255,7 @@ com.nh.nsight.marketing.{businessCodeLower}
 
 ```text
 serviceId: OM.ErrorCode.update
-  → Handler: OmErrorCodeUpdateHandler
+  → Handler: OmErrorCodeHandler (serviceIds에 OM.ErrorCode.* 포함, update로 분기)
   → Facade : OmErrorCodeFacade.update(...)
   → Service: OmErrorCodeService.update(...)
   → DAO    : OmOperationDao.updateErrorCode(...)
@@ -386,7 +387,7 @@ E-{BC}-{CATEGORY}-{NNNN}
 
 ```text
 serviceId: OM.ServiceCatalog.update
-handler  : OmServiceCatalogUpdateHandler
+handler  : OmServiceCatalogHandler (도메인당 1개, update로 분기)
 facade   : OmServiceCatalogFacade
 service  : OmServiceCatalogService
 dao      : OmOperationDao.updateServiceCatalog(...)

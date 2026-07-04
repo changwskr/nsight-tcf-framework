@@ -230,14 +230,22 @@ public class NsightSvServiceApplication extends NsightWarBootstrap {
 | `TransactionDispatcher` | `@Component` | **생성자에서 모든 Handler 등록** |
 | `StandardHeaderValidator` 등 | `@Component` | STF 의존 |
 
-```21:31:tcf-core/src/main/java/com/nh/nsight/tcf/core/dispatch/TransactionDispatcher.java
+```22:39:tcf-core/src/main/java/com/nh/nsight/tcf/core/dispatch/TransactionDispatcher.java
     public TransactionDispatcher(List<TransactionHandler> handlers) {
         for (TransactionHandler handler : handlers) {
-            TransactionHandler previous = handlerMap.put(handler.serviceId(), handler);
-            if (previous != null) {
-                throw new IllegalStateException("Duplicate serviceId detected: " + handler.serviceId());
+            Collection<String> serviceIds = handler.serviceIds();   // 도메인당 1개 핸들러가 여러 serviceId 담당
+            if (serviceIds == null || serviceIds.isEmpty()) {
+                log.warn("Handler declares no serviceId, skipped: {}", handler.getClass().getName());
+                continue;
             }
-            log.info("Registered NSIGHT handler. serviceId={}", handler.serviceId());
+            for (String serviceId : serviceIds) {
+                TransactionHandler previous = handlerMap.put(serviceId, handler);
+                if (previous != null) {
+                    throw new IllegalStateException("Duplicate serviceId detected: " + serviceId);
+                }
+                log.info("Registered NSIGHT handler. serviceId={} handler={}",
+                        serviceId, handler.getClass().getSimpleName());
+            }
         }
     }
 ```
@@ -514,7 +522,7 @@ MDC는 **이중 정리** — Filter와 TCF 모두에서 clear.
 | 3 | `NsightTxlogPathEnvironmentPostProcessor` | `data/nsight-txlog` 설정 |
 | 4 | yml 로드: tcf-web.jar → sv-service → (local 없으면 default) | Environment |
 | 5 | AutoConfiguration: Tcf*, DataSource, MyBatis, TransactionLog | imports |
-| 6 | ComponentScan: TCF, Controller, SvSampleInquiryHandler, … | `com.nh.nsight` |
+| 6 | ComponentScan: TCF, Controller, SvSampleHandler, … | `com.nh.nsight` |
 | 7 | `@MapperScan`: SvSampleMapper 프록시 | sv Application |
 | 8 | `TransactionDispatcher` — Handler 목록 등록 | tcf-core |
 | 9 | `TransactionLogSchemaInitializer.init()` | @PostConstruct |
@@ -546,7 +554,7 @@ WAR마다 **독립 Spring Context** — Handler·Dispatcher는 WAR 내부에만 
 
 | 증상 | 원인·확인 |
 |------|-----------|
-| `Duplicate serviceId detected` | Handler 2개가 같은 `serviceId()` |
+| `Duplicate serviceId detected` | 서로 다른 Handler의 `serviceIds()`에 같은 serviceId 중복 |
 | `Failed to configure a DataSource` | `spring.datasource.url` 누락 |
 | `SqlSessionFactory` 없음 | DS 빈 없음, `@MapperScan` 패키지 오타 |
 | H2 file lock | 동일 파일에 mem+file 혼용, Tomcat 중복 기동 |

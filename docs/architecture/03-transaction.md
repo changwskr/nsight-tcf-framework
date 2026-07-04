@@ -505,7 +505,7 @@ nsight:
 | 6 | `tcf-core/.../logging/TransactionLogService.java` |
 | 7 | `tcf-web/.../controller/OnlineTransactionController.java` |
 | 8 | `tcf-web/.../logging/JdbcTransactionLogRepository.java` |
-| 9 | `sv-service/.../handler/SvSampleInquiryHandler.java` |
+| 9 | `sv-service/.../entry/handler/SvSampleHandler.java` |
 
 ---
 

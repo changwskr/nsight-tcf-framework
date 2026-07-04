@@ -153,7 +153,7 @@ NSIGHT TCF Framework는 **모듈별로 DB 사용 범위가 다르다**.
 |------|------|
 | 용도 | 온라인 거래 요약 이력 (성공/실패, 소요시간) |
 | 쓰기 | 모든 업무 WAR ETF (`JdbcTransactionLogRepository`, 독립 커밋) |
-| 읽기/삭제 | `tcf-om` (`OmTransactionLogInquiryHandler`, `OmTransactionLogDeleteAllHandler`) |
+| 읽기/삭제 | `tcf-om` (`OmTransactionLogHandler` — 조회·삭제 serviceId 통합) |
 | 인덱스 | `(GUID, TX_TIME)`, `(SERVICE_ID, TX_TIME)`, `(USER_ID, TX_TIME)` |
 
 | 컬럼 | 타입 | 설명 |
@@ -239,7 +239,7 @@ NSIGHT TCF Framework는 **모듈별로 DB 사용 범위가 다르다**.
 | `tcf-om` | `spring.session.store-type: jdbc` |
 | 업무 WAR | `store-type: none` (OM 로그인 세션은 OM WAR) |
 
-OM 세션 관리·만료 정리: `OmSessionInquiryHandler`, `OmSessionCleanupScheduler`, `tcf-batch` `SessionMetricsClient`.
+OM 세션 관리·만료 정리: `OmSessionHandler`, `OmSessionCleanupScheduler`, `tcf-batch` `SessionMetricsClient`.
 
 상세: [10-session.md](10-session.md), [11-login.md](11-login.md).
 

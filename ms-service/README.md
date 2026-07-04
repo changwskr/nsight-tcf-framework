@@ -63,7 +63,7 @@ com.nh.nsight.marketing.ms
 │   └── rule/          MsSampleRule
 ├── config/
 ├── entry/
-│   ├── handler/       MsSampleInquiryHandler
+│   ├── handler/       MsSampleHandler (도메인당 1개)
 │   └── facade/        MsSampleFacade
 └── persistence/
     ├── dao/           MsSampleDao

@@ -54,7 +54,7 @@ TCF Core·Dispatcher는 페이징에 관여하지 않으며, **Rule → Service 
   body: { pageNo, pageSize, sampleKey? }
        │
        ▼
-SvSampleInquiryHandler          ← 페이징 로직 없음
+SvSampleHandler                 ← 페이징 로직 없음
        │
        ▼
 SvSampleFacade.inquiry          @Transactional(readOnly=true)
@@ -82,7 +82,7 @@ SvSampleDao → SvSampleMapper.xml
 
 | 클래스 | 파일 | 페이징 책임 |
 |--------|------|-------------|
-| `SvSampleInquiryHandler` | `entry/handler/SvSampleInquiryHandler.java` | 없음 (body 전달만) |
+| `SvSampleHandler` | `entry/handler/SvSampleHandler.java` | 없음 (body 전달만) |
 | `SvSampleFacade` | `entry/facade/SvSampleFacade.java` | TX 경계 |
 
 ### 4.2 Rule — `SvSampleRule`
@@ -250,7 +250,7 @@ sv-service/
 │   ├── rule/SvSampleRule.java          페이징 정규화·검색조건
 │   └── service/SvSampleService.java    inquiry·응답 조립
 ├── entry/
-│   ├── handler/SvSampleInquiryHandler.java
+│   ├── handler/SvSampleHandler.java
 │   └── facade/SvSampleFacade.java
 ├── persistence/
 │   ├── dao/SvSampleDao.java

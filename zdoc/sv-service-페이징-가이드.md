@@ -67,7 +67,7 @@ Service
 sv-service/
 ├── entry/
 │   ├── handler/
-│   │   └── SvSampleInquiryHandler.java
+│   │   └── SvSampleHandler.java
 │   └── facade/
 │       └── SvSampleFacade.java
 │
@@ -142,23 +142,29 @@ Handler는 페이징을 모릅니다.
 
 ```java
 @Component
-public class SvSampleInquiryHandler implements TransactionHandler {
+public class SvSampleHandler implements TransactionHandler {
+
+    private static final String INQUIRY = "SV.Sample.inquiry";
 
     private final SvSampleFacade facade;
 
-    public SvSampleInquiryHandler(SvSampleFacade facade) {
+    public SvSampleHandler(SvSampleFacade facade) {
         this.facade = facade;
     }
 
     @Override
-    public String serviceId() {
-        return "SV.Sample.inquiry";
+    public Collection<String> serviceIds() {
+        return List.of(INQUIRY);
     }
 
     @Override
     public Object doHandle(StandardRequest<Map<String, Object>> request,
                            TransactionContext context) {
-        return facade.inquiry(request.getBody(), context);
+        String serviceId = context.getHeader().getServiceId();
+        return switch (serviceId) {
+            case INQUIRY -> facade.inquiry(request.getBody(), context);
+            default -> throw new BusinessException(ErrorCode.SERVICE_NOT_FOUND, serviceId);
+        };
     }
 }
 ```

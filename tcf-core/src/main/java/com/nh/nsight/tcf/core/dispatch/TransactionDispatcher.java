@@ -22,12 +22,20 @@ public class TransactionDispatcher {
     public TransactionDispatcher(List<TransactionHandler> handlers) {
         TcfConsoleLog.boundary("Dispatcher", "init", "START");
         for (TransactionHandler handler : handlers) {
-            TransactionHandler previous = handlerMap.put(handler.serviceId(), handler);
-            if (previous != null) {
-                throw new IllegalStateException("Duplicate serviceId detected: " + handler.serviceId());
+            java.util.Collection<String> serviceIds = handler.serviceIds();
+            if (serviceIds == null || serviceIds.isEmpty()) {
+                log.warn("Handler declares no serviceId, skipped: {}", handler.getClass().getName());
+                continue;
             }
-            TcfConsoleLog.step("Dispatcher", "init", "register", handler.serviceId());
-            log.info("Registered NSIGHT handler. serviceId={}", handler.serviceId());
+            for (String serviceId : serviceIds) {
+                TransactionHandler previous = handlerMap.put(serviceId, handler);
+                if (previous != null) {
+                    throw new IllegalStateException("Duplicate serviceId detected: " + serviceId);
+                }
+                TcfConsoleLog.step("Dispatcher", "init", "register", serviceId);
+                log.info("Registered NSIGHT handler. serviceId={} handler={}",
+                        serviceId, handler.getClass().getSimpleName());
+            }
         }
         System.out.println(" ============================[Dispatcher] handlerMap dump (size=" + handlerMap.size() + ")");
         handlerMap.forEach((serviceId, mappedHandler) ->

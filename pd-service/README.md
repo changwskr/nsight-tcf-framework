@@ -63,7 +63,7 @@ com.nh.nsight.marketing.pd
 │   └── rule/          PdSampleRule
 ├── config/
 ├── entry/
-│   ├── handler/       PdSampleInquiryHandler
+│   ├── handler/       PdSampleHandler (도메인당 1개)
 │   └── facade/        PdSampleFacade
 └── persistence/
     ├── dao/           PdSampleDao

@@ -63,7 +63,7 @@ com.nh.nsight.marketing.ic
 │   └── rule/          IcSampleRule
 ├── config/
 ├── entry/
-│   ├── handler/       IcSampleInquiryHandler
+│   ├── handler/       IcSampleHandler (도메인당 1개)
 │   └── facade/        IcSampleFacade
 └── persistence/
     ├── dao/           IcSampleDao

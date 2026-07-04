@@ -63,7 +63,7 @@ com.nh.nsight.marketing.pc
 │   └── rule/          PcSampleRule
 ├── config/
 ├── entry/
-│   ├── handler/       PcSampleInquiryHandler
+│   ├── handler/       PcSampleHandler (도메인당 1개)
 │   └── facade/        PcSampleFacade
 └── persistence/
     ├── dao/           PcSampleDao

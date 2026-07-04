@@ -51,7 +51,7 @@ sequenceDiagram
     participant T as TCF
     participant S as STF
     participant D as TransactionDispatcher
-    participant H as SvSampleInquiryHandler
+    participant H as SvSampleHandler
     participant F as SvSampleFacade
     participant V as SvSampleService
     participant R as SvSampleRule
@@ -253,24 +253,32 @@ Handler/Facade/Service에서 던진 `BusinessException`은 TCF가 catch하여 `E
 |------|------|
 | 인터페이스 | `tcf-core/.../transaction/TransactionHandler.java` |
 | 스테레오타입 | `@Component` |
-| 메서드 | `serviceId()`, `doHandle(request, context)` |
+| 메서드 | `serviceIds()`, `doHandle(request, context)` |
 | 금지 | `@Transactional`, DAO 직접 호출, 복잡한 비즈니스 로직 |
 
-### 5.1 샘플: 조회 Handler
+### 5.1 샘플: 도메인 Handler (도메인당 1개)
 
-```10:26:sv-service/src/main/java/com/nh/nsight/marketing/sv/handler/SvSampleInquiryHandler.java
+핸들러는 **도메인(application Service)당 1개**를 두고, `serviceIds()`로 담당 거래를 선언한 뒤 `doHandle`에서 `serviceId`로 분기한다.
+
+```10:30:sv-service/src/main/java/com/nh/nsight/marketing/sv/entry/handler/SvSampleHandler.java
 @Component
-public class SvSampleInquiryHandler implements TransactionHandler {
+public class SvSampleHandler implements TransactionHandler {
+    private static final String INQUIRY = "SV.Sample.inquiry";
+
     private final SvSampleFacade facade;
 
     @Override
-    public String serviceId() {
-        return "SV.Sample.inquiry";
+    public Collection<String> serviceIds() {
+        return List.of(INQUIRY);
     }
 
     @Override
     public Object doHandle(StandardRequest<Map<String, Object>> request, TransactionContext context) {
-        return facade.inquiry(request.getBody(), context);
+        String serviceId = context.getHeader().getServiceId();
+        return switch (serviceId) {
+            case INQUIRY -> facade.inquiry(request.getBody(), context);
+            default -> throw new BusinessException(ErrorCode.SERVICE_NOT_FOUND, serviceId);
+        };
     }
 }
 ```
@@ -278,24 +286,31 @@ public class SvSampleInquiryHandler implements TransactionHandler {
 **패턴:** `request.getBody()`와 `context`만 Facade에 넘긴다.  
 **serviceId 명명:** `{BusinessCode}.{Domain}.{action}` — 예: `OM.ServiceCatalog.save`
 
-### 5.2 tcf-om: 동일 Facade·다른 serviceId
+### 5.2 tcf-om: 도메인 Handler 1개가 CRUD 전부 처리
 
-`OmServiceCatalogFacade` 하나에 `inquiry`, `save`, `update`, `delete`가 있고, **Handler는 serviceId당 1개**다.
+`OmServiceCatalogFacade` 하나에 `inquiry`, `save`, `update`, `delete`가 있고, **`OmServiceCatalogHandler` 도메인 핸들러 1개**가 이 serviceId들을 모두 담당한다.
 
-| Handler | serviceId | Facade 메서드 |
+| Handler | serviceIds | Facade 메서드 |
 |---------|-----------|---------------|
-| `OmServiceCatalogInquiryHandler` | `OM.ServiceCatalog.inquiry` | `facade.inquiry(...)` |
-| `OmServiceCatalogSaveHandler` | `OM.ServiceCatalog.save` | `facade.save(...)` |
+| `OmServiceCatalogHandler` | `OM.ServiceCatalog.inquiry` / `.save` / `.update` / `.delete` | `facade.inquiry/save/update/delete(...)` |
 
-```18:26:tcf-om/src/main/java/com/nh/nsight/marketing/om/handler/OmServiceCatalogSaveHandler.java
+```java
+// tcf-om/.../om/entry/handler/OmServiceCatalogHandler.java
     @Override
-    public String serviceId() {
-        return "OM.ServiceCatalog.save";
+    public Collection<String> serviceIds() {
+        return List.of(INQUIRY, SAVE, UPDATE, DELETE);
     }
 
     @Override
     public Object doHandle(StandardRequest<Map<String, Object>> request, TransactionContext context) {
-        return facade.save(request.getBody(), context);
+        String serviceId = context.getHeader().getServiceId();
+        return switch (serviceId) {
+            case INQUIRY -> facade.inquiry(request.getBody(), context);
+            case SAVE -> facade.save(request.getBody(), context);
+            case UPDATE -> facade.update(request.getBody(), context);
+            case DELETE -> facade.delete(request.getBody(), context);
+            default -> throw new BusinessException(ErrorCode.SERVICE_NOT_FOUND, serviceId);
+        };
     }
 ```
 
@@ -546,8 +561,8 @@ Content-Type: application/json
 | 1 | Web | `OnlineTransactionController` | `handleWithBusinessCode` → `handle` |
 | 2 | TCF | `TCF` | `process` |
 | 3 | STF | `STF` | `preProcess` |
-| 4 | Dispatch | `TransactionDispatcher` | `dispatch` → `SvSampleInquiryHandler` |
-| 5 | Handler | `SvSampleInquiryHandler` | `doHandle` |
+| 4 | Dispatch | `TransactionDispatcher` | `dispatch` → `SvSampleHandler` |
+| 5 | Handler | `SvSampleHandler` | `doHandle` |
 | 6 | Facade | `SvSampleFacade` | `inquiry` (@Transactional readOnly) |
 | 7 | Service | `SvSampleService` | `inquiry` |
 | 8 | Rule | `SvSampleRule` | `validateInquiry` |
@@ -661,7 +676,7 @@ Service에서 RuntimeException / SQLException
 
 | 순서 | 작업 | 파일 예 (`sv-service`) |
 |------|------|------------------------|
-| 1 | Handler | `handler/SvXxxActionHandler.java` — `serviceId()`, `facade.xxx(body, context)` |
+| 1 | Handler | `handler/SvXxxHandler.java` — 도메인 핸들러에 `serviceIds()` 추가 + `case`로 `facade.xxx(body, context)` 분기 (새 도메인일 때만 신규) |
 | 2 | Facade 메서드 | `facade/SvXxxFacade.java` — `@Transactional` |
 | 3 | Service | `service/SvXxxService.java` — Rule → DAO → result Map |
 | 4 | Rule | `rule/SvXxxRule.java` — Body 검증 |
@@ -680,7 +695,7 @@ Service에서 RuntimeException / SQLException
 | 증상 | 확인 위치 |
 |------|-----------|
 | 404 / URL 오류 | context-path (`/sv`, `/om`), Relay target URL |
-| `등록되지 않은 serviceId` | Handler `@Component`, `serviceId()` 문자열, WAR scanBasePackages |
+| `등록되지 않은 serviceId` | Handler `@Component`, `serviceIds()` 목록, WAR scanBasePackages |
 | Header 검증 실패 | `STF` / `StandardHeaderValidator` |
 | Body 검증 실패 | `*Rule` |
 | SQL / 페이징 | `OmOperationMapper.xml`, `criteria`의 `offset`/`pageSize` |

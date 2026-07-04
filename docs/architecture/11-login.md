@@ -46,7 +46,7 @@ tcf-om /om/online
   ▼
 TCF.process()
   → STF
-  → Dispatcher(OM.Auth.login → OmAuthLoginHandler)
+  → Dispatcher(OM.Auth.login → OmAuthHandler)
   → Facade/Service(OmAuthService.login)
   → ETF
   ▼
@@ -63,9 +63,9 @@ Browser sessionStorage 저장 + JSESSIONID 쿠키 유지
 
 | serviceId | transactionCode | Handler | 용도 |
 |-----------|-----------------|---------|------|
-| `OM.Auth.login` | `OM-AUT-0002` | `OmAuthLoginHandler` | 로그인 |
-| `OM.Auth.logout` | `OM-AUT-0003` | `OmAuthLogoutHandler` | 로그아웃 |
-| `OM.Auth.session` | `OM-AUT-0004` | `OmAuthSessionInquiryHandler` | 현재 세션 조회 |
+| `OM.Auth.login` | `OM-AUT-0002` | `OmAuthHandler` | 로그인 |
+| `OM.Auth.logout` | `OM-AUT-0003` | `OmAuthHandler` | 로그아웃 |
+| `OM.Auth.session` | `OM-AUT-0004` | `OmAuthHandler` | 현재 세션 조회 |
 
 위 거래는 `OM_SERVICE_CATALOG`에 등록되어 운영/권한/타임아웃 정책과 함께 관리된다.
 

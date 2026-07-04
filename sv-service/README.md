@@ -67,7 +67,7 @@ com.nh.nsight.marketing.sv
 │   └── rule/          SvSampleRule
 ├── config/
 ├── entry/
-│   ├── handler/       SvSampleInquiryHandler
+│   ├── handler/       SvSampleHandler (도메인당 1개)
 │   └── facade/        SvSampleFacade
 └── persistence/
     ├── dao/           SvSampleDao

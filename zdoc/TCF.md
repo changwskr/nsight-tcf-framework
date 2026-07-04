@@ -283,7 +283,7 @@ nsight.tcf:
 1. OnlineTransactionController — businessCode, clientIp 보정
 2. TCF.process()
 3. STF — validate, guid, 거래통제, Timeout, idempotency, TX_START
-4. OnlineTimeoutExecutor → Dispatcher → SvSampleInquiryHandler
+4. OnlineTimeoutExecutor → Dispatcher → SvSampleHandler
 5. Facade.inquiry [@Transactional] → Service → Rule → DAO
 6. ETF.success — S0000, TX_END, TCF_TX_LOG
 7. finally — ContextHolder.clear(), MDC.clear()
@@ -295,7 +295,7 @@ nsight.tcf:
 
 | SPI | 기본 | 교체 |
 |-----|------|------|
-| `TransactionHandler` | 업무 `@Component` | serviceId당 Handler 추가 |
+| `TransactionHandler` | 업무 `@Component` | 도메인당 1 Handler, `serviceIds()`에 거래 추가 |
 | `TransactionLogRepository` | `JdbcTransactionLogRepository` | `@Bean` 오버라이드 |
 | `IdempotencyChecker` | InMemory | Redis 등 `@Primary` |
 | Session/Auth Validator | tcf-core 기본 | `@Component` 교체 |

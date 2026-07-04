@@ -73,7 +73,7 @@ com.nh.nsight.marketing.ep
 │   └── rule/          EpSampleRule, EpUserEventRule
 ├── config/
 ├── entry/
-│   ├── handler/       EpSampleInquiryHandler, EpUserEventInquiryHandler, EpUserEventReceiveHandler
+│   ├── handler/       EpSampleHandler, EpUserEventHandler (도메인당 1개)
 │   └── facade/        EpSampleFacade, EpUserEventFacade
 └── persistence/
     ├── dao/           EpSampleDao, EpUserEventDao

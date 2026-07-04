@@ -30,17 +30,25 @@ OnlineTransactionController
 
 ## 3. Handler 개발 규칙
 
+핸들러는 **도메인(application Service)당 1개**를 원칙으로 하며, `serviceIds()`로 담당 거래를 선언하고 `doHandle`에서 `serviceId`로 분기한다.
+
 ```java
 @Component
-public class SvSampleInquiryHandler implements TransactionHandler {
+public class SvSampleHandler implements TransactionHandler {
+    private static final String INQUIRY = "SV.Sample.inquiry";
+
     @Override
-    public String serviceId() {
-        return "SV.Sample.inquiry";
+    public Collection<String> serviceIds() {
+        return List.of(INQUIRY);
     }
 
     @Override
-    public Object handle(StandardRequest<Map<String, Object>> request, TransactionContext context) {
-        return facade.inquiry(request.getBody(), context);
+    public Object doHandle(StandardRequest<Map<String, Object>> request, TransactionContext context) {
+        String serviceId = context.getHeader().getServiceId();
+        return switch (serviceId) {
+            case INQUIRY -> facade.inquiry(request.getBody(), context);
+            default -> throw new BusinessException(ErrorCode.SERVICE_NOT_FOUND, serviceId);
+        };
     }
 }
 ```

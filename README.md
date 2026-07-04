@@ -7,7 +7,7 @@ NSIGHT HTTP/JSON **표준 전문**을 **TCF(Transaction Control Framework)** 로
 
 ## 핵심 설계 원칙
 
-1. **Handler 중심** — 업무 개발자는 `TransactionHandler` + `serviceId` 등록에 집중
+1. **Handler 중심** — 업무 개발자는 `TransactionHandler` + `serviceId` 등록에 집중 (도메인당 핸들러 1개, `serviceIds()`로 다중 거래 처리)
 2. **공통 파이프라인** — Header 검증·세션·권한·거래통제·Timeout·로깅·응답 조립은 STF/TCF/ETF가 담당
 3. **업무 독립 WAR** — 9개 업무 + OM은 동일 패턴의 Spring Boot WAR
 4. **이중 배포** — 개발 `bootRun`(포트 분리) · 통합 `ztomcat`(8080 게이트웨이)
@@ -78,7 +78,7 @@ com.nh.nsight.marketing.{업무}   (또는 com.nh.nsight.auth.jwt, com.nh.nsight
 ├── client/            외부 WAS·API Client (해당 시)
 ├── config/            Spring 설정·Properties
 ├── entry/
-│   ├── handler/       TransactionHandler (serviceId 등록)
+│   ├── handler/       TransactionHandler (도메인당 1개, serviceIds 등록)
 │   ├── facade/        Handler → Service 위임
 │   └── web/           REST Controller·Filter (해당 시)
 ├── persistence/

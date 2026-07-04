@@ -5,7 +5,7 @@
 
 > **본 문서는 현재 프레임워크 구현 기준입니다.**
 > 원 설계서 초안의 DTO/Lombok/`@Component("serviceId")` 방식 대신, 실제 TCF 규약인
-> **Map 기반 body + `serviceId()`/`doHandle` Handler + `BusinessException(code, msg)`** 로 정리했습니다.
+> **Map 기반 body + `serviceIds()`/`doHandle` 도메인 Handler + `BusinessException(code, msg)`** 로 정리했습니다.
 > DTO 버전이 필요하면 §12를 참고하세요.
 
 | 관련 문서 | 내용 |
@@ -44,7 +44,7 @@
 | 감사로그 | Y |
 | 페이징 | 미사용 (단건 조회) |
 | 담당 WAR | `sv.war` (`sv-service`) |
-| Handler | `com.nh.nsight.marketing.sv.entry.handler.SvCustomerSummaryHandler` |
+| Handler | `com.nh.nsight.marketing.sv.entry.handler.SvCustomerHandler` |
 
 ### 2.1 카탈로그 (OM_SERVICE_CATALOG)
 
@@ -55,7 +55,7 @@
 | `BUSINESS_CODE` | `SV` |
 | `TRANSACTION_CODE` | `SV-INQ-0002` |
 | `PROCESSING_TYPE` | `INQUIRY` |
-| `HANDLER_CLASS` | `SvCustomerSummaryHandler` |
+| `HANDLER_CLASS` | `SvCustomerHandler` |
 | `AUTH_CODE` | `ROLE_SV_INQ` |
 | `TIMEOUT_SEC` | `3` |
 | `AUDIT_YN` | `Y` |
@@ -75,7 +75,7 @@
         ▼
 [tcf-core] TCF.process()
         ├─ STF.preProcess()  Header검증·GUID·세션·권한·거래통제·Timeout정책·거래로그(PROCESSING)
-        ├─ Dispatcher        serviceId = SV.Customer.selectSummary → SvCustomerSummaryHandler
+        ├─ Dispatcher        serviceId = SV.Customer.selectSummary → SvCustomerHandler
         ▼
 [SV 업무]  Handler → Facade → Service → Rule → DAO → Mapper.xml
         ▼
@@ -157,7 +157,7 @@
 ```text
 sv-service/src/main/java/com/nh/nsight/marketing/sv
 ├── entry
-│   ├── handler/SvCustomerSummaryHandler.java
+│   ├── handler/SvCustomerHandler.java
 │   └── facade/SvCustomerFacade.java
 ├── application
 │   ├── service/SvCustomerService.java
@@ -178,27 +178,33 @@ sv-service/src/main/resources
 
 ## 7. 클래스별 구현
 
-### 7.1 Handler — `SvCustomerSummaryHandler`
+### 7.1 Handler — `SvCustomerHandler`
 
-Dispatcher 진입점. `serviceId()`로 라우팅, body를 Facade로 전달만 합니다. (SQL·업무로직·트랜잭션 금지)
+Dispatcher 진입점(SV.Customer 도메인 핸들러). `serviceIds()`로 담당 거래를 선언하고 `doHandle`에서 `serviceId`로 분기, body를 Facade로 전달만 합니다. (SQL·업무로직·트랜잭션 금지)
 
 ```java
 @Component
-public class SvCustomerSummaryHandler implements TransactionHandler {
+public class SvCustomerHandler implements TransactionHandler {
+    private static final String SELECT_SUMMARY = "SV.Customer.selectSummary";
+
     private final SvCustomerFacade facade;
 
-    public SvCustomerSummaryHandler(SvCustomerFacade facade) {
+    public SvCustomerHandler(SvCustomerFacade facade) {
         this.facade = facade;
     }
 
     @Override
-    public String serviceId() {
-        return "SV.Customer.selectSummary";
+    public Collection<String> serviceIds() {
+        return List.of(SELECT_SUMMARY);
     }
 
     @Override
     public Object doHandle(StandardRequest<Map<String, Object>> request, TransactionContext context) {
-        return facade.selectCustomerSummary(request.getBody(), context);
+        String serviceId = context.getHeader().getServiceId();
+        return switch (serviceId) {
+            case SELECT_SUMMARY -> facade.selectCustomerSummary(request.getBody(), context);
+            default -> throw new BusinessException(ErrorCode.SERVICE_NOT_FOUND, serviceId);
+        };
     }
 }
 ```
@@ -435,7 +441,7 @@ curl -X POST http://localhost:8086/sv/online \
 ## 15. 개발자 체크리스트
 
 - [x] ServiceId가 `OM_SERVICE_CATALOG`에 등록 (CAT-002)
-- [x] Handler `serviceId()` 반환값 = 카탈로그 SERVICE_ID
+- [x] Handler `serviceIds()` 목록에 카탈로그 SERVICE_ID 포함
 - [x] Facade 트랜잭션 timeout 설정
 - [x] Rule 필수값 검증
 - [x] DAO는 Mapper 호출만

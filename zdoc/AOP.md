@@ -217,7 +217,7 @@ EbEventPublishScheduler — 스케줄러 직접 Service (Facade 미경유)
 1. OnlineTransactionController     [AOP ✕]
 2. TCF.process / STF               [AOP ✕]
 3. TransactionDispatcher           [AOP ✕]
-4. SvSampleInquiryHandler          [AOP ✕]
+4. SvSampleHandler                 [AOP ✕]
 5. SvSampleFacade.inquiry()        [AOP ● TransactionInterceptor]
 6.   SvSampleService → DAO         [같은 TX, AOP ✕]
 7. Facade return → commit          [AOP ●]

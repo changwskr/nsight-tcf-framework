@@ -19,10 +19,10 @@
 
 | 업무 | 대표 Handler |
 |---|---|
-| SV | `sv-service/src/main/java/com/nh/nsight/marketing/sv/handler/SvSampleInquiryHandler.java` |
-| CM | `cm-service/src/main/java/com/nh/nsight/marketing/cm/handler/CmSampleInquiryHandler.java` |
-| MG | `mg-service/src/main/java/com/nh/nsight/marketing/mg/handler/MgSampleInquiryHandler.java` |
-| OM | `om-service/src/main/java/com/nh/nsight/marketing/om/handler/OmSampleInquiryHandler.java` |
+| SV | `sv-service/src/main/java/com/nh/nsight/marketing/sv/entry/handler/SvSampleHandler.java` |
+| IC | `ic-service/src/main/java/com/nh/nsight/marketing/ic/entry/handler/IcSampleHandler.java` |
+| MG | `mg-service/src/main/java/com/nh/nsight/marketing/mg/entry/handler/MgSampleHandler.java` |
+| OM | `tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmSampleHandler.java` |
 
 ## 3. 실행 흐름
 

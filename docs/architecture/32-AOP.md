@@ -278,7 +278,7 @@ public class TcfCacheSupportAutoConfiguration {
 1. OnlineTransactionController     [AOP ✕]
 2. TCF.process / STF               [AOP ✕]
 3. TransactionDispatcher           [AOP ✕]
-4. SvSampleInquiryHandler          [AOP ✕]
+4. SvSampleHandler                 [AOP ✕]
 5. SvSampleFacade.inquiry()        [AOP ● TransactionInterceptor]
 6.   SvSampleService.inquiry()     [같은 TX 컨텍스트, AOP ✕]
 7.   SvSampleDao → MyBatis         [같은 Connection]

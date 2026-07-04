@@ -113,20 +113,29 @@ src/main/resources/
 
 Handler는 **얇게(thin)** 유지한다. `request.getBody()`와 `TransactionContext`를 Facade에 넘기는 것이 주 역할이다.
 
+핸들러는 **도메인(application Service)당 1개**를 원칙으로 하며, `serviceIds()`로 담당 거래를 선언하고 `doHandle` 안에서 `serviceId`로 분기한다.
+
 ```java
 @Component
-public class SvSampleInquiryHandler implements TransactionHandler {
+public class SvSampleHandler implements TransactionHandler {
+    private static final String INQUIRY = "SV.Sample.inquiry";
+
     private final SvSampleFacade facade;
 
     @Override
-    public String serviceId() {
-        return "SV.Sample.inquiry";
+    public Collection<String> serviceIds() {
+        return List.of(INQUIRY);
     }
 
     @Override
     public Object doHandle(StandardRequest<Map<String, Object>> request,
                            TransactionContext context) {
-        return facade.inquiry(request.getBody(), context);
+        String serviceId = context.getHeader().getServiceId();
+        return switch (serviceId) {
+            case INQUIRY -> facade.inquiry(request.getBody(), context);
+            default -> throw new BusinessException(ErrorCode.SERVICE_NOT_FOUND,
+                    "SvSampleHandler 미지원 serviceId: " + serviceId);
+        };
     }
 }
 ```
@@ -434,7 +443,7 @@ Rule        → (없음 — 순수 검증)
 2. OnlineTransactionController — businessCode·clientIp 보정
 3. TCF.process()
 4. STF — Header 검증, Context 생성
-5. Dispatcher — "SV.Sample.inquiry" → SvSampleInquiryHandler
+5. Dispatcher — "SV.Sample.inquiry" → SvSampleHandler
 6. Handler — facade.inquiry(body, context)
 7. Facade — @Transactional, service.inquiry()
 8. Service — rule.validate → dao.select → result Map 조립
@@ -453,7 +462,7 @@ Rule        → (없음 — 순수 검증)
 ## 8. 신규 거래 추가 절차
 
 1. **serviceId 정의** — `{BC}.{Domain}.{action}`
-2. **Handler** — `serviceId()` + Facade 위임
+2. **Handler** — 도메인 핸들러에 `serviceIds()` 등록 + `serviceId` 분기 → Facade 위임 (새 도메인일 때만 신규 생성)
 3. **Facade** — `@Transactional` 유스케이스 메서드
 4. **Service** — 도메인 로직
 5. **Rule** — 입력 검증 (필요 시)
@@ -470,11 +479,11 @@ Rule        → (없음 — 순수 검증)
 |------|------|------|
 | 1 | tcf-core | `processor/TCF.java`, `dispatch/TransactionDispatcher.java` |
 | 2 | tcf-web | `entry/web/OnlineTransactionController.java` |
-| 3 | sv-service | `entry/handler/SvSampleInquiryHandler.java` |
+| 3 | sv-service | `entry/handler/SvSampleHandler.java` |
 | 4 | sv-service | `entry/facade/SvSampleFacade.java` → `application/service/SvSampleService.java` |
 | 5 | sv-service | `application/rule/SvSampleRule.java`, `persistence/dao/SvSampleDao.java` |
-| 6 | tcf-om | `entry/handler/OmUserSaveHandler.java` (CRUD 패턴) |
-| 7 | tcf-om | `entry/handler/OmDashboardInquiryHandler.java` (조회·집계) |
+| 6 | tcf-om | `entry/handler/OmUserHandler.java` (도메인 CRUD 패턴) |
+| 7 | tcf-om | `entry/handler/OmDashboardHandler.java` (조회·집계) |
 
 ---
 

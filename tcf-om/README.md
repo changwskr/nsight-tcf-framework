@@ -14,7 +14,7 @@
 
 ## 주요 기능
 
-- OM 운영 Handler **45개+** (`OM.*` serviceId)
+- OM 운영 도메인 Handler **24개** (`OM.*` serviceId 80+, **도메인(Service)당 핸들러 1개** — `serviceIds()`로 다중 거래 처리)
 - 로그인·세션·권한 (`OM.Auth.*`, `OM.Session.*`)
 - **거래통제** CRUD (`OM.TransactionControl.*`) — Header 7필드 차단 규칙
 - **Timeout 정책** CRUD (`OM.TimeoutPolicy.*`) — 서비스별 timeout 설정
@@ -28,6 +28,9 @@
 - 기동 시 `OmDatabaseMigration` — 스키마·시드·기능권한 MERGE
 
 ## TCF Handler 예시
+
+> CRUD 등 같은 도메인의 거래는 도메인 핸들러 1개가 `serviceIds()` + `doHandle` 분기로 처리합니다.
+> 예: `OM.User.*` → `OmUserHandler`, `OM.Deploy.*` → `OmDeployHandler`.
 
 | serviceId | 설명 |
 |-----------|------|
@@ -104,7 +107,7 @@ com.nh.nsight.marketing.om
 ├── client/            OmBatchRemoteClient, OmCicdClientService
 ├── config/            Spring Session, 스케줄, UD Properties
 ├── entry/
-│   ├── handler/       OM.* TransactionHandler (45개+)
+│   ├── handler/       OM.* 도메인 핸들러 (24개, serviceId 80+, 도메인당 1개)
 │   ├── facade/        업무 Facade
 │   └── web/           OmUpdownloadFileController (UD REST)
 ├── persistence/

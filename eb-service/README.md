@@ -89,7 +89,7 @@ com.nh.nsight.marketing.eb
 ├── client/            EpOnlineClient (POST ep-service /ep/online)
 ├── config/            EbSchedulerConfiguration, EbEventPublishProperties
 ├── entry/
-│   ├── handler/       EbSampleInquiryHandler, EbUserCreateHandler, …
+│   ├── handler/       EbSampleHandler, EbUserHandler, EbBatchHandler, EbEventHandler (도메인당 1개)
 │   └── facade/        EbSampleFacade, EbUserFacade, EbEventFacade, EbBatchFacade
 ├── persistence/
 │   ├── dao/           EbUserDao, EbEventDao, EbSampleDao

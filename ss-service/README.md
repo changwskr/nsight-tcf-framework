@@ -63,7 +63,7 @@ com.nh.nsight.marketing.ss
 │   └── rule/          SsSampleRule
 ├── config/
 ├── entry/
-│   ├── handler/       SsSampleInquiryHandler
+│   ├── handler/       SsSampleHandler (도메인당 1개)
 │   └── facade/        SsSampleFacade
 └── persistence/
     ├── dao/           SsSampleDao

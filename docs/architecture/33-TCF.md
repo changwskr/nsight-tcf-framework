@@ -246,19 +246,29 @@ OM Admin 등 로그인 환경에서 `true`로 전환.
 ### 5.1 기동 시 등록
 
 Spring `@Component`인 모든 `TransactionHandler`를 주입받아 **`serviceId` → Handler** Map 구성.
+핸들러는 도메인당 1개이므로, 각 핸들러의 `serviceIds()` 목록을 순회하며 등록한다.
 
-```21:31:tcf-core/src/main/java/com/nh/nsight/tcf/core/dispatch/TransactionDispatcher.java
+```22:39:tcf-core/src/main/java/com/nh/nsight/tcf/core/dispatch/TransactionDispatcher.java
     public TransactionDispatcher(List<TransactionHandler> handlers) {
         for (TransactionHandler handler : handlers) {
-            TransactionHandler previous = handlerMap.put(handler.serviceId(), handler);
-            if (previous != null) {
-                throw new IllegalStateException("Duplicate serviceId detected: " + handler.serviceId());
+            Collection<String> serviceIds = handler.serviceIds();
+            if (serviceIds == null || serviceIds.isEmpty()) {
+                log.warn("Handler declares no serviceId, skipped: {}", handler.getClass().getName());
+                continue;
             }
-            log.info("Registered NSIGHT handler. serviceId={}", handler.serviceId());
+            for (String serviceId : serviceIds) {
+                TransactionHandler previous = handlerMap.put(serviceId, handler);
+                if (previous != null) {
+                    throw new IllegalStateException("Duplicate serviceId detected: " + serviceId);
+                }
+                log.info("Registered NSIGHT handler. serviceId={} handler={}",
+                        serviceId, handler.getClass().getSimpleName());
+            }
         }
     }
 ```
 
+- 한 핸들러가 `serviceIds()`로 **여러 serviceId**를 담당 (도메인당 1개 핸들러)
 - **중복 serviceId** → 기동 실패 (`IllegalStateException`)
 - 로그 `Registered NSIGHT handler` → 등록 성공 확인
 
@@ -289,9 +299,19 @@ Spring `@Component`인 모든 `TransactionHandler`를 주입받아 **`serviceId`
 
 **인터페이스:** `tcf-core/.../transaction/TransactionHandler.java`
 
-```7:22:tcf-core/src/main/java/com/nh/nsight/tcf/core/transaction/TransactionHandler.java
+```20:57:tcf-core/src/main/java/com/nh/nsight/tcf/core/transaction/TransactionHandler.java
 public interface TransactionHandler {
-    String serviceId();
+
+    // 단일 거래 매핑용 (하위호환). 도메인 묶음 핸들러는 재정의 불필요.
+    default String serviceId() {
+        return null;
+    }
+
+    // 이 핸들러가 담당하는 serviceId 목록. 기본은 serviceId() 단일값을 감싼다.
+    default Collection<String> serviceIds() {
+        String id = serviceId();
+        return id == null ? List.of() : List.of(id);
+    }
 
     default Object handle(StandardRequest<Map<String, Object>> request, TransactionContext context) {
         try {
@@ -502,7 +522,7 @@ OM ServiceId 카탈로그·Facade `@Transactional(readOnly)` 선택 참고용.
 
 3. TransactionDispatcher
      · handlerMap.get("SV.Sample.inquiry")
-     · SvSampleInquiryHandler.doHandle()
+     · SvSampleHandler.doHandle()
 
 4. Handler → Facade.inquiry() [@Transactional AOP]
      · Service → Rule → DAO
@@ -556,7 +576,7 @@ Service throw BusinessException
 
 | SPI / Bean | 기본 구현 | 교체 방법 |
 |------------|-----------|-----------|
-| `TransactionHandler` | 업무 `@Component` | serviceId당 1 Handler 추가 |
+| `TransactionHandler` | 업무 `@Component` | 도메인당 1 Handler, `serviceIds()`에 거래 추가 |
 | `TransactionLogRepository` | `JdbcTransactionLogRepository` | `@Bean` 오버라이드 |
 | `IdempotencyChecker` | `InMemoryIdempotencyChecker` | `@Primary` Bean |
 | `SessionValidator` / `AuthorizationValidator` | tcf-core 기본 | `@Component` 교체 또는 설정 off |

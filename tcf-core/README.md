@@ -39,20 +39,43 @@ TCF.process(request)
 
 ## Handler 구현 규약
 
-업무 WAR에서는 Handler를 **`entry.handler`** 패키지에 둡니다 (6계층 규약). 아래는 최소 예시입니다.
+업무 WAR에서는 Handler를 **`entry.handler`** 패키지에 둡니다 (6계층 규약).
+
+핸들러는 **도메인(Service)당 1개**를 원칙으로 하며, `serviceIds()`로 담당 거래 목록을 선언하고
+`doHandle` 내부에서 `context.getHeader().getServiceId()` 기준으로 분기합니다.
+새 거래 추가 시 상수 + `case` 한 줄씩만 확장하면 됩니다.
 
 ```java
 @Component
-public class XxxHandler implements TransactionHandler {
+public class SvSampleHandler implements TransactionHandler {
+
+    private static final String INQUIRY = "SV.Sample.inquiry";
+
+    private final SvSampleFacade facade;
+
+    public SvSampleHandler(SvSampleFacade facade) {
+        this.facade = facade;
+    }
+
     @Override
-    public String serviceId() { return "SV.Sample.inquiry"; }
+    public Collection<String> serviceIds() {
+        return List.of(INQUIRY);
+    }
 
     @Override
     public Object doHandle(StandardRequest<Map<String, Object>> request, TransactionContext context) {
-        return facade.inquiry(request.getBody(), context);
+        String serviceId = context.getHeader().getServiceId();
+        return switch (serviceId) {
+            case INQUIRY -> facade.inquiry(request.getBody(), context);
+            default -> throw new BusinessException(ErrorCode.SERVICE_NOT_FOUND,
+                    "SvSampleHandler 미지원 serviceId: " + serviceId);
+        };
     }
 }
 ```
+
+> 하위호환: 단일 거래만 처리하는 경우 `serviceId()` 하나만 재정의해도 됩니다
+> (`serviceIds()` 기본 구현이 `serviceId()` 단일값을 감쌉니다).
 
 ## 먼저 볼 소스
 

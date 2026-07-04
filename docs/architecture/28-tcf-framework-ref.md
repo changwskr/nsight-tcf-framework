@@ -273,7 +273,7 @@ com.nh.nsight.marketing.om/
 | MyBatis | `mapper/om/OmOperationMapper.xml` (800+ lines), `OmSampleMapper.xml` |
 | static | 없음 (UI → `tcf-ui`) |
 
-**Handler 예:** `OmDashboardInquiryHandler`, `OmAuthLoginHandler`, `OmServiceCatalogInquiryHandler`
+**Handler 예:** `OmDashboardHandler`, `OmAuthHandler`, `OmServiceCatalogHandler` (도메인당 1개, `serviceIds()`로 다중 거래 처리)
 
 ---
 
@@ -489,7 +489,7 @@ ztomcat 통합: **8080** 게이트웨이 — [16-deploy.md](16-deploy.md), [ztom
 | 목적 | 시작 파일 |
 |------|-----------|
 | 거래 한 건의 전체 흐름 | `tcf-web/.../OnlineTransactionController.java` → `tcf-core/.../TCF.java` |
-| 업무 Handler 작성 | `sv-service/.../SvSampleInquiryHandler.java` + `TransactionHandler.java` |
+| 업무 Handler 작성 | `sv-service/.../SvSampleHandler.java` + `TransactionHandler.java` |
 | OM 목록·페이징 | `tcf-om/.../OmServiceCatalogService.java` + [27-paging.md](27-paging.md) |
 | MyBatis·DAO | `tcf-om/.../OmOperationDao.java` + [26-mybatis.md](26-mybatis.md) |
 | 대시보드 수집 | `tcf-batch/.../ApStatusCollectService.java` + [13-batch.md](13-batch.md) |
