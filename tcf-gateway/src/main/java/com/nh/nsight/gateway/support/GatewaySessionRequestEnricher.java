@@ -2,8 +2,6 @@ package com.nh.nsight.gateway.support;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nh.nsight.gateway.support.GatewaySessionContext;
-import com.nh.nsight.gateway.support.GatewayProxyTrace;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.springframework.stereotype.Component;

@@ -1,7 +1,6 @@
 package com.nh.nsight.tcf.web.persistence.dao;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
-import com.nh.nsight.tcf.core.timeout.TcfServiceTimeoutConstants;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

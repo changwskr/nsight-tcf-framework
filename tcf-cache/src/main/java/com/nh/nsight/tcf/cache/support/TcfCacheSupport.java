@@ -1,6 +1,7 @@
 package com.nh.nsight.tcf.cache.support;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,7 +98,9 @@ public class TcfCacheSupport {
 
     private long sizeOf(Cache<Object, Object> cache) {
         long count = 0;
-        for (Cache.Entry<?, ?> ignored : cache) {
+        Iterator<Cache.Entry<Object, Object>> iterator = cache.iterator();
+        while (iterator.hasNext()) {
+            iterator.next();
             count++;
         }
         return count;

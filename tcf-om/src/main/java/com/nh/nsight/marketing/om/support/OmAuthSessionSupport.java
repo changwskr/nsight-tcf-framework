@@ -74,10 +74,6 @@ public class OmAuthSessionSupport {
         return body;
     }
 
-    private OmSessionUser toSessionUser(Map<String, Object> user) {
-        return toSessionUser(user, null, null);
-    }
-
     private OmSessionUser toSessionUser(Map<String, Object> user, String loginType, String channelId) {
         return new OmSessionUser(
                 stringValue(user, "userId"),

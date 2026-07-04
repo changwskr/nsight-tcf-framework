@@ -28,7 +28,7 @@ public class JwtInternalCallValidator {
             throw new BusinessException("E-JWT-INT-0001", "내부 호출이 아닙니다.");
         }
         String service = request.getHeader(NsightInternalCallSupport.HEADER_INTERNAL_SERVICE);
-        if (!properties.getAllowedService().equalsIgnoreCase(StringUtils.trimWhitespace(service))) {
+        if (!properties.getAllowedService().equalsIgnoreCase(service == null ? null : service.strip())) {
             throw new BusinessException("E-JWT-INT-0001", "허용되지 않은 내부 서비스입니다.");
         }
 
