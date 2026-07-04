@@ -6,7 +6,7 @@
 | 제목 | Session Architecture |
 | 상위 문서 | [architecture.md](architecture.md) |
 | 관련 문서 | [03-transaction.md](03-transaction.md), [04-messaging.md](04-messaging.md), [08-timeout.md](08-timeout.md) |
-| 구현 모듈 | `tcf-om`, `tcf-core`, `tcf-ui`, `tcf-batch` |
+| 구현 모듈 | `tcf-om`, `tcf-core`, `tcf-ui`, `tcf-uj`, `tcf-gateway`, `tcf-jwt`, `tcf-batch` |
 | 대상 | OM 포털/프레임워크/운영 개발자 |
 
 ---
@@ -29,15 +29,21 @@ NSIGHT TCF의 세션은 단일 방식이 아니라, 목적에 따라 3가지 관
 
 ```text
 Browser (OM Admin)
-  │ Cookie: JSESSIONID
+  │ Cookie: JSESSIONID  또는  Authorization: Bearer (JWT)
   ▼
-tcf-ui (/api/relay/OM/online)  -- Cookie 전달/Set-Cookie 역전달
+tcf-ui / tcf-uj
+  ├─ /api/relay/OM/online  ── Cookie ──► tcf-om (직접)
+  └─ /api/gateway/om/online ── Bearer ──► tcf-gateway ──► tcf-om
   ▼
 tcf-om (/om/online, OM.Auth.*)
   │
   ├─ Spring Session JDBC (SPRING_SESSION)
   ├─ OmAuthSessionSupport (세션 생성/조회/무효화)
   └─ TCF STF SessionValidator (선택)
+
+tcf-gateway (uj 업무 relay / ui·uj JWT OM)
+  ├─ GatewayAuthenticationService (JWT 또는 SESSIONDB 4단계)
+  └─ GatewaySessionRequestEnricher
 
 tcf-batch
   ├─ SPRING_SESSION 집계 (OM-PORTAL)

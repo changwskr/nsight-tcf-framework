@@ -74,7 +74,7 @@ sequenceDiagram
 |--------|-------------|
 | entry/web | *ProxyController, Gateway*AdminController |
 | entry/facade | BusinessRouteService |
-| application/service | GatewayRouteAdminService, GatewayAuthenticationService, GatewayJwtValidator, GatewaySessionRegistry |
+| application/service | GatewayRouteAdminService, GatewayAuthenticationService, GatewayJwtValidator, GatewaySessionValidationService, GatewaySessionRegistry |
 | application/rule | GatewaySessionValidator, GatewayAuthExemptions |
 | client | GatewayRouteDispatcher |
 | persistence/dao | GatewayRouteDao, UserSessionDao |

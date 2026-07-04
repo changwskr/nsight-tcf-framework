@@ -33,7 +33,7 @@ JWT는 TCF **대체 아님**.
 |------|------|
 | IdP/SSO | 최초 인증 |
 | tcf-om | SSO 검증, 세션, 사용자 |
-| tcf-jwt | Token 발급·검증 (8110, /jwt) |
+| tcf-jwt | Token 발급·JWKS (8110, /jwt) — **검증은 tcf-gateway** |
 | STF | Header+JWT+세션 교차검증 |
 
 ## Token 정책 (11.8)
@@ -69,7 +69,7 @@ X-Internal-Call, X-Internal-Service, Timestamp, Signature
 | serviceId | 모듈 |
 |-----------|------|
 | OM.Auth.login, ssoLogin, logout | tcf-om / OmAuthHandler |
-| JWT.Auth.ssoIssue, validate | tcf-jwt |
+| JWT.Auth.ssoIssue, login, refresh, revoke, logout | tcf-jwt |
 
 ## 테이블 (11.13)
 

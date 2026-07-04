@@ -99,6 +99,9 @@ spring:
 | `tcf-om` | `http://127.0.0.1:8097` |
 | `tcf-batch` | `http://127.0.0.1:8098/batch` |
 | `tcf-ui` | `http://127.0.0.1:8099` |
+| `tcf-gateway` | `http://127.0.0.1:8100` |
+| `tcf-uj` | `http://127.0.0.1:8102` |
+| `tcf-jwt` | `http://127.0.0.1:8110` |
 | 업무 `sv` | `http://127.0.0.1:8086` |
 | `nsight.om.batch-service-url` | `http://127.0.0.1:8098/batch` |
 

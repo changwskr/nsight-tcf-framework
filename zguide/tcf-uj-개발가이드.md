@@ -56,7 +56,8 @@ http://localhost:8102/sv/index.html
 | 메서드 | 경로 | 설명 |
 |--------|------|------|
 | `GET` | `/api/business-modules` | 업무 목록 |
-| `POST` | `/api/relay/{code}/online` | **Gateway 경유** Relay |
+| `POST` | `/api/relay/{code}/online` | **Gateway 경유** Relay (Cookie) |
+| `POST` | `/api/gateway/om/online` | OM JWT Bearer relay |
 | `POST` | `/api/multi/relay/{code}/online` | 다중 거래 |
 | `POST` | `/api/updownload/*` | tcf-om 직접 |
 
@@ -111,8 +112,9 @@ nsight:
 
 | | tcf-ui (8099) | tcf-uj (8102) |
 |---|---------------|---------------|
-| Relay | WAS 직접 | Gateway 경유 |
-| JWT Admin | ❌ | ✅ |
+| 업무 Relay | WAS 직접 | Gateway 경유 (Cookie) |
+| OM JWT Gateway | `callViaGateway` (tcf-ui `om-admin.js`) | API만, JS 분기 없음 |
+| JWT Admin | ✅ | ✅ |
 | 용도 | 개발·단순 테스트 | **운영형·세션·Gateway 검증** |
 
 ---

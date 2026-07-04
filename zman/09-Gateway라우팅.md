@@ -64,9 +64,10 @@ Gateway ≠ L4/GSLB/Apache.
 | Key | businessCode | serviceId |
 | 위치 | Apache 뒤 | WAR 내부 STF 뒤 |
 
-## Gateway 세션 (9.11)
+## Gateway 세션·JWT (9.11)
 
-- Cookie 존재·유효 1차
+- **Bearer 있음:** JWT JWKS 검증 (`GatewayJwtValidator`, issuer/audience)
+- **Bearer 없음:** SESSIONDB 4단계 (`GatewaySessionValidationService`)
 - Cookie/Authorization **그대로 Relay**
 - 정밀 검증: 업무 WAR STF
 

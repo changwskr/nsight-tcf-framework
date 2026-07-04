@@ -6,7 +6,7 @@
 | 제목 | Login Architecture |
 | 상위 문서 | [architecture.md](architecture.md) |
 | 관련 문서 | [10-session.md](10-session.md), [04-messaging.md](04-messaging.md), [05-exception.md](05-exception.md) |
-| 구현 모듈 | `tcf-ui`, `tcf-om`, `tcf-core` |
+| 구현 모듈 | `tcf-ui`, `tcf-uj`, `tcf-om`, `tcf-core`, `tcf-jwt`, `tcf-gateway` |
 | 대상 | OM 포털/프레임워크 개발자 |
 
 ---
@@ -17,7 +17,7 @@ NSIGHT OM 로그인은 **TCF 표준 거래(`OM.Auth.login`) + Spring Session JDB
 
 | 계층 | 역할 |
 |------|------|
-| `tcf-ui` | 로그인 UI + Relay API (`/api/relay/OM/online`) |
+| `tcf-ui` | 로그인 UI + Relay (`/api/relay/OM/online`, JWT 시 `/api/gateway/om/online`) |
 | `tcf-om` | 인증 처리, 세션 생성/조회/종료 |
 | `tcf-core` | STF/Dispatcher/ETF 표준 거래 파이프라인 |
 
@@ -249,7 +249,21 @@ OM.Auth.login
 
 ---
 
-## 14. 변경 이력
+## 14. JWT 로그인 (보조 경로)
+
+OM 쿠키 세션과 별도로 `tcf-jwt`가 Bearer 토큰을 발급합니다. Gateway는 `Authorization: Bearer` 검증을 담당합니다 (`nsight.gateway.auth.jwt`).
+
+| 구분 | OM 로그인 | JWT 로그인 |
+|------|-----------|------------|
+| 모듈 | tcf-om | tcf-jwt |
+| 상태 | JSESSIONID | accessToken (sessionStorage) |
+| OM Admin relay | `/api/relay/om/online` | tcf-ui `callViaGateway` → `/api/gateway/om/online` |
+
+상세: [zdoc/로그인.md](../../zdoc/로그인.md) §10 · [zdoc/SSO-TOKEN처리.md](../../zdoc/SSO-TOKEN처리.md)
+
+---
+
+## 15. 변경 이력
 
 | 일자 | 변경 내용 |
 |------|-----------|

@@ -78,9 +78,9 @@ XxxProxyController
     → GRF.forwardOnline
       → GSF.preProcess
           ① TCF_GATEWAY_ROUTE 조회
-          ② GatewaySessionValidator (4단계)
+          ② GatewayAuthenticationService (Bearer → JWT / 없음 → SESSIONDB 4단계)
           ③ GatewaySessionRequestEnricher
-      → GatewayRouteDispatcher (RestClient + Cookie)
+      → GatewayRouteDispatcher (RestClient + Cookie·Authorization)
       → GEF (응답·OM 로그인 시 TCF_USER_SESSION 등록)
       → GatewayTransactionLogRecorder (TCF_GATEWAY_TX_LOG)
 ```
@@ -115,8 +115,7 @@ Gateway는 **업무 WAR와 분리된 독립 프로세스(WAR)** 이다.
 | 항목                                 | 담당                                         |
 | ------------------------------------ | -------------------------------------------- |
 | HttpSession/JSESSIONID **발급·소유** | OM·업무 WAS (Spring Session)                 |
-| JWT **발급**                         | tcf-jwt (Gateway는 발급하지 않음)            |
-| JWT **검증** (Gateway 경유)          | tcf-gateway (`nsight.gateway.auth.jwt`, 선택) |
+| JWT **발급**                         | tcf-jwt                                      |
 | TCF Handler 실행                     | downstream WAS                               |
 | 업무 DB(RDW/ADW) 접근                | downstream WAS                               |
 | 파일 업·다운로드                     | tcf-om 직접                                  |

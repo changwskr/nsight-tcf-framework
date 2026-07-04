@@ -74,7 +74,7 @@ com.nh.nsight.auth.jwt
 - tcf-om: `OmJwtSsoClient` → `JWT.Auth.ssoIssue`
 - Gateway: `JwtProxyController` → `POST /jwt/online` (라우팅)
 - Gateway JWT **검증**: `GatewayAuthenticationService` + `GatewayJwtValidator` — [tcf-gateway-개발가이드.md](./tcf-gateway-개발가이드.md)
-- tcf-uj: `/jwt/admin/*` JWT Admin UI
+- tcf-ui / tcf-uj: `/jwt/admin/*` JWT Admin UI
 
 ---
 

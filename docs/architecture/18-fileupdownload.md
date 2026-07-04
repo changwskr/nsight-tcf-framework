@@ -324,7 +324,7 @@ TCF `Result.fail()`과의 차이:
 ### 9.1 bootRun (로컬 개발)
 
 ```text
-tcf-ui  : http://127.0.0.1:8090/ui
+tcf-ui  : http://127.0.0.1:8099/ui
 tcf-om  : http://127.0.0.1:8097
 Relay   : http://127.0.0.1:8097/ud/files/*
 ```
@@ -402,7 +402,7 @@ multipart를 TCF에 넣으려면 별도 어댑터에서 `TcfGateway.invoke()`로
 
 **로컬 개발**
 
-- [ ] `tcf-om`(8097), `tcf-ui`(8090) 기동
+- [ ] `tcf-om`(8097), `tcf-ui`(8099) 기동
 - [ ] `./data/updownload` 쓰기 권한 확인
 - [ ] `/ui/ud/updownload.html`에서 업로드·목록·다운로드 확인
 

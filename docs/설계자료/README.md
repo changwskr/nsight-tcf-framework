@@ -78,7 +78,7 @@
 | tcf-uj (bootRun) | http://localhost:8102/om/admin/login.html |
 | tcf-uj (ztomcat) | http://localhost:8080/uj/om/admin/login.html |
 
-**JWT Admin (tcf-uj):** `/jwt/admin/*` — `tcf-jwt` (bootRun **8110**) 기동 필요
+**JWT Admin (tcf-ui 8099 / tcf-uj 8102):** `/jwt/admin/*` — `tcf-jwt` (bootRun **8110**) 기동 필요
 
 ## 업무 WAR 패키지 (6계층 요약)
 
