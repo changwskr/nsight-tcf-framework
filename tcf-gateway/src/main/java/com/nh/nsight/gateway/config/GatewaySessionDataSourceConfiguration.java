@@ -1,6 +1,5 @@
 package com.nh.nsight.gateway.config;
 
-import com.nh.nsight.gateway.config.GatewayProperties;
 import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -1,5 +1,6 @@
 package com.nh.nsight.marketing.om.client;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nh.nsight.marketing.om.config.OmSsoProperties;
@@ -73,7 +74,7 @@ public class OmJwtSsoClient {
                 throw new BusinessException("E-OM-SSO-0003", message);
             }
             JsonNode bodyNode = root.path("body");
-            Map<String, Object> tokenBody = objectMapper.convertValue(bodyNode, Map.class);
+            Map<String, Object> tokenBody = objectMapper.convertValue(bodyNode, new TypeReference<Map<String, Object>>() {});
             return tokenBody != null ? tokenBody : Map.of();
         } catch (BusinessException e) {
             throw e;

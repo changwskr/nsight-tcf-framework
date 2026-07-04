@@ -1,6 +1,5 @@
 package com.nh.nsight.gateway.support;
 
-import com.nh.nsight.gateway.support.GatewayProxyTrace;
 import java.util.List;
 
 public record RouteResult(
@@ -8,8 +7,7 @@ public record RouteResult(
         int httpStatus,
         long elapsedMs,
         String responseBody,
-        List<String> setCookies
-) {
+        List<String> setCookies) {
     private static final String PHASE = "RouteResult";
 
     public RouteResult {

@@ -161,8 +161,6 @@ public class UserSessionService {
 
     private UserSession syncFromSpringSession(SpringSessionRow row, SessionType sessionType, String requestBody) {
 
-        Instant now = Instant.now();
-
         HttpServletRequest request = currentRequest().orElse(null);
 
         UserSession session = new UserSession(

@@ -1,8 +1,5 @@
 package com.nh.nsight.gateway.support;
 
-import com.nh.nsight.gateway.support.SessionStatus;
-import com.nh.nsight.gateway.support.SessionType;
-import com.nh.nsight.gateway.support.UserSession;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.ZoneId;

@@ -3,7 +3,6 @@ package com.nh.nsight.tcf.web.persistence.dao;
 import com.nh.nsight.tcf.core.config.TcfProperties;
 import com.nh.nsight.tcf.core.timeout.TimeoutPolicy;
 import com.nh.nsight.tcf.core.timeout.TimeoutPolicyRepository;
-import com.nh.nsight.tcf.core.timeout.TcfServiceTimeoutConstants;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -37,7 +36,8 @@ public class JdbcTimeoutPolicyRepository implements TimeoutPolicyRepository {
 
     @Override
     public Optional<TimeoutPolicy> findPolicy(String serviceId, String transactionCode, String businessCode) {
-        if (!StringUtils.hasText(serviceId) || !StringUtils.hasText(transactionCode) || !StringUtils.hasText(businessCode)) {
+        if (!StringUtils.hasText(serviceId) || !StringUtils.hasText(transactionCode)
+                || !StringUtils.hasText(businessCode)) {
             return Optional.empty();
         }
         List<TimeoutPolicy> policies = jdbcTemplate.query(

@@ -1,6 +1,5 @@
 package com.nh.nsight.gateway.support;
 
-import com.nh.nsight.gateway.support.RouteResult;
 import org.springframework.http.ResponseEntity;
 
 public final class ProxyResponseSupport {
