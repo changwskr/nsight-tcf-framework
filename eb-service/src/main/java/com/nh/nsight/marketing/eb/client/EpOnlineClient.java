@@ -2,6 +2,7 @@ package com.nh.nsight.marketing.eb.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nh.nsight.marketing.eb.client.dto.ep.EpUserEventPayload;
 import com.nh.nsight.tcf.util.GuidGenerator;
 import java.net.URI;
 import java.time.OffsetDateTime;
@@ -30,10 +31,10 @@ public class EpOnlineClient {
                 .build();
     }
 
-    public boolean sendUserEvent(String epOnlineUrl, Map<String, Object> event) {
-        String eventId = stringValue(event, "EVENT_ID", "eventId");
-        String userId = stringValue(event, "USER_ID", "userId");
-        String eventType = stringValue(event, "EVENT_TYPE", "eventType");
+    public boolean sendUserEvent(String epOnlineUrl, EpUserEventPayload event) {
+        String eventId = event.getEventId();
+        String userId = event.getUserId();
+        String eventType = event.getEventType();
 
         Map<String, Object> request = new LinkedHashMap<>();
         request.put("header", buildHeader(eventId, userId));
@@ -89,16 +90,5 @@ public class EpOnlineClient {
         header.put("bizDate", systemDate);
         header.put("clientIp", "127.0.0.1");
         return header;
-    }
-
-    private String stringValue(Map<String, Object> row, String upperKey, String camelKey) {
-        Object value = row.get(upperKey);
-        if (value == null) {
-            value = row.get(camelKey);
-        }
-        if (value == null) {
-            value = row.get(upperKey.toLowerCase());
-        }
-        return value == null ? "" : String.valueOf(value);
     }
 }

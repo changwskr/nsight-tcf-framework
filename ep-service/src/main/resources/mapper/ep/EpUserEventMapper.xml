@@ -24,7 +24,8 @@
         </where>
     </sql>
 
-    <insert id="insertReceivedEvent" parameterType="map">
+    <insert id="insertReceivedEvent"
+            parameterType="com.nh.nsight.marketing.ep.persistence.dto.userevent.UserEventInsertRow">
         INSERT INTO EP_USER_EVENT (EVENT_ID, USER_ID, EVENT_TYPE)
         VALUES (#{eventId}, #{userId}, #{eventType})
     </insert>
@@ -33,7 +34,9 @@
         SELECT COUNT(1) FROM EP_USER_EVENT WHERE EVENT_ID = #{eventId}
     </select>
 
-    <select id="searchReceivedEvents" resultType="map">
+    <select id="searchReceivedEvents"
+            parameterType="com.nh.nsight.marketing.ep.application.dto.userevent.UserEventSearchCriteria"
+            resultType="com.nh.nsight.marketing.ep.persistence.dto.userevent.UserEventRow">
         SELECT <include refid="userEventColumns"/>
           FROM EP_USER_EVENT
         <include refid="userEventSearchWhere"/>
@@ -41,7 +44,9 @@
          OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
     </select>
 
-    <select id="countReceivedEvents" resultType="int">
+    <select id="countReceivedEvents"
+            parameterType="com.nh.nsight.marketing.ep.application.dto.userevent.UserEventSearchCriteria"
+            resultType="int">
         SELECT COUNT(1)
           FROM EP_USER_EVENT
         <include refid="userEventSearchWhere"/>

@@ -1,11 +1,14 @@
 package com.nh.nsight.marketing.sv.application.service;
 
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.marketing.sv.application.dto.sample.SampleInquiryRequest;
+import com.nh.nsight.marketing.sv.application.dto.sample.SampleInquiryResponse;
+import com.nh.nsight.marketing.sv.application.dto.sample.SampleListItem;
+import com.nh.nsight.marketing.sv.application.dto.sample.SampleSearchCriteria;
 import com.nh.nsight.marketing.sv.application.rule.SvSampleRule;
 import com.nh.nsight.marketing.sv.persistence.dao.SvSampleDao;
-import java.util.LinkedHashMap;
+import com.nh.nsight.marketing.sv.persistence.dto.sample.SampleRow;
+import com.nh.nsight.tcf.core.context.TransactionContext;
 import java.util.List;
-import java.util.Map;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,25 +21,13 @@ public class SvSampleService {
         this.dao = dao;
     }
 
-    public Map<String, Object> inquiry(Map<String, Object> body, TransactionContext context) {
-        rule.validateInquiry(body);
-        Map<String, Object> criteria = rule.buildSearchCriteria(body);
-        List<Map<String, Object>> list = dao.searchSamples(criteria);
+    public SampleInquiryResponse inquiry(SampleInquiryRequest request, TransactionContext context) {
+        rule.validateInquiry(request);
+        SampleSearchCriteria criteria = rule.buildSearchCriteria(request);
+        List<SampleRow> rows = dao.searchSamples(criteria);
         int totalCount = dao.countSamples(criteria);
-
-        int pageNo = (int) criteria.get("pageNo");
-        int pageSize = (int) criteria.get("pageSize");
-        int totalPage = totalCount == 0 ? 0 : (totalCount + pageSize - 1) / pageSize;
-
-        Map<String, Object> result = new LinkedHashMap<>();
-        result.put("businessCode", "SV");
-        result.put("serviceId", context.getHeader().getServiceId());
-        result.put("guid", context.getHeader().getGuid());
-        result.put("list", list);
-        result.put("pageNo", pageNo);
-        result.put("pageSize", pageSize);
-        result.put("totalCount", totalCount);
-        result.put("totalPage", totalPage);
-        return result;
+        List<SampleListItem> list = rows.stream().map(SampleListItem::fromRow).toList();
+        return SampleInquiryResponse.of(
+                context, list, criteria.getPageNo(), criteria.getPageSize(), totalCount);
     }
 }

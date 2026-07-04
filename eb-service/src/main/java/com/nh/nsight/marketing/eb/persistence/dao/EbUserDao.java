@@ -1,8 +1,10 @@
 package com.nh.nsight.marketing.eb.persistence.dao;
 
+import com.nh.nsight.marketing.eb.application.dto.user.UserSearchCriteria;
+import com.nh.nsight.marketing.eb.persistence.dto.user.UserInsertRow;
+import com.nh.nsight.marketing.eb.persistence.dto.user.UserRow;
 import com.nh.nsight.marketing.eb.persistence.mapper.EbUserMapper;
 import java.util.List;
-import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -13,7 +15,7 @@ public class EbUserDao {
         this.mapper = mapper;
     }
 
-    public int insertUser(Map<String, Object> row) {
+    public int insertUser(UserInsertRow row) {
         return mapper.insertUser(row);
     }
 
@@ -21,11 +23,11 @@ public class EbUserDao {
         return mapper.countByUserId(userId) > 0;
     }
 
-    public List<Map<String, Object>> searchUsers(Map<String, Object> criteria) {
+    public List<UserRow> searchUsers(UserSearchCriteria criteria) {
         return mapper.searchUsers(criteria);
     }
 
-    public int countUsers(Map<String, Object> criteria) {
+    public int countUsers(UserSearchCriteria criteria) {
         return mapper.countUsers(criteria);
     }
 }

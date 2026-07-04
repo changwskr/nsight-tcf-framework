@@ -1,5 +1,8 @@
 package com.nh.nsight.marketing.eb.application.rule;
 
+import com.nh.nsight.marketing.eb.application.dto.user.UserCreateRequest;
+import com.nh.nsight.marketing.eb.application.dto.user.UserInquiryRequest;
+import com.nh.nsight.marketing.eb.application.dto.user.UserSearchCriteria;
 import com.nh.nsight.tcf.core.error.BusinessException;
 import com.nh.nsight.tcf.core.error.ErrorCode;
 import java.util.Map;
@@ -10,46 +13,50 @@ import org.springframework.util.StringUtils;
 public class EbUserRule {
     private static final int MAX_PAGE_SIZE = 100;
 
-    public void validateInquiry(Map<String, Object> body) {
-        if (body == null) {
+    public void validateInquiry(UserInquiryRequest request) {
+        if (request == null) {
             return;
         }
-        int pageSize = parsePositiveInt(body.get("pageSize"), 20);
+        int pageSize = request.getPageSize() != null ? request.getPageSize() : 20;
         if (pageSize > MAX_PAGE_SIZE) {
             throw new BusinessException(ErrorCode.BUSINESS_ERROR, "pageSize는 최대 " + MAX_PAGE_SIZE + " 입니다.");
         }
-        int pageNo = parsePositiveInt(body.get("pageNo"), 1);
+        int pageNo = request.getPageNo() != null ? request.getPageNo() : 1;
         if (pageNo < 1) {
             throw new BusinessException(ErrorCode.BUSINESS_ERROR, "pageNo는 1 이상이어야 합니다.");
         }
     }
 
-    public void validateCreate(Map<String, Object> body) {
-        if (body == null) {
+    public UserSearchCriteria buildSearchCriteria(UserInquiryRequest request) {
+        UserInquiryRequest safe = request != null ? request : UserInquiryRequest.fromMap(Map.of());
+        int pageNo = safe.getPageNo() != null ? safe.getPageNo() : 1;
+        int pageSize = safe.getPageSize() != null ? safe.getPageSize() : 20;
+        if (pageNo < 1) {
+            pageNo = 1;
+        }
+        if (pageSize < 1) {
+            pageSize = 20;
+        }
+
+        UserSearchCriteria criteria = new UserSearchCriteria();
+        criteria.setPageNo(pageNo);
+        criteria.setPageSize(pageSize);
+        criteria.setOffset((pageNo - 1) * pageSize);
+        criteria.setUserId(safe.getUserId());
+        criteria.setUserName(safe.getUserName());
+        criteria.setBranchId(safe.getBranchId());
+        return criteria;
+    }
+
+    public void validateCreate(UserCreateRequest request) {
+        if (request == null) {
             throw new BusinessException(ErrorCode.BUSINESS_ERROR, "요청 Body가 없습니다.");
         }
-        require(body, "userId");
-        require(body, "userName");
-    }
-
-    private void require(Map<String, Object> body, String key) {
-        Object value = body.get(key);
-        if (!(value instanceof String text) || !StringUtils.hasText(text)) {
-            throw new BusinessException(ErrorCode.BUSINESS_ERROR, "필수 필드 누락: " + key);
+        if (!StringUtils.hasText(request.getUserId())) {
+            throw new BusinessException(ErrorCode.BUSINESS_ERROR, "필수 필드 누락: userId");
         }
-    }
-
-    private int parsePositiveInt(Object value, int defaultValue) {
-        if (value == null) {
-            return defaultValue;
-        }
-        if (value instanceof Number number) {
-            return number.intValue();
-        }
-        try {
-            return Integer.parseInt(String.valueOf(value).trim());
-        } catch (NumberFormatException ex) {
-            throw new BusinessException(ErrorCode.BUSINESS_ERROR, "숫자 형식이 올바르지 않습니다: " + value);
+        if (!StringUtils.hasText(request.getUserName())) {
+            throw new BusinessException(ErrorCode.BUSINESS_ERROR, "필수 필드 누락: userName");
         }
     }
 }

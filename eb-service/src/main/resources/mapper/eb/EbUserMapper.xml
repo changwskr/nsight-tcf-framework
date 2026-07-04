@@ -3,7 +3,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.nh.nsight.marketing.eb.persistence.mapper.EbUserMapper">
 
-    <insert id="insertUser" parameterType="map">
+    <insert id="insertUser" parameterType="com.nh.nsight.marketing.eb.persistence.dto.user.UserInsertRow">
         INSERT INTO EB_USER (USER_ID, USER_NAME, BRANCH_ID)
         VALUES (#{userId}, #{userName}, #{branchId})
     </insert>
@@ -26,7 +26,9 @@
         </where>
     </sql>
 
-    <select id="searchUsers" resultType="map">
+    <select id="searchUsers"
+            parameterType="com.nh.nsight.marketing.eb.application.dto.user.UserSearchCriteria"
+            resultType="com.nh.nsight.marketing.eb.persistence.dto.user.UserRow">
         SELECT u.USER_ID AS userId,
                u.USER_NAME AS userName,
                u.BRANCH_ID AS branchId,
@@ -45,7 +47,9 @@
          OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
     </select>
 
-    <select id="countUsers" resultType="int">
+    <select id="countUsers"
+            parameterType="com.nh.nsight.marketing.eb.application.dto.user.UserSearchCriteria"
+            resultType="int">
         SELECT COUNT(1)
           FROM EB_USER u
         <include refid="userSearchWhere"/>

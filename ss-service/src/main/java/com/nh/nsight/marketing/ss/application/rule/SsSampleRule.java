@@ -1,15 +1,20 @@
 package com.nh.nsight.marketing.ss.application.rule;
 
+import com.nh.nsight.marketing.ss.application.dto.sample.SampleInquiryRequest;
+import com.nh.nsight.marketing.ss.application.dto.sample.SampleSearchCriteria;
 import com.nh.nsight.tcf.core.error.BusinessException;
 import com.nh.nsight.tcf.core.error.ErrorCode;
-import java.util.Map;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SsSampleRule {
-    public void validateInquiry(Map<String, Object> body) {
-        if (body == null || body.isEmpty()) {
+    public void validateInquiry(SampleInquiryRequest request) {
+        if (request == null) {
             throw new BusinessException(ErrorCode.BUSINESS_ERROR, "요청 Body가 비어 있습니다.");
         }
+    }
+    public SampleSearchCriteria buildSearchCriteria(SampleInquiryRequest request) {
+        String sampleKey = request.getSampleKey() == null ? "SAMPLE" : request.getSampleKey();
+        return new SampleSearchCriteria(sampleKey);
     }
 }

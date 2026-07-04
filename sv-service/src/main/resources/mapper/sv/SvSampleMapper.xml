@@ -18,18 +18,14 @@
         </where>
     </sql>
 
-    <select id="searchSamples" parameterType="map" resultType="map">
+    <select id="searchSamples"
+            parameterType="com.nh.nsight.marketing.sv.application.dto.sample.SampleSearchCriteria"
+            resultType="com.nh.nsight.marketing.sv.persistence.dto.sample.SampleRow">
         SELECT <include refid="sampleColumns"/>
           FROM SV_SAMPLE
         <include refid="sampleSearchWhere"/>
          ORDER BY SAMPLE_KEY
          OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
-    </select>
-
-    <select id="countSamples" parameterType="map" resultType="int">
-        SELECT COUNT(1)
-          FROM SV_SAMPLE
-        <include refid="sampleSearchWhere"/>
     </select>
 
 </mapper>

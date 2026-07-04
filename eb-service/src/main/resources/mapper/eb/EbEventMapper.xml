@@ -13,7 +13,7 @@
         SENT_AT AS sentAt
     </sql>
 
-    <insert id="insertEvent" parameterType="map">
+    <insert id="insertEvent" parameterType="com.nh.nsight.marketing.eb.persistence.dto.event.EventInsertRow">
         INSERT INTO EB_EVENT (EVENT_ID, USER_ID, EVENT_TYPE, EVENT_STATUS, RETRY_COUNT)
         VALUES (#{eventId}, #{userId}, #{eventType}, #{eventStatus}, #{retryCount})
     </insert>
@@ -25,7 +25,7 @@
          WHERE EVENT_ID = #{eventId}
     </update>
 
-    <select id="selectReadyEvents" resultType="map">
+    <select id="selectReadyEvents" resultType="com.nh.nsight.marketing.eb.persistence.dto.event.EventRow">
         SELECT <include refid="eventColumns"/>
           FROM EB_EVENT
          WHERE EVENT_STATUS = 'READY'
@@ -50,7 +50,9 @@
         </where>
     </sql>
 
-    <select id="searchEvents" resultType="map">
+    <select id="searchEvents"
+            parameterType="com.nh.nsight.marketing.eb.application.dto.event.EventSearchCriteria"
+            resultType="com.nh.nsight.marketing.eb.persistence.dto.event.EventRow">
         SELECT <include refid="eventColumns"/>
           FROM EB_EVENT
         <include refid="eventSearchWhere"/>
@@ -58,13 +60,16 @@
          OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
     </select>
 
-    <select id="countEvents" resultType="int">
+    <select id="countEvents"
+            parameterType="com.nh.nsight.marketing.eb.application.dto.event.EventSearchCriteria"
+            resultType="int">
         SELECT COUNT(1)
           FROM EB_EVENT
         <include refid="eventSearchWhere"/>
     </select>
 
-    <select id="countEventsByStatus" resultType="map">
+    <select id="countEventsByStatus"
+            resultType="com.nh.nsight.marketing.eb.persistence.dto.event.EventStatusCountRow">
         SELECT EVENT_STATUS AS eventStatus,
                COUNT(1) AS count
           FROM EB_EVENT

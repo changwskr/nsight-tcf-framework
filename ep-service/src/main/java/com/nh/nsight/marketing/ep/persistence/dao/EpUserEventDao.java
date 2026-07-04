@@ -1,8 +1,10 @@
 package com.nh.nsight.marketing.ep.persistence.dao;
 
+import com.nh.nsight.marketing.ep.application.dto.userevent.UserEventSearchCriteria;
+import com.nh.nsight.marketing.ep.persistence.dto.userevent.UserEventInsertRow;
+import com.nh.nsight.marketing.ep.persistence.dto.userevent.UserEventRow;
 import com.nh.nsight.marketing.ep.persistence.mapper.EpUserEventMapper;
 import java.util.List;
-import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -13,7 +15,7 @@ public class EpUserEventDao {
         this.mapper = mapper;
     }
 
-    public int insertReceivedEvent(Map<String, Object> row) {
+    public int insertReceivedEvent(UserEventInsertRow row) {
         return mapper.insertReceivedEvent(row);
     }
 
@@ -21,11 +23,11 @@ public class EpUserEventDao {
         return mapper.countByEventId(eventId) > 0;
     }
 
-    public List<Map<String, Object>> searchReceivedEvents(Map<String, Object> criteria) {
+    public List<UserEventRow> searchReceivedEvents(UserEventSearchCriteria criteria) {
         return mapper.searchReceivedEvents(criteria);
     }
 
-    public int countReceivedEvents(Map<String, Object> criteria) {
+    public int countReceivedEvents(UserEventSearchCriteria criteria) {
         return mapper.countReceivedEvents(criteria);
     }
 }

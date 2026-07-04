@@ -1,30 +1,23 @@
 package com.nh.nsight.marketing.mg.application.service;
 
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.marketing.mg.application.dto.sample.SampleInquiryRequest;
+import com.nh.nsight.marketing.mg.application.dto.sample.SampleInquiryResponse;
+import com.nh.nsight.marketing.mg.application.dto.sample.SampleSearchCriteria;
 import com.nh.nsight.marketing.mg.application.rule.MgSampleRule;
 import com.nh.nsight.marketing.mg.persistence.dao.MgSampleDao;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.nh.nsight.marketing.mg.persistence.dto.sample.SampleRow;
+import com.nh.nsight.tcf.core.context.TransactionContext;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MgSampleService {
     private final MgSampleRule rule;
     private final MgSampleDao dao;
-
-    public MgSampleService(MgSampleRule rule, MgSampleDao dao) {
-        this.rule = rule;
-        this.dao = dao;
-    }
-
-    public Map<String, Object> inquiry(Map<String, Object> body, TransactionContext context) {
-        rule.validateInquiry(body);
-        Map<String, Object> data = dao.selectSample(body);
-        Map<String, Object> result = new LinkedHashMap<>();
-        result.put("businessCode", "MG");
-        result.put("serviceId", context.getHeader().getServiceId());
-        result.put("guid", context.getHeader().getGuid());
-        result.put("data", data);
-        return result;
+    public MgSampleService(MgSampleRule rule, MgSampleDao dao) { this.rule = rule; this.dao = dao; }
+    public SampleInquiryResponse inquiry(SampleInquiryRequest request, TransactionContext context) {
+        rule.validateInquiry(request);
+        SampleSearchCriteria criteria = rule.buildSearchCriteria(request);
+        SampleRow row = dao.selectSample(criteria);
+        return SampleInquiryResponse.of(context, row);
     }
 }

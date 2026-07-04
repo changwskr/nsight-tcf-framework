@@ -1,9 +1,11 @@
 package com.nh.nsight.marketing.eb.entry.facade;
 
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.marketing.eb.application.dto.event.EventInquiryRequest;
 import com.nh.nsight.marketing.eb.application.service.EbEventService;
+import com.nh.nsight.tcf.core.context.TransactionContext;
 import java.util.Map;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EbEventFacade {
@@ -13,7 +15,9 @@ public class EbEventFacade {
         this.service = service;
     }
 
+    @Transactional(readOnly = true, timeout = 5)
     public Map<String, Object> inquiry(Map<String, Object> body, TransactionContext context) {
-        return service.inquiry(body, context);
+        EventInquiryRequest request = EventInquiryRequest.fromMap(body);
+        return service.inquiry(request, context).toMap();
     }
 }

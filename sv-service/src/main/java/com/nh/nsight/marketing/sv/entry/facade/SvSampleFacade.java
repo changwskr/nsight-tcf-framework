@@ -1,7 +1,8 @@
 package com.nh.nsight.marketing.sv.entry.facade;
 
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.marketing.sv.application.dto.sample.SampleInquiryRequest;
 import com.nh.nsight.marketing.sv.application.service.SvSampleService;
+import com.nh.nsight.tcf.core.context.TransactionContext;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ public class SvSampleFacade {
 
     @Transactional(readOnly = true, timeout = 5)
     public Map<String, Object> inquiry(Map<String, Object> body, TransactionContext context) {
-        return service.inquiry(body, context);
+        SampleInquiryRequest request = SampleInquiryRequest.fromMap(body);
+        return service.inquiry(request, context).toMap();
     }
 }

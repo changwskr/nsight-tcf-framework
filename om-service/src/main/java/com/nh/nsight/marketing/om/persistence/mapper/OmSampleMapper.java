@@ -1,9 +1,10 @@
 package com.nh.nsight.marketing.om.persistence.mapper;
 
-import java.util.Map;
+import com.nh.nsight.marketing.om.application.dto.sample.SampleSearchCriteria;
+import com.nh.nsight.marketing.om.persistence.dto.sample.SampleRow;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface OmSampleMapper {
-    Map<String, Object> selectSample(Map<String, Object> condition);
+    SampleRow selectSample(SampleSearchCriteria criteria);
 }

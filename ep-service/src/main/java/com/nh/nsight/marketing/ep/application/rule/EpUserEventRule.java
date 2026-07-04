@@ -1,8 +1,10 @@
 package com.nh.nsight.marketing.ep.application.rule;
 
+import com.nh.nsight.marketing.ep.application.dto.userevent.UserEventInquiryRequest;
+import com.nh.nsight.marketing.ep.application.dto.userevent.UserEventReceiveRequest;
+import com.nh.nsight.marketing.ep.application.dto.userevent.UserEventSearchCriteria;
 import com.nh.nsight.tcf.core.error.BusinessException;
 import com.nh.nsight.tcf.core.error.ErrorCode;
-import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -13,71 +15,50 @@ public class EpUserEventRule {
     public static final int DEFAULT_PAGE_SIZE = 100;
     public static final int MAX_PAGE_SIZE_LOG = 1000;
 
-    public void validateReceive(Map<String, Object> body) {
-        if (body == null) {
+    public void validateReceive(UserEventReceiveRequest request) {
+        if (request == null) {
             throw new BusinessException(ErrorCode.BUSINESS_ERROR, "요청 Body가 없습니다.");
         }
-        require(body, "eventId");
-        require(body, "userId");
-        require(body, "eventType");
+        if (!StringUtils.hasText(request.getEventId())) {
+            throw new BusinessException(ErrorCode.BUSINESS_ERROR, "필수 필드 누락: eventId");
+        }
+        if (!StringUtils.hasText(request.getUserId())) {
+            throw new BusinessException(ErrorCode.BUSINESS_ERROR, "필수 필드 누락: userId");
+        }
+        if (!StringUtils.hasText(request.getEventType())) {
+            throw new BusinessException(ErrorCode.BUSINESS_ERROR, "필수 필드 누락: eventType");
+        }
     }
 
-    public void validateInquiry(Map<String, Object> body) {
-        // 목록 조회 — body·검색조건 모두 선택 (pageNo/pageSize만으로도 조회 가능)
+    public void validateInquiry(UserEventInquiryRequest request) {
+        // 목록 조회 — body·검색조건 모두 선택
     }
 
-    public Map<String, Object> buildSearchCriteria(Map<String, Object> body) {
-        Map<String, Object> safeBody = body != null ? body : Map.of();
-        Map<String, Object> criteria = new HashMap<>();
-        normalizePaging(criteria, safeBody, MAX_PAGE_SIZE_LOG);
-        putTrimmed(criteria, "eventId", safeBody.get("eventId"));
-        putTrimmed(criteria, "userId", safeBody.get("userId"));
-        putTrimmed(criteria, "eventType", safeBody.get("eventType"));
+    public UserEventSearchCriteria buildSearchCriteria(UserEventInquiryRequest request) {
+        UserEventInquiryRequest safe = request != null ? request : UserEventInquiryRequest.fromMap(Map.of());
+        UserEventSearchCriteria criteria = new UserEventSearchCriteria();
+        normalizePaging(criteria, safe);
+        criteria.setEventId(safe.getEventId());
+        criteria.setUserId(safe.getUserId());
+        criteria.setEventType(safe.getEventType());
         return criteria;
     }
 
-    private void normalizePaging(Map<String, Object> criteria, Map<String, Object> body, int maxPageSize) {
-        int pageNo = Math.max(1, toInt(body.get("pageNo"), DEFAULT_PAGE_NO));
-        int pageSize = toInt(body.get("pageSize"), DEFAULT_PAGE_SIZE);
+    private void normalizePaging(UserEventSearchCriteria criteria, UserEventInquiryRequest request) {
+        int pageNo = Math.max(1, toInt(request.getPageNo(), DEFAULT_PAGE_NO));
+        int pageSize = toInt(request.getPageSize(), DEFAULT_PAGE_SIZE);
         if (pageSize < 1) {
             pageSize = DEFAULT_PAGE_SIZE;
         }
-        if (pageSize > maxPageSize) {
-            pageSize = maxPageSize;
+        if (pageSize > MAX_PAGE_SIZE_LOG) {
+            pageSize = MAX_PAGE_SIZE_LOG;
         }
-        criteria.put("pageNo", pageNo);
-        criteria.put("pageSize", pageSize);
-        criteria.put("offset", (pageNo - 1) * pageSize);
+        criteria.setPageNo(pageNo);
+        criteria.setPageSize(pageSize);
+        criteria.setOffset((pageNo - 1) * pageSize);
     }
 
-    private void putTrimmed(Map<String, Object> target, String key, Object value) {
-        if (value == null) {
-            return;
-        }
-        String text = String.valueOf(value).trim();
-        if (!text.isEmpty()) {
-            target.put(key, text);
-        }
-    }
-
-    private int toInt(Object value, int defaultValue) {
-        if (value == null) {
-            return defaultValue;
-        }
-        if (value instanceof Number number) {
-            return number.intValue();
-        }
-        try {
-            return Integer.parseInt(String.valueOf(value).trim());
-        } catch (NumberFormatException ex) {
-            return defaultValue;
-        }
-    }
-
-    private void require(Map<String, Object> body, String key) {
-        Object value = body.get(key);
-        if (!(value instanceof String text) || !StringUtils.hasText(text)) {
-            throw new BusinessException(ErrorCode.BUSINESS_ERROR, "필수 필드 누락: " + key);
-        }
+    private int toInt(Integer value, int defaultValue) {
+        return value == null ? defaultValue : value;
     }
 }

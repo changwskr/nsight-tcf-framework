@@ -9,7 +9,10 @@
       로컬(H2)에서는 단일 SV_CUSTOMER 테이블로 동일 응답 컬럼을 제공.
       SQL_ID: SV.Customer.selectSummary
     -->
-    <select id="selectCustomerSummary" parameterType="map" resultType="map" timeout="3">
+    <select id="selectCustomerSummary"
+            parameterType="com.nh.nsight.marketing.sv.application.dto.customer.CustomerSummaryCriteria"
+            resultType="com.nh.nsight.marketing.sv.persistence.dto.customer.CustomerSummaryRow"
+            timeout="3">
         /* SQL_ID: SV.Customer.selectSummary */
         SELECT
               CUSTOMER_NO            AS customerNo
