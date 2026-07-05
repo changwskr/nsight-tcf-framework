@@ -219,6 +219,8 @@ const TWO_COL_PAIRS = new Set([
   '유형|Blocker / Critical 사례', '금지 패턴|문제', '방식|판단', '주의 항목|설명',
   '단계|정상 기준', 'Endpoint|사용 목적', '사용 목적|주의사항',
   'Header businessCode|판단', '금지 Endpoint|문제점', 'REMARK|비고',
+  '계층|트랜잭션 기준', '계층|예외 처리 기준', '계층|로그 기준',
+  '항목|처리 기준', '거래 유형|트랜잭션 기준',
 ]);
 
 function isTwoColHeaderPair(h0, h1) {
@@ -380,7 +382,8 @@ function isFixedTableRowBreak(line, headers) {
   if (!t) return true;
   if (isSectionHeading(t)) return true;
   if (isProseLine(t)) return true;
-  if (/작성 기준은 다음|예시는 다음|다음과 같다/.test(t)) return true;
+  if (/작성 기준은 다음|예시는 다음|다음과 같다|테스트 예시는|예시는 가장/.test(t)) return true;
+  if (/^로그에는 다음 정보/.test(t)) return true;
   if (/거래로그 구조는 다음|개발자는 최소한|공통 처리를 우회하면/.test(t)) return true;
   if (headers[0] === 'ServiceId' && !/^[A-Z]{2,3}\./.test(t) && !t.includes('.')) return true;
   if (t === headers[0]) return true;
@@ -919,6 +922,27 @@ function collectBracketBlock(lines, start) {
   return null;
 }
 
+/** "로그에는 다음 정보…" 뒤 필드명 나열 (GUID, TraceId, …) */
+function tryLogFieldList(lines, start) {
+  const t = lines[start]?.trim() ?? '';
+  if (!/^로그에는 다음 정보/.test(t)) return null;
+  const fields = [];
+  let i = start + 1;
+  while (i < lines.length) {
+    const f = lines[i]?.trim() ?? '';
+    if (!f) break;
+    if (isSectionHeading(f) || isProseLine(f)) break;
+    if (!/^[A-Za-z][\w]*$/.test(f)) break;
+    fields.push(f);
+    i++;
+  }
+  if (fields.length < 2) return null;
+  return {
+    next: i,
+    block: [t, '', fields.join(', '), ''].join('\n'),
+  };
+}
+
 function tryExtractTable(lines, start) {
   if (isProseLine(lines[start] ?? '')) return null;
 
@@ -1056,7 +1080,12 @@ function tryExtractTable(lines, start) {
     const h0 = lines[start].trim();
     const h1 = lines[start + 1].trim();
     const h2 = lines[start + 2].trim();
-    if (
+    const LAYER_CRITERIA_H1 = new Set(['트랜잭션 기준', '예외 처리 기준', '로그 기준']);
+    if (h0 === '계층' && LAYER_CRITERIA_H1.has(h1)) {
+      // 2열 계층|…기준 표 — 3번째 줄(Handler 등)은 데이터 행
+    } else if (h0 === '거래 유형' && h1 === '트랜잭션 기준') {
+      // 2열 거래 유형|트랜잭션 기준 표
+    } else if (
       ['구성요소', '필드', 'Layer', '계층', '목적', '영역', '패키지', '호출', '검증', '파일', '모듈', 'WAR', '순서', '변환', '공통 모듈', 'Context Path', '거래 유형', '관점', '구분', '점검 항목', '처리 유형', '업무코드', 'TYPE', 'Type'].includes(h0) &&
       isStrictHeaderCell(h1) &&
       isStrictHeaderCell(h2)
@@ -1183,7 +1212,7 @@ function collectJsonBlock(lines, start) {
 function isCodeBlockStart(lines, start) {
   const t = lines[start]?.trim() ?? '';
   if (!t) return false;
-  if (/^(public |private |protected |@Component|@Service|@Repository|@Mapper|@RequiredArgsConstructor|@Slf4j|@Transactional|@SpringBootApplication|@Test|@Override|plugins \{|dependencies \{|import |package |<\?xml|<mapper|<select|spring:|server:|mybatis:|logging:|nsight:|void |@Bean|@Value|@Autowired)/.test(t)) {
+  if (/^(public |private |protected |@Component|@Service|@Repository|@Mapper|@RequiredArgsConstructor|@Slf4j|@Transactional|@SpringBootApplication|@Test|@Override|if\s*\(|try\s*\{|plugins \{|dependencies \{|import |package |<\?xml|<mapper|<select|spring:|server:|mybatis:|logging:|nsight:|void |@Bean|@Value|@Autowired)/.test(t)) {
     return true;
   }
   if (t === 'bootWar {' || t === 'bootRun {') return true;
@@ -1555,6 +1584,13 @@ function formatDocxMarkdown(raw) {
       } else {
         i++;
       }
+      continue;
+    }
+
+    const logFields = tryLogFieldList(lines, i);
+    if (logFields) {
+      out.push(logFields.block);
+      i = logFields.next;
       continue;
     }
 
