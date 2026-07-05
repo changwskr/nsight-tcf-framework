@@ -1,4 +1,4 @@
-﻿@echo off
+@echo off
 setlocal enabledelayedexpansion
 
 set "PROJECT_HOME=%~dp0..\.."
@@ -69,6 +69,6 @@ echo Usage: build.bat [clean^|run^|run-local^|run-dev]
 echo   build.bat            Build gw.war
 echo   build.bat clean      clean + build
 echo   build.bat run        bootRun ^(SPRING_PROFILES_ACTIVE or default local^)
-echo   build.bat run-local  bootRun profile=local ^(8100 -^> ?낅Т蹂?bootRun^)
+echo   build.bat run-local  bootRun profile=local ^(8100 -^> per-module bootRun ports^)
 echo   build.bat run-dev    bootRun profile=dev ^(8100 -^> Tomcat 8080^)
 exit /b 0

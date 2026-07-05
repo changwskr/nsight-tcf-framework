@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 @ConditionalOnProperty(prefix = "nsight.gateway.auth.jwt", name = "enabled", havingValue = "true")
 public class GatewayJwtValidator {
     private static final String PHASE = "GatewayJwtValidator.validate";
+    private static final String JWT_LOG = "******* [GW-JWT] ";
 
     private final GatewayProperties properties;
     private final ObjectProvider<JwtDecoder> jwtDecoderProvider;
@@ -40,17 +41,21 @@ public class GatewayJwtValidator {
         GatewayProxyTrace.start(PHASE);
         try {
             String token = extractBearerToken(authorizationHeader);
+            System.out.println(JWT_LOG + "validate start token=" + maskToken(token));
             if (!StringUtils.hasText(token)) {
+                System.out.println(JWT_LOG + "validate fail: Bearer token empty");
                 throw new GatewayAuthException(401, "Authorization Bearer 토큰이 없습니다.");
             }
             JwtDecoder jwtDecoder = jwtDecoderProvider.getIfAvailable();
             if (jwtDecoder == null) {
+                System.out.println(JWT_LOG + "validate fail: JwtDecoder not configured");
                 throw new GatewayAuthException(503, "JWT 검증기가 구성되지 않았습니다.");
             }
             Jwt jwt;
             try {
                 jwt = jwtDecoder.decode(token);
             } catch (JwtException e) {
+                System.out.println(JWT_LOG + "validate fail: decode error " + e.getMessage());
                 throw new GatewayAuthException(401, "JWT 토큰이 유효하지 않습니다.");
             }
             String userId = claimAsString(jwt, "userId");
@@ -58,6 +63,7 @@ public class GatewayJwtValidator {
                 userId = jwt.getSubject();
             }
             if (!StringUtils.hasText(userId)) {
+                System.out.println(JWT_LOG + "validate fail: userId missing in claims");
                 throw new GatewayAuthException(401, "JWT에 사용자 정보가 없습니다.");
             }
             String branchId = claimAsString(jwt, "branchId");
@@ -65,6 +71,12 @@ public class GatewayJwtValidator {
             validateHeaderUser(requestBody, userId);
             String sessionId = StringUtils.hasText(jwt.getId()) ? jwt.getId() : null;
             GatewayProxyTrace.log(PHASE, "pass userId=" + userId + " jti=" + sessionId);
+            System.out.println(JWT_LOG + "validate pass userId=" + userId
+                    + " branchId=" + branchId
+                    + " channelId=" + channelId
+                    + " jti=" + sessionId
+                    + " iss=" + claimAsString(jwt, "iss")
+                    + " aud=" + jwt.getClaim("aud"));
             return new GatewaySessionContext(sessionId, userId, branchId, channelId);
         } finally {
             GatewayProxyTrace.end(PHASE);
@@ -97,6 +109,16 @@ public class GatewayJwtValidator {
         }
         String token = trimmed.substring(prefix.length()).trim();
         return token.isEmpty() ? null : token;
+    }
+
+    private static String maskToken(String token) {
+        if (!StringUtils.hasText(token)) {
+            return "-";
+        }
+        if (token.length() <= 16) {
+            return token.substring(0, Math.min(4, token.length())) + "…";
+        }
+        return token.substring(0, 8) + "…" + token.substring(token.length() - 6);
     }
 
     private static String claimAsString(Jwt jwt, String claimName) {

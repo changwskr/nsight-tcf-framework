@@ -10,9 +10,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class GatewayRouteSchemaInitializer {
     private final DataSource dataSource;
+    private final GatewayRouteLocalCatalogSeeder catalogSeeder;
 
-    public GatewayRouteSchemaInitializer(@Qualifier("gatewayRouteDataSource") DataSource dataSource) {
+    public GatewayRouteSchemaInitializer(
+            @Qualifier("gatewayRouteDataSource") DataSource dataSource,
+            GatewayRouteLocalCatalogSeeder catalogSeeder) {
         this.dataSource = dataSource;
+        this.catalogSeeder = catalogSeeder;
     }
 
     @PostConstruct
@@ -22,5 +26,6 @@ public class GatewayRouteSchemaInitializer {
         populator.addScript(new ClassPathResource("data.sql"));
         populator.setContinueOnError(true);
         populator.execute(dataSource);
+        catalogSeeder.seedMissingRoutes();
     }
 }

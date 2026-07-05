@@ -1,6 +1,7 @@
 /**
  * NSIGHT OM 운영관리 포털 공통 유틸 (tcf-ui)
- * tcf-om API를 /api/relay/OM/online 으로 호출합니다.
+ * OM 업무 거래: accessToken 보유 시 /api/gateway/om/online (Bearer + Gateway JWT 검증)
+ * OM 인증 거래(OM.Auth.*): /api/relay/OM/online (쿠키 직접 relay)
  */
 window.OmAdmin = (function () {
   const BUSINESS_CODE = 'OM';
@@ -228,19 +229,22 @@ window.OmAdmin = (function () {
     return tx && tx.serviceId && String(tx.serviceId).startsWith('OM.Auth.');
   }
 
+  function buildOmAuthHeaders() {
+    const jwt = getJwtSession();
+    const headers = { 'Content-Type': 'application/json' };
+    if (jwt && jwt.accessToken) {
+      const tokenType = jwt.tokenType || 'Bearer';
+      headers.Authorization = `${tokenType} ${jwt.accessToken}`;
+    }
+    return headers;
+  }
+
   function shouldUseOmGateway(tx) {
     if (!config.omGatewayEnabled || isAuthTransaction(tx)) {
       return false;
     }
     const jwt = getJwtSession();
-    if (!jwt || !jwt.accessToken) {
-      return false;
-    }
-    // SSO 로그인: OM 세션(JSESSIONID) Relay 우선 — gateway(8100) 미기동 시에도 OM Admin 동작
-    if (jwt.loginType === 'SSO') {
-      return false;
-    }
-    return true;
+    return !!(jwt && jwt.accessToken);
   }
 
   function todayIsoDate() {
@@ -419,24 +423,15 @@ window.OmAdmin = (function () {
     }
     await loadConfig();
     const jwt = getJwtSession();
-    if (jwt && jwt.loginType === 'SSO') {
-      try {
-        const { body } = await call('authSession', {}, 'INQUIRY');
-        if (body.loggedIn) {
-          return syncSessionFromBody(body);
-        }
-      } catch (e) {
-        /* OM 세션 없음 — 아래 JWT/gateway 또는 로그인 화면으로 */
-      }
-    }
-    if (config.omGatewayEnabled && jwt && jwt.accessToken && jwt.loginType !== 'SSO') {
+    if (config.omGatewayEnabled && jwt && jwt.accessToken) {
       setSession({
         userId: jwt.userId,
         userName: jwt.userName,
         branchId: jwt.branchId,
         authGroupId: jwt.authGroupId,
         authGroupName: jwt.authGroupName,
-        authType: 'jwt'
+        authType: 'jwt',
+        loginType: jwt.loginType || 'JWT'
       });
       return getSession();
     }
@@ -549,7 +544,7 @@ window.OmAdmin = (function () {
       config.gatewayOmUrl = data.gatewayOmUrl || config.gatewayOmUrl;
     }
     const jwt = getJwtSession();
-    const targetPath = (config.omGatewayEnabled && jwt && jwt.accessToken && jwt.loginType !== 'SSO')
+    const targetPath = (config.omGatewayEnabled && jwt && jwt.accessToken)
       ? `/api/gateway/om/target-url?${buildRelayQuery()}`
       : `/api/business-modules/${BUSINESS_CODE}/target-url?${buildRelayQuery()}`;
     const urlRes = await fetch(uiPath(targetPath));
@@ -696,7 +691,7 @@ window.OmAdmin = (function () {
     const request = { header: buildHeader(tx, processingType), body: body || {} };
     const res = await relayFetch(`/api/relay/${BUSINESS_CODE}/online?${buildRelayQuery()}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: buildOmAuthHeaders(),
       credentials: 'include',
       body: JSON.stringify(request)
     });
@@ -727,15 +722,10 @@ window.OmAdmin = (function () {
   }
 
   async function callViaGateway(tx, body, processingType) {
-    const jwt = getJwtSession();
     const request = { header: buildHeader(tx, processingType), body: body || {} };
-    const tokenType = jwt.tokenType || 'Bearer';
     const res = await relayFetch(`/api/gateway/om/online?${buildRelayQuery()}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `${tokenType} ${jwt.accessToken}`
-      },
+      headers: buildOmAuthHeaders(),
       credentials: 'include',
       body: JSON.stringify(request)
     });
@@ -933,7 +923,7 @@ window.OmAdmin = (function () {
   async function pingBackend() {
     try {
       const jwt = getJwtSession();
-      const targetPath = (config.omGatewayEnabled && jwt && jwt.accessToken && jwt.loginType !== 'SSO')
+      const targetPath = (config.omGatewayEnabled && jwt && jwt.accessToken)
         ? `/api/gateway/om/target-url?${buildRelayQuery()}`
         : `/api/business-modules/${BUSINESS_CODE}/target-url?${buildRelayQuery()}`;
       const res = await fetch(uiPath(targetPath));

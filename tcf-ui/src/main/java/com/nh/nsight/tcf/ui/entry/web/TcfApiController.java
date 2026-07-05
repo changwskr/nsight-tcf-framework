@@ -8,6 +8,7 @@ import com.nh.nsight.tcf.ui.support.RelayResult;
 import com.nh.nsight.tcf.ui.application.service.BusinessModuleCatalog;
 import com.nh.nsight.tcf.ui.application.service.BusinessTransactionCatalog;
 import com.nh.nsight.tcf.ui.client.GatewayRelayService;
+import com.nh.nsight.tcf.ui.client.JwtJwksRelayService;
 import com.nh.nsight.tcf.ui.client.TransactionRelayService;
 import com.nh.nsight.tcf.ui.client.TransactionRelayService.RelayOptions;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,15 +32,17 @@ public class TcfApiController {
     private final BusinessTransactionCatalog transactionCatalog;
     private final TransactionRelayService relayService;
     private final GatewayRelayService gatewayRelayService;
+    private final JwtJwksRelayService jwtJwksRelayService;
     private final TcfUiProperties properties;
 
     public TcfApiController(BusinessModuleCatalog catalog, BusinessTransactionCatalog transactionCatalog,
                              TransactionRelayService relayService, GatewayRelayService gatewayRelayService,
-                             TcfUiProperties properties) {
+                             JwtJwksRelayService jwtJwksRelayService, TcfUiProperties properties) {
         this.catalog = catalog;
         this.transactionCatalog = transactionCatalog;
         this.relayService = relayService;
         this.gatewayRelayService = gatewayRelayService;
+        this.jwtJwksRelayService = jwtJwksRelayService;
         this.properties = properties;
     }
 
@@ -90,7 +93,8 @@ public class TcfApiController {
             HttpServletRequest request,
             HttpServletResponse response) {
         RelayOptions options = new RelayOptions(deploymentMode, bootrunHost, tomcatGatewayUrl);
-        RelayResult result = relayService.relay(code, requestBody, options, request.getHeader("Cookie"));
+        RelayResult result = relayService.relay(
+                code, requestBody, options, request.getHeader("Cookie"), request.getHeader(HttpHeaders.AUTHORIZATION));
         applySetCookies(response, result);
         return result;
     }
@@ -101,11 +105,21 @@ public class TcfApiController {
         config.put("deploymentMode", properties.getDeploymentMode().name());
         config.put("tomcatGatewayUrl", properties.getTomcatGatewayUrl());
         config.put("bootrunHost", properties.getBootrunHost());
+        config.put("gatewayRelayEnabled", properties.isGatewayRelayEnabled());
         config.put("omGatewayEnabled", properties.isOmGatewayEnabled());
         config.put("gatewayOmUrl", gatewayRelayService.resolveGatewayOmUrl(
                 new RelayOptions(properties.getDeploymentMode().name(), properties.getBootrunHost(),
                         properties.getTomcatGatewayUrl())));
         return config;
+    }
+
+    @GetMapping("/jwt/jwks")
+    public Map<String, Object> jwtJwks(
+            @RequestParam(value = "deploymentMode", required = false) String deploymentMode,
+            @RequestParam(value = "bootrunHost", required = false) String bootrunHost,
+            @RequestParam(value = "tomcatGatewayUrl", required = false) String tomcatGatewayUrl) {
+        RelayOptions options = new RelayOptions(deploymentMode, bootrunHost, tomcatGatewayUrl);
+        return jwtJwksRelayService.fetch(options);
     }
 
     @GetMapping("/gateway/om/target-url")
@@ -155,7 +169,8 @@ public class TcfApiController {
             HttpServletRequest request,
             HttpServletResponse response) {
         RelayOptions options = new RelayOptions(deploymentMode, bootrunHost, tomcatGatewayUrl);
-        RelayResult result = relayService.relay(code, requestBody, options, request.getHeader("Cookie"));
+        RelayResult result = relayService.relay(
+                code, requestBody, options, request.getHeader("Cookie"), request.getHeader(HttpHeaders.AUTHORIZATION));
         applySetCookies(response, result);
         return result;
     }

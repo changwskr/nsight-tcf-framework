@@ -19,11 +19,15 @@ import org.springframework.web.client.RestClientResponseException;
 public class TransactionRelayService {
     private final TcfUiProperties properties;
     private final BusinessModuleCatalog catalog;
+    private final GatewayRelayService gatewayRelayService;
     private final RestClient restClient;
 
-    public TransactionRelayService(TcfUiProperties properties, BusinessModuleCatalog catalog) {
+    public TransactionRelayService(TcfUiProperties properties,
+                                   BusinessModuleCatalog catalog,
+                                   GatewayRelayService gatewayRelayService) {
         this.properties = properties;
         this.catalog = catalog;
+        this.gatewayRelayService = gatewayRelayService;
         this.restClient = RestClient.builder()
                 .defaultHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
                 .defaultHeader("Accept", MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
@@ -31,12 +35,15 @@ public class TransactionRelayService {
     }
 
     public String resolveTargetUrl(String businessCode, RelayOptions options) {
+        if (properties.isGatewayRelayEnabled()) {
+            return gatewayRelayService.resolveGatewayOnlineUrl(businessCode, options);
+        }
         BusinessModuleInfo module = catalog.findByCode(businessCode);
-        String baseUrl = resolveBaseUrl(module, options);
+        String baseUrl = resolveDirectBaseUrl(module, options);
         return baseUrl + module.contextPath() + "/online";
     }
 
-    private String resolveBaseUrl(BusinessModuleInfo module, RelayOptions options) {
+    private String resolveDirectBaseUrl(BusinessModuleInfo module, RelayOptions options) {
         if (resolveMode(options) == TcfUiProperties.DeploymentMode.tomcat) {
             return trimTrailingSlash(resolveTomcatGateway(options));
         }
@@ -44,10 +51,22 @@ public class TransactionRelayService {
     }
 
     public RelayResult relay(String businessCode, String requestBody, RelayOptions options) {
-        return relay(businessCode, requestBody, options, null);
+        return relay(businessCode, requestBody, options, null, null);
     }
 
     public RelayResult relay(String businessCode, String requestBody, RelayOptions options, String cookieHeader) {
+        return relay(businessCode, requestBody, options, cookieHeader, null);
+    }
+
+    public RelayResult relay(String businessCode,
+                             String requestBody,
+                             RelayOptions options,
+                             String cookieHeader,
+                             String authorizationHeader) {
+        if (properties.isGatewayRelayEnabled()) {
+            return gatewayRelayService.relayOnline(
+                    businessCode, requestBody, options, cookieHeader, authorizationHeader);
+        }
         BusinessModuleInfo module = catalog.findByCode(businessCode);
         String targetUrl = resolveTargetUrl(businessCode, options);
         long started = System.currentTimeMillis();
@@ -90,7 +109,8 @@ public class TransactionRelayService {
                     targetUrl,
                     502,
                     System.currentTimeMillis() - started,
-                    connectionErrorJson(targetUrl, module.localPort(), e.getMessage())
+                    connectionErrorJson(targetUrl, module.localPort(), e.getMessage()),
+                    List.of()
             );
         }
     }

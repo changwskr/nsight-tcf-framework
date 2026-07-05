@@ -57,7 +57,7 @@ public class GatewayRouteDao {
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
                 """,
                 route.routeId(), route.envCode(), route.routeGroupCode(), route.routeGroupName(),
-                route.businessCode(), route.businessName(), route.targetBaseUrl(), route.contextPath(),
+                route.businessCode(), route.businessName(), route.targetBaseUrl(), toDbContextPath(route.contextPath()),
                 route.onlinePath(), route.healthCheckPath(), route.connectTimeoutMs(), route.readTimeoutMs(),
                 route.useYn(), route.sortOrder(), route.description());
     }
@@ -74,7 +74,7 @@ public class GatewayRouteDao {
                 """,
                 route.envCode(), route.routeGroupCode(), route.routeGroupName(),
                 route.businessCode(), route.businessName(), route.targetBaseUrl(),
-                route.contextPath(), route.onlinePath(), route.healthCheckPath(),
+                toDbContextPath(route.contextPath()), route.onlinePath(), route.healthCheckPath(),
                 route.connectTimeoutMs(), route.readTimeoutMs(), route.useYn(),
                 route.sortOrder(), route.description(), route.routeId());
     }
@@ -94,7 +94,7 @@ public class GatewayRouteDao {
                 rs.getString("BUSINESS_CODE"),
                 rs.getString("BUSINESS_NAME"),
                 rs.getString("TARGET_BASE_URL"),
-                rs.getString("CONTEXT_PATH"),
+                fromDbContextPath(rs.getString("CONTEXT_PATH")),
                 rs.getString("ONLINE_PATH"),
                 rs.getString("HEALTH_CHECK_PATH"),
                 rs.getInt("CONNECT_TIMEOUT_MS"),
@@ -103,5 +103,14 @@ public class GatewayRouteDao {
                 (Integer) rs.getObject("SORT_ORDER"),
                 rs.getString("DESCRIPTION")
         );
+    }
+
+    /** H2 Oracle 모드에서는 빈 문자열이 NULL로 저장되므로 공백 한 칸을 사용한다. */
+    private static String toDbContextPath(String value) {
+        return org.springframework.util.StringUtils.hasText(value) ? value : " ";
+    }
+
+    private static String fromDbContextPath(String value) {
+        return org.springframework.util.StringUtils.hasText(value) ? value : "";
     }
 }

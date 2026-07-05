@@ -6,6 +6,7 @@ import com.nh.nsight.tcf.ui.client.TransactionRelayService.RelayOptions;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Locale;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -30,19 +31,24 @@ public class GatewayRelayService {
                 .build();
     }
 
-    public String resolveGatewayOmUrl(RelayOptions options) {
+    public String resolveGatewayOnlineUrl(String businessCode, RelayOptions options) {
+        String code = businessCode.toLowerCase(Locale.ROOT);
         if (resolveMode(options) == TcfUiProperties.DeploymentMode.tomcat) {
-            return trimTrailingSlash(resolveTomcatGateway(options)) + GATEWAY_CONTEXT + "/om/online";
+            return trimTrailingSlash(resolveTomcatGateway(options)) + GATEWAY_CONTEXT + "/" + code + "/online";
         }
-        return trimTrailingSlash(resolveBootrunHost(options)) + ":" + GATEWAY_LOCAL_PORT + "/om/online";
+        return trimTrailingSlash(resolveBootrunHost(options)) + ":" + GATEWAY_LOCAL_PORT + "/" + code + "/online";
     }
 
-    public RelayResult relayOm(
-            String requestBody,
-            String authorizationHeader,
-            RelayOptions options,
-            String cookieHeader) {
-        String targetUrl = resolveGatewayOmUrl(options);
+    public String resolveGatewayOmUrl(RelayOptions options) {
+        return resolveGatewayOnlineUrl("OM", options);
+    }
+
+    public RelayResult relayOnline(String businessCode,
+                                   String requestBody,
+                                   RelayOptions options,
+                                   String cookieHeader,
+                                   String authorizationHeader) {
+        String targetUrl = resolveGatewayOnlineUrl(businessCode, options);
         long started = System.currentTimeMillis();
         try {
             return restClient.post()
@@ -86,9 +92,18 @@ public class GatewayRelayService {
                     targetUrl,
                     502,
                     System.currentTimeMillis() - started,
-                    connectionErrorJson(targetUrl, e.getMessage())
+                    connectionErrorJson(businessCode, targetUrl, e.getMessage()),
+                    List.of()
             );
         }
+    }
+
+    public RelayResult relayOm(
+            String requestBody,
+            String authorizationHeader,
+            RelayOptions options,
+            String cookieHeader) {
+        return relayOnline("OM", requestBody, options, cookieHeader, authorizationHeader);
     }
 
     private String relayQuery(RelayOptions options) {
@@ -132,10 +147,10 @@ public class GatewayRelayService {
         return value.endsWith("/") ? value.substring(0, value.length() - 1) : value;
     }
 
-    private String connectionErrorJson(String targetUrl, String message) {
+    private String connectionErrorJson(String businessCode, String targetUrl, String message) {
         return """
-                {"error":"%s","targetUrl":"%s","hint":"tcf-gateway(8100 또는 /gw)와 tcf-jwt 기동 상태를 확인하세요."}
-                """.formatted(escapeJson(message), escapeJson(targetUrl));
+                {"error":"%s","targetUrl":"%s","businessCode":"%s","hint":"tcf-gateway(8100 또는 /gw) 기동 상태를 확인하세요."}
+                """.formatted(escapeJson(message), escapeJson(targetUrl), businessCode.toUpperCase(Locale.ROOT));
     }
 
     private String escapeJson(String value) {

@@ -39,7 +39,7 @@ MERGE INTO TCF_GATEWAY_ROUTE KEY(ROUTE_ID) VALUES
  'http://127.0.0.1:8093', '/ss', '/online', '/ss/actuator/health', 3000, 5000, 'Y', 120, 'LOCAL SS bootRun', CURRENT_TIMESTAMP, NULL);
 MERGE INTO TCF_GATEWAY_ROUTE KEY(ROUTE_ID) VALUES
 ('LOCAL-GW-JWT', 'LOCAL', 'GATEWAY', 'Gateway/운영관리', 'JWT', 'JWT Auth',
- 'http://127.0.0.1:8110', '', '/online', '/actuator/health', 3000, 5000, 'Y', 130, 'LOCAL JWT bootRun', CURRENT_TIMESTAMP, NULL);
+ 'http://127.0.0.1:8110', ' ', '/online', '/actuator/health', 3000, 5000, 'Y', 130, 'LOCAL JWT bootRun', CURRENT_TIMESTAMP, NULL);
 
 -- DEV
 MERGE INTO TCF_GATEWAY_ROUTE KEY(ROUTE_ID) VALUES

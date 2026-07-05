@@ -315,10 +315,17 @@ window.JwtAdmin = (function () {
   }
 
   async function fetchJwks() {
-    const url = resolveJwksUrl();
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`JWK 조회 실패 (HTTP ${res.status})`);
-    return { url, data: await res.json() };
+    const res = await relayFetch(`/api/jwt/jwks?${buildRelayQuery()}`);
+    if (!res.ok) {
+      let msg = `JWK 조회 실패 (HTTP ${res.status})`;
+      try {
+        const err = await res.json();
+        if (err.error) msg = err.error;
+      } catch (e) { /* ignore */ }
+      throw new Error(msg);
+    }
+    const payload = await res.json();
+    return { url: payload.url || resolveJwksUrl(), data: payload.jwks || payload.data || payload };
   }
 
   function decodeJwtPayload(token) {
