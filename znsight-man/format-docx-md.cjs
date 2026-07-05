@@ -386,9 +386,10 @@ function isFixedTableRowBreak(line, headers) {
   if (t === headers[0]) return true;
   if (/^본 (개발|문서|장|표준)/.test(t)) return true;
   if (/^(핵심 원칙은|이 선이|즉,|따라서|기본 원칙은|권장 행위명은|SQL ID 예시는|오류코드 형식은|금지 예시는|DTO 작성 원칙은|트랜잭션 적용 기준은|배포 흐름은|거래코드는|거래 상태는|개발 완료 기준은|최종 문장은|정리하면|테스트 완료 기준은|역할별|로컬 설정에서|Windows 환경|Linux,|bootRun과|테스트 실행|특정 모듈|특정 업무|WAR 생성|빌드 산출물|권장 방식|application-local\.yml에서는)/.test(t)) return true;
-  // 역할|주요 산출물·완료 책임 표 1열(OM 개발자 등)은 데이터 행
+  // 역할|주요 산출물·완료 책임 표 1열(OM 개발자 등)은 데이터 행 — 대상|설명 표(1.4)도 동일
   if (
     headers[0] !== '역할' &&
+    headers[0] !== '대상' &&
     /^(업무 개발자가|공통 프레임워크|OM 개발자|Gateway 개발|JWT \/ SSO|Batch 개발|UI 개발|SQL \/ DB|DevOps 담당|리뷰어가|PMO 관점)/.test(t)
   ) {
     return true;
