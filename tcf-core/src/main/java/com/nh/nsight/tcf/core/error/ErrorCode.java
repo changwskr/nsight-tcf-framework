@@ -7,6 +7,7 @@ public final class ErrorCode {
     public static final String SERVICE_NOT_FOUND = "E-COM-DISP-0001";
     public static final String SESSION_INVALID = "E-COM-AUTH-0001";
     public static final String AUTHORIZATION_DENIED = "E-COM-AUTH-0002";
+    public static final String JWT_HEADER_CLAIM_MISMATCH = "E-JWT-AUTH-0009";
     public static final String DUPLICATE_REQUEST = "E-COM-IDEMP-0001";
     public static final String TXCTRL_HDR_SERVICE_ID = "E-TCF-HDR-001";
     public static final String TXCTRL_HDR_TRANSACTION_CODE = "E-TCF-HDR-002";

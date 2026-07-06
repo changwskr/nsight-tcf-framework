@@ -16,6 +16,7 @@
 | `TcfGateway` | REST·multipart 등 비표준 진입점 → `TCF.process()` 위임 |
 | `GuidMdcCleanupFilter` | 요청 종료 시 MDC·Context 정리 |
 | `GlobalStandardExceptionHandler` | 표준 오류 응답 변환 |
+| `TcfJwtAuthenticationFilter` | `/online` 요청 Bearer JWT 검증 (옵션) |
 | `TcfAutoConfiguration` | Spring Boot 자동 구성 |
 | `TcfPrimaryDataSourceAutoConfiguration` | 다중 DS 환경 기본 DataSource |
 | `TcfTransactionLogDataSourceConfiguration` | H2 기반 공유 거래로그 DB |
@@ -50,6 +51,30 @@ com.nh.nsight.tcf.web
 | POST | `/{businessCode}/online` | 업무코드 경로 기반 거래 |
 
 Tomcat 예: `POST http://localhost:8080/sv/online`
+
+## JWT 필터 (옵션)
+
+`nsight.tcf.web.jwt.enabled=true` 일 때 `/online`, `/{businessCode}/online` 요청에 대해 Bearer JWT를 검증합니다.
+
+```yaml
+nsight:
+  tcf:
+    web:
+      jwt:
+        enabled: true
+        jwk-set-uri: http://127.0.0.1:8110/.well-known/jwks.json
+        issuer: NSIGHT-AUTH
+        audience: NSIGHT-MP
+        header-name: Authorization
+        token-prefix: Bearer
+        required-for-online: true
+```
+
+- 검증 통과 시 `AuthenticatedUserContext`를 request attribute와 ThreadLocal holder에 저장
+- `AuthenticationContextHolder`(tcf-core)에도 동일 claim을 저장하여 STF 2차 검증에 사용
+- 검증 실패 시 401 JSON(`errorCode`, `message`) 반환
+
+STF는 `AuthenticationContextValidator`가 JWT claim과 전문 Header(`userId`, `branchId`, `channelId`) 정합성을 확인합니다.
 
 ## TcfGateway 사용 예
 

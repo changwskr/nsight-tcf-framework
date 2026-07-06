@@ -5,6 +5,9 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @AutoConfiguration
-@EnableConfigurationProperties(TcfProperties.class)
+@EnableConfigurationProperties({
+        TcfProperties.class,
+        TcfWebJwtProperties.class
+})
 public class TcfAutoConfiguration {
 }

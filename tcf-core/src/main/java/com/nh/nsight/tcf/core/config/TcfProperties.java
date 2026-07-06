@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class TcfProperties {
     private boolean sessionValidationEnabled = false;
     private boolean authorizationValidationEnabled = false;
+    private boolean authenticationContextValidationEnabled = true;
     private boolean idempotencyEnabled = true;
     private boolean auditEnabled = true;
     private boolean transactionLogEnabled = true;
@@ -26,6 +27,10 @@ public class TcfProperties {
     public void setSessionValidationEnabled(boolean sessionValidationEnabled) { this.sessionValidationEnabled = sessionValidationEnabled; }
     public boolean isAuthorizationValidationEnabled() { return authorizationValidationEnabled; }
     public void setAuthorizationValidationEnabled(boolean authorizationValidationEnabled) { this.authorizationValidationEnabled = authorizationValidationEnabled; }
+    public boolean isAuthenticationContextValidationEnabled() { return authenticationContextValidationEnabled; }
+    public void setAuthenticationContextValidationEnabled(boolean authenticationContextValidationEnabled) {
+        this.authenticationContextValidationEnabled = authenticationContextValidationEnabled;
+    }
     public boolean isIdempotencyEnabled() { return idempotencyEnabled; }
     public void setIdempotencyEnabled(boolean idempotencyEnabled) { this.idempotencyEnabled = idempotencyEnabled; }
     public boolean isAuditEnabled() { return auditEnabled; }

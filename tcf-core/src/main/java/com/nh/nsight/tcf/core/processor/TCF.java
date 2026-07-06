@@ -7,7 +7,7 @@ import com.nh.nsight.tcf.core.message.StandardHeader;
 import com.nh.nsight.tcf.core.message.StandardRequest;
 import com.nh.nsight.tcf.core.message.StandardResponse;
 import com.nh.nsight.tcf.core.dispatch.TransactionDispatcher;
-import com.nh.nsight.tcf.core.support.TcfConsoleLog;
+import com.nh.nsight.tcf.core.security.AuthenticationContextHolder;
 import com.nh.nsight.tcf.core.timeout.OnlineTransactionTimeoutExecutor;
 import com.nh.nsight.tcf.core.timeout.TimeoutContextHolder;
 import com.nh.nsight.tcf.core.timeout.TimeoutExceptionResolver;
@@ -80,6 +80,7 @@ public class TCF {
         } finally {
             System.out.println(" =========================================[TCF.process] cleanup");
             TransactionContextHolder.clear();
+            AuthenticationContextHolder.clear();
             TimeoutContextHolder.clear();
             MDC.clear();
         }

@@ -31,7 +31,7 @@ TCF.process(request)
 | `control` | `TransactionControlService` — Header 7필드 거래통제 |
 | `timeout` | `TimeoutPolicyService`, `OnlineTransactionTimeoutExecutor`, `TimeoutExceptionResolver` |
 | `validation` | `StandardHeaderValidator` |
-| `security` | `SessionValidator`, `AuthorizationValidator` |
+| `security` | `SessionValidator`, `AuthorizationValidator`, `AuthenticationContextValidator` |
 | `idempotency` | `IdempotencyChecker` |
 | `logging` | `TransactionLogService`, `AuditLogService` |
 | `error` | `BusinessException`, `ErrorCode` |

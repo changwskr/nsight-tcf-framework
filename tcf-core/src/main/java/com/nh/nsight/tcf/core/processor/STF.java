@@ -7,6 +7,7 @@ import com.nh.nsight.tcf.core.idempotency.IdempotencyChecker;
 import com.nh.nsight.tcf.core.logging.TransactionLogService;
 import com.nh.nsight.tcf.core.message.StandardHeader;
 import com.nh.nsight.tcf.core.message.StandardRequest;
+import com.nh.nsight.tcf.core.security.AuthenticationContextValidator;
 import com.nh.nsight.tcf.core.security.AuthorizationValidator;
 import com.nh.nsight.tcf.core.security.SessionValidator;
 import com.nh.nsight.tcf.core.support.TcfConsoleLog;
@@ -22,6 +23,7 @@ import org.springframework.util.StringUtils;
 public class STF {
     private final StandardHeaderValidator headerValidator;
     private final SessionValidator sessionValidator;
+    private final AuthenticationContextValidator authenticationContextValidator;
     private final AuthorizationValidator authorizationValidator;
     private final IdempotencyChecker idempotencyChecker;
     private final TransactionControlService transactionControlService;
@@ -30,6 +32,7 @@ public class STF {
 
     public STF(StandardHeaderValidator headerValidator,
             SessionValidator sessionValidator,
+            AuthenticationContextValidator authenticationContextValidator,
             AuthorizationValidator authorizationValidator,
             IdempotencyChecker idempotencyChecker,
             TransactionControlService transactionControlService,
@@ -37,6 +40,7 @@ public class STF {
             TransactionLogService transactionLogService) {
         this.headerValidator = headerValidator;
         this.sessionValidator = sessionValidator;
+        this.authenticationContextValidator = authenticationContextValidator;
         this.authorizationValidator = authorizationValidator;
         this.idempotencyChecker = idempotencyChecker;
         this.transactionControlService = transactionControlService;
@@ -68,6 +72,9 @@ public class STF {
         System.out.println(
                 " =====================================================[STF.preProcess] sessionValidator.validate");
         sessionValidator.validate(header);
+        System.out.println(
+                " =====================================================[STF.preProcess] authenticationContextValidator.validate");
+        authenticationContextValidator.validate(header, context);
         System.out.println(
                 " =====================================================[STF.preProcess] authorizationValidator.validate");
         authorizationValidator.validate(header);
