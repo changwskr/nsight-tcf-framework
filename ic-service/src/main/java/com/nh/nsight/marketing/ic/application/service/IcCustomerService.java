@@ -5,8 +5,8 @@ import com.nh.nsight.marketing.ic.application.dto.customer.CustomerInquiryRespon
 import com.nh.nsight.marketing.ic.application.rule.IcCustomerRule;
 import com.nh.nsight.marketing.ic.client.SvIntegrationClient;
 import com.nh.nsight.marketing.ic.client.dto.sv.SvCustomerSummaryResult;
-import com.nh.nsight.tcf.core.context.TransactionContext;
-import com.nh.nsight.tcf.core.error.BusinessException;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.error.BusinessException;
 import com.nh.nsight.tcf.eai.exception.IntegrationBusinessException;
 import com.nh.nsight.tcf.eai.exception.IntegrationException;
 import com.nh.nsight.tcf.eai.exception.IntegrationTimeoutException;

@@ -1,8 +1,8 @@
 package com.nh.nsight.tcf.web.entry.web;
 
-import com.nh.nsight.tcf.core.error.BusinessException;
-import com.nh.nsight.tcf.core.error.ErrorCode;
-import com.nh.nsight.tcf.core.message.StandardResponse;
+import com.nh.nsight.tcf.core.support.error.BusinessException;
+import com.nh.nsight.tcf.core.support.error.ErrorCode;
+import com.nh.nsight.tcf.core.support.message.StandardResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;

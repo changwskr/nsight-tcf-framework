@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
-import com.nh.nsight.tcf.core.timeout.TimeoutContextHolder;
-import com.nh.nsight.tcf.core.timeout.TimeoutPolicy;
+import com.nh.nsight.tcf.core.support.timeout.TimeoutContextHolder;
+import com.nh.nsight.tcf.core.support.timeout.TimeoutPolicy;
 import java.lang.reflect.Method;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;

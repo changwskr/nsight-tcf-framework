@@ -1,6 +1,6 @@
 package com.nh.nsight.marketing.ep.application.dto.userevent;
 
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

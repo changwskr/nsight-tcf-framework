@@ -1,7 +1,6 @@
 package com.nh.nsight.marketing.sv.client;
 
 import com.nh.nsight.marketing.sv.client.dto.ic.IcSampleInquiryResult;
-import com.nh.nsight.tcf.core.context.TransactionContext;
 import com.nh.nsight.tcf.eai.client.TcfServiceClient;
 import java.util.Map;
 import org.springframework.stereotype.Component;
@@ -22,7 +21,9 @@ public class IcIntegrationClient {
         this.tcfServiceClient = tcfServiceClient;
     }
 
-    public IcSampleInquiryResult inquirySample(String sampleKey, TransactionContext callerContext) {
+    public IcSampleInquiryResult inquirySample(
+            String sampleKey,
+            com.nh.nsight.tcf.core.support.context.TransactionContext callerContext) {
         Map<String, Object> body = tcfServiceClient.callForBody(
                 TARGET_BUSINESS_CODE,
                 SVC_SAMPLE_INQUIRY,

@@ -1,8 +1,8 @@
 package com.nh.nsight.tcf.core.config;
 
-import com.nh.nsight.tcf.core.control.TcfTransactionControlConstants;
-import com.nh.nsight.tcf.core.logging.TcfTransactionLogConstants;
-import com.nh.nsight.tcf.core.timeout.TcfServiceTimeoutConstants;
+import com.nh.nsight.tcf.core.support.control.TcfTransactionControlConstants;
+import com.nh.nsight.tcf.core.support.logging.TcfTransactionLogConstants;
+import com.nh.nsight.tcf.core.support.timeout.TcfServiceTimeoutConstants;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "nsight.tcf")

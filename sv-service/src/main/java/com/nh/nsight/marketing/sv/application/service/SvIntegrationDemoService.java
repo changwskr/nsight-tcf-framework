@@ -4,8 +4,8 @@ import com.nh.nsight.marketing.sv.application.dto.integration.IntegrationIcSampl
 import com.nh.nsight.marketing.sv.application.dto.integration.IntegrationIcSampleResponse;
 import com.nh.nsight.marketing.sv.client.IcIntegrationClient;
 import com.nh.nsight.marketing.sv.client.dto.ic.IcSampleInquiryResult;
-import com.nh.nsight.tcf.core.context.TransactionContext;
-import com.nh.nsight.tcf.core.error.BusinessException;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.error.BusinessException;
 import com.nh.nsight.tcf.eai.exception.IntegrationBusinessException;
 import com.nh.nsight.tcf.eai.exception.IntegrationException;
 import com.nh.nsight.tcf.eai.exception.IntegrationTimeoutException;

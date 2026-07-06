@@ -1,7 +1,7 @@
 package com.nh.nsight.marketing.sv.application.dto.integration;
 
 import com.nh.nsight.marketing.sv.client.dto.ic.IcSampleInquiryResult;
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

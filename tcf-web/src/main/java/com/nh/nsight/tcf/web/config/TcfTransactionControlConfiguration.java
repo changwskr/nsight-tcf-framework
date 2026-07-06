@@ -1,7 +1,7 @@
 package com.nh.nsight.tcf.web.config;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
-import com.nh.nsight.tcf.core.control.TransactionControlRepository;
+import com.nh.nsight.tcf.core.support.control.TransactionControlRepository;
 import com.nh.nsight.tcf.web.persistence.dao.JdbcTransactionControlRepository;
 import com.nh.nsight.tcf.web.persistence.dao.TransactionControlSchemaInitializer;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -1,8 +1,8 @@
 package com.nh.nsight.tcf.web.application.rule;
 
-import com.nh.nsight.tcf.core.timeout.TimeoutPolicy;
-import com.nh.nsight.tcf.core.timeout.TimeoutContextHolder;
-import com.nh.nsight.tcf.core.timeout.TcfServiceTimeoutConstants;
+import com.nh.nsight.tcf.core.support.timeout.TimeoutPolicy;
+import com.nh.nsight.tcf.core.support.timeout.TimeoutContextHolder;
+import com.nh.nsight.tcf.core.support.timeout.TcfServiceTimeoutConstants;
 import java.util.function.Supplier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;

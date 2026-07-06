@@ -1,7 +1,7 @@
 package com.nh.nsight.tcf.web.entry.web;
 
-import com.nh.nsight.tcf.core.security.AuthenticationContext;
-import com.nh.nsight.tcf.core.security.AuthenticationContextHolder;
+import com.nh.nsight.tcf.core.support.security.AuthenticationContext;
+import com.nh.nsight.tcf.core.support.security.AuthenticationContextHolder;
 import com.nh.nsight.tcf.web.config.TcfWebJwtProperties;
 import com.nh.nsight.tcf.web.support.AuthenticatedUserContext;
 import com.nh.nsight.tcf.web.support.AuthenticatedUserContextHolder;

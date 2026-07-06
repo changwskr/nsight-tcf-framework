@@ -5,10 +5,9 @@
  * 본 모듈은 <b>프레임워크 JAR</b>로 패키지 이동 없이 역할별로 분리되어 있습니다.
  *
  * <ul>
- *   <li>진입·파이프라인: {@code processor}, {@code dispatch}, {@code transaction}</li>
- *   <li>프레임워크 서비스: {@code control}, {@code timeout}, {@code validation}, {@code security}, …</li>
- *   <li>전문·컨텍스트: {@code message}, {@code context}, {@code error}</li>
- *   <li>설정·유틸: {@code config}, {@code support}</li>
+ *   <li>업무 계층: {@code application}, {@code entry}, {@code persistence}</li>
+ *   <li>설정: {@code config}</li>
+ *   <li>프레임워크 지원: {@code support} — processor, dispatch, transaction, message, context, error, …</li>
  * </ul>
  */
 package com.nh.nsight.tcf.core;

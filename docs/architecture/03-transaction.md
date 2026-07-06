@@ -107,7 +107,7 @@ Client          Controller       TCF          STF         Dispatcher      Handle
 
 ## 3. TCF.process() — 핵심 오케스트레이션
 
-`com.nh.nsight.tcf.core.processor.TCF`가 단일 진입점이다.
+`com.nh.nsight.tcf.core.support.processor.TCF`가 단일 진입점이다.
 
 ```java
 public StandardResponse<Object> process(StandardRequest<Map<String, Object>> request) {

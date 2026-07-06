@@ -43,7 +43,7 @@ public final class JwtSupport {
     public static void requireField(Map<String, Object> body, String field) {
         String value = stringValue(body, field);
         if (value == null || value.isBlank()) {
-            throw new com.nh.nsight.tcf.core.error.BusinessException(
+            throw new com.nh.nsight.tcf.core.support.error.BusinessException(
                     "E-JWT-VAL-0001", field + " 은(는) 필수입니다.");
         }
     }

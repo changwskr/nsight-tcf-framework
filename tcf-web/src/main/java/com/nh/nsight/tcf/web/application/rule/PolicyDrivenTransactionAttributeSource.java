@@ -1,8 +1,8 @@
 package com.nh.nsight.tcf.web.application.rule;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
-import com.nh.nsight.tcf.core.timeout.TimeoutContextHolder;
-import com.nh.nsight.tcf.core.timeout.TimeoutPolicy;
+import com.nh.nsight.tcf.core.support.timeout.TimeoutContextHolder;
+import com.nh.nsight.tcf.core.support.timeout.TimeoutPolicy;
 import java.lang.reflect.Method;
 import org.springframework.lang.Nullable;
 import org.springframework.transaction.annotation.AnnotationTransactionAttributeSource;

@@ -6,7 +6,7 @@ import com.nh.nsight.marketing.ic.application.dto.sample.SampleSearchCriteria;
 import com.nh.nsight.marketing.ic.application.rule.IcSampleRule;
 import com.nh.nsight.marketing.ic.persistence.dao.IcSampleDao;
 import com.nh.nsight.marketing.ic.persistence.dto.sample.SampleRow;
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
 import org.springframework.stereotype.Service;
 
 @Service

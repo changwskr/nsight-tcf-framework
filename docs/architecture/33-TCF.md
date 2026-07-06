@@ -100,7 +100,7 @@ com.nh.nsight.tcf.core/
 
 ## 3. 진입점 — `TCF.process()`
 
-모든 온라인 거래는 **`com.nh.nsight.tcf.core.processor.TCF`** 한 곳을 통과한다.
+모든 온라인 거래는 **`com.nh.nsight.tcf.core.support.processor.TCF`** 한 곳을 통과한다.
 
 ```27:64:tcf-core/src/main/java/com/nh/nsight/tcf/core/processor/TCF.java
     public StandardResponse<Object> process(StandardRequest<Map<String, Object>> request) {

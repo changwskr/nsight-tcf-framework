@@ -2,8 +2,8 @@ package com.nh.nsight.marketing.mg.application.rule;
 
 import com.nh.nsight.marketing.mg.application.dto.sample.SampleInquiryRequest;
 import com.nh.nsight.marketing.mg.application.dto.sample.SampleSearchCriteria;
-import com.nh.nsight.tcf.core.error.BusinessException;
-import com.nh.nsight.tcf.core.error.ErrorCode;
+import com.nh.nsight.tcf.core.support.error.BusinessException;
+import com.nh.nsight.tcf.core.support.error.ErrorCode;
 import org.springframework.stereotype.Component;
 
 @Component

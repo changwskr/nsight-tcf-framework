@@ -35,7 +35,7 @@ tcf-web
 업무 서비스는 기존 Handler/Facade/Service/Rule/DAO/Mapper 구조를 유지한다. 단, 표준 전문과 Handler Interface import는 다음으로 변경된다.
 
 ```java
-import com.nh.nsight.tcf.core.context.TransactionContext;
-import com.nh.nsight.tcf.core.message.StandardRequest;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.message.StandardRequest;
 import com.nh.nsight.tcf.web.transaction.TransactionHandler;
 ```

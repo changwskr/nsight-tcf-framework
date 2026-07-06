@@ -1,7 +1,7 @@
 package com.nh.nsight.marketing.ss.application.dto.sample;
 
 import com.nh.nsight.marketing.ss.persistence.dto.sample.SampleRow;
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

@@ -1,14 +1,14 @@
 package com.nh.nsight.tcf.web.persistence.dao;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
-import com.nh.nsight.tcf.core.logging.TransactionLogRecord;
-import com.nh.nsight.tcf.core.logging.TransactionLogRepository;
+import com.nh.nsight.tcf.core.support.logging.TransactionLogRecord;
+import com.nh.nsight.tcf.core.support.logging.TransactionLogRepository;
 import java.sql.PreparedStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.StringUtils;
 
 /**
- * 프레임워크 공통 트랜잭션 로그 테이블({@link com.nh.nsight.tcf.core.logging.TcfTransactionLogConstants#TABLE_NAME})에 INSERT.
+ * 프레임워크 공통 트랜잭션 로그 테이블({@link com.nh.nsight.tcf.core.support.logging.TcfTransactionLogConstants#TABLE_NAME})에 INSERT.
  * 업무 DataSource가 {@code auto-commit: false}여도 로그만 즉시 커밋한다.
  */
 public class JdbcTransactionLogRepository implements TransactionLogRepository {

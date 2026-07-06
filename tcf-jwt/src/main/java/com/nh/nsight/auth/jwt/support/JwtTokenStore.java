@@ -80,7 +80,7 @@ public class JwtTokenStore {
             String sub = jwt.getJWTClaimsSet().getSubject();
             denylist(jti, sub, exp, reason);
         } catch (Exception e) {
-            throw new com.nh.nsight.tcf.core.error.BusinessException(
+            throw new com.nh.nsight.tcf.core.support.error.BusinessException(
                     "E-JWT-AUTH-0003", "유효하지 않은 Access Token입니다.");
         }
     }

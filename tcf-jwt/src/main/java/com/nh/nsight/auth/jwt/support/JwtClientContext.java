@@ -1,6 +1,6 @@
 package com.nh.nsight.auth.jwt.support;
 
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
 import org.springframework.util.StringUtils;
 
 public final class JwtClientContext {

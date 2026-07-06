@@ -1,8 +1,8 @@
 package com.nh.nsight.tcf.web.support;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
-import com.nh.nsight.tcf.core.timeout.TimeoutContextHolder;
-import com.nh.nsight.tcf.core.timeout.TimeoutPolicy;
+import com.nh.nsight.tcf.core.support.timeout.TimeoutContextHolder;
+import com.nh.nsight.tcf.core.support.timeout.TimeoutPolicy;
 import java.util.Properties;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;

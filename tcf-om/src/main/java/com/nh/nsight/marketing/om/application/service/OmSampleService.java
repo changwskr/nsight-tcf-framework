@@ -2,7 +2,7 @@ package com.nh.nsight.marketing.om.application.service;
 
 import com.nh.nsight.marketing.om.persistence.dao.OmSampleDao;
 import com.nh.nsight.marketing.om.application.rule.OmSampleRule;
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
 import com.nh.nsight.tcf.core.support.TcfConsoleLog;
 import java.util.LinkedHashMap;
 import java.util.Map;

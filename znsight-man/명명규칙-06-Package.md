@@ -17,7 +17,7 @@ NSIGHT Package Root는 다음처럼 구분한다.
 | --- | --- | --- |
 | 업무 WAR | com.nh.nsight.marketing.{업무코드소문자} | com.nh.nsight.marketing.sv |
 | OM 운영관리 | com.nh.nsight.marketing.om | com.nh.nsight.marketing.om |
-| TCF 공통 Core | com.nh.nsight.tcf.core | com.nh.nsight.tcf.core.message |
+| TCF 공통 Core | com.nh.nsight.tcf.core | com.nh.nsight.tcf.core.support.message |
 | TCF Web | com.nh.nsight.tcf.web | com.nh.nsight.tcf.web.controller |
 | TCF Util | com.nh.nsight.tcf.util | com.nh.nsight.tcf.util.masking |
 | TCF Cache | com.nh.nsight.tcf.cache | com.nh.nsight.tcf.cache.config |
@@ -250,7 +250,7 @@ Package와 Class 이름은 함께 읽혀야 한다.
 | com.nh.nsight.marketing.sv.persistence.dao | SvCustomerDao | SV 고객 DB 접근 |
 | com.nh.nsight.marketing.sv.persistence.mapper | SvCustomerMapper | SV 고객 MyBatis Mapper |
 | com.nh.nsight.marketing.om.entry.handler | OmUserSelectListHandler | OM 사용자 목록 Handler |
-| com.nh.nsight.tcf.core.dispatcher | TransactionDispatcher | 공통 Dispatcher |
+| com.nh.nsight.tcf.core.support.dispatcher | TransactionDispatcher | 공통 Dispatcher |
 | com.nh.nsight.tcf.web.controller | OnlineTransactionController | 공통 온라인 Controller |
 
 ## 11. Package별 DTO 배치 기준

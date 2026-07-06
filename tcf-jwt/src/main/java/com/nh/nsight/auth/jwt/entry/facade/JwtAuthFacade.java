@@ -1,7 +1,7 @@
 package com.nh.nsight.auth.jwt.entry.facade;
 
 import com.nh.nsight.auth.jwt.application.service.JwtAuthService;
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

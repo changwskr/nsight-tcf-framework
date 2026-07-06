@@ -3,8 +3,8 @@ package com.nh.nsight.tcf.web.support;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
-import com.nh.nsight.tcf.core.timeout.TimeoutContextHolder;
-import com.nh.nsight.tcf.core.timeout.TimeoutPolicy;
+import com.nh.nsight.tcf.core.support.timeout.TimeoutContextHolder;
+import com.nh.nsight.tcf.core.support.timeout.TimeoutPolicy;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;

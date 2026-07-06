@@ -1,7 +1,7 @@
 package com.nh.nsight.tcf.web.support;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
-import com.nh.nsight.tcf.core.logging.H2DevDataSourceUrls;
+import com.nh.nsight.tcf.core.support.logging.H2DevDataSourceUrls;
 import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
 

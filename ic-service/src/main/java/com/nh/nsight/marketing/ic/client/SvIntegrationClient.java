@@ -1,7 +1,6 @@
 package com.nh.nsight.marketing.ic.client;
 
 import com.nh.nsight.marketing.ic.client.dto.sv.SvCustomerSummaryResult;
-import com.nh.nsight.tcf.core.context.TransactionContext;
 import com.nh.nsight.tcf.eai.client.TcfServiceClient;
 import java.util.Map;
 import org.springframework.stereotype.Component;
@@ -22,7 +21,9 @@ public class SvIntegrationClient {
         this.tcfServiceClient = tcfServiceClient;
     }
 
-    public SvCustomerSummaryResult selectCustomerSummary(String customerNo, TransactionContext callerContext) {
+    public SvCustomerSummaryResult selectCustomerSummary(
+            String customerNo,
+            com.nh.nsight.tcf.core.support.context.TransactionContext callerContext) {
         Map<String, Object> body = tcfServiceClient.callForBody(
                 TARGET_BUSINESS_CODE,
                 SVC_CUSTOMER_SUMMARY,

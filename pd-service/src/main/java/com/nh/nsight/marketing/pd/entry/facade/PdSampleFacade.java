@@ -2,7 +2,7 @@ package com.nh.nsight.marketing.pd.entry.facade;
 
 import com.nh.nsight.marketing.pd.application.dto.sample.SampleInquiryRequest;
 import com.nh.nsight.marketing.pd.application.service.PdSampleService;
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

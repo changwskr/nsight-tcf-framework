@@ -1,9 +1,9 @@
 package com.nh.nsight.tcf.web.entry.facade;
 
-import com.nh.nsight.tcf.core.message.StandardHeader;
-import com.nh.nsight.tcf.core.message.StandardRequest;
-import com.nh.nsight.tcf.core.message.StandardResponse;
-import com.nh.nsight.tcf.core.processor.TCF;
+import com.nh.nsight.tcf.core.support.message.StandardHeader;
+import com.nh.nsight.tcf.core.support.message.StandardRequest;
+import com.nh.nsight.tcf.core.support.message.StandardResponse;
+import com.nh.nsight.tcf.core.support.processor.TCF;
 import java.util.Map;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;

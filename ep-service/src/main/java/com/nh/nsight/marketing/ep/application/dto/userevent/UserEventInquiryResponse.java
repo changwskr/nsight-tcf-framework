@@ -1,7 +1,7 @@
 package com.nh.nsight.marketing.ep.application.dto.userevent;
 
 import com.nh.nsight.marketing.ep.persistence.dto.userevent.UserEventRow;
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;

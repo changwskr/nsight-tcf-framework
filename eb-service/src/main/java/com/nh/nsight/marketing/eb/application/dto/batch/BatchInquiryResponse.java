@@ -4,7 +4,7 @@ import com.nh.nsight.marketing.eb.application.dto.event.EventStatusSummary;
 import com.nh.nsight.marketing.eb.config.EbEventPublishProperties;
 import com.nh.nsight.marketing.eb.persistence.dto.event.EventStatusCountRow;
 import com.nh.nsight.marketing.eb.support.EbEventStatus;
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

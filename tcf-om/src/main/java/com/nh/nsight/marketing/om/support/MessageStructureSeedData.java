@@ -1,8 +1,8 @@
 package com.nh.nsight.marketing.om.support;
 
-import com.nh.nsight.tcf.core.message.catalog.TcfMessageFieldDefinition;
-import com.nh.nsight.tcf.core.message.catalog.TcfMessageStructDefinition;
-import com.nh.nsight.tcf.core.message.catalog.TcfStandardMessageCatalog;
+import com.nh.nsight.tcf.core.support.message.catalog.TcfMessageFieldDefinition;
+import com.nh.nsight.tcf.core.support.message.catalog.TcfMessageStructDefinition;
+import com.nh.nsight.tcf.core.support.message.catalog.TcfStandardMessageCatalog;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 /** OM_MESSAGE_STRUCT / OM_MESSAGE_FIELD 샘플 시드 — 프레임워크 구조는 tcf-core catalog 기준. */

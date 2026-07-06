@@ -1,8 +1,8 @@
 package com.nh.nsight.marketing.ic.application.rule;
 
 import com.nh.nsight.marketing.ic.application.dto.customer.CustomerInquiryRequest;
-import com.nh.nsight.tcf.core.error.BusinessException;
-import com.nh.nsight.tcf.core.error.ErrorCode;
+import com.nh.nsight.tcf.core.support.error.BusinessException;
+import com.nh.nsight.tcf.core.support.error.ErrorCode;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 

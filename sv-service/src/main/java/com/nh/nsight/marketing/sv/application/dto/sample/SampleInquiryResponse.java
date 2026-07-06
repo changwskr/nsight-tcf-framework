@@ -1,6 +1,6 @@
 package com.nh.nsight.marketing.sv.application.dto.sample;
 
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;

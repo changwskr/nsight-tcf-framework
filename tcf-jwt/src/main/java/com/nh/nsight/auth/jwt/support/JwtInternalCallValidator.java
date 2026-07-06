@@ -1,7 +1,7 @@
 package com.nh.nsight.auth.jwt.support;
 
 import com.nh.nsight.auth.jwt.config.JwtInternalCallProperties;
-import com.nh.nsight.tcf.core.error.BusinessException;
+import com.nh.nsight.tcf.core.support.error.BusinessException;
 import com.nh.nsight.tcf.util.security.NsightInternalCallSupport;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Duration;

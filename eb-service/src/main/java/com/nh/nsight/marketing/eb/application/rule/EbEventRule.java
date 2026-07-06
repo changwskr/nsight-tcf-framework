@@ -2,8 +2,8 @@ package com.nh.nsight.marketing.eb.application.rule;
 
 import com.nh.nsight.marketing.eb.application.dto.event.EventInquiryRequest;
 import com.nh.nsight.marketing.eb.application.dto.event.EventSearchCriteria;
-import com.nh.nsight.tcf.core.error.BusinessException;
-import com.nh.nsight.tcf.core.error.ErrorCode;
+import com.nh.nsight.tcf.core.support.error.BusinessException;
+import com.nh.nsight.tcf.core.support.error.ErrorCode;
 import java.util.Map;
 import org.springframework.stereotype.Component;
 

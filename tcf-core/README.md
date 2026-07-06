@@ -21,21 +21,24 @@ TCF.process(request)
 
 ## 주요 패키지
 
+최상위는 `application`, `client`, `config`, `entry`, `persistence`, `support` 만 둡니다.
+프레임워크 엔진·전문·거래 파이프라인은 `support` 하위에 위치합니다.
+
 | 패키지 | 설명 |
 |--------|------|
-| `message` | `StandardRequest`, `StandardResponse`, `StandardHeader`, `Result`, `TcfStandardMessageCatalog` |
-| `processor` | `TCF`, `STF`, `ETF` |
-| `dispatch` | `TransactionDispatcher` |
-| `transaction` | `TransactionHandler` 인터페이스 |
-| `context` | `TransactionContext`, `TransactionContextHolder` |
-| `control` | `TransactionControlService` — Header 7필드 거래통제 |
-| `timeout` | `TimeoutPolicyService`, `OnlineTransactionTimeoutExecutor`, `TimeoutExceptionResolver` |
-| `validation` | `StandardHeaderValidator` |
-| `security` | `SessionValidator`, `AuthorizationValidator`, `AuthenticationContextValidator` |
-| `idempotency` | `IdempotencyChecker` |
-| `logging` | `TransactionLogService`, `AuditLogService` |
-| `error` | `BusinessException`, `ErrorCode` |
-| `support` | `TcfConsoleLog` (UTF-8 콘솔 로그) |
+| `support.message` | `StandardRequest`, `StandardResponse`, `StandardHeader`, `Result`, `TcfStandardMessageCatalog` |
+| `support.processor` | `TCF`, `STF`, `ETF` |
+| `support.dispatch` | `TransactionDispatcher` |
+| `support.transaction` | `TransactionHandler` 인터페이스 |
+| `support.context` | `TransactionContext`, `TransactionContextHolder` |
+| `support.control` | `TransactionControlService` — Header 7필드 거래통제 |
+| `support.timeout` | `TimeoutPolicyService`, `OnlineTransactionTimeoutExecutor`, `TimeoutExceptionResolver` |
+| `support.validation` | `StandardHeaderValidator` |
+| `support.security` | `SessionValidator`, `AuthorizationValidator`, `AuthenticationContextValidator` |
+| `support.idempotency` | `IdempotencyChecker` |
+| `support.logging` | `TransactionLogService`, `AuditLogService` |
+| `support.error` | `BusinessException`, `ErrorCode` |
+| `support` (루트) | `TcfConsoleLog` (UTF-8 콘솔 로그) |
 
 ## Handler 구현 규약
 
@@ -79,12 +82,12 @@ public class SvSampleHandler implements TransactionHandler {
 
 ## 먼저 볼 소스
 
-1. `processor/TCF.java`
-2. `processor/STF.java`
-3. `timeout/OnlineTransactionTimeoutExecutor.java`
-4. `control/TransactionControlService.java`
-5. `message/StandardRequest.java`
-6. `dispatch/TransactionDispatcher.java`
+1. `support/processor/TCF.java`
+2. `support/processor/STF.java`
+3. `support/timeout/OnlineTransactionTimeoutExecutor.java`
+4. `support/control/TransactionControlService.java`
+5. `support/message/StandardRequest.java`
+6. `support/dispatch/TransactionDispatcher.java`
 
 ## 빌드
 

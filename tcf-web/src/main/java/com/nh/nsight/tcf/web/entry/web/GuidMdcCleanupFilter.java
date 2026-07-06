@@ -5,7 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import com.nh.nsight.tcf.core.security.AuthenticationContextHolder;
+import com.nh.nsight.tcf.core.support.security.AuthenticationContextHolder;
 import com.nh.nsight.tcf.web.support.AuthenticatedUserContextHolder;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;

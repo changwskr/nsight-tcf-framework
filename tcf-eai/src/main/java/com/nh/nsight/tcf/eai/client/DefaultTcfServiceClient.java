@@ -1,7 +1,7 @@
 package com.nh.nsight.tcf.eai.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
 import com.nh.nsight.tcf.eai.config.TcfIntegrationProperties;
 import com.nh.nsight.tcf.eai.exception.IntegrationErrorCode;
 import com.nh.nsight.tcf.eai.exception.IntegrationException;

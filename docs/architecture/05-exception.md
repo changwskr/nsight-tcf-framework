@@ -107,7 +107,7 @@ E-{영역}-{분류}-{일련번호}
 
 ### 3.2 프레임워크 공통 코드 (`ErrorCode`)
 
-`com.nh.nsight.tcf.core.error.ErrorCode`:
+`com.nh.nsight.tcf.core.support.error.ErrorCode`:
 
 | 상수 | 코드 | 발생 위치 |
 |------|------|-----------|

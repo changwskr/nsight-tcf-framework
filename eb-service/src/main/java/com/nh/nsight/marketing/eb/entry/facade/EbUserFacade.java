@@ -3,7 +3,7 @@ package com.nh.nsight.marketing.eb.entry.facade;
 import com.nh.nsight.marketing.eb.application.dto.user.UserCreateRequest;
 import com.nh.nsight.marketing.eb.application.dto.user.UserInquiryRequest;
 import com.nh.nsight.marketing.eb.application.service.EbUserService;
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

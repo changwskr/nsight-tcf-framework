@@ -1,7 +1,7 @@
 package com.nh.nsight.tcf.web.config;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
-import com.nh.nsight.tcf.core.logging.TransactionLogRepository;
+import com.nh.nsight.tcf.core.support.logging.TransactionLogRepository;
 import com.nh.nsight.tcf.web.persistence.dao.JdbcTransactionLogRepository;
 import com.nh.nsight.tcf.web.persistence.dao.TransactionLogSchemaInitializer;
 import org.springframework.beans.factory.annotation.Qualifier;

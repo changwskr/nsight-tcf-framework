@@ -5,7 +5,7 @@ import com.nh.nsight.marketing.sv.application.dto.customer.CustomerSummaryRespon
 import com.nh.nsight.marketing.sv.application.rule.SvCustomerRule;
 import com.nh.nsight.marketing.sv.persistence.dao.SvCustomerDao;
 import com.nh.nsight.marketing.sv.persistence.dto.customer.CustomerSummaryRow;
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
 import org.springframework.stereotype.Service;
 
 @Service

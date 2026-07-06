@@ -1,6 +1,6 @@
 package com.nh.nsight.marketing.om.support;
 
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
 import com.nh.nsight.marketing.om.persistence.dao.OmOperationDao;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

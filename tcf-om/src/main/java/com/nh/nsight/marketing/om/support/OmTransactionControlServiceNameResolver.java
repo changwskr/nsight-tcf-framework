@@ -1,7 +1,7 @@
 package com.nh.nsight.marketing.om.support;
 
-import com.nh.nsight.tcf.core.control.TransactionControlServiceNameResolver;
-import com.nh.nsight.tcf.core.message.StandardHeader;
+import com.nh.nsight.tcf.core.support.control.TransactionControlServiceNameResolver;
+import com.nh.nsight.tcf.core.support.message.StandardHeader;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;

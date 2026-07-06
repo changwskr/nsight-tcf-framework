@@ -1,6 +1,6 @@
 package com.nh.nsight.marketing.om.client;
 
-import com.nh.nsight.tcf.core.error.BusinessException;
+import com.nh.nsight.tcf.core.support.error.BusinessException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;

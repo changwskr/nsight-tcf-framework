@@ -1,6 +1,6 @@
 package com.nh.nsight.marketing.om.application.rule;
 
-import com.nh.nsight.tcf.core.error.BusinessException;
+import com.nh.nsight.tcf.core.support.error.BusinessException;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.stereotype.Component;

@@ -2,7 +2,7 @@ package com.nh.nsight.marketing.eb.application.dto.event;
 
 import com.nh.nsight.marketing.eb.persistence.dto.event.EventRow;
 import com.nh.nsight.marketing.eb.persistence.dto.event.EventStatusCountRow;
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;

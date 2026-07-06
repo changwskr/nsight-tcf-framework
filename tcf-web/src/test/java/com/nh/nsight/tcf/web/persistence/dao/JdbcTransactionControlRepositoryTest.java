@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
-import com.nh.nsight.tcf.core.control.TransactionControlHeader;
-import com.nh.nsight.tcf.core.control.TransactionControlRule;
+import com.nh.nsight.tcf.core.support.control.TransactionControlHeader;
+import com.nh.nsight.tcf.core.support.control.TransactionControlRule;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,9 +1,9 @@
 package com.nh.nsight.tcf.web.entry.web;
 
-import com.nh.nsight.tcf.core.message.StandardHeader;
-import com.nh.nsight.tcf.core.message.StandardRequest;
-import com.nh.nsight.tcf.core.message.StandardResponse;
-import com.nh.nsight.tcf.core.processor.TCF;
+import com.nh.nsight.tcf.core.support.message.StandardHeader;
+import com.nh.nsight.tcf.core.support.message.StandardRequest;
+import com.nh.nsight.tcf.core.support.message.StandardResponse;
+import com.nh.nsight.tcf.core.support.processor.TCF;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 import org.springframework.web.bind.annotation.PathVariable;

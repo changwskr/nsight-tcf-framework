@@ -1,6 +1,6 @@
 package com.nh.nsight.tcf.eai.client;
 
-import com.nh.nsight.tcf.core.context.TransactionContext;
+import com.nh.nsight.tcf.core.support.context.TransactionContext;
 import com.nh.nsight.tcf.eai.model.IntegrationCallRequest;
 import com.nh.nsight.tcf.eai.model.IntegrationCallResult;
 import java.util.Map;

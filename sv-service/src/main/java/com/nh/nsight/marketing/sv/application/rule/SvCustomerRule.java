@@ -3,7 +3,7 @@ package com.nh.nsight.marketing.sv.application.rule;
 import com.nh.nsight.marketing.sv.application.dto.customer.CustomerSummaryCriteria;
 import com.nh.nsight.marketing.sv.application.dto.customer.CustomerSummaryRequest;
 import com.nh.nsight.marketing.sv.persistence.dto.customer.CustomerSummaryRow;
-import com.nh.nsight.tcf.core.error.BusinessException;
+import com.nh.nsight.tcf.core.support.error.BusinessException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 

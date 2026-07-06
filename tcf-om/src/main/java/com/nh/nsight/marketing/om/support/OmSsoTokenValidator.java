@@ -1,7 +1,7 @@
 package com.nh.nsight.marketing.om.support;
 
 import com.nh.nsight.marketing.om.config.OmSsoProperties;
-import com.nh.nsight.tcf.core.error.BusinessException;
+import com.nh.nsight.tcf.core.support.error.BusinessException;
 import java.util.Map;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;

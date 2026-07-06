@@ -1,7 +1,7 @@
 package com.nh.nsight.tcf.web.config;
 
 import com.nh.nsight.tcf.core.config.TcfProperties;
-import com.nh.nsight.tcf.core.logging.H2DevDataSourceUrls;
+import com.nh.nsight.tcf.core.support.logging.H2DevDataSourceUrls;
 import com.nh.nsight.tcf.web.support.TcfHikariDataSources;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -27,7 +27,7 @@ NSIGHT 온라인 거래는 **HTTP 한 개의 URL**(`/online`)로 들어와 **TCF
 | 계층 | 모듈·패키지 | 소스 위치 |
 |------|-------------|-----------|
 | Web | `tcf-web` | `com.nh.nsight.tcf.web.controller` |
-| TCF | `tcf-core` | `com.nh.nsight.tcf.core.processor`, `dispatch`, `transaction` |
+| TCF | `tcf-core` | `com.nh.nsight.tcf.core.support.processor`, `dispatch`, `transaction` |
 | Handler | 업무 WAR | `com.nh.nsight.marketing.{code}.handler` | [BTF](35-BTF.md) 진입 |
 | Facade | 업무 WAR | `com.nh.nsight.marketing.{code}.facade` | [BTF](35-BTF.md) |
 | Service | 업무 WAR | `com.nh.nsight.marketing.{code}.service` | [BTF](35-BTF.md) |

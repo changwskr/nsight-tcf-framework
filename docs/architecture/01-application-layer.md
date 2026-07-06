@@ -107,7 +107,7 @@ src/main/resources/
 | 항목 | 설명 |
 |------|------|
 | **역할** | `serviceId`와 TCF 파이프라인을 연결하는 **유일한 업무 진입점** |
-| **인터페이스** | `com.nh.nsight.tcf.core.transaction.TransactionHandler` |
+| **인터페이스** | `com.nh.nsight.tcf.core.support.transaction.TransactionHandler` |
 | **등록** | Spring `@Component` → `TransactionDispatcher`가 기동 시 `serviceId` 맵에 등록 |
 | **금지** | SQL 직접 호출, 복잡한 비즈니스 로직, 트랜잭션 어노테이션 |
 
