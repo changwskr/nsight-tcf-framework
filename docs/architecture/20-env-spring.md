@@ -5,7 +5,7 @@
 | 문서 번호 | 20 |
 | 제목 | Spring Environment Architecture (프로젝트별 Spring 설정) |
 | 상위 문서 | [architecture.md](architecture.md) |
-| 관련 문서 | [25-env-profile.md](25-env-profile.md), [24-env-spring-detail.md](24-env-spring-detail.md), [16-deploy.md](16-deploy.md), [19-tcf-table.md](19-tcf-table.md), [09-transaction log.md](09-transaction%20log.md), [10-session.md](10-session.md), [12-cache.md](12-cache.md), [13-batch.md](13-batch.md) |
+| 관련 문서 | [25-env-profile.md](25-env-profile.md), [24-env-spring-detail.md](24-env-spring-detail.md), [16-deploy.md](16-deploy.md), [19-tcf-table.md](19-tcf-table.md), [09-transaction log.md](09-transaction log.md), [10-session.md](10-session.md), [12-cache.md](12-cache.md), [13-batch.md](13-batch.md) |
 | 대상 | 프레임워크·업무·운영·인프라 담당자 |
 | Spring Boot 기동 | [30-springboot.md](30-springboot.md) |
 | AutoConfiguration | [31-autoconfiguration.md](31-autoconfiguration.md) |
@@ -388,7 +388,7 @@ public class NsightTcfBatchApplication extends NsightWarBootstrap
 | `tcf-om` | `true` | 5s |
 | `tcf-batch` | (기본) | — |
 
-거래로그 INSERT는 `JdbcTransactionLogRepository`에서 **별도 autocommit** — [09-transaction log.md §6](09-transaction%20log.md).
+거래로그 INSERT는 `JdbcTransactionLogRepository`에서 **별도 autocommit** — [09-transaction log.md §6](09-transaction log.md).
 
 ---
 

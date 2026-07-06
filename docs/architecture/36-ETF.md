@@ -5,7 +5,7 @@
 | 문서 번호 | 36 |
 | 제목 | ETF — End Transaction Framework |
 | 상위 문서 | [architecture.md](architecture.md) |
-| 관련 문서 | [03-transaction.md](03-transaction.md), [05-exception.md](05-exception.md), [09-transaction log.md](09-transaction%20log.md), [31-autoconfiguration.md](31-autoconfiguration.md), [33-TCF.md](33-TCF.md), [34-STF.md](34-STF.md), [35-BTF.md](35-BTF.md), [37-transaction-log.md](37-transaction-log.md) |
+| 관련 문서 | [03-transaction.md](03-transaction.md), [05-exception.md](05-exception.md), [09-transaction log.md](09-transaction log.md), [31-autoconfiguration.md](31-autoconfiguration.md), [33-TCF.md](33-TCF.md), [34-STF.md](34-STF.md), [35-BTF.md](35-BTF.md), [37-transaction-log.md](37-transaction-log.md) |
 | 구현 | `tcf-core/.../processor/ETF.java`, `tcf-web/.../logging/JdbcTransactionLogRepository.java` |
 | 대상 | 프레임워크·업무·운영 개발자 |
 
@@ -76,7 +76,7 @@ TCF.process()
 4. **ETF** — 종료 후처리 + `TransactionLogService.end()` (TX_END + DB)
 5. `logClientResponse` — 입출력 전문 로그 (응답 payload)
 
-입출력 전문 로그와 거래 요약 로그는 **목적·저장소가 다르다** — [09-transaction log.md](09-transaction%20log.md) §1.
+입출력 전문 로그와 거래 요약 로그는 **목적·저장소가 다르다** — [09-transaction log.md](09-transaction log.md) §1.
 
 ---
 
@@ -403,7 +403,7 @@ TX       없음                   @Transactional (Facade)  JDBC 독립 커밋
 - 성공/실패 건수, 평균 `ELAPSED_TIME_MS`, `serviceId`/`errorCode` Top N
 - ETF가 **실패 시에도 INSERT**하므로 “롤백된 거래”도 OM에서 추적 가능
 
-입출력 전문은 DB가 아닌 **애플리케이션 로그** — [09-transaction log.md](09-transaction%20log.md).
+입출력 전문은 DB가 아닌 **애플리케이션 로그** — [09-transaction log.md](09-transaction log.md).
 
 ---
 
@@ -436,7 +436,7 @@ TX       없음                   @Transactional (Facade)  JDBC 독립 커밋
 
 ## 12. 참고 문서
 
-- 거래로그 아키텍처 전체: [09-transaction log.md](09-transaction%20log.md)
+- 거래로그 아키텍처 전체: [09-transaction log.md](09-transaction log.md)
 - Spring 업무 TX: [03-transaction.md](03-transaction.md) §12
 - AutoConfiguration: [31-autoconfiguration.md](31-autoconfiguration.md)
 - TCF 엔진 흐름: [33-TCF.md](33-TCF.md)

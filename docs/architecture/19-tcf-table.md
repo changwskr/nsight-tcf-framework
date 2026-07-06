@@ -5,7 +5,7 @@
 | 문서 번호 | 19 |
 | 제목 | TCF Table Architecture (프로젝트별 DB·테이블) |
 | 상위 문서 | [architecture.md](architecture.md) |
-| 관련 문서 | [07-DAO.md](07-DAO.md), [09-transaction log.md](09-transaction%20log.md), [10-session.md](10-session.md), [11-login.md](11-login.md), [12-cache.md](12-cache.md), [13-batch.md](13-batch.md), [18-fileupdownload.md](18-fileupdownload.md) |
+| 관련 문서 | [07-DAO.md](07-DAO.md), [09-transaction log.md](09-transaction log.md), [10-session.md](10-session.md), [11-login.md](11-login.md), [12-cache.md](12-cache.md), [13-batch.md](13-batch.md), [18-fileupdownload.md](18-fileupdownload.md) |
 | 대상 | 프레임워크·업무·운영·DB 담당자 |
 
 ---
@@ -71,7 +71,7 @@ NSIGHT TCF Framework는 **모듈별로 DB 사용 범위가 다르다**.
 - 거래로그: `nsight.tcf.transaction-log-datasource.*`
 - 공유 경로: `nsight.txlog.path` (기본 `./data/nsight-txlog`)
 
-상세: [09-transaction log.md §5](09-transaction%20log.md).
+상세: [09-transaction log.md §5](09-transaction log.md).
 
 ---
 

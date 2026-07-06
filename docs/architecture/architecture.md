@@ -6,7 +6,7 @@
 | 대상 시스템 | `nsight-tcf-framework` (Gradle 멀티 모듈) |
 | 버전 | 1.0.0-SNAPSHOT |
 | 기술 스택 | Java 21, Spring Boot 3.3, Gradle 8.x, MyBatis, H2, EhCache |
-| 최종 갱신 | 2026-06 |
+| 최종 갱신 | 2026-07 |
 
 ---
 
@@ -24,11 +24,11 @@
 
 | 문서 | 경로 |
 |------|------|
-| 어플리케이션 계층 | [01-application-layer.md](architecture/01-application-layer.md) |
-| 표준 전문(준문) | [02-junmun.md](architecture/02-junmun.md) |
-| 트랜잭션 처리 | [03-transaction.md](architecture/03-transaction.md) |
-| 메시지 처리 | [04-messaging.md](architecture/04-messaging.md) |
-| 예외 처리 | [05-exception.md](architecture/05-exception.md) |
+| 어플리케이션 계층 | [01-application-layer.md](01-application-layer.md) |
+| 표준 전문(준문) | [02-junmun.md](02-junmun.md) |
+| 트랜잭션 처리 | [03-transaction.md](03-transaction.md) |
+| 메시지 처리 | [04-messaging.md](04-messaging.md) |
+| 예외 처리 | [05-exception.md](05-exception.md) |
 | 프로젝트 개요 | [README.md](../../README.md) |
 | TCF 개발 가이드 | [TCF_FRAMEWORK_GUIDE.md](../TCF_FRAMEWORK_GUIDE.md) |
 | TCF 모듈 레퍼런스 | [28-tcf-framework-ref.md](28-tcf-framework-ref.md) |
@@ -43,6 +43,18 @@
 | 트랜잭션 로그 처리 | [37-transaction-log.md](37-transaction-log.md) |
 | 스크립트 (빌드·배포) | [38-script.md](38-script.md) |
 | Header 기반 거래통제 | [39-header-transaction-control.md](39-header-transaction-control.md) |
+| JWT 인증 | [42-jwt.md](42-jwt.md) |
+| 보안 운영 | [43-security-operations.md](43-security-operations.md) |
+| 관측성 | [44-observability.md](44-observability.md) |
+| 장애복구·DR | [45-disaster-recovery.md](45-disaster-recovery.md) |
+| 서비스 연동 Contract | [46-service-integration-contract.md](46-service-integration-contract.md) |
+| 데이터 거버넌스 | [47-data-governance.md](47-data-governance.md) |
+| 멀티모듈 의존성 | [48-multi-module-dependencies.md](48-multi-module-dependencies.md) |
+| 릴리즈 전략 | [49-release-strategy.md](49-release-strategy.md) |
+| 테스트 아키텍처 | [50-test-architecture.md](50-test-architecture.md) |
+| API Gateway | [51-api-gateway.md](51-api-gateway.md) |
+| OM 운영 | [52-om-operations.md](52-om-operations.md) |
+| 명명규칙 | [53-naming-conventions.md](53-naming-conventions.md) |
 | Gradle 매뉴얼 | [../manual/gradle.md](../manual/gradle.md) |
 | 환경변수 매뉴얼 | [../manual/environment-variables.md](../manual/environment-variables.md) |
 | 빌드 산출물·기동 파일 | [../manual/artifacts.md](../manual/artifacts.md) |
@@ -50,7 +62,20 @@
 | 모듈 재구성 이력 | [TCF_MODULE_RESTRUCTURE.md](../TCF_MODULE_RESTRUCTURE.md) |
 | 소스 인덱스 | [SOURCE_INDEX.md](../SOURCE_INDEX.md) |
 | **공식 설계안 (Word)** | [설계자료/README.md](../설계자료/README.md) |
+| TCF 개발 매뉴얼 (Markdown) | [znsight-man/README.md](../../znsight-man/README.md) |
 | Tomcat 배포 | [ztomcat/README.md](../../ztomcat/README.md) |
+
+### 1.1 아키텍처 문서 전체 목차
+
+| 구분 | 번호 | 문서 |
+|------|------|------|
+| **기초** | 01~08 | [계층](01-application-layer.md) · [전문](02-junmun.md) · [트랜잭션](03-transaction.md) · [메시지](04-messaging.md) · [예외](05-exception.md) · [네이밍](06-naming.md) · [DAO](07-DAO.md) · [Timeout](08-timeout.md) |
+| **로그·세션·파일** | 09~12, 18 | [거래로그(개요)](09-transaction%20log.md) · [세션](10-session.md) · [로그인](11-login.md) · [캐시](12-cache.md) · [파일 UD](18-fileupdownload.md) |
+| **온라인·배치** | 13~17 | [배치](13-batch.md) · [온라인](14-online-arc.md) · [스케줄](15-schedule.md) · [배포](16-deploy.md) · [스크립트](17-script.md) |
+| **DB·환경** | 19~27 | [테이블](19-tcf-table.md) · [Spring env](20-env-spring.md) · [Tomcat](21-env-tomcat.md) · [빌드](22-build-project.md) · [Apache](23-env-apache.md) · [env 상세](24-env-spring-detail.md) · [프로파일](25-env-profile.md) · [MyBatis](26-mybatis.md) · [페이징](27-paging.md) |
+| **TCF 엔진** | 28~38 | [레퍼런스](28-tcf-framework-ref.md) · [Facade](29-facade.md) · [Spring Boot](30-springboot.md) · [AutoConfig](31-autoconfiguration.md) · [AOP](32-AOP.md) · [TCF](33-TCF.md) · [STF](34-STF.md) · [BTF](35-BTF.md) · [ETF](36-ETF.md) · [TX 로그](37-transaction-log.md) · [스크립트](38-script.md) |
+| **통제·정책** | 39~41 | [거래통제](39-header-transaction-control.md) · [Header 7](40-header-7-transaction-control.md) · [Timeout 정책](41-service-timeout-policy.md) |
+| **운영·플랫폼** | 42~53 | [JWT](42-jwt.md) · [보안 운영](43-security-operations.md) · [관측성](44-observability.md) · [DR](45-disaster-recovery.md) · [연동 Contract](46-service-integration-contract.md) · [데이터 거버넌스](47-data-governance.md) · [멀티모듈](48-multi-module-dependencies.md) · [릴리즈](49-release-strategy.md) · [테스트](50-test-architecture.md) · [Gateway](51-api-gateway.md) · [OM](52-om-operations.md) · [명명규칙](53-naming-conventions.md) |
 
 ---
 
@@ -98,8 +123,9 @@ nsight-tcf-framework
 ├─ [Foundation]
 │   ├─ tcf-util          순수 Java 유틸 (Spring 비의존)
 │   ├─ tcf-core          TCF 엔진, 표준 전문, STF/TCF/ETF, Dispatcher
-│   ├─ tcf-web           HTTP 진입점, Gateway, 자동설정, WAR Bootstrap
-│   └─ tcf-cache         EhCache / Spring Cache (선택)
+│   ├─ tcf-web           HTTP 진입점, AutoConfiguration, WAR Bootstrap
+│   ├─ tcf-cache         EhCache / Spring Cache (tcf-om)
+│   └─ tcf-eai           서비스 간 HTTP/JSON 연동 Client
 │
 ├─ [Platform Services]
 │   ├─ tcf-om            운영관리(OM) + 파일 업·다운로드(UD)
@@ -116,7 +142,8 @@ nsight-tcf-framework
 │   └─ om-service        레거시 OM (tcf-om 권장)
 │
 └─ [Tooling]
-    ├─ tcf-scripts       빌드·실행·배포 스크립트
+    ├─ tcf-cicd          환경 yml·CI/CD 스크립트 (local/dev/prod)
+    ├─ tcf-scripts       빌드·실행 래퍼
     └─ ztomcat           로컬 Tomcat 8080 WAR 배포 도구
 ```
 
@@ -127,18 +154,16 @@ tcf-util
    ↑
 tcf-core
    ↑
-tcf-web ──→ tcf-cache (선택)
+tcf-web ──→ tcf-cache (tcf-om만)
    ↑
-   ├── *-service (ic … mg, 9개)
-   ├── tcf-om
+   ├── *-service (ic … mg, 9개) [+ tcf-eai 선택]
+   ├── tcf-om (+ tcf-cache)
    ├── tcf-batch
-   ├── tcf-gateway
    ├── tcf-jwt
    └── tcf-uj
 
-tcf-ui  ──(HTTP Relay)──→ *-service / tcf-om
-       ──(OM JWT)───────→ tcf-gateway → tcf-om
-tcf-uj  ──(Gateway)────→ tcf-gateway → *-service
+tcf-gateway  (독립 — tcf-core 미의존)
+tcf-ui       (tcf-core만 — HTTP Relay)
 ```
 
 | 모듈 | 산출물 | 역할 |
@@ -199,14 +224,14 @@ StandardResponse JSON (HTTP 200, resultCode 기반 성공/실패)
 
 | 컴포넌트 | 패키지/위치 | 책임 |
 |----------|-------------|------|
-| `TCF` | `tcf-core.processor` | 파이프라인 오케스트레이션 |
-| `STF` | `tcf-core.processor` | 전처리(검증·컨텍스트·시작 로그) |
-| `ETF` | `tcf-core.processor` | 후처리(응답·오류·종료 로그) |
-| `TransactionDispatcher` | `tcf-core.dispatch` | `serviceId` → Handler 라우팅 |
-| `TransactionHandler` | `tcf-core.transaction` | 업무 거래 구현 계약 |
-| `OnlineTransactionController` | `tcf-web.controller` | REST `/online` 엔드포인트 |
-| `TcfGateway` | `tcf-web.gateway` | 비표준 REST → TCF 위임 (UD 등) |
-| `TransactionContext` | `tcf-core.context` | 요청 단위 컨텍스트(ThreadLocal) |
+| `TCF` | `tcf-core.support.processor` | 파이프라인 오케스트레이션 |
+| `STF` | `tcf-core.support.processor` | 전처리(검증·컨텍스트·시작 로그) |
+| `ETF` | `tcf-core.support.processor` | 후처리(응답·오류·종료 로그) |
+| `TransactionDispatcher` | `tcf-core.support.dispatch` | `serviceId` → Handler 라우팅 |
+| `TransactionHandler` | `tcf-core.support.transaction` | 업무 거래 구현 계약 |
+| `OnlineTransactionController` | `tcf-web` | REST `/online` 엔드포인트 |
+| `TcfGateway` | `tcf-web` | 비표준 REST → TCF 위임 (UD 등) |
+| `TransactionContext` | `tcf-core.support.context` | 요청 단위 컨텍스트 |
 
 ### 4.3 업무 확장 모델
 
@@ -375,26 +400,32 @@ public class NsightSvServiceApplication extends NsightWarBootstrap {
 
 ## 8. 운영(OM) 아키텍처
 
+상세: [52-om-operations.md](52-om-operations.md) · Gateway: [51-api-gateway.md](51-api-gateway.md)
+
 ### 8.1 구성 요소 역할
 
 ```text
 ┌─────────────┐     Relay (REST)      ┌─────────────┐
 │   tcf-ui    │ ────────────────────→ │   tcf-om    │
 │  /ui (WAR)  │   OM.* serviceId      │  /om (WAR)  │
-│  정적 HTML  │                       │  Handler 40+│
+│  정적 HTML  │                       │  Handler 24 │
 └──────┬──────┘                       └──────┬──────┘
        │                                     │
        │ relay /api/relay/{code}/online      │ OM.Dashboard.inquiry
        ▼                                     ▼
-┌─────────────┐                       ┌─────────────┐
-│ *-service   │                       │  공유 H2    │
-│  업무 WAR   │                       │ nsight_om   │
-└─────────────┘                       └──────▲──────┘
-                                           │
-                                    ┌──────┴──────┐
-                                    │  tcf-batch  │
-                                    │  수집 Job   │
-                                    └─────────────┘
+┌─────────────┐     Gateway (선택)    ┌─────────────┐
+│ tcf-gateway │ ────────────────────→ │ *-service   │
+│   :8100     │   세션/JWT 관문       │  업무 WAR   │
+└─────────────┘                       └──────┬──────┘
+                                               │
+                                        ┌──────┴──────┐
+                                        │  공유 H2    │
+                                        │ nsight_om   │
+                                        └──────▲──────┘
+                                               │
+                                        ┌──────┴──────┐
+                                        │  tcf-batch  │
+                                        └─────────────┘
 ```
 
 | 컴포넌트 | 책임 |
@@ -454,6 +485,8 @@ POST /batch/jobs/deploy-status/run
 
 ## 9. 보안·세션 아키텍처
 
+상세: [42-jwt.md](42-jwt.md) · [43-security-operations.md](43-security-operations.md) · [51-api-gateway.md](51-api-gateway.md) §7
+
 ### 9.1 OM Admin 인증
 
 | 항목 | 구현 |
@@ -474,6 +507,8 @@ POST /batch/jobs/deploy-status/run
 ---
 
 ## 10. 관측·로깅 아키텍처
+
+상세: [44-observability.md](44-observability.md) · [37-transaction-log.md](37-transaction-log.md)
 
 ### 10.1 Actuator
 
@@ -528,7 +563,7 @@ OM Cache 관리: `OM.Cache.inquiry` / `OM.Cache.delete`
 - JVM/Tomcat 클러스터 — WAR 단위 스케일아웃
 - 공유 DB — 거래로그·OM 메타 (운영 DBMS)
 
-참고: [deploy/apache/nsight-marketing-routing.conf](../../deploy/apache/nsight-marketing-routing.conf)
+참고: [tcf-cicd/prod/apache/nsight-marketing-routing.conf](../../tcf-cicd/prod/apache/nsight-marketing-routing.conf)
 
 ---
 
@@ -568,6 +603,10 @@ OM Cache 관리: `OM.Cache.inquiry` / `OM.Cache.delete`
 | ADR-06 | tcf-ui Relay | CORS·브라우저에서 다중 업무 테스트 |
 | ADR-07 | ztomcat 13 WAR (`deploy-wars.sh`) | 운영 context path 통합 검증 |
 | ADR-08 | 공유 H2 `nsight.txlog.path` | bootRun/Tomcat/Batch DB 일치 |
+| ADR-09 | `tcf-integration` → `tcf-eai` | EAI 연동 모듈 명칭·역할 명확화 |
+| ADR-10 | `tcf-gateway` 독립 스택 | Gateway는 tcf-core 미의존, GRF/GSF/GEF 전용 |
+| ADR-11 | 42~52 운영·플랫폼 설계서 분리 | JWT·Gateway·OM·릴리즈 등 횡단 관심사 문서화 |
+| ADR-12 | 53 명명규칙 정의서 | znsight-man 21주제를 아키텍처 단일 SoT로 통합 |
 
 ---
 
@@ -577,3 +616,5 @@ OM Cache 관리: `OM.Cache.inquiry` / `OM.Cache.delete`
 |------|------|-----------|
 | 2026-06 | 1.0 | 최초 작성 — ztomcat 배포, tcf-batch 대시보드, 이중 배포 모드 반영 |
 | 2026-07 | 1.1 | 모듈 수·포트·Gateway JWT — `settings.gradle` / `deploy-wars.sh` 기준 정정 |
+| 2026-07 | 1.2 | 42~52 운영·플랫폼 설계서 추가, tcf-eai·패키지 `support.*` 반영, OM Handler 24, znsight-man·설계자료 링크 정리 |
+| 2026-07 | 1.3 | 53 명명규칙 정의서 추가 |

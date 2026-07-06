@@ -1,6 +1,6 @@
 # 부록 E. Mapper XML 템플릿
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## E. Mapper XML 템플릿
 
@@ -797,7 +797,7 @@ Mapper XML은 업무 로직이 아니라 SQL 실행 책임만 가지며, Service
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (76).docx`
+> znsight-guide-word: `통합 (76).docx`
 
 | [mybatisNaming.md](../zdoc/mybatisNaming.md) |
 

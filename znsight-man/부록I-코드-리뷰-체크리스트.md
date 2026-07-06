@@ -1,6 +1,6 @@
 # 부록 I. 코드 리뷰 체크리스트
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## I. 코드 리뷰 체크리스트
 
@@ -645,7 +645,7 @@ SQL ID만 보고
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (79).docx`
+> znsight-guide-word: `통합 (79).docx`
 
 | [61-코드-리뷰-기준.md](../znsight-man/61-코드-리뷰-기준.md) |
 

@@ -1,6 +1,6 @@
 # 부록 H. 개발 완료 체크리스트
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 > **보완 출처:** [SV고객요약샘플.md](../zdoc/SV고객요약샘플.md)
 

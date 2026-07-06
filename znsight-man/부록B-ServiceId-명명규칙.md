@@ -1,6 +1,6 @@
 # 부록 B. ServiceId 명명 규칙
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## B. ServiceId 명명 규칙
 
@@ -399,7 +399,7 @@ ServiceId는 URL이 아니라 실제 업무 Handler를 실행하는 기준이며
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (73).docx`
+> znsight-guide-word: `통합 (73).docx`
 
 | [applicationNaming.md](../zdoc/applicationNaming.md) |
 | [07-ServiceIdDispatcher.md](../zman/07-ServiceIdDispatcher.md) |

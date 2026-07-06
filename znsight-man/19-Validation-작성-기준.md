@@ -1,6 +1,6 @@
 # 19. Validation 작성 기준
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 19. Validation 작성 기준
 
@@ -1119,7 +1119,7 @@ Validation은 개발 편의 기능이 아니라 운영 안정성과 보안성을
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (24).docx` + 명명규칙 상세 19
+> znsight-guide-word: `통합 (24).docx` + 명명규칙 상세 19
 
 | [어플리케이션계층.md](../zdoc/어플리케이션계층.md) |
 

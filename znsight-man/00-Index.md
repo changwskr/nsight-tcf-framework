@@ -1,6 +1,6 @@
 # 00. NSIGHT TCF 개발 Manual 색인
 
-> **NSIGHT TCF 개발 Manual** · [README](./README.md) · 원본: [`znsight-guide`](../znsight-guide/) · **갱신:** 2026-07-05
+> **NSIGHT TCF 개발 Manual** · [README](./README.md) · 원본: [`znsight-guide-word`](../znsight-guide-word/) · **갱신:** 2026-07-05
 
 본 문서는 `znsight-man`에 포함된 **78장 + 부록 10개** Markdown 파일의 색인입니다.
 

@@ -1,6 +1,6 @@
 # 15. 업무코드 / Context / WAR 기준
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 15. 업무코드 / Context / WAR 기준
 
@@ -644,7 +644,7 @@ OM, Gateway, CI/CD, Apache 기준과 연결되어야 함
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (20).docx` + 명명규칙 상세 3,4
+> znsight-guide-word: `통합 (20).docx` + 명명규칙 상세 3,4
 
 | [applicationNaming.md](../zdoc/applicationNaming.md) |
 

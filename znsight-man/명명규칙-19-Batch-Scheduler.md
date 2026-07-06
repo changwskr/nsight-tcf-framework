@@ -1,6 +1,6 @@
 # Batch / Scheduler 명명규칙
 
-> **NSIGHT TCF 명명규칙 상세** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 명명규칙 상세** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 Batch / Scheduler 명명규칙 설계기준
 ## 1. 도입 전 안내말
@@ -592,4 +592,4 @@ LOCK_ID      = LOCK-{JOB_ID}-{BUSINESS_DATE}
 
 ## 원본
 
-- [`znsight-guide`](../znsight-guide/) — `명명규칙 상세 (19).docx`
+- [`znsight-guide-word`](../znsight-guide-word/) — `명명규칙 상세 (19).docx`

@@ -1,6 +1,6 @@
 # 27. DAO 개발
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 27. DAO 개발
 
@@ -441,7 +441,7 @@ DAO는 개발자가 가장 자주 작성하는 계층이지만, 운영 관점에
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (32).docx`
+> znsight-guide-word: `통합 (32).docx`
 
 | [DAO처리.md](../zdoc/DAO처리.md) |
 

@@ -1,6 +1,6 @@
 # 부록 D. 표준 전문 예시
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## D. 표준 전문 예시
 
@@ -730,7 +730,7 @@ Result
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (75).docx`
+> znsight-guide-word: `통합 (75).docx`
 
 | [전문관리.md](../zdoc/전문관리.md) |
 

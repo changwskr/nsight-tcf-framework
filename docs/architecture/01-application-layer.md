@@ -144,11 +144,11 @@ public class SvSampleHandler implements TransactionHandler {
 
 ```text
 {BusinessCode}.{Domain}.{action}
-
-예) SV.Sample.inquiry
-    OM.User.save
-    OM.Dashboard.inquiry
 ```
+
+전체 명명 표준: [53-naming-conventions.md](../architecture/53-naming-conventions.md)
+
+예) `SV.Sample.inquiry`, `OM.User.save`, `OM.Dashboard.inquiry`
 
 - `BusinessCode`: CC, SV, OM, UD …
 - `Domain`: 업무 도메인·엔티티

@@ -1,6 +1,6 @@
 # 65. CI/CD 파이프라인 기준
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 65. CI/CD 파이프라인 기준
 
@@ -586,7 +586,7 @@ NSIGHT의 CI/CD 기준은 다음 한 문장으로 정리할 수 있다.
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (63).docx`
+> znsight-guide-word: `통합 (63).docx`
 
 | [tcf-cicd-개발가이드.md](../zguide/tcf-cicd-개발가이드.md) |
 | [21-CICD-배포.md](../zman/21-CICD-배포.md) |

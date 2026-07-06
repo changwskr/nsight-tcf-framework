@@ -1,6 +1,6 @@
 # 47. ServiceId 등록 절차
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 47. ServiceId 등록 절차
 
@@ -579,7 +579,7 @@ ServiceId는 NSIGHT TCF Framework의 운영 가능한 프로그램 단위이다.
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (50).docx`
+> znsight-guide-word: `통합 (50).docx`
 
 | [12-OM운영관리.md](../zman/12-OM운영관리.md) |
 

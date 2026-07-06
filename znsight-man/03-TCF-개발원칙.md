@@ -1,6 +1,6 @@
 # 3. TCF Framework 개발 원칙
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 3. TCF Framework 개발 원칙
 
@@ -444,7 +444,7 @@ Service 단일 계층 개발이 아니라 Handler → Facade → Service → Rul
 | [TCF.md](../zdoc/TCF.md) |
 | [05-TCF처리구조.md](../zman/05-TCF처리구조.md) |
 
-> znsight-guide: `통합 (8).docx`
+> znsight-guide-word: `통합 (8).docx`
 
 ## 코드베이스 정정 (develop 기준)
 

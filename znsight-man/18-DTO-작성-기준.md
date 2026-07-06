@@ -1,6 +1,6 @@
 # 18. DTO 작성 기준
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 18. DTO 작성 기준
 
@@ -748,7 +748,7 @@ NSIGHT TCF 개발에서 DTO 작성의 핵심은 다음이다.
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (23).docx` + 명명규칙 상세 11,18
+> znsight-guide-word: `통합 (23).docx` + 명명규칙 상세 11,18
 
 | [applicationNaming.md](../zdoc/applicationNaming.md) |
 

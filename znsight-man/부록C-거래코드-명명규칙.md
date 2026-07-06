@@ -1,6 +1,6 @@
 # 부록 C. 거래코드 명명 규칙
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## C. 거래코드 명명 규칙
 
@@ -512,7 +512,7 @@ GUID / TraceId
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (74).docx`
+> znsight-guide-word: `통합 (74).docx`
 
 | [applicationNaming.md](../zdoc/applicationNaming.md) |
 

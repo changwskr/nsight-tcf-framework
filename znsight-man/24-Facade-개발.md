@@ -1,6 +1,6 @@
 # 24. Facade 개발
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 24. Facade 개발 기준
 
@@ -958,7 +958,7 @@ Facade는 업무 로직을 담는 곳이 아니라 업무 유스케이스 흐름
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (29).docx`
+> znsight-guide-word: `통합 (29).docx`
 
 | [어플리케이션계층.md](../zdoc/어플리케이션계층.md) |
 

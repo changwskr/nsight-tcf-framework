@@ -250,7 +250,8 @@ Service: CommonService.process()
 | `tcf-om/src/main/java/com/nh/nsight/marketing/om/mapper/OmOperationMapper.java` | Mapper 인터페이스 |
 | `tcf-om/src/main/java/com/nh/nsight/marketing/om/mapper/OmSampleMapper.java` | 샘플 Mapper |
 | `docs/architecture/01-application-layer.md` | 계층 구조 기준 |
-| `docs/architecture/06-naming.md` | DAO/Mapper/SQL ID 네이밍 기준 |
+| `docs/architecture/06-naming.md` | DAO/Mapper/SQL ID 구현 네이밍 |
+| `docs/architecture/53-naming-conventions.md` | 명명규칙 통합 정의서 |
 
 ---
 

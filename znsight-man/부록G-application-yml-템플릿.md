@@ -1,6 +1,6 @@
 # 부록 G. application.yml 템플릿
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## G. application.yml 템플릿
 
@@ -903,7 +903,7 @@ application.yml은 개발 편의용 설정 파일이 아니라, NSIGHT 온라인
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (78).docx`
+> znsight-guide-word: `통합 (78).docx`
 
 | [20-Spring환경설정.md](../zman/20-Spring환경설정.md) |
 

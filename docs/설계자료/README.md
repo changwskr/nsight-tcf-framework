@@ -20,6 +20,7 @@
 | `tcf-uj` | gateway 경유 테스트 UI · JWT Admin (`/uj`) | [tcf-uj/README.md](../../tcf-uj/README.md) |
 | `tcf-gateway` | API Gateway · SESSIONDB 관문 (`/gw`) | [tcf-gateway/README.md](../../tcf-gateway/README.md) |
 | `tcf-jwt` | JWT 발급·갱신·폐기 (`/jwt`) | [tcf-jwt/README.md](../../tcf-jwt/README.md) |
+| `tcf-eai` | 서비스 간 HTTP/JSON 연동 Client | [tcf-eai/README.md](../../tcf-eai/README.md) |
 | `tcf-cicd` | local/dev/prod 설정 SoT | [tcf-cicd/README.md](../../tcf-cicd/README.md) |
 
 > **OM 배포:** `om-service`는 레거시 샘플 모듈입니다. CI/CD·ztomcat 배포는 **`tcf-om`** 을 사용합니다.
@@ -48,6 +49,25 @@
 | [NSIGHT TCF Framework 헬스체크 설계안](NSIGHT%20TCF%20Framework%20헬스체크%20설계안.docx) | Liveness/Readiness/Deep/Smoke | `tcf-web`, `tcf-batch` | — |
 | [NSIGHT TCF Framework 배포관리 설계안](NSIGHT%20TCF%20Framework%20배포관리%20설계안.docx) | CI/CD·WAR·Rolling·Rollback | `tcf-cicd`, `ztomcat` | [16-deploy.md](../architecture/16-deploy.md) |
 | [NSIGHT 배치·스케줄러 설계안](NSIGHT%20배치·스케줄러%20설계안.docx) | Scheduler·Job·Execution | `tcf-batch`, `tcf-om` | [13-batch.md](../architecture/13-batch.md), [15-schedule.md](../architecture/15-schedule.md) |
+
+## 아키텍처 Markdown (42~52, 운영·플랫폼)
+
+| 문서 | 주제 | 구현 모듈 |
+|------|------|-----------|
+| [42-jwt.md](../architecture/42-jwt.md) | JWT 발급·갱신·폐기·JWKS | `tcf-jwt`, `tcf-gateway` |
+| [43-security-operations.md](../architecture/43-security-operations.md) | 보안 운영·Denylist·감사 | `tcf-jwt`, `tcf-om` |
+| [44-observability.md](../architecture/44-observability.md) | 로그·메트릭·헬스·대시보드 | `tcf-batch`, `tcf-om` |
+| [45-disaster-recovery.md](../architecture/45-disaster-recovery.md) | DR·백업·복구 절차 | `tcf-cicd`, `ztomcat` |
+| [46-service-integration-contract.md](../architecture/46-service-integration-contract.md) | 업무 간 연동 Contract | `tcf-eai`, `*-service` |
+| [47-data-governance.md](../architecture/47-data-governance.md) | 데이터 분류·마스킹·보존 | `tcf-core`, `tcf-om` |
+| [48-multi-module-dependencies.md](../architecture/48-multi-module-dependencies.md) | Gradle 모듈 의존 그래프 | 전 모듈 |
+| [49-release-strategy.md](../architecture/49-release-strategy.md) | 릴리즈·브랜치·CI/CD | `tcf-cicd` |
+| [50-test-architecture.md](../architecture/50-test-architecture.md) | 단위·통합·품질 게이트 | 전 모듈 |
+| [51-api-gateway.md](../architecture/51-api-gateway.md) | API Gateway·라우팅·GRF/GSF/GEF | `tcf-gateway` |
+| [52-om-operations.md](../architecture/52-om-operations.md) | OM Handler·카탈로그·배포 통제 | `tcf-om`, `tcf-ui` |
+| [53-naming-conventions.md](../architecture/53-naming-conventions.md) | 명명규칙 통합 정의서 | 전 모듈 |
+
+개발 매뉴얼 Markdown: [znsight-man/README.md](../../znsight-man/README.md) · Word 원본: [znsight-guide-word](../../znsight-guide-word/)
 
 ## 설계안 ↔ OM 관리 화면
 

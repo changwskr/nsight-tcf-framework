@@ -1,6 +1,6 @@
 # Header 항목 명명규칙
 
-> **NSIGHT TCF 명명규칙 상세** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 명명규칙 상세** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 Header 항목 명명규칙 설계기준
 
@@ -338,7 +338,7 @@ MDC.serviceId / TCF_TRANSACTION_LOG.SERVICE_ID
 
 ---
 
-> **출처 통합**: 원본 `명명규칙 상세 (21).docx` 본문 없음.  
+> **출처 통합**: [명명 - 21. Header 항목.docx](../znsight-guide-word/NSIGHT%20TCF%20개발%20매뉴얼%20-%20명명%20-%2021.%20Header%20항목.docx)는 본 md 기준으로 생성됨.  
 > `명명규칙 상세 (8, 10, 11, 14, 16, 17, 18).docx` 및 Manual [21장 Header 작성 기준](./21-Header-작성-기준.md)에서 Header **항목 이름·매핑** 기준을 추출·통합함.
 
 ---
@@ -349,6 +349,6 @@ MDC.serviceId / TCF_TRANSACTION_LOG.SERVICE_ID
 
 ## 원본
 
-- [`znsight-guide`](../znsight-guide/) — `명명규칙 상세 (21).docx`
+- [`znsight-guide-word`](../znsight-guide-word/) — [명명 - 21. Header 항목.docx](../znsight-guide-word/NSIGHT%20TCF%20개발%20매뉴얼%20-%20명명%20-%2021.%20Header%20항목.docx)
 
-> 원본 `명명규칙 상세 (21).docx` 본문 없음. `_naming-21-header-body.md`(명명규칙 8·10·11·14·16·17·18 통합) 사용.
+> znsight-man 통합본(`명명규칙-21-Header-항목.md`)은 명명규칙 8·10·11·14·16·17·18 및 Manual 21장 기준으로 정리함. docx 재생성: `node _gen-naming21-docx.cjs`

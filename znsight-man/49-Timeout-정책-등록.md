@@ -1,6 +1,6 @@
 # 49. Timeout 정책 등록 절차
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 49. Timeout 정책 등록 절차
 
@@ -617,7 +617,7 @@ Timeout 정책은 성능 설정이 아니라 장애 확산 방지 정책이다.
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (52).docx`
+> znsight-guide-word: `통합 (52).docx`
 
 | [14-Timeout관리.md](../zman/14-Timeout관리.md) |
 

@@ -1,6 +1,6 @@
 # Package 명명규칙
 
-> **NSIGHT TCF 명명규칙 상세** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 명명규칙 상세** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 Package 명명규칙
 ## 1. 도입 전 안내말
@@ -370,4 +370,4 @@ E-SV-BIZ-0001
 
 ## 원본
 
-- [`znsight-guide`](../znsight-guide/) — `명명규칙 상세 (6).docx`
+- [`znsight-guide-word`](../znsight-guide-word/) — `명명규칙 상세 (6).docx`

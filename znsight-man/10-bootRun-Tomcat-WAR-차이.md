@@ -1,6 +1,6 @@
 # 10. bootRun / Tomcat WAR 배포 차이
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 10. bootRun / Tomcat WAR 배포 차이
 
@@ -187,7 +187,7 @@ dependencies {
     implementation project(':tcf-web')
     implementation project(':tcf-core')
     implementation project(':tcf-cache')
-    implementation project(':tcf-integration')
+    implementation project(':tcf-eai')
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter'
@@ -592,7 +592,7 @@ Merge Request
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (15).docx`
+> znsight-guide-word: `통합 (15).docx`
 
 | [21-CICD-배포.md](../zman/21-CICD-배포.md) |
 

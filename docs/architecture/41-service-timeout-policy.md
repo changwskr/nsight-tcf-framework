@@ -113,3 +113,7 @@ Header 7필드
 2. 등록·변경 Timeout 시 FAIL 단독 처리 지양 — UNKNOWN/STATUS_CHECK 검토.
 3. 정책 변경은 OM 화면 + 권한이력(`TIMEOUT_POLICY`) 기록.
 4. 10초 초과 온라인 Timeout은 예외 승인 대상.
+
+---
+
+← [40-header-7-transaction-control.md](40-header-7-transaction-control.md) · [42-jwt.md](42-jwt.md) →

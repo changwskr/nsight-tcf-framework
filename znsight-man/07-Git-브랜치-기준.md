@@ -1,6 +1,6 @@
 # 7. Git 저장소 및 브랜치 사용 기준
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 7. Git 저장소 및 브랜치 사용 기준
 
@@ -649,7 +649,7 @@ NSIGHT 개발자는 Git을 단순 소스 저장소로 사용하면 안 된다.Gi
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (12).docx`
+> znsight-guide-word: `통합 (12).docx`
 
 | [21-CICD-배포.md](../zman/21-CICD-배포.md) |
 

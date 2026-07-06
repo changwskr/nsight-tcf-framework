@@ -1,6 +1,6 @@
 # 70. FAQ / Troubleshooting
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 70. FAQ / Troubleshooting
 
@@ -731,7 +731,7 @@ NSIGHT의 Troubleshooting 기준은 다음 한 문장으로 정리할 수 있다
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (66).docx`
+> znsight-guide-word: `통합 (66).docx`
 
 
 ## 코드베이스 정정 (develop 기준)

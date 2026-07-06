@@ -1,6 +1,6 @@
 # 76. Batch Job 샘플
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 76. Batch Job 샘플
 
@@ -763,7 +763,7 @@ OM은 등록·수동실행·중지·재처리를 통제한다.
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (70).docx`
+> znsight-guide-word: `통합 (70).docx`
 
 | [배치관리.md](../zdoc/배치관리.md) |
 

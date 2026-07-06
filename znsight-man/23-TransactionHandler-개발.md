@@ -1,6 +1,6 @@
 # 23. TransactionHandler 개발
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 23. TransactionHandler 개발 기준
 
@@ -1064,7 +1064,7 @@ TransactionHandler는 업무 로직 클래스가 아니라 ServiceId 실행 Adap
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (28).docx`
+> znsight-guide-word: `통합 (28).docx`
 
 | [08-업무Handler개발.md](../zman/08-업무Handler개발.md) |
 

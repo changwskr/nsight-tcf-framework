@@ -1,6 +1,6 @@
 # 37. Timeout 기준
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 37. Timeout 기준
 
@@ -807,7 +807,7 @@ DBA / 업무팀 / 연계팀 조치
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (42).docx`
+> znsight-guide-word: `통합 (42).docx`
 
 | [타임아웃관리.md](../zdoc/타임아웃관리.md) |
 | [14-Timeout관리.md](../zman/14-Timeout관리.md) |

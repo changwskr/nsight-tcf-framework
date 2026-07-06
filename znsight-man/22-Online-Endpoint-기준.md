@@ -1,6 +1,6 @@
 # 22. Online Endpoint 기준
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 22. Online Endpoint 기준
 
@@ -793,7 +793,7 @@ NSIGHT 개발에서 Endpoint를 REST식으로 계속 늘리면, 시간이 지날
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (27).docx`
+> znsight-guide-word: `통합 (27).docx`
 
 | [온라인처리.md](../zdoc/온라인처리.md) |
 

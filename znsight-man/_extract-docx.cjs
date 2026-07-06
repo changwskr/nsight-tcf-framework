@@ -6,7 +6,7 @@ const path = require('path');
 const os = require('os');
 const { execSync } = require('child_process');
 
-const guideDir = process.argv[2] || path.join(__dirname, '..', 'znsight-guide');
+const guideDir = process.argv[2] || path.join(__dirname, '..', 'znsight-guide-word');
 const outDir = process.argv[3] || path.join(__dirname, '_docx-cache');
 
 if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
@@ -44,18 +44,55 @@ $text = $text -replace '&amp;','&' -replace '&lt;','<' -replace '&gt;','>' -repl
   }
 }
 
+/** 명명규칙 docx — `NSIGHT TCF 개발 매뉴얼 - 명명 - {NN}. {제목}.docx` */
+const NAMING_DOCX_TITLE = {
+  1: '명명 - 01. 명명규칙 총정리',
+  2: '명명 - 02. 명명규칙 최상위 원칙',
+  3: '명명 - 03. 업무코드 Context WAR Package',
+  4: '명명 - 04. 업무코드 표준표',
+  5: '명명 - 05. Gradle 모듈 설계기준',
+  6: '명명 - 06. Package',
+  7: '명명 - 07. ServiceId',
+  8: '명명 - 08. 거래코드',
+  9: '명명 - 09. Java Class',
+  10: '명명 - 10. Java Method Field',
+  11: '명명 - 11. Java DTO',
+  12: '명명 - 12. MyBatis Mapper SQL ID',
+  13: '명명 - 13. DB 객체',
+  14: '명명 - 14. 오류코드',
+  15: '명명 - 15. 화면번호',
+  16: '명명 - 16. 로그 감사로그',
+  17: '명명 - 17. 화면번호와 ServiceId 연결',
+  18: '명명 - 18. Gateway 라우팅',
+  19: '명명 - 19. Batch Scheduler',
+  20: '명명 - 20. Cache',
+  21: '명명 - 21. Header 항목',
+};
+
+function resolveNamingDocx(guideDir, n) {
+  const legacy = path.join(guideDir, `NSIGHT TCF 개발 매뉴얼 - 명명규칙 상세 (${n}).docx`);
+  if (fs.existsSync(legacy)) return legacy;
+  const titlePart = NAMING_DOCX_TITLE[n];
+  if (!titlePart) return null;
+  const hit = fs.readdirSync(guideDir).find(
+    (f) => f.endsWith('.docx') && f.includes(titlePart) && !/명명규칙 상세 \(\d+\)/.test(f),
+  );
+  return hit ? path.join(guideDir, hit) : null;
+}
+
 const main = {};
 const naming = {};
 
 for (const name of fs.readdirSync(guideDir)) {
   if (!name.endsWith('.docx')) continue;
-  const m = name.match(/\((\d+)\)\.docx$/);
+  const m = name.match(/통합 \((\d+)\)\.docx$/);
   if (!m) continue;
-  const n = parseInt(m[1], 10);
-  const full = path.join(guideDir, name);
-  const isNaming = /명명규칙/.test(name);
-  const bucket = isNaming ? naming : main;
-  bucket[n] = full;
+  main[parseInt(m[1], 10)] = path.join(guideDir, name);
+}
+
+for (const n of Object.keys(NAMING_DOCX_TITLE).map(Number)) {
+  const file = resolveNamingDocx(guideDir, n);
+  if (file) naming[n] = file;
 }
 
 for (const [n, file] of Object.entries(main).sort((a, b) => a[0] - b[0])) {

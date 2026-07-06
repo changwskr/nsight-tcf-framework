@@ -5,7 +5,7 @@
 | 문서 번호 | 37 |
 | 제목 | Transaction Log — 기록 방법·흐름·설정 |
 | 상위 문서 | [architecture.md](architecture.md) |
-| 관련 문서 | [03-transaction.md](03-transaction.md), [09-transaction log.md](09-transaction%20log.md), [31-autoconfiguration.md](31-autoconfiguration.md), [34-STF.md](34-STF.md), [36-ETF.md](36-ETF.md) |
+| 관련 문서 | [03-transaction.md](03-transaction.md), [09-transaction log.md](09-transaction log.md), [31-autoconfiguration.md](31-autoconfiguration.md), [34-STF.md](34-STF.md), [36-ETF.md](36-ETF.md) |
 | 구현 | `tcf-core`, `tcf-web`, `tcf-om` |
 | 대상 | 프레임워크·업무·운영 개발자 |
 
@@ -38,7 +38,7 @@ NSIGHT TCF는 **한 번의 온라인 거래**에 대해 로그를 **4채널**로
 **업무 개발자가 직접 거래로그 INSERT를 하지 않는다.**  
 `TransactionLogService` + `JdbcTransactionLogRepository`가 프레임워크에서 자동 처리한다.
 
-입출력 전문·운영 플레이북 등 배경: [09-transaction log.md](09-transaction%20log.md).  
+입출력 전문·운영 플레이북 등 배경: [09-transaction log.md](09-transaction log.md).  
 ETF 후처리·독립 커밋 상세: [36-ETF.md](36-ETF.md) §5.
 
 ---
@@ -73,7 +73,7 @@ finally      ContextHolder.clear(), MDC.clear()
 
 - 출력 경로: `TcfConsoleLog` — logback `logback-tcf-console.xml` 포함
 - **DB와 무관** — 디버깅·장애 1차 분석용
-- Body는 **마스킹 없이** 그대로 출력 → 운영 시 마스킹 정책 필요 ([09-transaction log.md](09-transaction%20log.md) §10)
+- Body는 **마스킹 없이** 그대로 출력 → 운영 시 마스킹 정책 필요 ([09-transaction log.md](09-transaction log.md) §10)
 
 ### 3.2 TX_START — 거래 시작 (`STF`)
 
@@ -420,7 +420,7 @@ OM Facade: `OmTransactionLogFacade` → `OmTransactionLogService`.
 | 문서 | 초점 |
 |------|------|
 | **본 문서 (37)** | **어떻게** 남기는지 — 호출 순서·설정·코드·체크리스트 |
-| [09-transaction log.md](09-transaction%20log.md) | 입출력 vs 거래요약 이중 구조·운영 원칙·플레이북 |
+| [09-transaction log.md](09-transaction log.md) | 입출력 vs 거래요약 이중 구조·운영 원칙·플레이북 |
 | [36-ETF.md](36-ETF.md) | ETF 후처리·독립 커밋·STF/BTF 대칭 |
 | [34-STF.md](34-STF.md) | STF 전처리·TX_START 위치 |
 | [03-transaction.md](03-transaction.md) §10·§12 | TCF 로그 vs Spring TX |

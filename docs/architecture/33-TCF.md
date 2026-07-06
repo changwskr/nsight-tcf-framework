@@ -5,7 +5,7 @@
 | 문서 번호 | 33 |
 | 제목 | TCF (Transaction Control Framework) Engine Guide |
 | 상위 문서 | [architecture.md](architecture.md) |
-| 관련 문서 | [02-junmun.md](02-junmun.md), [03-transaction.md](03-transaction.md), [05-exception.md](05-exception.md), [09-transaction log.md](09-transaction%20log.md), [14-online-arc.md](14-online-arc.md), [29-facade.md](29-facade.md), [34-STF.md](34-STF.md), [35-BTF.md](35-BTF.md), [36-ETF.md](36-ETF.md), [28-tcf-framework-ref.md](28-tcf-framework-ref.md) |
+| 관련 문서 | [02-junmun.md](02-junmun.md), [03-transaction.md](03-transaction.md), [05-exception.md](05-exception.md), [09-transaction log.md](09-transaction log.md), [14-online-arc.md](14-online-arc.md), [29-facade.md](29-facade.md), [34-STF.md](34-STF.md), [35-BTF.md](35-BTF.md), [36-ETF.md](36-ETF.md), [28-tcf-framework-ref.md](28-tcf-framework-ref.md) |
 | 구현 모듈 | `tcf-core` (엔진), `tcf-web` (HTTP 진입·거래로그 SPI 구현) |
 | 대상 | 프레임워크·업무 Handler 개발자 |
 
@@ -455,7 +455,7 @@ DB 적재는 **`TransactionLogRepository` SPI** — `tcf-web`의 `JdbcTransactio
     }
 ```
 
-- 업무 DB TX **롤백**과 **독립** — 별도 DataSource·실패 시 warn만 ([09-transaction log.md](09-transaction%20log.md))
+- 업무 DB TX **롤백**과 **독립** — 별도 DataSource·실패 시 warn만 ([09-transaction log.md](09-transaction log.md))
 - `tcf-batch`: `transaction-log-enabled=false` → Repository 없음
 
 ### 10.2 AuditLogService
@@ -625,7 +625,7 @@ TCF 관련 `@Component`는 **`com.nh.nsight` ComponentScan** 으로 등록 ([30-
 | 표준 전문 JSON | [02-junmun.md](02-junmun.md) |
 | 트랜잭션·STF/ETF 요약 | [03-transaction.md](03-transaction.md) |
 | 예외·resultCode | [05-exception.md](05-exception.md) |
-| 거래로그 테이블 | [09-transaction log.md](09-transaction%20log.md) |
+| 거래로그 테이블 | [09-transaction log.md](09-transaction log.md) |
 | 온라인 아키텍처 | [14-online-arc.md](14-online-arc.md) |
 | Handler 이후 계층 | [29-facade.md](29-facade.md) |
 | tcf-core README | [tcf-core/README.md](../../tcf-core/README.md) |

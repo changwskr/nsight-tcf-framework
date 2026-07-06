@@ -1,6 +1,6 @@
 # 41. JWT / SSO 연계 기준
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 41. JWT / SSO 연계 기준
 
@@ -811,7 +811,7 @@ JWT / SSO 연계 기준의 핵심은 책임 분리이다.SSO는 외부 인증기
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (45).docx`
+> znsight-guide-word: `통합 (45).docx`
 
 | [SSO-TOKEN처리.md](../zdoc/SSO-TOKEN처리.md) |
 | [11-JWT-SSO인증.md](../zman/11-JWT-SSO인증.md) |

@@ -5,7 +5,7 @@
 | 문서 번호 | 26 |
 | 제목 | MyBatis Architecture |
 | 상위 문서 | [architecture.md](architecture.md) |
-| 관련 문서 | [07-DAO.md](07-DAO.md), [06-naming.md](06-naming.md), [08-timeout.md](08-timeout.md), [09-transaction log.md](09-transaction%20log.md), [19-tcf-table.md](19-tcf-table.md), [20-env-spring.md](20-env-spring.md), [27-paging.md](27-paging.md) |
+| 관련 문서 | [07-DAO.md](07-DAO.md), [06-naming.md](06-naming.md), [53-naming-conventions.md](53-naming-conventions.md), [08-timeout.md](08-timeout.md), [09-transaction log.md](09-transaction log.md), [19-tcf-table.md](19-tcf-table.md), [20-env-spring.md](20-env-spring.md), [27-paging.md](27-paging.md) |
 | 구현 모듈 | `tcf-web`, `*-service`, `tcf-om` |
 | 대상 | Service/DAO/Mapper 개발자 |
 

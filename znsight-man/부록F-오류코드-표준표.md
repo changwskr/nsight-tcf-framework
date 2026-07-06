@@ -1,6 +1,6 @@
 # 부록 F. 오류코드 표준표
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## F. 오류코드 표준표
 
@@ -1094,7 +1094,7 @@ TIMEOUT 또는 UNKNOWN 상태를 고려한다.
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (77).docx`
+> znsight-guide-word: `통합 (77).docx`
 
 | [예외처리.md](../zdoc/예외처리.md) |
 

@@ -1,6 +1,6 @@
 # 9. 업무 WAR 구조
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 9. 업무 WAR 구조
 
@@ -131,7 +131,7 @@ sv-service
 | application.rule | 업무 규칙 | 조건 판단, 값 검증, 정책 계산 |
 | persistence.dao | DB 접근 캡슐화 | Mapper 호출 |
 | persistence.mapper | MyBatis Interface | XML SQL과 연결 |
-| client | 외부/내부 서비스 호출 | tcf-integration 사용 |
+| client | 외부/내부 서비스 호출 | tcf-eai 사용 |
 | support | 업무 내부 지원 기능 | 업무 전용 유틸 |
 | config | 업무별 설정 | Bean, Mapper Scan 등 |
 | resources/mapper/{업무코드} | SQL XML | SQL ID 표준 준수 |
@@ -155,7 +155,7 @@ sv.war
  │   ├─ tcf-core
  │   ├─ tcf-web
  │   ├─ tcf-cache
- │   └─ tcf-integration
+ │   └─ tcf-eai
  │
  └─ 설정 파일
      ├─ application.yml
@@ -167,7 +167,7 @@ sv.war
 | --- | --- | --- |
 | 공통 유틸, 날짜, 문자열, 마스킹 | tcf-core | 표준 전문, TCF, STF, ETF, Dispatcher, 예외 |
 | tcf-web | Online Controller, Filter, Exception Handler | tcf-cache |
-| 공통코드, ServiceId, 정책정보 Cache | tcf-integration | 업무 간 HTTP/JSON 표준 전문 호출 |
+| 공통코드, ServiceId, 정책정보 Cache | tcf-eai | 업무 간 HTTP/JSON 표준 전문 호출 |
 공통 모듈은 업무 WAR를 참조하지 않고, 업무 WAR가 공통 모듈을 참조한다.
 
 | 허용: | sv-service → tcf-web → tcf-core → tcf-util |
@@ -399,7 +399,7 @@ dependencies {
     implementation project(':tcf-web')
     implementation project(':tcf-core')
     implementation project(':tcf-cache')
-    implementation project(':tcf-integration')
+    implementation project(':tcf-eai')
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter'
@@ -739,7 +739,7 @@ Health Check / Smoke Test
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (14).docx`
+> znsight-guide-word: `통합 (14).docx`
 
 | [16-deploy.md](../docs/architecture/16-deploy.md) |
 

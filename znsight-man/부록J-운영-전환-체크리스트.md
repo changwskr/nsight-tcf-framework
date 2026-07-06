@@ -1,6 +1,6 @@
 # 부록 J. 운영 전환 체크리스트
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## J. 운영전환 체크리스트
 
@@ -351,7 +351,7 @@ Rollback 불가
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (80).docx`
+> znsight-guide-word: `통합 (80).docx`
 
 | [68-운영-전환-체크리스트.md](../znsight-man/68-운영-전환-체크리스트.md) |
 

@@ -1,6 +1,6 @@
 # 2. 개발자가 알아야 할 NSIGHT 기본 구조
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 2. 개발자가 알아야 할 NSIGHT 기본 구조
 
@@ -274,7 +274,7 @@ NSIGHT 개발자는 업무 WAR와 공통 모듈의 관계를 이해해야 한다
  ├─ tcf-core
  ├─ tcf-web
  ├─ tcf-cache
- ├─ tcf-integration
+ ├─ tcf-eai
  └─ ...
 ```
 
@@ -293,7 +293,7 @@ NSIGHT 개발자는 업무 WAR와 공통 모듈의 관계를 이해해야 한다
 | tcf-core        | StandardRequest, StandardResponse, STF, Dispatcher, ETF 제공 |
 | tcf-web         | /online Controller, 예외 Handler, Web 공통 처리 제공         |
 | tcf-cache       | 공통코드, ServiceId, 정책정보 Cache 제공                     |
-| tcf-integration | 업무 간 HTTP/JSON 표준 전문 호출 Client 제공                 |
+| tcf-eai | 업무 간 HTTP/JSON 표준 전문 호출 Client 제공                 |
 | tcf-om          | 운영 기준정보 관리 기능 제공                                 |
 | tcf-gateway     | 업무코드 기반 라우팅 제공                                    |
 | tcf-jwt         | JWT 발급·검증 기능 제공                                      |
@@ -474,7 +474,7 @@ ServiceId
 | [03-전체아키텍처.md](../zman/03-전체아키텍처.md) |
 | [04-모듈구성.md](../zman/04-모듈구성.md)         |
 
-> znsight-guide: `통합 (7).docx`
+> znsight-guide-word: `통합 (7).docx`
 
 ## 코드베이스 정정 (develop 기준)
 

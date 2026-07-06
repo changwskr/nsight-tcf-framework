@@ -1,6 +1,6 @@
 # 38. Idempotency / 중복요청 처리
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 38. Idempotency / 중복요청 처리
 
@@ -521,7 +521,7 @@ NSIGHT에서 Idempotency는 다음 세 가지를 동시에 만족해야 한다.
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (43).docx`
+> znsight-guide-word: `통합 (43).docx`
 
 | [13-거래통제.md](../zman/13-거래통제.md) |
 

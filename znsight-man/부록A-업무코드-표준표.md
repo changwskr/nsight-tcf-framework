@@ -1,6 +1,6 @@
 # 부록 A. 업무코드 표준표
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## A. 업무코드 표준표
 
@@ -228,7 +228,7 @@ GUID, ServiceId, 업무코드, 거래코드를 함께 남긴다.
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (72).docx`
+> znsight-guide-word: `통합 (72).docx`
 
 | [applicationNaming.md](../zdoc/applicationNaming.md) |
 

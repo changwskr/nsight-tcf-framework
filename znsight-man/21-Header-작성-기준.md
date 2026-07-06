@@ -1,6 +1,6 @@
 # 21. Header 작성 기준
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 ## 21. Header 작성 기준
 
@@ -734,7 +734,7 @@ Header는 업무 데이터가 아니라 거래 실행을 통제하는 공통 계
 | 참고 |
 |------|
 
-> znsight-guide: `통합 (26).docx` + 명명규칙 상세 21
+> znsight-guide-word: `통합 (26).docx` + 명명규칙 상세 21
 
 | [전문관리.md](../zdoc/전문관리.md) |
 

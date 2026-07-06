@@ -1,6 +1,6 @@
 # 57. MyBatis SQL 테스트 기준
 
-> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide`](../znsight-guide/) · 갱신: 2026-07-05
+> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-05
 
 > **보완 출처:** [DAO처리.md](../zdoc/DAO처리.md)
 

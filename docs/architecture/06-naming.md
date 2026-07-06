@@ -3,8 +3,9 @@
 | 항목 | 내용 |
 |------|------|
 | 문서 번호 | 06 |
-| 제목 | Naming Convention Standard |
+| 제목 | Naming Convention Standard (구현 네이밍) |
 | 상위 문서 | [architecture.md](architecture.md) |
+| **명명규칙 정의서** | [53-naming-conventions.md](53-naming-conventions.md) — 업무코드·serviceId·DB·Gateway 등 전체 표준 |
 | 관련 문서 | [01-application-layer.md](01-application-layer.md), [02-junmun.md](02-junmun.md), [03-transaction.md](03-transaction.md), [05-exception.md](05-exception.md) |
 | 대상 | `*-service`, `tcf-om`, `tcf-ui` 개발자 |
 
@@ -233,6 +234,8 @@ com.nh.nsight.marketing.{businessCodeLower}
 
 ## 6. `serviceId` 네이밍 표준
 
+> 전체 정의·업무/OM action 구분·체크리스트: [53-naming-conventions.md](53-naming-conventions.md) §6
+
 ### 6.1 형식
 
 ```text
@@ -243,7 +246,10 @@ com.nh.nsight.marketing.{businessCodeLower}
 |------|------|----|
 | `{BC}` | 대문자 업무코드 | `OM`, `SV`, `UD` |
 | `{Domain}` | PascalCase 도메인 | `ErrorCode`, `TransactionLog`, `Auth` |
-| `{action}` | 소문자 동사 | `inquiry`, `detail`, `save`, `update`, `delete`, `execute` |
+| `{action}` | lowerCamelCase 동사 | `inquiry`, `save`, `selectSummary` (업무 도메인) |
+
+**OM·플랫폼:** `inquiry`, `detail`, `save`, `update`, `delete`, `execute`  
+**업무 WAR:** `selectSummary`, `selectList`, `create`, `send` 등 도메인 의미 동사 — 해당 업무 내 일관 유지
 
 예:
 
@@ -372,7 +378,7 @@ E-{BC}-{CATEGORY}-{NNNN}
 ## 11. 신규 거래 추가 체크리스트
 
 1. `serviceId`를 `{BC}.{Domain}.{action}` 형식으로 정의
-2. Handler 클래스명 `{Business}{Domain}{Action}Handler` 생성
+2. Handler 클래스명 `{Business}{Domain}Handler` 생성 (도메인당 1개)
 3. Facade/Service/DAO/Mapper를 동일 도메인 이름으로 생성
 4. Mapper 메서드명과 SQL ID를 정확히 일치
 5. `transactionCode`를 카탈로그 규칙에 맞게 등록
@@ -430,3 +436,8 @@ sql id   : upd01
 |------|-----------|
 | 2026-06 | 최초 작성 — 계층/SQL/serviceId/errorCode 네이밍 표준화 |
 | 2026-06 | 6계층 패키지(entry/application/persistence/client) 반영 |
+| 2026-07 | [53-naming-conventions.md](53-naming-conventions.md) 연계, serviceId action 이중 계층 명시 |
+
+---
+
+← [53-naming-conventions.md](53-naming-conventions.md) · [07-DAO.md](07-DAO.md) →

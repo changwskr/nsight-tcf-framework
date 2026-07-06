@@ -1,4 +1,5 @@
-NSIGHT TCF 개발가이드 - 7차
+
+NSIGHT TCF 개발가이드 - 7차
 54. 명명규칙 총정리
 54.1 도입 전 안내말
 NSIGHT TCF Framework의 명명규칙은 단순히 이름을 통일하는 기준이 아니다.이름 하나가 업무코드, URL, WAR, Package, ServiceId, Handler, Mapper, SQL ID, 거래로그, 오류코드까지 이어져야 한다.
@@ -20,7 +21,6 @@ Facade / Service / Rule / DAO / Mapper
 Mapper XML / SQL ID
    ↓
 거래로그 / 오류코드 / 감사로그
-
 
 54.2 명명규칙 최상위 원칙
 원칙
@@ -280,7 +280,6 @@ com.nh.nsight.marketing.{businessCode}
 com.nh.nsight.marketing.sv
 com.nh.nsight.marketing.cm
 com.nh.nsight.marketing.om
-
 54.5.2 계층별 Package 구조
 com.nh.nsight.marketing.sv
  ├─ entry
@@ -340,7 +339,6 @@ SvConstants
 ServiceId는 온라인 거래를 실행·통제·추적하는 핵심 식별자다. ServiceId는 Dispatcher가 어떤 Handler를 실행할지 결정하는 Key이며, Header 검증, 권한, 거래로그, 감사로그, Timeout, 중복요청 통제의 기준이 된다.
 54.6.1 표준 형식
 {BusinessCode}.{Domain}.{action}
-
 구성요소
 규칙
 예시
@@ -453,13 +451,11 @@ OM.CommonCode.refreshCache
 54.7 거래코드 Transaction Code 명명규칙
 54.7.1 표준 형식
 {업무코드}-{처리유형}-{일련번호4자리}
-
 예시:
 SV-INQ-0001
 CM-REG-0001
 OM-CTL-0001
 UD-DWN-0001
-
 54.7.2 처리유형 코드
 처리유형
 의미
@@ -516,7 +512,6 @@ OM-HCK-0001
 54.8 Java Class 명명규칙
 54.8.1 기본 형식
 {BusinessCode}{Domain}{Action}{Layer}
-
 계층
 규칙
 예시
@@ -693,7 +688,6 @@ CampaignCreateCommand
 UserAuthUpdateRequest
 CommonCodeSearchCondition
 
-
 54.11 MyBatis Mapper / XML / SQL ID 명명규칙
 MyBatis는 DAO/Mapper 계층에 위치하고, SQL은 Mapper XML에 두며, 업무별 Mapper 분리와 RDW/ADW Mapper 구분, SQL ID 표준화를 원칙으로 한다.
 54.11.1 Mapper Interface
@@ -717,7 +711,6 @@ mapper/sv/SvCustomerMapper.xml
 
 54.11.3 SQL ID 규칙
 {action}{Domain}{Target}
-
 SQL 유형
 SQL ID
 예시
@@ -866,7 +859,6 @@ EXPIRED_AT
 오류코드는 TCF 공통 후처리에서 표준 오류코드로 변환하고, StandardResponse로 조립하며, 거래로그·감사로그·모니터링 지표에 남기는 구조가 기준이다. 오류코드 형식은 E-{DOMAIN}-{CATEGORY}-{NNNN}으로 정리한다.
 54.13.1 표준 형식
 E-{DOMAIN}-{CATEGORY}-{NNNN}
-
 구성
 의미
 예시
@@ -1029,10 +1021,8 @@ LOCAL, DEV, STG, PRD
 PRD
 Gateway 라우팅은 URL Path의 업무코드와 JSON Header의 businessCode가 일치해야 한다.
 POST /gw/sv/online
-
 header.businessCode = SV
 header.serviceId    = SV.Customer.selectSummary
-
 
 54.16 환경설정 파일 명명규칙
 파일
@@ -1343,29 +1333,17 @@ E-OM-BIZ-0001
 점검 항목
 확인
 업무코드가 표준 2자리 대문자인가?
-
 Context, WAR, Package가 같은 업무코드를 사용하는가?
-
 ServiceId가 {BusinessCode}.{Domain}.{action} 형식인가?
-
 거래코드가 {업무코드}-{처리유형}-{일련번호} 형식인가?
-
 Handler 이름이 ServiceId와 연결되는가?
-
 Handler에서 DB를 직접 호출하지 않는가?
-
 Facade, Service, Rule, DAO, Mapper 계층명이 명확한가?
-
 Mapper XML namespace가 Mapper Interface와 일치하는가?
-
 SQL ID가 selectList, insertData처럼 모호하지 않은가?
-
 오류코드가 E-{DOMAIN}-{CATEGORY}-{NNNN} 형식인가?
-
 로그에 guid, traceId, serviceId, transactionCode가 남는가?
-
 약어와 임시 명칭이 운영 코드에 남아 있지 않은가?
-
 
 54.24 마무리말
 NSIGHT TCF의 명명규칙은 개발 편의를 위한 단순 규칙이 아니라 운영 추적성, 장애 분석, 거래통제, Timeout 정책, 오류코드, 감사로그까지 연결하는 기준이다.
@@ -1374,4 +1352,5 @@ NSIGHT TCF의 명명규칙은 개발 편의를 위한 단순 규칙이 아니라
 54.25 시사점
 명명규칙이 흔들리면 TCF의 가장 중요한 장점인 ServiceId 기반 실행 통제와 운영 추적성이 약해진다.반대로 명명규칙이 일관되면 신규 업무 추가, 장애 추적, 로그 분석, Mapper 관리, OM 운영관리, CI/CD 배포까지 하나의 기준으로 연결된다.
 
+모듈
 

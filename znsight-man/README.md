@@ -1,7 +1,7 @@
 # NSIGHT TCF 개발 Manual
 
-> **원본:** [`znsight-guide`](../znsight-guide/) (docx) · **대조:** [`zdoc`](../zdoc/) · [`zman`](../zman/) · [`zguide`](../zguide/) · **코드:** `develop`  
-> **갱신:** 2026-07-05 — `znsight-guide` docx 본문 + zdoc/zman 보완
+> **원본:** [`znsight-guide-word`](../znsight-guide-word/) (docx) · **대조:** [`zdoc`](../zdoc/) · [`zman`](../zman/) · [`zguide`](../zguide/) · **코드:** `develop`  
+> **갱신:** 2026-07-05 — `znsight-guide-word` docx 본문 + zdoc/zman 보완
 
 NSIGHT TCF Framework **업무 개발자용 통합 매뉴얼**입니다. **78장 + 부록 10개**가 각각 별도 Markdown 파일입니다.
 
@@ -176,17 +176,18 @@ NSIGHT TCF Framework **업무 개발자용 통합 매뉴얼**입니다. **78장 
 
 ## 관련
 
+- [아키텍처 정의서](../docs/architecture/architecture.md) · [설계자료](../docs/설계자료/README.md)
 - [`zdoc/`](../zdoc/) · [`zman/`](../zman/) · [`zguide/`](../zguide/) · [`docs/architecture/`](../docs/architecture/)
 
 ---
 
 ## 재생성
 
-`znsight-guide` docx 갱신 후:
+`znsight-guide-word` docx 갱신 후:
 
 ```bash
 cd znsight-man
-node _extract-docx.cjs ../znsight-guide ./_docx-cache
+node _extract-docx.cjs ../znsight-guide-word ./_docx-cache
 node _generate.cjs
 node _generate-naming.cjs
 node _build-index.cjs
