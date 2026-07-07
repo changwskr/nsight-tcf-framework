@@ -426,4 +426,4 @@ Spring Boot 기동 성공 시 `Started *Application` 로그가 context별로 출
 - [tcf-batch/README.md](../tcf-batch/README.md) — 대시보드 수집 배치
 - [tcf-om/README.md](../tcf-om/README.md) — OM 운영 API (tcf-om vs om-service)
 - [tcf-web/README.md](../tcf-web/README.md) — `/online` Controller·STF/ETF
-- [deploy/apache/nsight-marketing-routing.conf](../deploy/apache/nsight-marketing-routing.conf) — Apache ProxyPass 예시
+- [tcf-cicd/prod/apache/nsight-marketing-routing.conf](../tcf-cicd/prod/apache/nsight-marketing-routing.conf) — Apache ProxyPass 예시
