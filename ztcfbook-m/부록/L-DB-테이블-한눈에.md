@@ -6,6 +6,16 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart TB
+  OM23[OM 23 tables] --> CAT[OM_SERVICE_CATALOG]
+  TXL[TCF_TX_LOG] --> ALL[모든 WAR]
+```
+
+---
+
 ## DB 3종류 (18장 복습)
 
 | 이름 | 뭐 들어있나 | 로컬 파일 대략 |

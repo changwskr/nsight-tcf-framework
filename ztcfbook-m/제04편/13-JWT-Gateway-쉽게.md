@@ -8,6 +8,17 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart LR
+  JWT[tcf-jwt :8110 JWKS] --> GW[tcf-gateway :8100]
+  GW -->|Bearer 검증| WAR[업무 WAR]
+  UJ[tcf-uj] --> GW
+```
+
+---
+
 ## 13.1 JWT — “디지털 출입증”
 
 **JWT(JSON Web Token)** 는 쿠키 대신 쓰는 **출입증 문자열**입니다.

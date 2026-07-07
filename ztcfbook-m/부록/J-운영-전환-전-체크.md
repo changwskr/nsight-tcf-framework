@@ -6,6 +6,18 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart LR
+  BUILD[WAR 빌드] --> OMSEED[OM prod seed]
+  OMSEED --> DEPLOY[배포]
+  DEPLOY --> SMOKE[Smoke]
+  SMOKE -->|fail| RB[Rollback]
+```
+
+---
+
 ## “개발 끝” ≠ “운영 OK”
 
 운영 반영 전에는 **WAR + OM + DB + Rollback**까지 준비돼야 합니다.

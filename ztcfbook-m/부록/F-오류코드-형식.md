@@ -6,6 +6,16 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart LR
+  BE[BusinessException] --> ETF[ETF Result]
+  ETF --> OM[OM ErrorCode CRUD]
+```
+
+---
+
 ## 형식 — 한 줄
 
 ```text

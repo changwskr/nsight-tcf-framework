@@ -6,6 +6,17 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart LR
+  ID[ServiceId·거래코드] --> CODE[6계층+SQL]
+  CODE --> TEST[curl 통과]
+  TEST --> OM[OM 등록]
+```
+
+---
+
 ## MR 올리기 전 — 15초 점검
 
 | □ | 질문 |

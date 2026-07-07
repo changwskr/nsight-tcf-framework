@@ -8,6 +8,17 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart LR
+  Client --> GW[tcf-gateway :8100]
+  JWT[tcf-jwt :8110] -->|JWKS| GW
+  GW -->|Proxy| WAR[/{bc}/online]
+```
+
+---
+
 ## 26.1 tcf-gateway — 정문 (8100)
 
 채널에서 들어온 요청을 **Route 테이블** 보고 업무 WAR로 **넘깁니다**.

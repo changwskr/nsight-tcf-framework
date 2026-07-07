@@ -6,6 +6,16 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart LR
+  MR[Pull Request] --> REV[15항 체크]
+  REV --> APPROVE[승인/반려]
+```
+
+---
+
 ## 리뷰 = “운영 표준 맞나?”
 
 취향이 아니라 **6계층·serviceId·로그·OM 등록**을 봅니다.

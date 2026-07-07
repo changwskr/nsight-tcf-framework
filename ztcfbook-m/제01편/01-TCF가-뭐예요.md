@@ -9,6 +9,19 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart LR
+  Client[채널/UI] --> GW[tcf-gateway]
+  GW --> WAR[업무 WAR]
+  WAR --> TCF[TCF.process]
+  TCF --> Handler[TransactionHandler]
+  Handler --> DB[(RDW/H2)]
+```
+
+---
+
 ## 1.1 REST와 TCF, 뭐가 다른가요?
 
 Spring Boot tutorial에서는 보통 이렇게 배웁니다.

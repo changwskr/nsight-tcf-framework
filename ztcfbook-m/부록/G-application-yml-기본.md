@@ -6,6 +6,16 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart TB
+  APP[application.yml] --> PROF[profile local/dev/prod]
+  PROF --> TCF[application-tcf.yml]
+```
+
+---
+
 ## yml이 하는 일
 
 `application.yml`은 “서버 설정 메모장”입니다. 여기서 정해지는 것:

@@ -8,6 +8,17 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart TB
+  COMP[@Component Handler] --> IDS[serviceIds]
+  IDS --> SW[switch serviceId]
+  SW --> FAC[Facade]
+```
+
+---
+
 ## 10.1 Handler가 하는 일 — **한 가지**
 
 **serviceId에 맞는 Facade를 호출**합니다. 그게 전부입니다.

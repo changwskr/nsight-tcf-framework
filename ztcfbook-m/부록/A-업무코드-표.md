@@ -6,6 +6,16 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart TB
+  BC17[17 업무코드] --> DEPLOY[9 WAR 배포]
+  BC17 --> PKG[Package prefix]
+```
+
+---
+
 ## 배포 중인 업무 WAR (develop 기준)
 
 | 코드 | 이름 | Context | 로컬 포트 |

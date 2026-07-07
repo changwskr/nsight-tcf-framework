@@ -6,6 +6,16 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart LR
+  FMT["BC.Domain.action"] --> REG[Handler.serviceIds]
+  REG --> OM[OM Catalog]
+```
+
+---
+
 ## ServiceId 형식
 
 ```text

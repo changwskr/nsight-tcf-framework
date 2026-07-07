@@ -8,6 +8,18 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart TB
+  BE[BusinessException] --> ETF[ETF.businessFail]
+  TO[Timeout] --> ETF
+  IDEM[Idempotency] --> STF
+  LOG[TxLog/Audit/Metric] --> ETF
+```
+
+---
+
 ## 11.1 로그 — 나중에 찾을 번호
 
 장애 나면 **“그 요청 한 건”** 을 찾아야 합니다. TCF가 자동으로 남기는 키:

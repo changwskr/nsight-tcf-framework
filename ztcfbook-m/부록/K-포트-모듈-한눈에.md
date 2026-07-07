@@ -6,6 +6,17 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart TB
+  MOD[22 모듈] --> PORT[포트]
+  PORT --> CTX[Context Path]
+  CTX --> WAR[WAR 파일명]
+```
+
+---
+
 ## 업무 WAR (9종) — 외울 것: SV 8086
 
 | 모듈 | BC | 포트 | Context | Online URL |

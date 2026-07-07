@@ -8,6 +8,16 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart LR
+  SID["ServiceId BC.Domain.action"] --> DISPATCH[Dispatcher]
+  TXC["거래코드 BC-TYPE-NNNN"] --> CTRL[거래통제/감사]
+```
+
+---
+
 ## 6.1 ServiceId — 세 덩어리
 
 ```text

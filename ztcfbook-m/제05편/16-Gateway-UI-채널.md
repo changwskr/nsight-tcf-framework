@@ -8,6 +8,18 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart LR
+  Browser --> UI[tcf-ui Relay]
+  Browser --> UJ[tcf-uj]
+  UJ --> GW[Gateway GEF]
+  GW --> SV[sv-service /{bc}/online]
+```
+
+---
+
 ## 16.1 채널 3종류
 
 | 모듈 | 포트 | 역할 (한 줄) |

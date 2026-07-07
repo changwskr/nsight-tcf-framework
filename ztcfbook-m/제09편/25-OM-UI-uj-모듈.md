@@ -8,6 +8,16 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart LR
+  OM[tcf-om :8097/om] --> UI[tcf-ui :8099 Relay]
+  UI --> UJ[tcf-uj :8102 Gateway UI]
+```
+
+---
+
 ## 25.1 tcf-om — 운영 센터 WAR
 
 | | |

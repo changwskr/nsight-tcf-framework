@@ -6,6 +6,16 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart LR
+  DAO[SvCustomerDao] --> XML[SvCustomerMapper.xml]
+  XML --> SQL[RDW SELECT]
+```
+
+---
+
 ## SQL은 여기만
 
 ```text

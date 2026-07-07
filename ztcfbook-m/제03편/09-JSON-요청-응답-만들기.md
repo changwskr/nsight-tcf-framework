@@ -8,6 +8,17 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart LR
+  REQ[StandardRequest Header+Body] --> STF[검증]
+  STF --> BTF[Handler]
+  BTF --> RES[StandardResponse Header+Result+Body]
+```
+
+---
+
 ## 9.1 요청 = header + body
 
 **StandardRequest** 는 JSON 객체 **두 칸**입니다.

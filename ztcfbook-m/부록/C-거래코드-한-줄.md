@@ -6,6 +6,16 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart LR
+  TX["BC-TYPE-NNNN"] --> HDR[Header transactionCode]
+  HDR --> CTRL[거래통제·감사]
+```
+
+---
+
 ## serviceId vs 거래코드
 
 | | 역할 | 예 |

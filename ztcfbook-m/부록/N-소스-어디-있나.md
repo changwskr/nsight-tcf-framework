@@ -6,6 +6,17 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart TB
+  CORE[tcf-core/web] --> WAR[업무 *-service]
+  GW[tcf-gateway/jwt] --> UI[tcf-ui/uj]
+  OM[tcf-om 24 handlers]
+```
+
+---
+
 ## 거래 1번의 길 (코드 순서)
 
 ```text

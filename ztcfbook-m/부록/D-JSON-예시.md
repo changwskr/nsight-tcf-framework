@@ -6,6 +6,16 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart LR
+  REQ[Request JSON] --> API[/online]
+  API --> RES[Response success/fail]
+```
+
+---
+
 ## 조회 요청 (SV)
 
 ```json

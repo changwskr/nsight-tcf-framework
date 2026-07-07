@@ -8,6 +8,17 @@
 
 ---
 
+## 그림으로 보기
+
+```mermaid
+flowchart LR
+  CICD[tcf-cicd yml] --> BUILD[cicd-build.sh]
+  BUILD --> DEPLOY[deploy-wars.sh]
+  SCRIPTS[tcf-scripts curl/build] --> LOCAL[로컬 검증]
+```
+
+---
+
 ## 28.1 tcf-cicd — 설정 파일 창고
 
 **실행 WAR가 아닙니다.**  
