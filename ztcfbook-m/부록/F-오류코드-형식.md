@@ -80,7 +80,7 @@ throw new BusinessException("E-SV-BIZ-0001", "고객번호가 없습니다.");
 | | |
 | --- | --- |
 | ← 이전 | [부록 E Mapper](./E-Mapper-XML-기본.md) |
-| → 다음 | [부록 G yml](./G-application-yml-기본.md) |
+| → 다음 | [21장 테스트](../제07편/21-테스트-어떻게-하나.md) |
 
 ---
 

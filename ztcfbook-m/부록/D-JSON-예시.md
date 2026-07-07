@@ -68,6 +68,15 @@ flowchart LR
 
 ---
 
+## 이전 · 다음
+
+| | |
+| --- | --- |
+| ← 이전 | [부록 C 거래코드](./C-거래코드-한-줄.md) |
+| → 다음 | [부록 E Mapper XML](./E-Mapper-XML-기본.md) |
+
+---
+
 ## 📘 원본
 
 - [ztcfbook/부록/D-표준-전문-JSON-예시.md](../ztcfbook/부록/D-표준-전문-JSON-예시.md)
