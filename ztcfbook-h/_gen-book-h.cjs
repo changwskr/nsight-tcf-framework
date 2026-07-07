@@ -135,6 +135,10 @@ function renderMasterBlock(enrich) {
   );
 }
 
+function normalizeEol(s) {
+  return s.replace(/\r\n/g, '\n');
+}
+
 function stripSourceMeta(body) {
   return body
     .replace(/^\| \*\*상태\*\* \|[^\n]+\n/m, '| **상태** | Master Edition (ztcfbook-h) |\n')
@@ -154,10 +158,10 @@ function masterMeta(relPath) {
 
 function transformChapter(relPath, content) {
   const key = relKey(relPath);
-  const enrich = resolveEnrich(key, content);
+  const enrich = resolveEnrich(key, normalizeEol(content));
   const block = renderMasterBlock(enrich);
 
-  let body = stripSourceMeta(content);
+  let body = stripSourceMeta(normalizeEol(content));
   body = body.replace(
     /(\| \*\*목차\*\* \|[^\n]+\n\n---\n\n)/,
     `$1${block}`,

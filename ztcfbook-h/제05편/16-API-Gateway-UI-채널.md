@@ -20,7 +20,7 @@ flowchart LR
   Browser --> UI[tcf-ui Relay]
   Browser --> UJ[tcf-uj]
   UJ --> GW[Gateway GEF]
-  GW --> SV[sv-service /{bc}/online]
+  GW --> SV["sv-service /bc/online"]
 ```
 
 ---

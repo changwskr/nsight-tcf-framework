@@ -10,8 +10,8 @@
 
 ```mermaid
 flowchart LR
-  REQ[Request JSON] --> API[/online]
-  API --> RES[Response success/fail]
+  REQ["Request JSON"] --> API["POST /online"]
+  API --> RES["Response success/fail"]
 ```
 
 ---

@@ -382,7 +382,7 @@ const MASTER_ENRICH = {
   Browser --> UI[tcf-ui Relay]
   Browser --> UJ[tcf-uj]
   UJ --> GW[Gateway GEF]
-  GW --> SV[sv-service /{bc}/online]`,
+  GW --> SV["sv-service /bc/online"]`,
     samples: [
       { title: 'TransactionRelayService (tcf-ui)', file: 'tcf-ui/src/main/java/com/nh/nsight/tcf/ui/client/TransactionRelayService.java', start: 1, end: 55 },
       { title: 'GatewayRouteDispatcher', file: 'tcf-gateway/src/main/java/com/nh/nsight/gateway/client/GatewayRouteDispatcher.java', start: 1, end: 55 },
@@ -569,7 +569,7 @@ const MASTER_ENRICH = {
     mermaid: `flowchart LR
   Client --> GW[tcf-gateway :8100]
   JWT[tcf-jwt :8110] -->|JWKS| GW
-  GW -->|Proxy| WAR[/{bc}/online]`,
+  GW -->|Proxy| WAR["/{bc}/online"]`,
     samples: [
       { title: 'GatewayRouteDispatcher', file: 'tcf-gateway/src/main/java/com/nh/nsight/gateway/client/GatewayRouteDispatcher.java', start: 1, end: 55 },
       { title: 'SvProxyController', file: 'tcf-gateway/src/main/java/com/nh/nsight/gateway/entry/web/SvProxyController.java', start: 1, end: 35 },
@@ -751,8 +751,8 @@ const MASTER_ENRICH = {
 
   '부록/D-표준-전문-JSON-예시': {
     mermaid: `flowchart LR
-  REQ[Request JSON] --> API[/online]
-  API --> RES[Response success/fail]`,
+  REQ["Request JSON"] --> API["POST /online"]
+  API --> RES["Response success/fail"]`,
     samples: [
       { title: 'sv-sample-inquiry.json', file: 'tcf-ui/src/main/resources/sample-requests/sv-sample-inquiry.json' },
     ],

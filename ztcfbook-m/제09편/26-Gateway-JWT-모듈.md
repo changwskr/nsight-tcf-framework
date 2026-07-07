@@ -14,7 +14,7 @@
 flowchart LR
   Client --> GW[tcf-gateway :8100]
   JWT[tcf-jwt :8110] -->|JWKS| GW
-  GW -->|Proxy| WAR[/{bc}/online]
+  GW -->|Proxy| WAR["/{bc}/online"]
 ```
 
 ---
