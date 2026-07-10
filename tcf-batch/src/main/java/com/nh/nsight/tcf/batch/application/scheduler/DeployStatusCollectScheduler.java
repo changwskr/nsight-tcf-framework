@@ -27,7 +27,7 @@ public class DeployStatusCollectScheduler {
 
     @Scheduled(cron = "${nsight.batch.deploy-status.cron:55 */5 * * * *}")
     public void runScheduled() {
-        if (scheduledCollectSupport.skipIfWarmingUp(properties.getJobId(), log)) {
+        if (scheduledCollectSupport.skipIfUnavailable(properties.getJobId(), log)) {
             return;
         }
         log.info("Scheduled deploy status collect started jobId={}", properties.getJobId());

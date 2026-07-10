@@ -26,7 +26,7 @@ public class DbStatusCollectScheduler {
 
     @Scheduled(cron = "${nsight.batch.db-status.cron:30 */5 * * * *}")
     public void runScheduled() {
-        if (scheduledCollectSupport.skipIfWarmingUp(properties.getJobId(), log)) {
+        if (scheduledCollectSupport.skipIfUnavailable(properties.getJobId(), log)) {
             return;
         }
         log.info("Scheduled DB status collect started jobId={}", properties.getJobId());

@@ -44,8 +44,9 @@ nsight:
     batch-service-url: http://127.0.0.1:8098/batch
     runtime-diagnostics:
       enabled: true
-      connect-timeout-ms: 1000
-      read-timeout-ms: 2000
+      connect-timeout-ms: 2000
+      read-timeout-ms: 8000
+      max-parallel-requests: 4
       targets:
         - businessCode: OM
           baseUrl: http://127.0.0.1:8097/om
@@ -59,11 +60,6 @@ nsight:
         - { businessCode: EP, baseUrl: '${nsight.gateway.base-url}/ep', enabled: true }
         - { businessCode: SS, baseUrl: '${nsight.gateway.base-url}/ss', enabled: true }
         - { businessCode: MG, baseUrl: '${nsight.gateway.base-url}/mg', enabled: true }
-        - { businessCode: UI, baseUrl: '${nsight.gateway.base-url}/ui', enabled: true }
-        - { businessCode: UJ, baseUrl: '${nsight.gateway.base-url}/uj', enabled: true }
-        - { businessCode: JWT, baseUrl: '${nsight.gateway.base-url}/jwt', enabled: true }
-        - { businessCode: GW, baseUrl: '${nsight.gateway.base-url}/gw', enabled: true }
-        - { businessCode: BATCH, baseUrl: '${nsight.gateway.base-url}/batch', enabled: true }
     sso:
       mock-enabled: true
       jwt-service-url: http://127.0.0.1:8110

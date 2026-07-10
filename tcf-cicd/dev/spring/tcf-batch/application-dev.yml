@@ -12,6 +12,11 @@ nsight:
   gateway:
     mode: dev
     base-url: http://127.0.0.1:8080
+  tcf:
+    runtime-monitor-enabled: true
+    runtime-slow-sql-threshold-ms: 1000
+    runtime:
+      business-code: BATCH
   batch:
     startup-collect:
       # batch.war가 알파벳 순 첫 WAR → 나머지 11개 순차 배포 후 수집

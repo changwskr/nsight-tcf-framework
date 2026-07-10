@@ -78,9 +78,16 @@ nsight:
     transaction-log-enabled: true
     runtime-monitor-enabled: true
     runtime-slow-sql-threshold-ms: 1000
+    runtime:
+      business-code: OM
+  om:
+    runtime-diagnostics:
+      enabled: true
+      connect-timeout-ms: 2000
+      read-timeout-ms: 8000
+      max-parallel-requests: 4
+    session-cleanup:
+      fixed-rate-ms: 10000
   timeout:
     online-transaction-seconds: 5
     db-query-seconds: 3
-  om:
-    session-cleanup:
-      fixed-rate-ms: 10000

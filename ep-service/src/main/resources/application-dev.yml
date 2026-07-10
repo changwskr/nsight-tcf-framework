@@ -25,3 +25,7 @@ nsight:
       username: sa
       password:
       driver-class-name: org.h2.Driver
+    runtime-monitor-enabled: true
+    runtime-slow-sql-threshold-ms: 1000
+    runtime:
+      business-code: EP

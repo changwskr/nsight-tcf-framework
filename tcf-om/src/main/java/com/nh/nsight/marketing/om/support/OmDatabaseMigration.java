@@ -95,10 +95,44 @@ public class OmDatabaseMigration implements ApplicationRunner {
         ensureTransactionControlTable();
         TransactionControlSeedData.mergeAll(jdbcTemplate);
         TimeoutPolicySeedData.mergeAll(jdbcTemplate);
+        repairRuntimeInquiryCatalogAndTimeout();
         ensureMessageStructTables();
         MessageStructureSeedData.mergeAll(jdbcTemplate);
         removeLegacyFunctionAuthIds();
         log.debug("OM schema migration applied.");
+    }
+
+    /** CAT-105 중복으로 카탈로그에서 빠졌을 수 있는 런타임 진단 거래·Timeout 정책을 복구한다. */
+    private void repairRuntimeInquiryCatalogAndTimeout() {
+        jdbcTemplate.update("""
+                MERGE INTO OM_SERVICE_CATALOG (CATALOG_ID, BUSINESS_CODE, SERVICE_ID, TRANSACTION_CODE,
+                                               PROCESSING_TYPE, HANDLER_CLASS, AUTH_CODE, AUDIT_YN,
+                                               TIMEOUT_SEC, USE_YN, DESCRIPTION)
+                KEY (CATALOG_ID)
+                VALUES ('CAT-111', 'OM', 'OM.Runtime.inquiry', 'OM-RTM-0001', 'INQUIRY',
+                        'OmRuntimeHandler', 'ROLE_OM_RTM', 'N', 60, 'Y', '런타임 진단')
+                """);
+        jdbcTemplate.update("""
+                MERGE INTO TCF_SERVICE_TIMEOUT_POLICY (
+                    SERVICE_ID, TRANSACTION_CODE, BUSINESS_CODE, SERVICE_NAME,
+                    ONLINE_TIMEOUT_SEC, TX_TIMEOUT_SEC, DB_QUERY_TIMEOUT_SEC,
+                    EXTERNAL_CONNECT_TIMEOUT_MS, EXTERNAL_READ_TIMEOUT_MS,
+                    TIMEOUT_ACTION, USE_YN, DESCRIPTION, CREATED_AT
+                )
+                KEY (SERVICE_ID, TRANSACTION_CODE, BUSINESS_CODE)
+                VALUES ('OM.Runtime.inquiry', 'OM-RTM-0001', 'OM', '런타임 진단',
+                        60, 5, 3, 3000, 5000, 'FAIL', 'Y', '런타임 진단', CURRENT_TIMESTAMP)
+                """);
+        jdbcTemplate.update("""
+                UPDATE TCF_SERVICE_TIMEOUT_POLICY
+                   SET ONLINE_TIMEOUT_SEC = 60,
+                       SERVICE_NAME = '런타임 진단',
+                       DESCRIPTION = '런타임 진단'
+                 WHERE SERVICE_ID = 'OM.Runtime.inquiry'
+                   AND TRANSACTION_CODE = 'OM-RTM-0001'
+                   AND BUSINESS_CODE = 'OM'
+                   AND ONLINE_TIMEOUT_SEC < 60
+                """);
     }
 
     /** data.sql 이 MS949 등으로 적재된 H2 파일의 한글 깨짐을 Java UTF-16 문자열로 복구한다. */
@@ -132,7 +166,9 @@ public class OmDatabaseMigration implements ApplicationRunner {
                 Map.entry("CAT-023", "데이터권한 조회"),
                 Map.entry("CAT-024", "권한이력 조회"),
                 Map.entry("CAT-100", "거래통제 수정"),
-                Map.entry("CAT-105", "권한이력 전체 삭제"),
+                Map.entry("CAT-105", "전문구조 조회"),
+                Map.entry("CAT-111", "런타임 진단"),
+                Map.entry("CAT-112", "권한이력 전체 삭제"),
                 Map.entry("CAT-101", "Timeout 정책 조회"),
                 Map.entry("CAT-102", "Timeout 정책 등록"),
                 Map.entry("CAT-103", "Timeout 정책 수정"),

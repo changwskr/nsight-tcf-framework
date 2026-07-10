@@ -8,7 +8,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class OmRuntimeDiagnosticsProperties {
     private boolean enabled = true;
     private int connectTimeoutMs = 2000;
-    private int readTimeoutMs = 5000;
+    private int readTimeoutMs = 8000;
+    /** 동일 Tomcat에 동시 HTTP 조회 수 (과부하·Read timed out 방지) */
+    private int maxParallelRequests = 4;
     private final List<Target> targets = new ArrayList<>();
 
     public boolean isEnabled() {
@@ -33,6 +35,14 @@ public class OmRuntimeDiagnosticsProperties {
 
     public void setReadTimeoutMs(int readTimeoutMs) {
         this.readTimeoutMs = readTimeoutMs;
+    }
+
+    public int getMaxParallelRequests() {
+        return maxParallelRequests;
+    }
+
+    public void setMaxParallelRequests(int maxParallelRequests) {
+        this.maxParallelRequests = maxParallelRequests;
     }
 
     public List<Target> getTargets() {
