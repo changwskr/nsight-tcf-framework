@@ -9,6 +9,12 @@ spring:
   h2:
     console:
       enabled: true
+  sql:
+    init:
+      mode: always
+      continue-on-error: true
+      encoding: UTF-8
+      schema-locations: classpath:schema.sql
 
 nsight:
   tcf:

@@ -7,6 +7,7 @@ import com.nh.nsight.tcf.core.support.message.StandardHeader;
 import com.nh.nsight.tcf.core.support.message.StandardRequest;
 import com.nh.nsight.tcf.core.support.message.StandardResponse;
 import com.nh.nsight.tcf.core.support.dispatch.TransactionDispatcher;
+import com.nh.nsight.tcf.core.support.runtime.TcfRuntimeTransactionHook;
 import com.nh.nsight.tcf.core.support.security.AuthenticationContextHolder;
 import com.nh.nsight.tcf.core.support.timeout.OnlineTransactionTimeoutExecutor;
 import com.nh.nsight.tcf.core.support.timeout.TimeoutContextHolder;
@@ -21,15 +22,18 @@ public class TCF {
     private final TransactionDispatcher dispatcher;
     private final ETF etf;
     private final OnlineTransactionTimeoutExecutor onlineTransactionTimeoutExecutor;
+    private final TcfRuntimeTransactionHook runtimeTransactionHook;
 
     public TCF(STF stf,
             TransactionDispatcher dispatcher,
             ETF etf,
-            OnlineTransactionTimeoutExecutor onlineTransactionTimeoutExecutor) {
+            OnlineTransactionTimeoutExecutor onlineTransactionTimeoutExecutor,
+            TcfRuntimeTransactionHook runtimeTransactionHook) {
         this.stf = stf;
         this.dispatcher = dispatcher;
         this.etf = etf;
         this.onlineTransactionTimeoutExecutor = onlineTransactionTimeoutExecutor;
+        this.runtimeTransactionHook = runtimeTransactionHook;
     }
 
     public StandardResponse<Object> process(StandardRequest<Map<String, Object>> request) {
@@ -41,6 +45,7 @@ public class TCF {
 
             System.out.println(" ============================[TCF.process] STF START");
             context = stf.preProcess(request, clientHeader);
+            runtimeTransactionHook.onTransactionStart(context);
             System.out.println(" ============================[TCF.process] STF END");
 
             System.out.println(" ============================[TCF.process] DISPATCHER  START");
@@ -79,6 +84,7 @@ public class TCF {
             return response;
         } finally {
             System.out.println(" =========================================[TCF.process] cleanup");
+            runtimeTransactionHook.onTransactionEnd(context);
             TransactionContextHolder.clear();
             AuthenticationContextHolder.clear();
             TimeoutContextHolder.clear();

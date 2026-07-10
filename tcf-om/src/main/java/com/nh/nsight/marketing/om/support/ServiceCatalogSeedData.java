@@ -63,6 +63,8 @@ final class ServiceCatalogSeedData {
                     "OmBatchHandler", "ROLE_OM_BAT", "N", 10, "Y", "배치/스케줄 조회"),
             entry("CAT-012", "OM", "OM.HealthCheck.inquiry", "OM-HLT-0001", "INQUIRY",
                     "OmHealthCheckHandler", "ROLE_OM_HLT", "N", 5, "Y", "Health Check 조회"),
+            entry("CAT-105", "OM", "OM.Runtime.inquiry", "OM-RTM-0001", "INQUIRY",
+                    "OmRuntimeHandler", "ROLE_OM_RTM", "N", 60, "Y", "런타임 진단"),
             entry("CAT-013", "OM", "OM.SystemConfig.inquiry", "OM-CFG-0001", "INQUIRY",
                     "OmSystemConfigHandler", "ROLE_OM_CFG", "N", 5, "Y", "환경설정 조회"),
             entry("CAT-014", "OM", "OM.FileDownload.inquiry", "OM-FIL-0001", "INQUIRY",

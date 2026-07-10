@@ -43,7 +43,7 @@ public class TcfJwtAuthenticationFilter extends OncePerRequestFilter {
         if (uri == null) {
             return true;
         }
-        if (uri.startsWith("/actuator") || uri.endsWith("/health")) {
+        if (uri.startsWith("/actuator") || uri.endsWith("/health") || uri.startsWith("/internal/runtime")) {
             return true;
         }
         return !uri.endsWith("/online");

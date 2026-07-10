@@ -65,7 +65,11 @@ public class OmDatabaseMigration implements ApplicationRunner {
         jdbcTemplate.update("""
                 MERGE INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN) KEY (MENU_ID)
                 VALUES (?, ?, ?, ?, ?, ?)
-                """, "OM_FIL", "파일 관리", "/om/admin/file-management.html", "OM_GRP_SYS", 15, "Y");
+                """, "OM_RTM", "런타임 진단", "/om/admin/runtime-diagnostics.html", "OM_GRP_SYS", 14, "Y");
+        jdbcTemplate.update("""
+                MERGE INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN) KEY (MENU_ID)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """, "OM_FIL", "파일 관리", "/om/admin/file-management.html", "OM_GRP_SYS", 16, "Y");
         jdbcTemplate.update("""
                 MERGE INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN) KEY (MENU_ID)
                 VALUES (?, ?, ?, ?, ?, ?)
@@ -242,6 +246,7 @@ public class OmDatabaseMigration implements ApplicationRunner {
         mergeCommonCode("AUTH_CODE", "ROLE_OM_ERR", "오류코드", 6, "오류코드 관리", ts);
         mergeCommonCode("AUTH_CODE", "ROLE_OM_BAT", "배치", 7, "배치/스케줄", ts);
         mergeCommonCode("AUTH_CODE", "ROLE_OM_HLT", "Health Check", 8, "AP/DB 헬스", ts);
+        mergeCommonCode("AUTH_CODE", "ROLE_OM_RTM", "런타임 진단", 33, "Thread/JVM/DB Pool 진단", ts);
         mergeCommonCode("AUTH_CODE", "ROLE_OM_CFG", "환경설정", 9, "시스템 설정 조회", ts);
         mergeCommonCode("AUTH_CODE", "ROLE_OM_FIL", "파일", 10, "파일 다운로드 이력", ts);
         mergeCommonCode("AUTH_CODE", "ROLE_OM_CDC", "공통코드", 11, "공통코드 CRUD", ts);

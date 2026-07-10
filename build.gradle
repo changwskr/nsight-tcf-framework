@@ -61,7 +61,8 @@ subprojects { sub ->
         sub.tasks.withType(org.springframework.boot.gradle.tasks.run.BootRun).configureEach {
             workingDir = rootProject.projectDir
             systemProperty 'nsight.txlog.path', nsightTxlogPath
-            systemProperty 'spring.profiles.active', 'local'
+            def activeProfile = System.getenv('SPRING_PROFILES_ACTIVE') ?: sub.findProperty('springProfilesActive') ?: 'local'
+            systemProperty 'spring.profiles.active', activeProfile
             systemProperty 'file.encoding', 'UTF-8'
             systemProperty 'sun.jnu.encoding', 'UTF-8'
             systemProperty 'stdout.encoding', 'UTF-8'

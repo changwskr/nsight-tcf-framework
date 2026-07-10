@@ -27,7 +27,7 @@ final class FunctionAuthSeedData {
 
     private static final String[] SCREEN_MENUS = {
             "OM_DASH", "OM_TX", "OM_TXC", "OM_TMO", "OM_SVC", "OM_MSG", "OM_AUTH", "OM_AUDIT", "OM_SES",
-            "OM_ERR", "OM_BAT", "OM_HLT", "OM_CFG", "OM_FIL", "OM_DPL",
+            "OM_ERR", "OM_BAT", "OM_HLT", "OM_RTM", "OM_CFG", "OM_FIL", "OM_DPL",
             "OM_CDC", "OM_FAU", "OM_DAU", "OM_AHT", "OM_CCH"
     };
 

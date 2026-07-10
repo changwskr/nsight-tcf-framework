@@ -1,4 +1,4 @@
-# 80. JWT · TCF · Web 개발 매뉴얼
+# 81. JWT · TCF · Web 개발 매뉴얼
 
 > **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-06
 

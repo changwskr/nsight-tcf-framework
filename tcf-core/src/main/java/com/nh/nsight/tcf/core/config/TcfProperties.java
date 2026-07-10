@@ -21,6 +21,8 @@ public class TcfProperties {
     private boolean timeoutPolicyEnabled = true;
     private boolean timeoutPolicySchemaAutoInit = true;
     private String timeoutPolicyTableName = TcfServiceTimeoutConstants.TABLE_NAME;
+    private boolean runtimeMonitorEnabled = true;
+    private long runtimeSlowSqlThresholdMs = 1000;
     private final TransactionLogDataSource transactionLogDatasource = new TransactionLogDataSource();
 
     public boolean isSessionValidationEnabled() { return sessionValidationEnabled; }
@@ -53,6 +55,10 @@ public class TcfProperties {
     public void setTimeoutPolicySchemaAutoInit(boolean timeoutPolicySchemaAutoInit) { this.timeoutPolicySchemaAutoInit = timeoutPolicySchemaAutoInit; }
     public String getTimeoutPolicyTableName() { return timeoutPolicyTableName; }
     public void setTimeoutPolicyTableName(String timeoutPolicyTableName) { this.timeoutPolicyTableName = timeoutPolicyTableName; }
+    public boolean isRuntimeMonitorEnabled() { return runtimeMonitorEnabled; }
+    public void setRuntimeMonitorEnabled(boolean runtimeMonitorEnabled) { this.runtimeMonitorEnabled = runtimeMonitorEnabled; }
+    public long getRuntimeSlowSqlThresholdMs() { return runtimeSlowSqlThresholdMs; }
+    public void setRuntimeSlowSqlThresholdMs(long runtimeSlowSqlThresholdMs) { this.runtimeSlowSqlThresholdMs = runtimeSlowSqlThresholdMs; }
     public TransactionLogDataSource getTransactionLogDatasource() { return transactionLogDatasource; }
 
     public static class TransactionLogDataSource {

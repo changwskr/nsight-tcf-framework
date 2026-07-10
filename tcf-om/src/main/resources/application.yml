@@ -76,6 +76,8 @@ nsight:
     idempotency-enabled: false
     audit-enabled: true
     transaction-log-enabled: true
+    runtime-monitor-enabled: true
+    runtime-slow-sql-threshold-ms: 1000
   timeout:
     online-transaction-seconds: 5
     db-query-seconds: 3

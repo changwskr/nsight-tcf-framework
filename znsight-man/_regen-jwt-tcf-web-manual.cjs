@@ -13,7 +13,7 @@ const docxPath = path.resolve(
   'znsight-guide-word',
   'NSIGHT TCF 개발 매뉴얼 - JWT-TCF-WEB.docx',
 );
-const outMd = path.join(__dirname, '80-JWT-TCF-WEB-개발-매뉴얼.md');
+const outMd = path.join(__dirname, '81-JWT-TCF-WEB-개발-매뉴얼.md');
 const cacheTxt = path.join(__dirname, '_docx-cache', 'jwt-tcf-web-manual.txt');
 
 function getDocxText(filePath) {
@@ -87,7 +87,7 @@ const nav =
   '← [79. JWT 개발 매뉴얼](./79-JWT-개발-매뉴얼.md) · [41. JWT / SSO 연계](./41-JWT-SSO-연계.md) →';
 
 const full = [
-  '# 80. JWT · TCF · Web 개발 매뉴얼',
+  '# 81. JWT · TCF · Web 개발 매뉴얼',
   '',
   '> **NSIGHT TCF 개발 Manual** · 원본: [`znsight-guide-word`](../znsight-guide-word/) · 갱신: 2026-07-06',
   '',

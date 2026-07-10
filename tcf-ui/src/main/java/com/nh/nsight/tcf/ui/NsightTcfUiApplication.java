@@ -13,7 +13,9 @@ public class NsightTcfUiApplication extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
-        System.setProperty("server.port", "8099");
+        if (System.getProperty("server.port") == null) {
+            System.setProperty("server.port", "8099");
+        }
         SpringApplication.run(NsightTcfUiApplication.class, args);
     }
 }

@@ -47,6 +47,9 @@ public class EbEventPublishService {
             }
             System.out.println("[EB-BATCH] READY 이벤트 " + events.size()
                     + "건 처리 완료 (EbEventPublishService.publishReadyEvents)");
+        } catch (Exception e) {
+            log.warn("EB event publish batch skipped: {}", e.getMessage());
+            System.out.println("[EB-BATCH] ERROR publishReadyEvents: " + e.getMessage());
         } finally {
             System.out.println("---------- [EB-BATCH] END publishReadyEvents (EbEventPublishService.publishReadyEvents) ----------");
         }

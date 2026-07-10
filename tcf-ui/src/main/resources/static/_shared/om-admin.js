@@ -25,6 +25,7 @@ window.OmAdmin = (function () {
     { id: 'batch', label: '배치 / 스케줄', href: '/om/admin/batch.html' },
     { id: 'deploy', label: '배포 관리', href: '/om/admin/deploy.html' },
     { id: 'health-check', label: 'Health Check', href: '/om/admin/health-check.html' },
+    { id: 'runtime-diagnostics', label: '런타임 진단', href: '/om/admin/runtime-diagnostics.html' },
     { id: 'system-config', label: '환경설정 조회', href: '/om/admin/system-config.html' },
     { id: 'file-management', label: '파일 관리', href: '/om/admin/file-management.html' }
   ];
@@ -77,6 +78,7 @@ window.OmAdmin = (function () {
     errorCode: { serviceId: 'OM.ErrorCode.inquiry', transactionCode: 'OM-ERR-0001' },
     batch: { serviceId: 'OM.Batch.inquiry', transactionCode: 'OM-BAT-0001' },
     healthCheck: { serviceId: 'OM.HealthCheck.inquiry', transactionCode: 'OM-HLT-0001' },
+    runtimeDiagnostics: { serviceId: 'OM.Runtime.inquiry', transactionCode: 'OM-RTM-0001' },
     systemConfig: { serviceId: 'OM.SystemConfig.inquiry', transactionCode: 'OM-CFG-0001' },
     fileDownload: { serviceId: 'OM.FileDownload.inquiry', transactionCode: 'OM-FIL-0001' },
     commonCode: { serviceId: 'OM.CommonCode.inquiry', transactionCode: 'OM-CDC-0001' },
@@ -175,6 +177,7 @@ window.OmAdmin = (function () {
     'OM.Batch.execute': '배치 재실행',
     'OM.Batch.deleteAll': '배치 실행이력 전체 삭제',
     'OM.HealthCheck.inquiry': 'Health Check 조회',
+    'OM.Runtime.inquiry': '런타임 진단',
     'OM.SystemConfig.inquiry': '환경설정 조회',
     'OM.FileDownload.inquiry': '파일 다운로드 이력',
     'OM.CommonCode.inquiry': '공통코드 목록 조회',

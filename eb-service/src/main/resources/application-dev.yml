@@ -9,6 +9,12 @@ spring:
   h2:
     console:
       enabled: true
+  sql:
+    init:
+      mode: always
+      continue-on-error: true
+      encoding: UTF-8
+      schema-locations: classpath:schema.sql
 
 nsight:
   tcf:
@@ -19,3 +25,9 @@ nsight:
       username: sa
       password:
       driver-class-name: org.h2.Driver
+  eb:
+    event-publish:
+      enabled: true
+      fixed-delay-ms: 60000
+      batch-size: 50
+      ep-online-url: http://127.0.0.1:8080/ep/online
