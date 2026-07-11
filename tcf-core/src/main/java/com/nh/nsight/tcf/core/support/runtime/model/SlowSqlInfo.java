@@ -8,5 +8,6 @@ public record SlowSqlInfo(
         long endTimeMillis,
         long elapsedMillis,
         boolean success,
+        long affectedRows,
         long recordedAtMillis) {
 }

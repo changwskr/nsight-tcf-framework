@@ -62,8 +62,10 @@ public class TcfSqlMonitorInterceptor implements Interceptor {
         long start = System.currentTimeMillis();
         registry.markDbWait(guid);
         boolean success = true;
+        Object result = null;
         try {
-            return invocation.proceed();
+            result = invocation.proceed();
+            return result;
         } catch (Throwable e) {
             success = false;
             throw e;
@@ -71,7 +73,7 @@ public class TcfSqlMonitorInterceptor implements Interceptor {
             try {
                 long end = System.currentTimeMillis();
                 long elapsed = end - start;
-                registry.updateSqlId(guid, sqlId);
+                registry.updateSqlId(guid, mapperId);
                 if (elapsed >= properties.getRuntimeSlowSqlThresholdMs()) {
                     slowSqlTracker.record(new SlowSqlInfo(
                             mapperId,
@@ -81,12 +83,23 @@ public class TcfSqlMonitorInterceptor implements Interceptor {
                             end,
                             elapsed,
                             success,
+                            resolveAffectedRows(invocation, result),
                             end));
                 }
             } catch (Exception e) {
                 log.debug("sql monitor skipped: {}", e.getMessage());
             }
         }
+    }
+
+    private static long resolveAffectedRows(Invocation invocation, Object result) {
+        if (!"update".equals(invocation.getMethod().getName())) {
+            return -1L;
+        }
+        if (result instanceof Number number) {
+            return number.longValue();
+        }
+        return 0L;
     }
 
     private String resolveServiceId() {

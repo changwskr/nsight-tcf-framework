@@ -55,12 +55,96 @@ public class RuntimeStatusCollector {
         return extractFromStatuses(collected, "slowSql", limit);
     }
 
+    public List<Map<String, Object>> extractServiceCpuUsage(Map<String, Object> collected, int limit) {
+        List<Map<String, Object>> rows = new ArrayList<>();
+        Object targetRows = collected.get("targets");
+        if (!(targetRows instanceof List<?> list)) {
+            return rows;
+        }
+        for (Object item : list) {
+            if (!(item instanceof Map<?, ?> targetRow)) {
+                continue;
+            }
+            @SuppressWarnings("unchecked")
+            Map<String, Object> targetMap = (Map<String, Object>) targetRow;
+            String businessCode = String.valueOf(targetMap.get("businessCode"));
+            Object statusObj = targetMap.get("status");
+            if (!(statusObj instanceof Map<?, ?> statusMap)) {
+                continue;
+            }
+            @SuppressWarnings("unchecked")
+            Object values = ((Map<String, Object>) statusMap).get("serviceCpuUsage");
+            if (!(values instanceof List<?> valueList)) {
+                continue;
+            }
+            for (Object value : valueList) {
+                if (!(value instanceof Map<?, ?> valueMap)) {
+                    continue;
+                }
+                @SuppressWarnings("unchecked")
+                Map<String, Object> row = new LinkedHashMap<>((Map<String, Object>) valueMap);
+                row.putIfAbsent("businessCode", businessCode);
+                rows.add(row);
+            }
+        }
+        rows.sort((a, b) -> Double.compare(toDouble(b.get("cpuSharePct")), toDouble(a.get("cpuSharePct"))));
+        if (rows.size() > limit) {
+            return rows.subList(0, limit);
+        }
+        return rows;
+    }
+
+    private static double toDouble(Object value) {
+        if (value == null) {
+            return 0;
+        }
+        return Double.parseDouble(String.valueOf(value));
+    }
+
     public List<Map<String, Object>> collectThreads() {
         List<Map<String, Object>> rows = mapInParallel(enabledTargets(), target -> remoteClient.fetchThreads(target).stream()
                         .map(thread -> {
                             Map<String, Object> row = new LinkedHashMap<>(thread);
                             row.putIfAbsent("businessCode", target.getBusinessCode());
                             return row;
+                        })
+                        .toList())
+                .stream()
+                .flatMap(List::stream)
+                .sorted((a, b) -> Long.compare(toLong(b.get("elapsedMs")), toLong(a.get("elapsedMs"))))
+                .toList();
+        return new ArrayList<>(rows);
+    }
+
+    public List<Map<String, Object>> collectActiveTransactions() {
+        return collectRowsFromTargets(target -> remoteClient.fetchActiveTransactions(target));
+    }
+
+    public List<Map<String, Object>> collectSlowTransactions(int limit) {
+        List<Map<String, Object>> rows = collectRowsFromTargets(
+                target -> remoteClient.fetchSlowTransactions(target, limit));
+        if (rows.size() > limit) {
+            return new ArrayList<>(rows.subList(0, limit));
+        }
+        return rows;
+    }
+
+    public List<Map<String, Object>> collectSlowSql(int limit) {
+        List<Map<String, Object>> rows = collectRowsFromTargets(
+                target -> remoteClient.fetchSlowSql(target, limit));
+        if (rows.size() > limit) {
+            return new ArrayList<>(rows.subList(0, limit));
+        }
+        return rows;
+    }
+
+    private List<Map<String, Object>> collectRowsFromTargets(
+            Function<Target, List<Map<String, Object>>> fetcher) {
+        List<Map<String, Object>> rows = mapInParallel(enabledTargets(), target -> fetcher.apply(target).stream()
+                        .map(row -> {
+                            Map<String, Object> copy = new LinkedHashMap<>(row);
+                            copy.putIfAbsent("businessCode", target.getBusinessCode());
+                            return copy;
                         })
                         .toList())
                 .stream()

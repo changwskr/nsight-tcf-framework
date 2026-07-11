@@ -100,6 +100,15 @@
           <td>${OmAdmin.field(r, 'elapsedMs')}ms</td>
         </tr>`);
 
+      const serviceCpuRows = (body.serviceCpuUsage || []).map(r => `
+        <tr>
+          <td>${OmAdmin.field(r, 'businessCode')}</td>
+          <td class="om-mono">${OmAdmin.field(r, 'serviceId')}</td>
+          <td>${OmAdmin.field(r, 'threadCount')}</td>
+          <td>${formatPct(OmAdmin.field(r, 'cpuSharePct'))}</td>
+          <td>${OmAdmin.field(r, 'maxElapsedMs')}ms</td>
+        </tr>`);
+
       document.getElementById('findingBody').innerHTML =
         renderRows(findingRows, 4, '원인 분석 결과 없음');
       document.getElementById('ownershipBody').innerHTML =
@@ -110,11 +119,26 @@
         renderRows(threadRows, 6, 'Thread 상세 없음');
       document.getElementById('slowSqlBody').innerHTML =
         renderRows(slowSqlRows, 5, 'Slow SQL 없음');
+      document.getElementById('serviceCpuBody').innerHTML =
+        renderRows(serviceCpuRows, 5, 'ServiceId CPU 데이터 없음');
     }
 
     OmAdmin.initPage('runtime-diagnostics', '런타임 진단', async (el) => {
       el.innerHTML = `
-        <div class="om-alert info">각 WAR의 <code>/internal/runtime/*</code> 진단 API를 조회해 Thread·JVM·DB Pool·ServiceId·SQL 상태를 통합 표시합니다.</div>
+        <div class="om-alert info">각 WAR의 <code>/internal/runtime/*</code> 진단 API를 조회해 Thread·JVM·DB Pool·ServiceId·SQL 상태를 통합 표시합니다.
+          <a href="/om/admin/runtime-diagnosis-guide.html" style="margin-left:8px;font-weight:600">진단 순서 가이드</a>
+          <a href="/om/admin/runtime-thread-analysis.html" style="margin-left:8px">Thread 분석</a>
+          <a href="/om/admin/runtime-jvm-analysis.html" style="margin-left:8px">JVM 분석</a>
+          <a href="/om/admin/runtime-dbpool-analysis.html" style="margin-left:8px">DB Pool 분석</a>
+          <a href="/om/admin/runtime-sql-analysis.html" style="margin-left:8px">SQL 분석</a>
+          <a href="/om/admin/runtime-dominance-analysis.html" style="margin-left:8px">자원 독점 분석</a>
+          <a href="/om/admin/runtime-transaction-detail.html" style="margin-left:8px">거래·Thread 상세</a>
+          <a href="/om/admin/runtime-cause-analysis.html" style="margin-left:8px">자동 원인판정</a>
+          <a href="/om/admin/runtime-status-cards.html" style="margin-left:8px">핵심 상태 카드</a>
+          <a href="/om/admin/runtime-active-transactions.html" style="margin-left:8px">실행 중 거래</a>
+          <a href="/om/admin/runtime-business-occupancy.html" style="margin-left:8px">업무 점유 현황</a>
+          <a href="/om/admin/runtime-incident-flow.html" style="margin-left:8px">장애 흐름</a>
+        </div>
         <section class="om-filter-bar">
           <button class="btn-primary" id="refreshBtn" type="button">새로고침</button>
           <span id="rtmStatus" style="color:var(--muted);font-size:0.85rem;align-self:center">조회 중...</span>
@@ -185,6 +209,15 @@
                 <tbody id="slowSqlBody"><tr><td colspan="5" class="om-empty">조회 중...</td></tr></tbody>
               </table>
             </div>
+          </div>
+        </div>
+        <div class="om-card" style="margin-top:16px">
+          <div class="om-card-head">ServiceId CPU 점유</div>
+          <div class="om-card-body om-table-wrap">
+            <table class="om-table">
+              <thead><tr><th>업무</th><th>ServiceId</th><th>Thread</th><th>CPU 점유</th><th>최대 실행시간</th></tr></thead>
+              <tbody id="serviceCpuBody"><tr><td colspan="5" class="om-empty">조회 중...</td></tr></tbody>
+            </table>
           </div>
         </div>`;
 

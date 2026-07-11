@@ -72,17 +72,25 @@ public class RuntimeCauseAnalyzer {
         dominantServiceId = resolveDominantService(activeByService, totalActive);
         dominantSqlId = resolveDominantSql(sqlHits);
 
-        if ("SERVICE_DOMINANCE".equals(primaryCauseCode) || "BUSINESS_DOMINANCE".equals(primaryCauseCode)) {
-            if (dominantServiceId != null) {
-                primaryMessage = dominantServiceId + " 거래가 현재 실행 자원을 과다 점유 중입니다.";
-            }
-        }
-
         Map<String, Object> cards = buildCards(targets, totalActive, activeByBusiness);
+        AnalysisState resultHolder = new AnalysisState();
+        applyDominanceCause(
+                totalActive,
+                activeByBusiness,
+                activeByService,
+                dominantBusinessCode,
+                dominantServiceId,
+                cards,
+                overallStatus,
+                primaryCauseCode,
+                primaryMessage,
+                resultHolder);
+        applyUnknownFallback(resultHolder, cards, totalActive);
+
         Map<String, Object> result = new LinkedHashMap<>();
-        result.put("overallStatus", overallStatus);
-        result.put("primaryCauseCode", primaryCauseCode);
-        result.put("primaryMessage", primaryMessage);
+        result.put("overallStatus", resultHolder.overallStatus);
+        result.put("primaryCauseCode", resultHolder.primaryCauseCode);
+        result.put("primaryMessage", resultHolder.primaryMessage);
         result.put("dominantBusinessCode", dominantBusinessCode);
         result.put("dominantServiceId", dominantServiceId);
         result.put("dominantSqlId", dominantSqlId);
@@ -90,6 +98,76 @@ public class RuntimeCauseAnalyzer {
         result.put("cards", cards);
         result.put("businessOwnership", toOwnershipRows(activeByBusiness, totalActive));
         return result;
+    }
+
+    private void applyDominanceCause(
+            int totalActive,
+            Map<String, Integer> activeByBusiness,
+            Map<String, Integer> activeByService,
+            String dominantBusinessCode,
+            String dominantServiceId,
+            Map<String, Object> cards,
+            String overallStatus,
+            String primaryCauseCode,
+            String primaryMessage,
+            AnalysisState state) {
+        state.overallStatus = overallStatus;
+        state.primaryCauseCode = primaryCauseCode;
+        state.primaryMessage = primaryMessage;
+
+        if (totalActive <= 0) {
+            return;
+        }
+        double threadBusyRatio = toDouble(cards.get("threadBusyRatio"));
+        if (dominantBusinessCode != null) {
+            double businessOwnership = activeByBusiness.getOrDefault(dominantBusinessCode, 0) * 100.0 / totalActive;
+            if (businessOwnership >= 60
+                    && threadBusyRatio >= 80
+                    && isHigherPriority("BUSINESS_RESOURCE_DOMINANCE", state.primaryCauseCode)) {
+                state.primaryCauseCode = "BUSINESS_RESOURCE_DOMINANCE";
+                state.primaryMessage = String.format(
+                        "%s 업무가 현재 전체 실행 거래의 %s%%를 점유하고 있습니다.",
+                        dominantBusinessCode,
+                        round1(businessOwnership));
+                if (isWorse("WARN", state.overallStatus)) {
+                    state.overallStatus = "WARN";
+                }
+                return;
+            }
+        }
+        if (dominantServiceId != null) {
+            double serviceOwnership = activeByService.getOrDefault(dominantServiceId, 0) * 100.0 / totalActive;
+            if (serviceOwnership >= 40 && isHigherPriority("SERVICE_DOMINANCE", state.primaryCauseCode)) {
+                state.primaryCauseCode = "SERVICE_DOMINANCE";
+                state.primaryMessage = String.format(
+                        "%s 거래가 현재 Tomcat 처리량의 %s%%를 점유하고 있습니다.",
+                        dominantServiceId,
+                        round1(serviceOwnership));
+                if (isWorse("WARN", state.overallStatus)) {
+                    state.overallStatus = "WARN";
+                }
+            }
+        }
+    }
+
+    private void applyUnknownFallback(AnalysisState state, Map<String, Object> cards, int totalActive) {
+        if (!"NORMAL".equals(state.primaryCauseCode)) {
+            return;
+        }
+        int slowTx = (int) toLong(cards.get("slowTransactionCount"));
+        int slowSql = (int) toLong(cards.get("slowSqlCount"));
+        double maxBusy = toDouble(cards.get("threadBusyRatio"));
+        if (slowTx > 0 || slowSql > 0 || (totalActive > 0 && maxBusy >= 70)) {
+            state.primaryCauseCode = "UNKNOWN";
+            state.primaryMessage = "추가 로그와 DB 상태 확인이 필요합니다.";
+            state.overallStatus = "UNKNOWN";
+        }
+    }
+
+    private static final class AnalysisState {
+        private String overallStatus;
+        private String primaryCauseCode;
+        private String primaryMessage;
     }
 
     private Map<String, Object> buildCards(List<Map<String, Object>> targets, int totalActive,
@@ -226,8 +304,9 @@ public class RuntimeCauseAnalyzer {
             case "THREAD_SATURATION" -> 5;
             case "SLOW_SQL" -> 6;
             case "EXTERNAL_WAIT" -> 7;
-            case "BUSINESS_DOMINANCE" -> 8;
-            case "SERVICE_DOMINANCE" -> 9;
+            case "BUSINESS_RESOURCE_DOMINANCE", "BUSINESS_DOMINANCE" -> 8;
+            case "SERVICE_DOMINANCE" -> 8;
+            case "UNKNOWN" -> 9;
             case "NORMAL" -> 99;
             default -> 50;
         };

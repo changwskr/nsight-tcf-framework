@@ -1,9 +1,11 @@
 package com.nh.nsight.tcf.web.support.runtime;
 
+import com.nh.nsight.tcf.core.config.TcfProperties;
 import com.nh.nsight.tcf.core.support.runtime.ActiveTransactionRegistry;
 import com.nh.nsight.tcf.core.support.runtime.SlowSqlTracker;
 import com.nh.nsight.tcf.core.support.runtime.SlowTransactionTracker;
 import com.nh.nsight.tcf.core.support.runtime.model.ActiveTransactionInfo;
+import com.nh.nsight.tcf.core.support.runtime.model.RuntimeTransactionStep;
 import com.nh.nsight.tcf.core.support.runtime.model.SlowSqlInfo;
 import com.nh.nsight.tcf.core.support.runtime.model.SlowTransactionInfo;
 import com.zaxxer.hikari.HikariDataSource;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.info.BuildProperties;
@@ -30,6 +33,7 @@ public class TcfRuntimeMonitor {
     private final ActiveTransactionRegistry registry;
     private final SlowTransactionTracker slowTransactionTracker;
     private final SlowSqlTracker slowSqlTracker;
+    private final TcfProperties properties;
     private final DataSource dataSource;
     private final String applicationName;
     private final int serverPort;
@@ -43,6 +47,7 @@ public class TcfRuntimeMonitor {
             ActiveTransactionRegistry registry,
             SlowTransactionTracker slowTransactionTracker,
             SlowSqlTracker slowSqlTracker,
+            TcfProperties properties,
             DataSource dataSource,
             @Value("${spring.application.name:nsight-tcf}") String applicationName,
             @Value("${server.port:8080}") int serverPort,
@@ -51,6 +56,7 @@ public class TcfRuntimeMonitor {
         this.registry = registry;
         this.slowTransactionTracker = slowTransactionTracker;
         this.slowSqlTracker = slowSqlTracker;
+        this.properties = properties;
         this.dataSource = dataSource;
         this.applicationName = applicationName;
         this.serverPort = serverPort;
@@ -71,6 +77,8 @@ public class TcfRuntimeMonitor {
         snapshot.put("activeTransactions", toActiveTransactionRows(registry.snapshot(), 50));
         snapshot.put("slowTransactions", toSlowTransactionRows(slowTransactionTracker.snapshot(20)));
         snapshot.put("slowSql", toSlowSqlRows(slowSqlTracker.snapshot(20)));
+        snapshot.put("serviceCpuUsage", collectServiceCpuUsage());
+        snapshot.put("runtimeConfig", buildRuntimeConfig());
         return snapshot;
     }
 
@@ -93,10 +101,13 @@ public class TcfRuntimeMonitor {
             row.put("threadName", info.threadName());
             row.put("businessCode", info.businessCode());
             row.put("serviceId", info.serviceId());
+            row.put("guid", maskGuid(info.guid()));
             row.put("elapsedMs", info.elapsedMillis());
             row.put("currentStep", info.currentStep() == null ? null : info.currentStep().name());
             row.put("sqlId", info.currentSqlId());
+            row.put("mapperSql", formatMapperSql(info.currentSqlId(), null));
             row.put("externalSystemCode", info.externalSystemCode());
+            row.put("dbWaitMs", resolveDbWaitMillis(info));
             rows.add(row);
         }
         return rows;
@@ -132,11 +143,11 @@ public class TcfRuntimeMonitor {
 
         if (deadlock) {
             causeCode = "THREAD_DEADLOCK";
-            message = "Thread Deadlock가 발견되었습니다.";
+            message = "Thread Deadlock이 발견되었습니다.";
             status = "CRITICAL";
         } else if (isPoolExhausted(pools)) {
             causeCode = "DB_POOL_EXHAUSTED";
-            message = "DB Connection 대기가 발생하고 있습니다.";
+            message = "DB Connection을 얻지 못해 거래가 대기 중입니다.";
             status = "CRITICAL";
         } else if (heapRatio >= 80 && toLong(jvm.get("gcTimeLastMinuteMs")) >= 3000) {
             causeCode = "GC_PRESSURE";
@@ -144,11 +155,11 @@ public class TcfRuntimeMonitor {
             status = "WARN";
         } else if (processCpu >= 90 && pending == 0) {
             causeCode = "CPU_OVERLOAD";
-            message = "JVM CPU가 과부하 상태입니다.";
+            message = "JVM CPU가 과부하 상태입니다. 업무 연산 또는 과도한 Thread 실행 가능";
             status = "WARN";
-        } else if (busyRatio >= 85 || slowTx >= 5) {
+        } else if (busyRatio >= 85 && slowTx >= 5) {
             causeCode = "THREAD_SATURATION";
-            message = "Tomcat Thread가 포화 상태입니다.";
+            message = "Tomcat Thread 부족 또는 장기 거래 점유 상태입니다.";
             status = "WARN";
         } else if (slowSql >= 3) {
             causeCode = "SLOW_SQL";
@@ -174,8 +185,17 @@ public class TcfRuntimeMonitor {
         ThreadMXBean threads = ManagementFactory.getThreadMXBean();
         int live = threads.getThreadCount();
         int activeTx = registry.count();
-        int max = Math.max(live + 50, 200);
-        int busy = Math.max(activeTx, Math.min(live, live - threads.getDaemonThreadCount()));
+
+        Optional<TomcatThreadPoolProbe.Stats> tomcatPool = TomcatThreadPoolProbe.resolvePrimaryHttpPool();
+        int max = tomcatPool.map(TomcatThreadPoolProbe.Stats::maxThreads)
+                .filter(value -> value > 0)
+                .orElse(Math.max(live + 50, 200));
+        int busy = tomcatPool.map(TomcatThreadPoolProbe.Stats::busyThreads)
+                .filter(value -> value > 0)
+                .orElse(Math.max(activeTx, Math.min(live, live - threads.getDaemonThreadCount())));
+        if (tomcatPool.isPresent() && tomcatPool.get().currentThreads() > 0) {
+            live = tomcatPool.get().currentThreads();
+        }
         double busyRatio = max > 0 ? busy * 100.0 / max : 0;
         long[] deadlocked = threads.findDeadlockedThreads();
 
@@ -186,9 +206,77 @@ public class TcfRuntimeMonitor {
         row.put("busyRatio", round1(busyRatio));
         row.put("activeTransactionCount", activeTx);
         row.put("slowTransactionCount", slowTransactionTracker.countRecent(System.currentTimeMillis() - 60_000L));
-        row.put("blocked", 0);
+        row.put("blocked", countBlockedHttpThreads(threads));
         row.put("deadlock", deadlocked != null && deadlocked.length > 0);
+        row.put("maxSource", tomcatPool.isPresent() ? "tomcat-jmx" : "estimated");
+        if (tomcatPool.isPresent()) {
+            row.put("poolName", tomcatPool.get().poolName());
+        }
         return row;
+    }
+
+    private int countBlockedHttpThreads(ThreadMXBean threads) {
+        long[] ids = threads.getAllThreadIds();
+        java.lang.management.ThreadInfo[] infos = threads.getThreadInfo(ids);
+        if (infos == null) {
+            return 0;
+        }
+        int blocked = 0;
+        for (java.lang.management.ThreadInfo info : infos) {
+            if (info == null || info.getThreadState() != Thread.State.BLOCKED) {
+                continue;
+            }
+            String name = info.getThreadName();
+            if (name != null && name.startsWith("http-")) {
+                blocked++;
+            }
+        }
+        return blocked;
+    }
+
+    private List<Map<String, Object>> collectServiceCpuUsage() {
+        ThreadMXBean threadMx = ManagementFactory.getThreadMXBean();
+        if (!threadMx.isThreadCpuTimeSupported()) {
+            return List.of();
+        }
+        if (!threadMx.isThreadCpuTimeEnabled()) {
+            threadMx.setThreadCpuTimeEnabled(true);
+        }
+
+        Map<String, Integer> threadsByService = new LinkedHashMap<>();
+        Map<String, Long> cpuNanosByService = new LinkedHashMap<>();
+        Map<String, Long> maxElapsedByService = new LinkedHashMap<>();
+        long totalCpuNanos = 0;
+
+        for (ActiveTransactionInfo info : registry.snapshot()) {
+            String serviceId = info.serviceId();
+            if (serviceId == null || serviceId.isBlank()) {
+                continue;
+            }
+            long cpuNanos = Math.max(0L, threadMx.getThreadCpuTime(info.threadId()));
+            threadsByService.merge(serviceId, 1, Integer::sum);
+            cpuNanosByService.merge(serviceId, cpuNanos, Long::sum);
+            maxElapsedByService.merge(serviceId, info.elapsedMillis(), Math::max);
+            totalCpuNanos += cpuNanos;
+        }
+        if (totalCpuNanos <= 0 || threadsByService.isEmpty()) {
+            return List.of();
+        }
+
+        List<Map<String, Object>> rows = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : threadsByService.entrySet()) {
+            String serviceId = entry.getKey();
+            long cpuNanos = cpuNanosByService.getOrDefault(serviceId, 0L);
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("serviceId", serviceId);
+            row.put("threadCount", entry.getValue());
+            row.put("cpuSharePct", round1(cpuNanos * 100.0 / totalCpuNanos));
+            row.put("maxElapsedMs", maxElapsedByService.getOrDefault(serviceId, 0L));
+            rows.add(row);
+        }
+        rows.sort((left, right) -> Double.compare(
+                toDouble(right.get("cpuSharePct")), toDouble(left.get("cpuSharePct"))));
+        return rows;
     }
 
     public Map<String, Object> collectJvmStatus() {
@@ -226,6 +314,8 @@ public class TcfRuntimeMonitor {
             row.put("idle", idle);
             row.put("pending", pending);
             row.put("usageRatio", max > 0 ? round1(active * 100.0 / max) : 0);
+            row.put("connectionTimeoutCount", 0);
+            row.put("longUsageConnections", countLongUsageConnections());
             rows.add(row);
         }
         return rows;
@@ -242,7 +332,9 @@ public class TcfRuntimeMonitor {
             row.put("elapsedMs", info.elapsedMillis());
             row.put("currentStep", info.currentStep() == null ? null : info.currentStep().name());
             row.put("sqlId", info.currentSqlId());
+            row.put("mapperSql", formatMapperSql(info.currentSqlId(), null));
             row.put("externalSystemCode", info.externalSystemCode());
+            row.put("dbWaitMs", resolveDbWaitMillis(info));
             rows.add(row);
             index++;
             if (index >= limit) {
@@ -273,12 +365,39 @@ public class TcfRuntimeMonitor {
             Map<String, Object> row = new LinkedHashMap<>();
             row.put("mapperId", info.mapperId());
             row.put("sqlId", info.sqlId());
+            row.put("mapperSql", formatMapperSql(info.mapperId(), info.sqlId()));
             row.put("serviceId", info.serviceId());
+            row.put("startTimeMillis", info.startTimeMillis());
+            row.put("endTimeMillis", info.endTimeMillis());
             row.put("elapsedMs", info.elapsedMillis());
             row.put("success", info.success());
+            row.put("status", info.success() ? "COMPLETED" : "FAILED");
+            if (info.affectedRows() >= 0) {
+                row.put("affectedRows", info.affectedRows());
+            }
             rows.add(row);
         }
         return rows;
+    }
+
+    private Map<String, Object> buildRuntimeConfig() {
+        Map<String, Object> config = new LinkedHashMap<>();
+        config.put("slowSqlThresholdMs", properties.getRuntimeSlowSqlThresholdMs());
+        return config;
+    }
+
+    static String formatMapperSql(String mapperId, String sqlId) {
+        if (mapperId != null && !mapperId.isBlank()) {
+            int lastDot = mapperId.lastIndexOf('.');
+            if (lastDot > 0) {
+                int secondLast = mapperId.lastIndexOf('.', lastDot - 1);
+                if (secondLast >= 0) {
+                    return mapperId.substring(secondLast + 1);
+                }
+            }
+            return mapperId;
+        }
+        return sqlId != null && !sqlId.isBlank() ? sqlId : "-";
     }
 
     private boolean isPoolExhausted(List<Map<String, Object>> pools) {
@@ -302,6 +421,29 @@ public class TcfRuntimeMonitor {
             }
         }
         return count;
+    }
+
+    private int countLongUsageConnections() {
+        int count = 0;
+        long now = System.currentTimeMillis();
+        for (ActiveTransactionInfo info : registry.snapshot()) {
+            if (info.currentStep() == RuntimeTransactionStep.WAIT_DB_CONNECTION) {
+                if (info.dbWaitStartMillis() > 0 && now - info.dbWaitStartMillis() >= 3_000L) {
+                    count++;
+                }
+            } else if (info.currentStep() == RuntimeTransactionStep.EXECUTING_SQL
+                    && info.elapsedMillis() >= 10_000L) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private long resolveDbWaitMillis(ActiveTransactionInfo info) {
+        if (info.currentStep() == RuntimeTransactionStep.WAIT_DB_CONNECTION && info.dbWaitStartMillis() > 0) {
+            return Math.max(0L, System.currentTimeMillis() - info.dbWaitStartMillis());
+        }
+        return 0L;
     }
 
     private int sumPending(List<Map<String, Object>> pools) {

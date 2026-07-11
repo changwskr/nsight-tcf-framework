@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OM 자동 원인판정</title>
+  <link rel="stylesheet" href="/_shared/online.css">
+  <link rel="stylesheet" href="/_shared/om-admin.css">
+  <style>
+    .om-row-detected td { background: rgba(251, 191, 36, 0.08); }
+    .om-row-primary td { background: rgba(239, 68, 68, 0.1); font-weight: 500; }
+    .om-cause-code { font-family: var(--mono, monospace); font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <script src="/_shared/om-admin.js?v=20260711g"></script>
+  <script>
+    function statusLabel(status) {
+      if (status === 'CRITICAL') return '위험';
+      if (status === 'WARN') return '주의';
+      if (status === 'UNKNOWN') return '미확인';
+      return '정상';
+    }
+
+    function bannerClass(status) {
+      if (status === 'CRITICAL') return 'critical';
+      if (status === 'WARN') return 'warn';
+      if (status === 'UNKNOWN') return 'warn';
+      return 'normal';
+    }
+
+    function renderRows(rows, columns, emptyText) {
+      if (!rows.length) {
+        return `<tr><td colspan="${columns}" class="om-empty">${emptyText}</td></tr>`;
+      }
+      return rows.join('');
+    }
+
+    async function load(el) {
+      const { body, relay } = await OmAdmin.inquiry('runtimeDiagnostics', { includeDetails: 'Y' });
+      const cause = body.causeAnalysis || {};
+      const status = body.overallStatus || 'NORMAL';
+      const cls = bannerClass(status);
+
+      document.getElementById('rtmStatus').textContent =
+        `${relay.elapsedMs}ms · 점검 ${body.checkedAt || '-'}`;
+
+      document.getElementById('causeBanner').className = `om-status-banner ${cls}`;
+      document.getElementById('causeMain').className = `om-status-main ${cls}`;
+      document.getElementById('causeMain').textContent =
+        `판정 결과: ${statusLabel(status)} · ${cause.primaryCauseCode || body.primaryCauseCode || 'NORMAL'}`;
+      document.getElementById('causeMessage').textContent =
+        cause.primaryMessage || body.primaryMessage || '-';
+      document.getElementById('causeNote').textContent = cause.note || '-';
+
+      const priorityItems = (cause.priorities || []).map(p =>
+        `<li><strong>${p.rank}.</strong> ${p.label}</li>`).join('');
+      document.getElementById('priorityList').innerHTML =
+        priorityItems || '<li class="om-empty">우선순위 없음</li>';
+
+      const tableRows = (cause.causeTable || []).map(r => {
+        const rowClass = r.primary ? 'om-row-primary' : (r.detected ? 'om-row-detected' : '');
+        const detectedLabel = r.detected
+          ? (r.primary ? '<span class="om-chip critical">PRIMARY</span>' : '<span class="om-chip warn">징후</span>')
+          : '-';
+        return `
+        <tr class="${rowClass}">
+          <td>${r.priority ?? '-'}</td>
+          <td>${r.condition || '-'}</td>
+          <td class="om-cause-code">${r.causeCode || '-'}</td>
+          <td>${r.message || '-'}</td>
+          <td>${detectedLabel}</td>
+          <td style="color:var(--muted);font-size:0.85rem">${r.evidence || '-'}</td>
+        </tr>`;
+      });
+      document.getElementById('causeTableBody').innerHTML =
+        renderRows(tableRows, 6, '원인판정표 없음');
+
+      const findingRows = (cause.warFindings || body.findings || []).map(f => `
+        <tr>
+          <td>${OmAdmin.field(f, 'businessCode')}</td>
+          <td>${OmAdmin.chipForHealth(OmAdmin.field(f, 'status'))}</td>
+          <td class="om-cause-code">${OmAdmin.field(f, 'causeCode')}</td>
+          <td>${OmAdmin.field(f, 'message')}</td>
+        </tr>`);
+      document.getElementById('findingBody').innerHTML =
+        renderRows(findingRows, 4, 'WAR별 1차 판정 없음');
+    }
+
+    OmAdmin.initPage('runtime-cause-analysis', '자동 원인판정', async (el) => {
+      el.innerHTML = `
+        <div class="om-alert info">
+          설계 14장 자동 원인판정 — WAR 1차 판정 + tcf-om 통합 우선순위.
+          <a href="/om/admin/runtime-diagnostics.html" style="margin-left:8px">← 런타임 진단 통합</a>
+        </div>
+        <section class="om-filter-bar">
+          <button class="btn-primary" id="refreshBtn" type="button">새로고침</button>
+          <span id="rtmStatus" style="color:var(--muted);font-size:0.85rem;align-self:center">조회 중...</span>
+        </section>
+
+        <section class="om-status-banner normal" id="causeBanner" style="margin-bottom:16px">
+          <div>
+            <div class="om-status-main normal" id="causeMain">판정 결과: -</div>
+            <div id="causeMessage" style="margin-top:8px">-</div>
+            <div id="causeNote" style="margin-top:4px;color:var(--muted);font-size:0.85rem">-</div>
+          </div>
+        </section>
+
+        <div class="om-grid-2" style="margin-bottom:16px">
+          <div class="om-card">
+            <div class="om-card-head">14.1 판정 우선순위</div>
+            <div class="om-card-body">
+              <ol id="priorityList" style="margin:0;padding-left:20px;line-height:1.8">조회 중...</ol>
+            </div>
+          </div>
+          <div class="om-card">
+            <div class="om-card-head">WAR별 1차 판정</div>
+            <div class="om-card-body om-table-wrap">
+              <table class="om-table">
+                <thead>
+                  <tr><th>업무</th><th>상태</th><th>Cause Code</th><th>메시지</th></tr>
+                </thead>
+                <tbody id="findingBody"><tr><td colspan="4" class="om-empty">조회 중...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="om-card">
+          <div class="om-card-head">14.2 원인판정표 (통합 · PRIMARY 강조)</div>
+          <div class="om-card-body om-table-wrap">
+            <table class="om-table">
+              <thead>
+                <tr>
+                  <th>순위</th><th>조건</th><th>Cause Code</th>
+                  <th>운영 메시지</th><th>판정</th><th>근거</th>
+                </tr>
+              </thead>
+              <tbody id="causeTableBody"><tr><td colspan="6" class="om-empty">조회 중...</td></tr></tbody>
+            </table>
+          </div>
+        </div>`;
+
+      document.getElementById('refreshBtn').addEventListener('click', () => {
+        load(el).catch(err => OmAdmin.showErrorBanner(el, err.message));
+      });
+      await load(el);
+      window.setInterval(() => {
+        load(el).catch(() => {});
+      }, 30000);
+    });
+  </script>
+</body>
+</html>
