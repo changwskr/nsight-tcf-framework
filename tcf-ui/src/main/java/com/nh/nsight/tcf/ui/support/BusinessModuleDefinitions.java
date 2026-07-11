@@ -19,6 +19,7 @@ public final class BusinessModuleDefinitions {
             new ModuleDefinition("BP", "Behavior Processing", "실시간", 8091),
             new ModuleDefinition("BD", "Behavior Data", "데이터", 8092),
             new ModuleDefinition("SS", "Sales Support", "지원", 8093),
+            new ModuleDefinition("OC", "Operation Capacity (tcf-oc)", "운영", 8094),
             new ModuleDefinition("CS", "Common Service", "지원", 8094),
             new ModuleDefinition("CT", "Contents", "지원", 8095),
             new ModuleDefinition("MG", "Message", "지원", 8096),

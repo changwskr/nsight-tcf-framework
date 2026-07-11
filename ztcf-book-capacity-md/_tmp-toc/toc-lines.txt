@@ -1,0 +1,717 @@
+﻿NSIGHT 통합 용량산정 및 솔루션 환경설정 가이드
+업무부하 산정에서 운영 설정·검증·변경관리까지
+1. 도입 전 안내말
+1.1 본 가이드가 필요한 이유
+1.2 용량산정과 환경설정의 관계
+1.3 본 가이드의 핵심 원칙
+1.4 가정값·권고값·확정값의 구분
+1.5 성능시험 전후 설정값 관리 원칙
+1.6 문서 활용 방법
+2. 문서 개요
+2.1 목적
+2.2 적용범위
+2.3 대상 시스템
+2.4 대상 솔루션
+2.5 대상 독자
+2.6 선행조건
+2.7 용어 정의
+2.8 기준일과 기준 버전
+2.9 참조 자료
+2.10 문서 변경이력
+제1부. 용량산정과 설정값 도출 원칙
+3. 문제 정의 및 설계 배경
+3.1 단순 서버 사양 산정의 한계
+3.2 서버 용량과 솔루션 설정값의 불일치 문제
+3.3 과다 설정과 과소 설정의 위험
+3.4 AP·DB·네트워크 병목의 상호 영향
+3.5 다중 WAR 구조의 자원 공유 문제
+3.6 Active-Active 및 DR 환경의 용량 문제
+3.7 업무량 변화와 설정값 변경 필요성
+4. 현행 구조와 문제점
+4.1 전체 시스템 구성
+4.2 GSLB·L4·WEB·Gateway·WAS·DB 구조
+4.3 업무 WAR 및 Tomcat 배포 구조
+4.4 VM·CPU·Memory 현행 사양
+4.5 Tomcat Connector 현행 설정
+4.6 JVM 현행 설정
+4.7 DB Connection Pool 현행 설정
+4.8 세션 현행 설정
+4.9 Timeout 현행 설정
+4.10 Cache·Batch·연계 현행 설정
+4.11 설정값 간 불일치
+4.12 운영 지표 및 실측자료 부족
+5. 요구사항과 제약조건
+5.1 사용자·지점·세션 요구사항
+5.2 TPS 및 응답시간 요구사항
+5.3 가용성 요구사항
+5.4 센터 장애 수용 요구사항
+5.5 업무 증가 및 성장률 요구사항
+5.6 VM 표준 사양 제약
+5.7 DB 최대 Session 제약
+5.8 네트워크 및 보안 제약
+5.9 장시간 세션 및 전용 브라우저 제약
+5.10 배포·무중단·롤백 제약
+5.11 운영·모니터링 제약
+6. 설계 원칙
+6.1 업무부하에서 설정값까지 추적
+6.2 평균이 아닌 피크 기준 산정
+6.3 정상·피크·스트레스·장애 시나리오 분리
+6.4 세션과 TPS 분리
+6.5 Thread와 DB Pool 분리
+6.6 Heap과 물리 메모리 분리
+6.7 공유 자원과 업무별 자원 구분
+6.8 Timeout 계층의 대소관계 유지
+6.9 설정값의 상한·권고·임계치 구분
+6.10 설정값은 성능시험으로 확정
+6.11 설정 변경의 자동검증
+6.12 가정·산식·설정·시험결과의 추적성
+7. 용량산정 결과와 설정값 연결 모델
+7.1 전체 변환 흐름
+사용자와 업무량→ 동시요청자→ TPS→ 동시처리량→ CPU·VM 수량→ Tomcat Thread→ JVM Memory→ DB Pool→ Timeout→ 네트워크 Connection→ 운영 임계치
+7.2 입력값 분류
+7.3 계산값 분류
+7.4 솔루션 설정값 분류
+7.5 운영 임계치 분류
+7.6 성능시험 측정값 분류
+7.7 최종 확정값 관리
+제2부. 업무부하 및 시스템 용량산정
+8. 업무량 및 사용자 모델
+8.1 지점 수와 사용자 수
+8.2 로그인 사용자와 활성 사용자
+8.3 동시접속률
+8.4 동시요청률
+8.5 세션 수용량
+8.6 피크 집중계수
+8.7 성장률과 여유율
+8.8 업무별 사용자 분포
+8.9 조회·등록·변경·대량 거래 비율
+8.10 사용자 시나리오별 산정 예시
+9. TPS 및 동시처리량 산정
+9.1 TPS 기본 개념
+9.2 평균 TPS 산정
+9.3 피크 TPS 산정
+9.4 스트레스 TPS 산정
+9.5 Little’s Law 적용
+9.6 평균 응답시간과 동시처리량
+9.7 p95 응답시간 적용 기준
+9.8 360·720·1,080 TPS 시나리오
+9.9 1,200·1,800 TPS 검증 시나리오
+9.10 재시도·오류·Timeout 부하 반영
+10. TPMC 및 CPU Core 산정
+10.1 TPS와 TPMC의 차이
+10.2 거래복잡도와 TPMC 환산
+10.3 Core당 이론 처리량
+10.4 Core당 실효 처리량
+10.5 CPU 목표 이용률
+10.6 일반 업무와 SingleView 구분
+10.7 TPS 방식과 TPMC 방식 교차검증
+10.8 성능시험 보정계수
+11. VM 사양 및 서버 대수 산정
+11.1 8Core·32GB 기준
+11.2 16Core·64GB 기준
+11.3 16Core·128GB 기준
+11.4 32Core·256GB 기준
+11.5 VM당 목표 TPS
+11.6 정상 운영 대수
+11.7 피크 운영 대수
+11.8 센터 장애 시 필요 대수
+11.9 N+1·N+2 여유
+11.10 Rolling 배포 여유
+11.11 최종 VM 구성안
+12. 메모리 및 스토리지 용량산정
+12.1 OS Memory
+12.2 JVM Heap
+12.3 Native Memory
+12.4 Metaspace
+12.5 Thread Stack
+12.6 Direct Buffer
+12.7 Cache Memory
+12.8 Agent 사용 메모리
+12.9 로그 저장공간
+12.10 Heap Dump 저장공간
+12.11 임시파일 및 업로드 공간
+12.12 DB 데이터·인덱스·백업 공간
+13. 네트워크 및 Connection 용량산정
+13.1 동시 Connection
+13.2 HTTP 요청·응답 크기
+13.3 Keep-Alive Connection
+13.4 L4 Connection
+13.5 WEB Proxy Connection
+13.6 Gateway Connection
+13.7 DB Connection
+13.8 외부 API Connection
+13.9 파일 전송 대역폭
+13.10 센터 장애 시 네트워크 수용량
+제3부. 공통 환경설정 도출 기준
+14. 환경설정값 분류체계
+14.1 인프라 설정
+14.2 미들웨어 설정
+14.3 애플리케이션 설정
+14.4 데이터베이스 설정
+14.5 네트워크 설정
+14.6 보안 설정
+14.7 운영·모니터링 설정
+14.8 환경별 설정 구분
+14.9 공통값과 업무별 값
+14.10 정적 설정과 동적 설정
+15. 설정값 표준 표현방식
+15.1 설정 항목명
+15.2 설정 위치
+15.3 설정 단위
+15.4 기본값
+15.5 권고값
+15.6 최소값과 최대값
+15.7 산정 공식
+15.8 적용 대상
+15.9 변경 시 영향
+15.10 검증 방법
+15.11 Rollback 값
+15.12 운영 임계치
+16. Timeout 계층 공통 설계
+16.1 Timeout 계층 구조
+DB Query Timeout< DB Connection Timeout< Spring Transaction Timeout< TCF Service Timeout< 외부 Proxy Timeout< WEB Request Timeout< L4 Idle Timeout
+16.2 DB Query Timeout
+16.3 Connection 획득 Timeout
+16.4 Spring Transaction Timeout
+16.5 TCF ServiceId Timeout
+16.6 외부 API Connect Timeout
+16.7 외부 API Read Timeout
+16.8 Gateway Timeout
+16.9 WEB Proxy Timeout
+16.10 L4 Idle Timeout
+16.11 장시간 거래 예외기준
+16.12 Timeout 설정 정합성 검사
+제4부. 솔루션별 환경설정 가이드
+17. OS 및 VM 환경설정
+17.1 vCPU와 Memory 할당
+17.2 CPU Overcommit 기준
+17.3 Memory Overcommit 기준
+17.4 Swap 설정
+17.5 File Descriptor
+17.6 Process·Thread 제한
+17.7 TCP Backlog
+17.8 TCP Keepalive
+17.9 Ephemeral Port 범위
+17.10 시간동기화와 Timezone
+17.11 로그·Dump 디렉터리
+17.12 OS 설정 검증 명령
+18. GSLB 환경설정
+18.1 DNS TTL
+18.2 Health Check 주기
+18.3 Health Check Timeout
+18.4 Fail Count
+18.5 센터 분산비율
+18.6 센터 장애 전환 정책
+18.7 복구 후 원복 정책
+18.8 GSLB 설정 검증
+19. L4 환경설정
+19.1 VIP 구성
+19.2 서버 Pool 구성
+19.3 분산 알고리즘
+19.4 Persistence·Sticky 설정
+19.5 Health Check URL
+19.6 Connect Timeout
+19.7 Idle Timeout
+19.8 Connection Limit
+19.9 Drain·Graceful Removal
+19.10 센터 장애 시 라우팅
+19.11 L4 설정 검증
+20. WEB·Reverse Proxy·WebTopSuite 환경설정
+20.1 Worker Process와 Thread
+20.2 Backend Connection Pool
+20.3 Proxy Connect Timeout
+20.4 Proxy Read Timeout
+20.5 Request Timeout
+20.6 Keep-Alive Timeout
+20.7 최대 요청 크기
+20.8 최대 응답 크기
+20.9 Upload·Download Buffer
+20.10 정적 자원 Cache
+20.11 압축 설정
+20.12 Access Log
+20.13 WEB 설정 검증
+21. API Gateway 환경설정
+21.1 Gateway 인스턴스 수
+21.2 Worker Thread
+21.3 Route별 Connection Pool
+21.4 Connect·Read Timeout
+21.5 Retry 횟수
+21.6 Circuit Breaker
+21.7 Bulkhead
+21.8 Rate Limit
+21.9 최대 요청 크기
+21.10 JWT·JWKS Cache
+21.11 Route Cache
+21.12 Gateway 로그 설정
+21.13 Gateway 설정 검증
+22. Tomcat Connector 환경설정
+22.1 Connector 구조
+22.2 maxThreads
+22.3 minSpareThreads
+22.4 acceptCount
+22.5 maxConnections
+22.6 connectionTimeout
+22.7 keepAliveTimeout
+22.8 maxKeepAliveRequests
+22.9 maxPostSize
+22.10 maxSwallowSize
+22.11 asyncTimeout
+22.12 Executor 사용 기준
+22.13 다중 WAR Thread 경쟁
+22.14 업무별 동시처리 제한
+22.15 Tomcat 설정 예시
+22.16 Tomcat 설정 검증
+23. JVM 환경설정
+23.1 -Xms와 -Xmx
+23.2 Heap 산정식
+23.3 -Xss
+23.4 Metaspace
+23.5 Code Cache
+23.6 Direct Memory
+23.7 G1GC 선택 기준
+23.8 MaxGCPauseMillis
+23.9 GC Logging
+23.10 Heap Dump
+23.11 OOM 처리
+23.12 Container·VM Memory 인식
+23.13 Timezone·Encoding
+23.14 JVM 설정 예시
+23.15 JVM 설정 검증
+24. Spring Boot 환경설정
+24.1 Application Profile
+24.2 Graceful Shutdown
+24.3 Shutdown Timeout
+24.4 Request Body 제한
+24.5 Multipart 설정
+24.6 Spring Task Executor
+24.7 Async Executor
+24.8 Scheduler Thread Pool
+24.9 Transaction 기본 Timeout
+24.10 Actuator 노출 범위
+24.11 Health·Readiness·Liveness
+24.12 Spring Boot 설정 검증
+25. NSIGHT TCF 환경설정
+25.1 TCF 전체 설정 구조
+25.2 ServiceId별 Timeout
+25.3 거래통제 Cache
+25.4 Handler Registry
+25.5 Idempotency 설정
+25.6 거래로그 설정
+25.7 감사로그 설정
+25.8 GUID·TraceId 설정
+25.9 동시처리 제한
+25.10 Slow Transaction 기준
+25.11 업무 WAR별 기본값
+25.12 OM 연계 설정
+25.13 TCF 설정 검증
+26. HikariCP 환경설정
+26.1 Pool 산정 기본식
+26.2 maximumPoolSize
+26.3 minimumIdle
+26.4 connectionTimeout
+26.5 validationTimeout
+26.6 idleTimeout
+26.7 maxLifetime
+26.8 keepaliveTime
+26.9 leakDetectionThreshold
+26.10 autoCommit
+26.11 Pool Name
+26.12 업무 WAR별 Pool 분리
+26.13 Tomcat 전체 Pool 합산
+26.14 센터 전체 DB Connection 합산
+26.15 DB 최대 Session 보호
+26.16 HikariCP 설정 예시
+26.17 HikariCP 설정 검증
+27. MyBatis 및 SQL 환경설정
+27.1 Statement Timeout
+27.2 Fetch Size
+27.3 Default Executor Type
+27.4 Local Cache Scope
+27.5 Lazy Loading
+27.6 Map Underscore to Camel Case
+27.7 Batch Executor 사용 기준
+27.8 Paging 기준
+27.9 대량 조회 제한
+27.10 Slow SQL 기준
+27.11 SQL 실행시간 수집
+27.12 MyBatis 설정 검증
+28. DBMS 환경설정
+28.1 최대 Session
+28.2 Process 수
+28.3 Connection 수용량
+28.4 DB Memory
+28.5 Shared·Buffer Cache
+28.6 PGA·Work Memory
+28.7 Temp 공간
+28.8 Undo·Transaction Log
+28.9 Lock·Wait Timeout
+28.10 Query Timeout 연계
+28.11 Connection 유지정책
+28.12 DB 설정 검증
+29. 세션 환경설정
+29.1 세션 사용 여부 결정
+29.2 세션 Idle Timeout
+29.3 세션 Absolute Timeout
+29.4 Cookie Domain·Path
+29.5 Secure·HttpOnly·SameSite
+29.6 Tomcat DeltaManager
+29.7 Spring Session JDBC
+29.8 Redis Session
+29.9 세션 정리주기
+29.10 세션 DB Pool
+29.11 세션 복제 트래픽
+29.12 세션 설정 검증
+30. JWT 및 인증 환경설정
+30.1 Access Token 만료시간
+30.2 Refresh Token 만료시간
+30.3 JWKS Cache 시간
+30.4 Clock Skew
+30.5 issuer·audience
+30.6 키 Rotation 주기
+30.7 DenyList 보관기간
+30.8 Token Family Timeout
+30.9 인증 예외 URL
+30.10 권한 Cache
+30.11 JWT 설정 검증
+31. Cache 환경설정
+31.1 Cache 적용 대상
+31.2 Local Cache와 분산 Cache
+31.3 최대 Entry 수
+31.4 최대 Memory
+31.5 TTL
+31.6 TTI
+31.7 Eviction 정책
+31.8 Cache Refresh
+31.9 Cache Stampede 방지
+31.10 Cache Hit Ratio 목표
+31.11 Cache 장애 시 처리
+31.12 Cache 설정 검증
+32. 외부연계·HTTP Client 환경설정
+32.1 Connection Pool
+32.2 Max Total Connection
+32.3 Route별 Connection
+32.4 Connection Request Timeout
+32.5 Connect Timeout
+32.6 Read Timeout
+32.7 Keep-Alive
+32.8 Retry
+32.9 Circuit Breaker
+32.10 Bulkhead
+32.11 외부 시스템별 격리
+32.12 외부연계 설정 검증
+33. Batch·Scheduler 환경설정
+33.1 Batch 처리량
+33.2 실행 허용시간
+33.3 Scheduler Thread Pool
+33.4 Batch Chunk Size
+33.5 Commit Interval
+33.6 병렬 처리수
+33.7 DB Pool 분리
+33.8 재시도 횟수
+33.9 Skip 한도
+33.10 중복실행 방지
+33.11 온라인과 자원경합 방지
+33.12 Batch 설정 검증
+34. Kafka·CDC 환경설정
+34.1 이벤트 TPS
+34.2 메시지 평균·최대 크기
+34.3 Partition 수
+34.4 Replication Factor
+34.5 Retention
+34.6 Segment Size
+34.7 Producer Batch Size
+34.8 Linger 설정
+34.9 Consumer 동시성
+34.10 Poll 설정
+34.11 Lag 임계치
+34.12 재처리·DLQ
+34.13 Kafka·CDC 설정 검증
+35. 파일 업로드·다운로드 환경설정
+35.1 최대 파일 크기
+35.2 Request Size
+35.3 Multipart 임시공간
+35.4 Buffer Size
+35.5 Streaming 기준
+35.6 동시 전송수
+35.7 전송 Timeout
+35.8 대용량 파일 전용 서버 분리
+35.9 파일 보관기간
+35.10 파일 설정 검증
+36. 로그·감사·관측성 환경설정
+36.1 로그 레벨
+36.2 업무 WAR별 로그 분리
+36.3 로그 파일 크기
+36.4 Rotation 주기
+36.5 보관기간
+36.6 비동기 로그 Queue
+36.7 Access Log
+36.8 거래로그
+36.9 감사로그
+36.10 GC Log
+36.11 Runtime 상태수집
+36.12 모니터링 지표
+36.13 로그·관측성 설정 검증
+제5부. 사양별 표준 설정 프로파일
+37. 8Core·32GB 표준 프로파일
+37.1 적용 대상
+37.2 목표 TPS
+37.3 Tomcat 설정
+37.4 JVM 설정
+37.5 HikariCP 설정
+37.6 Timeout 설정
+37.7 OS 설정
+37.8 운영 임계치
+37.9 검증 시나리오
+38. 16Core·64GB 표준 프로파일
+38.1 적용 대상
+38.2 목표 TPS
+38.3 Tomcat 설정
+38.4 JVM 설정
+38.5 HikariCP 설정
+38.6 Timeout 설정
+38.7 OS 설정
+38.8 운영 임계치
+38.9 검증 시나리오
+39. 16Core·128GB 표준 프로파일
+39.1 적용 대상
+39.2 16Core·64GB와의 차이
+39.3 Heap·Cache·대량조립 기준
+39.4 Tomcat 설정
+39.5 JVM 설정
+39.6 HikariCP 설정
+39.7 운영 임계치
+39.8 검증 시나리오
+40. 32Core·256GB 표준 프로파일
+40.1 적용 대상
+40.2 고부하 업무 배치 기준
+40.3 Tomcat 설정
+40.4 JVM 설정
+40.5 HikariCP 설정
+40.6 Thread 경쟁 방지
+40.7 업무별 Bulkhead
+40.8 운영 임계치
+40.9 검증 시나리오
+41. 업무 유형별 설정 프로파일
+41.1 일반 조회 업무
+41.2 SingleView 대량조회
+41.3 등록·변경 업무
+41.4 외부연계 업무
+41.5 메시지 발송 업무
+41.6 파일 처리 업무
+41.7 Batch 업무
+41.8 OM 관리 업무
+41.9 JWT 인증 업무
+41.10 Gateway 업무
+제6부. 설정값 적용과 책임 경계
+42. 목표 아키텍처
+42.1 전체 물리 구성
+42.2 센터별 구성
+42.3 VM·Tomcat·WAR 배치
+42.4 업무그룹 구성
+42.5 DB Pool 구성
+42.6 Gateway·OM·JWT·Batch 분리
+42.7 정상·피크·장애 시 자원 흐름
+43. 설정 파일 및 배포 구조
+43.1 설정 파일 계층
+43.2 공통 설정
+43.3 환경별 설정
+43.4 업무별 설정
+43.5 민감정보 설정
+43.6 환경변수
+43.7 Config Server 사용 기준
+43.8 배포 패키지와 설정 분리
+43.9 설정 변경 배포절차
+43.10 설정 Rollback
+44. 책임 경계와 RACI
+44.1 아키텍처팀
+44.2 인프라팀
+44.3 미들웨어팀
+44.4 프레임워크팀
+44.5 업무개발팀
+44.6 DBA
+44.7 데이터플랫폼팀
+44.8 보안팀
+44.9 운영팀
+44.10 성능시험팀
+44.11 PMO·품질팀
+44.12 설정 승인 RACI
+45. 정상 적용 예시
+45.1 사용자 수에서 TPS 산정
+45.2 TPS에서 VM 대수 산정
+45.3 TPS에서 Thread 산정
+45.4 DB 점유시간에서 Pool 산정
+45.5 VM Memory에서 Heap 산정
+45.6 Timeout 계층 설정
+45.7 센터 장애 대수 산정
+45.8 업무별 설정 차등화
+45.9 성능시험 후 보정
+46. 금지 예시
+46.1 사용자 수를 TPS로 직접 적용
+46.2 세션 수를 Thread 수로 적용
+46.3 maxThreads와 DB Pool을 동일하게 설정
+46.4 모든 WAR에 같은 Pool 크기 적용
+46.5 물리 메모리의 50%를 무조건 Heap으로 설정
+46.6 CPU Core 수만으로 TPS 확정
+46.7 성능시험 없이 벤치마크 수치 확정
+46.8 모든 Timeout을 같은 값으로 설정
+46.9 Retry를 무제한 적용
+46.10 DR을 정상 50:50 기준으로만 산정
+46.11 공통 Tomcat에서 업무별 Heap을 별도라고 판단
+46.12 설정 변경 후 검증 없이 운영 반영
+제7부. 성능검증과 운영 전환
+47. 성능시험 계획
+47.1 시험 대상
+47.2 시험 환경
+47.3 업무 모델
+47.4 정상 부하 시험
+47.5 피크 부하 시험
+47.6 스트레스 시험
+47.7 Spike 시험
+47.8 Soak 시험
+47.9 센터 장애 시험
+47.10 AP 장애 시험
+47.11 DB Pool 고갈 시험
+47.12 Slow SQL 시험
+47.13 외부연계 지연 시험
+47.14 GC·메모리 누수 시험
+47.15 Batch·온라인 경합 시험
+48. 설정값 검증 기준
+48.1 CPU 검증
+48.2 Heap·GC 검증
+48.3 Busy Thread 검증
+48.4 DB Pool 검증
+48.5 TPS·응답시간 검증
+48.6 오류율 검증
+48.7 Timeout 검증
+48.8 Connection 검증
+48.9 세션 검증
+48.10 Scale-out 효과 검증
+48.11 장애복구 검증
+49. 운영 임계치와 모니터링
+49.1 CPU 임계치
+49.2 Heap 임계치
+49.3 GC 임계치
+49.4 Busy Thread 임계치
+49.5 DB Pool Active·Pending 임계치
+49.6 TPS·p95·오류율
+49.7 SQL 응답시간
+49.8 외부연계 응답시간
+49.9 Kafka Lag
+49.10 Cache Hit Ratio
+49.11 파일시스템 사용률
+49.12 설정값 조정 Trigger
+현재 장애 원인을 판단하려면 Thread·JVM·DB Pool을 별개로 보지 않고, 실행 중인 ServiceId와 SQL 상태까지 함께 확인해야 한다.
+50. 장애·Timeout·자원고갈 흐름
+50.1 Tomcat Thread 포화
+50.2 DB Pool 고갈
+50.3 DB Connection Timeout
+50.4 Slow SQL·DB Lock
+50.5 CPU 포화
+50.6 GC 압박
+50.7 외부 API 장애
+50.8 Gateway 장애
+50.9 Cache 장애
+50.10 Kafka Lag 증가
+50.11 특정 WAR 자원 독점
+50.12 센터 장애
+50.13 복구 후 설정값 재검증
+51. 자동검증 및 품질 Gate
+51.1 설정 스키마 검증
+51.2 필수 설정 누락 검사
+51.3 환경별 설정 비교
+51.4 Timeout 순서 검사
+51.5 Thread·Pool 비율 검사
+51.6 전체 DB Connection 합산 검사
+51.7 Heap·Memory 정합성 검사
+51.8 JVM 옵션 검사
+51.9 중복 Port 검사
+51.10 업무 WAR별 Pool Name 검사
+51.11 민감정보 평문 검사
+51.12 성능시험 품질 Gate
+51.13 운영 전환 Gate
+52. 운영 전환 체크리스트
+52.1 산정자료 승인
+52.2 최종 설정값 승인
+52.3 VM·OS 설정 확인
+52.4 GSLB·L4·WEB 설정 확인
+52.5 Tomcat·JVM 설정 확인
+52.6 HikariCP·DB 설정 확인
+52.7 Timeout 설정 확인
+52.8 세션·JWT 설정 확인
+52.9 Batch·Kafka 설정 확인
+52.10 로그·모니터링 설정 확인
+52.11 성능시험 결과 확인
+52.12 장애시험 결과 확인
+52.13 Rollback 준비 확인
+52.14 운영 Runbook 확인
+제8부. 변경·운영·폐기 관리
+53. 설정 변경관리
+53.1 설정값 변경 요청
+53.2 영향도 분석
+53.3 변경 승인
+53.4 개발·검증·운영 반영
+53.5 설정 변경 시험
+53.6 변경 전후 비교
+53.7 Rollback
+53.8 긴급 변경
+53.9 변경이력 관리
+54. 정기 Capacity Review
+54.1 일간 운영지표
+54.2 주간 병목 검토
+54.3 월간 Capacity Review
+54.4 분기별 성장률 검토
+54.5 사용자 증가 반영
+54.6 신규 업무·WAR 추가 반영
+54.7 SQL 변경 영향 반영
+54.8 인프라 사양 변경 반영
+54.9 운영 Baseline 갱신
+55. 호환성 및 폐기 관리
+55.1 설정 항목 버전관리
+55.2 솔루션 업그레이드 영향
+55.3 Deprecated 설정 관리
+55.4 이전 버전 호환
+55.5 설정 폐기 절차
+55.6 설정파일 정리
+55.7 역사적 산정근거 보존
+56. 시사점
+56.1 핵심 아키텍처 판단
+56.2 주요 위험
+56.3 우선 보완 과제
+56.4 운영 안정화 과제
+56.5 중장기 발전 방향
+57. 마무리말
+57.1 용량산정의 최종 목적
+57.2 설정값을 고정값으로 보지 않는 원칙
+57.3 성능시험과 운영 실측의 중요성
+57.4 지속적인 Capacity Management
+부록
+A. 용량산정 입력자료 양식
+B. 사용자·세션·TPS 계산표
+C. TPMC·Core 교차검증표
+D. VM 사양별 비교표
+E. 솔루션 환경설정 표준 양식
+F. 8C·16C·32C 표준 설정 프로파일
+G. Tomcat Connector 설정 템플릿
+H. JVM 옵션 템플릿
+I. Spring Boot 설정 템플릿
+J. TCF 환경설정 템플릿
+K. HikariCP 설정 템플릿
+L. MyBatis 설정 템플릿
+M. Timeout 매트릭스
+N. GSLB·L4·WEB 설정표
+O. Gateway 설정표
+P. 세션·JWT 설정표
+Q. Cache 설정표
+R. 외부연계 Client 설정표
+S. Batch·Scheduler 설정표
+T. Kafka·CDC 설정표
+U. 로그·모니터링 설정표
+V. 전체 DB Connection 합산표
+W. 센터 장애 수용량표
+X. 성능시험 시나리오
+Y. 운영 임계치 표준표
+Z. 설정값 검증결과서
+AA. 운영 전환 체크리스트
+AB. 설정 변경관리대장
+AC. 아키텍처 의사결정 기록
+AD. 용량산정 최종 결과서

@@ -93,6 +93,20 @@ management:
 |------|------|
 | `static/_shared/ui-context.js` | bootRun/Tomcat context path (`/ui`) 자동 보정 |
 | `static/_shared/om-admin.js` | OM Admin API Relay (`uiPath()`, `relayFetch()`, JWT·Gateway 분기) |
+| `static/_shared/oc-capacity.js` | OC 용량 산정 화면 (메인 `index.html` · `/oc/plan.html` 리다이렉트) |
+| `static/oc/plan.html` | Xpilot 용량 산정 UI → 메인 `#capacitySection`으로 이동 |
+
+### 용량 산정 Relay
+
+| API (tcf-ui) | 대상 (tcf-oc) |
+|--------------|---------------|
+| `GET /api/oc/capacity/defaults` | `GET /api/oc/capacity/defaults` |
+| `POST /api/oc/capacity/calculate` | `POST /api/oc/capacity/calculate` |
+| `POST /api/oc/capacity/calculate-step` | `POST /api/oc/capacity/calculate-step` |
+
+bootRun: `http://127.0.0.1:8094` · Tomcat: `{gateway}/oc`
+
+화면: `/index.html#capacitySection` (bootRun) · `/ui/index.html#capacitySection` (Tomcat) · `/oc/plan.html`은 메인으로 리다이렉트
 
 Tomcat `/ui` 배포 시 API·정적 경로에 `/ui` 접두가 자동 적용됩니다.
 

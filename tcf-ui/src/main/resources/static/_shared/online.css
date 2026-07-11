@@ -284,3 +284,109 @@ button {
 }
 
 .hub-card a:hover { text-decoration: underline; }
+
+/* ── TCF UI 홈 (index.html) ── */
+body.tcf-home {
+  background: radial-gradient(circle at top, #1e293b 0%, var(--bg) 55%);
+}
+
+.tcf-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  padding: 1.5rem 0 1rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.25rem;
+}
+
+.tcf-topbar__brand h1 {
+  margin: 0 0 0.35rem;
+  font-size: 1.65rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.tcf-topbar__brand p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.tcf-topbar__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 1rem;
+}
+
+.tcf-topbar__link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.tcf-topbar__link:hover {
+  border-color: var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  text-decoration: none;
+}
+
+.tcf-topbar__link--active {
+  border-color: rgba(56, 189, 248, 0.45);
+  background: rgba(56, 189, 248, 0.1);
+}
+
+.tcf-main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px 48px;
+}
+
+.tcf-section {
+  margin-bottom: 2.5rem;
+  scroll-margin-top: 1rem;
+}
+
+.tcf-section__head {
+  margin-bottom: 1rem;
+}
+
+.tcf-section__head h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.25rem;
+}
+
+.tcf-section__head p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.tcf-section--hub .hub-grid {
+  margin-top: 0.5rem;
+}
+
+.tcf-section--hub .hub-card--featured {
+  border-color: rgba(56, 189, 248, 0.35);
+  background: linear-gradient(145deg, var(--panel), rgba(56, 189, 248, 0.06));
+}
+
+.hub-card--oc .links--stack {
+  display: grid;
+  gap: 0.35rem 0.75rem;
+}
+
+.hub-card--oc .links--stack a {
+  font-size: 0.88rem;
+}
