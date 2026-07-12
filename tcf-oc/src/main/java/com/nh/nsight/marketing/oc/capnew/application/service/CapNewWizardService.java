@@ -37,16 +37,19 @@ public class CapNewWizardService {
     private final CapNewScenarioDao scenarioDao;
     private final CapNewStepRule stepRule;
     private final CapNewDerivationService derivationService;
+    private final CapNewScenarioTemplateService templateService;
     private final ObjectMapper objectMapper;
 
     public CapNewWizardService(
             CapNewScenarioDao scenarioDao,
             CapNewStepRule stepRule,
             CapNewDerivationService derivationService,
+            CapNewScenarioTemplateService templateService,
             ObjectMapper objectMapper) {
         this.scenarioDao = scenarioDao;
         this.stepRule = stepRule;
         this.derivationService = derivationService;
+        this.templateService = templateService;
         this.objectMapper = objectMapper;
     }
 
@@ -68,14 +71,25 @@ public class CapNewWizardService {
 
     @Transactional
     public CapNewScenarioCDTO createScenario(CapNewCreateScenarioRequest request) {
-        CapNewStepValidationCDTO validation = stepRule.validateStep1(request.toStep1Map());
-        if (!validation.isValid()) {
-            throw new CapNewBizException(String.join(", ", validation.getErrors()));
+        Map<String, Object> payload;
+        int currentStep;
+
+        if (StringUtils.hasText(request.getTemplateCode())) {
+            Map<String, Object> seed = templateService.getSeedPayload(request.getTemplateCode());
+            payload = materializeSeedPayload(seed);
+            mergeStep1Overrides(payload, request);
+            currentStep = resolveHighestStep(payload);
+        } else {
+            CapNewStepValidationCDTO validation = stepRule.validateStep1(request.toStep1Map());
+            if (!validation.isValid()) {
+                throw new CapNewBizException(String.join(", ", validation.getErrors()));
+            }
+            payload = new LinkedHashMap<>();
+            payload.put("step1", request.toStep1Map());
+            currentStep = 1;
         }
 
         String scenarioId = "CAP-NEW-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-        Map<String, Object> payload = new LinkedHashMap<>();
-        payload.put("step1", request.toStep1Map());
 
         CapNewScenarioRow row = new CapNewScenarioRow();
         row.setScenarioId(scenarioId);
@@ -89,10 +103,78 @@ public class CapNewWizardService {
         row.setDescription(request.getDescription());
         row.setPurpose(request.getPurpose());
         row.setStatus(CapNewScenarioStatus.DRAFT.name());
-        row.setCurrentStep(1);
+        row.setCurrentStep(currentStep);
         row.setStepPayload(writePayload(payload));
+        applyMetadataFromStep1(row, payload);
         scenarioDao.insert(row);
         return toDetail(row);
+    }
+
+    public Map<String, Object> materializeSeedPayload(Map<String, Object> seed) {
+        Map<String, Object> payload = new LinkedHashMap<>();
+        for (int stepNum = 1; stepNum <= 7; stepNum++) {
+            String key = "step" + stepNum;
+            Object raw = seed.get(key);
+            if (!(raw instanceof Map<?, ?>)) {
+                continue;
+            }
+            @SuppressWarnings("unchecked")
+            Map<String, Object> stepPayload = new LinkedHashMap<>((Map<String, Object>) raw);
+            if (stepNum == 6) {
+                alignStep6Baseline(payload, stepPayload);
+            }
+            CapNewStep step = CapNewStep.resolve(stepNum);
+            CapNewStepValidationCDTO validation = validateAndEnrich(step, payload, stepPayload);
+            if (!validation.isValid()) {
+                throw new CapNewBizException("템플릿 STEP " + stepNum + " 검증 실패: "
+                        + String.join(", ", validation.getErrors()));
+            }
+            payload.put(key, stepPayload);
+        }
+        if (seed.containsKey("_templateCode")) {
+            payload.put("_templateCode", seed.get("_templateCode"));
+        }
+        if (seed.containsKey("_templateLabel")) {
+            payload.put("_templateLabel", seed.get("_templateLabel"));
+        }
+        return payload;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void mergeStep1Overrides(Map<String, Object> payload, CapNewCreateScenarioRequest request) {
+        Map<String, Object> step1 = payload.get("step1") instanceof Map<?, ?> map
+                ? new LinkedHashMap<>((Map<String, Object>) map)
+                : new LinkedHashMap<>();
+        Map<String, Object> overrides = request.toStep1Map();
+        for (Map.Entry<String, Object> entry : overrides.entrySet()) {
+            Object value = entry.getValue();
+            if (value != null && StringUtils.hasText(String.valueOf(value))) {
+                step1.put(entry.getKey(), value);
+            }
+        }
+        payload.put("step1", step1);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void alignStep6Baseline(Map<String, Object> payload, Map<String, Object> step6) {
+        Object step3Raw = payload.get("step3");
+        if (!(step3Raw instanceof Map<?, ?> step3Map)) {
+            return;
+        }
+        Object baseline = ((Map<String, Object>) step3Map).get("operatingBaseline");
+        if (baseline != null && StringUtils.hasText(String.valueOf(baseline))) {
+            step6.put("baselineScenarioCode", String.valueOf(baseline).trim());
+        }
+    }
+
+    private int resolveHighestStep(Map<String, Object> payload) {
+        int highest = 1;
+        for (int stepNum = 1; stepNum <= 7; stepNum++) {
+            if (hasStepData(payload, stepNum)) {
+                highest = stepNum;
+            }
+        }
+        return highest;
     }
 
     @Transactional

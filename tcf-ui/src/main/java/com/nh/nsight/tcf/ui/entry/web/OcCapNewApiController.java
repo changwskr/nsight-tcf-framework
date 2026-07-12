@@ -33,6 +33,25 @@ public class OcCapNewApiController {
         return relayService.relayCapNewGet("/defaults", options);
     }
 
+    @GetMapping(value = "/templates", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String listTemplates(
+            @RequestParam(value = "deploymentMode", required = false) String deploymentMode,
+            @RequestParam(value = "bootrunHost", required = false) String bootrunHost,
+            @RequestParam(value = "tomcatGatewayUrl", required = false) String tomcatGatewayUrl) {
+        RelayOptions options = new RelayOptions(deploymentMode, bootrunHost, tomcatGatewayUrl);
+        return relayService.relayCapNewGet("/templates", options);
+    }
+
+    @GetMapping(value = "/templates/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getTemplate(
+            @PathVariable String code,
+            @RequestParam(value = "deploymentMode", required = false) String deploymentMode,
+            @RequestParam(value = "bootrunHost", required = false) String bootrunHost,
+            @RequestParam(value = "tomcatGatewayUrl", required = false) String tomcatGatewayUrl) {
+        RelayOptions options = new RelayOptions(deploymentMode, bootrunHost, tomcatGatewayUrl);
+        return relayService.relayCapNewGet("/templates/" + code, options);
+    }
+
     @GetMapping(value = "/scenarios", produces = MediaType.APPLICATION_JSON_VALUE)
     public String listScenarios(
             @RequestParam(value = "status", required = false) String status,

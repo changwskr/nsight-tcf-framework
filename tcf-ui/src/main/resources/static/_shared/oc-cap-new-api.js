@@ -36,6 +36,8 @@
 
     global.ocCapNewApi = {
         defaults: () => request('GET', '/defaults'),
+        listTemplates: () => request('GET', '/templates'),
+        getTemplate: (code) => request('GET', '/templates/' + encodeURIComponent(code)),
         listScenarios: (status) => request('GET', status ? '/scenarios?status=' + encodeURIComponent(status) : '/scenarios'),
         getScenario: (id) => request('GET', '/scenarios/' + encodeURIComponent(id)),
         createScenario: (payload) => request('POST', '/scenarios', payload),

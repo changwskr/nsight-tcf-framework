@@ -5,6 +5,7 @@ import com.nh.nsight.marketing.oc.capnew.application.dto.CapNewCreateScenarioReq
 import com.nh.nsight.marketing.oc.capnew.application.dto.CapNewDefaultsCDTO;
 import com.nh.nsight.marketing.oc.capnew.application.dto.CapNewScenarioCDTO;
 import com.nh.nsight.marketing.oc.capnew.application.dto.CapNewScenarioSummaryCDTO;
+import com.nh.nsight.marketing.oc.capnew.application.dto.CapNewScenarioTemplateCDTO;
 import com.nh.nsight.marketing.oc.capnew.application.dto.CapNewStepSaveRequest;
 import com.nh.nsight.marketing.oc.capnew.application.dto.CapNewCompareCDTO;
 import com.nh.nsight.marketing.oc.capnew.application.dto.CapNewCompareRequest;
@@ -22,6 +23,7 @@ import com.nh.nsight.marketing.oc.capnew.application.service.CapNewExcelExportSe
 import com.nh.nsight.marketing.oc.capnew.application.dto.CapNewVmCompareCDTO;
 import com.nh.nsight.marketing.oc.capnew.application.service.CapNewLegacyCompareService;
 import com.nh.nsight.marketing.oc.capnew.application.service.CapNewVmCompareService;
+import com.nh.nsight.marketing.oc.capnew.application.service.CapNewScenarioTemplateService;
 import com.nh.nsight.marketing.oc.capnew.application.service.CapNewWizardService;
 import com.nh.nsight.marketing.oc.capnew.support.CapNewBizException;
 import java.util.List;
@@ -48,6 +50,7 @@ public class CapNewApiController {
 
     private final CapNewDefaultsService defaultsService;
     private final CapNewWizardService wizardService;
+    private final CapNewScenarioTemplateService templateService;
     private final CapNewCompareService compareService;
     private final CapNewApprovalService approvalService;
     private final CapNewEnvBridgeService envBridgeService;
@@ -58,6 +61,7 @@ public class CapNewApiController {
     public CapNewApiController(
             CapNewDefaultsService defaultsService,
             CapNewWizardService wizardService,
+            CapNewScenarioTemplateService templateService,
             CapNewCompareService compareService,
             CapNewApprovalService approvalService,
             CapNewEnvBridgeService envBridgeService,
@@ -66,6 +70,7 @@ public class CapNewApiController {
             CapNewVmCompareService vmCompareService) {
         this.defaultsService = defaultsService;
         this.wizardService = wizardService;
+        this.templateService = templateService;
         this.compareService = compareService;
         this.approvalService = approvalService;
         this.envBridgeService = envBridgeService;
@@ -78,6 +83,19 @@ public class CapNewApiController {
     public ResponseEntity<CapNewApiResponse<CapNewDefaultsCDTO>> defaults() {
         System.out.println("★★★★★ [" + AC + "] defaults");
         return ResponseEntity.ok(CapNewApiResponse.ok(defaultsService.defaults(), "NEW 용량산정 기본값"));
+    }
+
+    @GetMapping("/templates")
+    public ResponseEntity<CapNewApiResponse<List<CapNewScenarioTemplateCDTO>>> listTemplates() {
+        System.out.println("★★★★★ [" + AC + "] listTemplates");
+        return ResponseEntity.ok(CapNewApiResponse.ok(templateService.listTemplates(), "시나리오 템플릿 목록"));
+    }
+
+    @GetMapping("/templates/{code}")
+    public ResponseEntity<CapNewApiResponse<CapNewScenarioTemplateCDTO>> getTemplate(
+            @PathVariable String code) {
+        System.out.println("★★★★★ [" + AC + "] getTemplate code=" + code);
+        return ResponseEntity.ok(CapNewApiResponse.ok(templateService.getTemplate(code), "시나리오 템플릿"));
     }
 
     @GetMapping("/scenarios")

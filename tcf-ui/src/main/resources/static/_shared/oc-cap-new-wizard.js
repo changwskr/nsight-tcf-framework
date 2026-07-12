@@ -119,13 +119,29 @@
         const step1 = Object.assign({}, defaults && defaults.step1, scenario.stepPayload && scenario.stepPayload.step1, scenario);
         const env = ENV_LABELS[step1.targetEnv] || step1.targetEnv || '-';
         const purpose = PURPOSE_LABELS[step1.purpose] || step1.purpose || '-';
-        contextBarEl.innerHTML = `
-            <span class="oc-capnew-context-bar__item"><strong>프로젝트</strong>${escapeHtml(step1.projectName || '-')}</span>
-            <span class="oc-capnew-context-bar__item"><strong>시나리오</strong>${escapeHtml(step1.scenarioName || scenario.scenarioId || '-')}</span>
-            <span class="oc-capnew-context-bar__item"><strong>환경</strong>${escapeHtml(env)}</span>
-            <span class="oc-capnew-context-bar__item"><strong>목적</strong>${escapeHtml(purpose)}</span>
-            <span class="oc-capnew-context-bar__item"><strong>상태</strong>${escapeHtml(STATUS_LABELS[scenario.status] || scenario.status || '-')}</span>
-            <span class="oc-capnew-context-bar__item"><strong>버전</strong>${escapeHtml(step1.versionNo || '-')}</span>`;
+        const statusCode = scenario.status || 'DRAFT';
+        const statusLabel = STATUS_LABELS[statusCode] || statusCode || '-';
+        const statusCls = judgmentStatusClass(statusCode === 'DRAFT' ? 'PENDING' : statusCode);
+
+        const items = [
+            { label: '프로젝트', value: step1.projectName || '-', wide: true },
+            { label: '시나리오', value: step1.scenarioName || scenario.scenarioId || '-', wide: true },
+            { label: '환경', value: env },
+            { label: '목적', value: purpose },
+            { label: '상태', value: statusLabel, badge: statusCls },
+            { label: '버전', value: step1.versionNo || '-' }
+        ];
+
+        contextBarEl.innerHTML = items.map(item => {
+            const wideCls = item.wide ? ' oc-capnew-context-bar__item--wide' : '';
+            const valueHtml = item.badge
+                ? `<span class="oc-capnew-status oc-capnew-status--${item.badge}">${escapeHtml(item.value)}</span>`
+                : escapeHtml(item.value);
+            return `<div class="oc-capnew-context-bar__item${wideCls}">
+                <span class="oc-capnew-context-bar__label">${escapeHtml(item.label)}</span>
+                <span class="oc-capnew-context-bar__value">${valueHtml}</span>
+            </div>`;
+        }).join('');
         contextBarEl.hidden = false;
     }
 

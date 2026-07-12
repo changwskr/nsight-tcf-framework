@@ -6,7 +6,7 @@
   <title>NSIGHT OC · NEW 용량산정</title>
   <script src="/_shared/ui-context.js"></script>
   <link rel="stylesheet" href="/_shared/online.css">
-  <link rel="stylesheet" href="/_shared/oc-cap-new.css">
+  <link rel="stylesheet" href="/_shared/oc-cap-new.css?v=20260712d">
 </head>
 <body class="tcf-home oc-capnew-page">
   <div class="tcf-main">
@@ -27,12 +27,19 @@
     </header>
 
     <section class="tcf-section oc-capnew-hero">
-      <h2>시나리오 목록</h2>
-      <p>신규 산정을 시작하거나 저장된 시나리오를 이어서 편집합니다.</p>
+      <h2>시나리오 템플릿</h2>
+      <p>용도에 맞는 초기 템플릿을 선택하면 STEP 1~7이 미리 채워진 상태로 Wizard가 시작됩니다. 이후 수치만 조정하면 됩니다.</p>
       <div id="capNewMsg" class="oc-capnew-msg" hidden></div>
+      <div id="templateGrid" class="oc-capnew-template-grid">
+        <p>템플릿을 불러오는 중…</p>
+      </div>
+    </section>
+
+    <section class="tcf-section oc-capnew-hero">
+      <h2>저장된 시나리오</h2>
+      <p>이전에 저장한 산정 시나리오를 이어서 편집합니다.</p>
       <p>
-        <button type="button" id="btnCreateScenario" class="tcf-btn">+ 신규 산정 시작</button>
-        <a href="/oc/cap-new/compare.html" class="tcf-btn tcf-btn--ghost" style="margin-left:0.5rem;">시나리오 비교</a>
+        <a href="/oc/cap-new/compare.html" class="tcf-btn tcf-btn--ghost">시나리오 비교</a>
         <a href="/oc/cap-new/approved.html" class="tcf-btn tcf-btn--ghost" style="margin-left:0.5rem;">승인 기준안</a>
       </p>
       <div id="scenarioList" class="oc-capnew-list">

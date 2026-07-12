@@ -138,13 +138,29 @@ public class CapNewDerivationService {
     @SuppressWarnings("unchecked")
     public Map<String, Object> enrichStep6(Map<String, Object> step6, Map<String, Object> allPayload) {
         Map<String, Object> enriched = new LinkedHashMap<>(step6);
+        Map<String, Object> step3 = mapValue(allPayload.get("step3"));
         Map<String, Object> step4 = mapValue(allPayload.get("step4"));
         Map<String, Object> step5 = mapValue(allPayload.get("step5"));
         VmProfile profile = resolveVmProfile(text(step4.get("vmProfileCode"), "16CORE-128GB"));
 
-        String baselineCode = text(step6.get("baselineScenarioCode"),
-                text(mapValue(allPayload.get("step3")).get("operatingBaseline"), "DESIGN_PEAK"));
+        String operatingBaseline = text(step3.get("operatingBaseline"), "DESIGN_PEAK");
+        String requestedBaseline = text(step6.get("baselineScenarioCode"));
+        String baselineCode = operatingBaseline;
         int targetTps = resolveTpsByCode(allPayload, baselineCode);
+
+        if (targetTps <= 0 && StringUtils.hasText(requestedBaseline)
+                && !requestedBaseline.equalsIgnoreCase(baselineCode)) {
+            baselineCode = requestedBaseline;
+            targetTps = resolveTpsByCode(allPayload, baselineCode);
+        }
+        if (targetTps <= 0) {
+            baselineCode = operatingBaseline;
+            targetTps = resolveBaselineTps(allPayload);
+        }
+        if (targetTps <= 0) {
+            baselineCode = findPrimaryEnabledScenarioCode(step3);
+            targetTps = resolveTpsByCode(allPayload, baselineCode);
+        }
         int deploymentAp = intValue(step5.get("baselineTotalAp"), Math.max(2, intValue(step5.get("baselineApPerCenter"), 2)));
         if (deploymentAp <= 0) {
             deploymentAp = 2;
@@ -378,6 +394,26 @@ public class CapNewDerivationService {
             }
         }
         return 0;
+    }
+
+    @SuppressWarnings("unchecked")
+    private String findPrimaryEnabledScenarioCode(Map<String, Object> step3) {
+        String operatingBaseline = text(step3.get("operatingBaseline"));
+        if (StringUtils.hasText(operatingBaseline)) {
+            return operatingBaseline;
+        }
+        Object raw = step3.get("scenarios");
+        if (raw instanceof List<?> list) {
+            for (Object item : list) {
+                if (item instanceof Map<?, ?> map) {
+                    Map<String, Object> scenario = (Map<String, Object>) map;
+                    if (boolValue(scenario.get("enabled"), false)) {
+                        return text(scenario.get("code"), "DESIGN_PEAK");
+                    }
+                }
+            }
+        }
+        return "DESIGN_PEAK";
     }
 
     private String classifyAp(int targetTps, int vmEffectiveTps, int failoverAp, boolean drFullLoad) {

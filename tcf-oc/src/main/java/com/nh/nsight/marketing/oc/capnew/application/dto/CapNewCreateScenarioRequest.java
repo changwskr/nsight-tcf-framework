@@ -14,6 +14,7 @@ public class CapNewCreateScenarioRequest {
     private String author;
     private String description;
     private String purpose;
+    private String templateCode;
 
     public Map<String, Object> toStep1Map() {
         Map<String, Object> step1 = new LinkedHashMap<>();
@@ -99,5 +100,13 @@ public class CapNewCreateScenarioRequest {
 
     public void setPurpose(String purpose) {
         this.purpose = purpose;
+    }
+
+    public String getTemplateCode() {
+        return templateCode;
+    }
+
+    public void setTemplateCode(String templateCode) {
+        this.templateCode = templateCode;
     }
 }
