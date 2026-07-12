@@ -45,6 +45,26 @@
   flex: 1;
 }
 
+.om-nav-section.om-nav-runtime .om-nav-label {
+  color: #38bdf8;
+}
+
+.om-link-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+}
+
+.om-link-grid a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.om-link-grid a:hover {
+  text-decoration: underline;
+}
+
 .om-nav-section {
   margin-bottom: 18px;
 }
@@ -149,7 +169,8 @@
 }
 
 .om-status-banner.normal { border-color: rgba(52, 211, 153, 0.45); }
-.om-status-banner.warn { border-color: rgba(251, 191, 36, 0.55); }
+.om-status-banner.warn,
+.om-status-banner.unknown { border-color: rgba(251, 191, 36, 0.55); }
 .om-status-banner.critical { border-color: rgba(248, 113, 113, 0.55); }
 
 .om-status-main {
@@ -158,7 +179,8 @@
 }
 
 .om-status-main.normal { color: var(--success); }
-.om-status-main.warn { color: #fbbf24; }
+.om-status-main.warn,
+.om-status-main.unknown { color: #fbbf24; }
 .om-status-main.critical { color: var(--fail); }
 
 .om-stat-pill {
@@ -379,7 +401,22 @@
 .om-alert.info {
   background: rgba(56, 189, 248, 0.1);
   border: 1px solid rgba(56, 189, 248, 0.35);
-  color: #bae6fd;
+  color: #e0f2fe;
+}
+
+.om-alert.info a,
+.om-alert.info a:visited,
+.om-content a,
+.om-content a:visited {
+  color: #7dd3fc;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 600;
+}
+
+.om-alert.info a:hover,
+.om-content a:hover {
+  color: #f0f9ff;
 }
 
 .om-form-panel {

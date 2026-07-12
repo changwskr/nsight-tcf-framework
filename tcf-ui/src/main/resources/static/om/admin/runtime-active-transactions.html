@@ -2,112 +2,11 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OM 실행 중 거래</title>
-  <link rel="stylesheet" href="/_shared/online.css">
-  <link rel="stylesheet" href="/_shared/om-admin.css">
-  <style>
-    .om-row-sql td { background: rgba(59, 130, 246, 0.06); }
-    .om-row-db td { background: rgba(251, 191, 36, 0.08); }
-    .om-row-ext td { background: rgba(168, 85, 247, 0.06); }
-  </style>
+  <meta http-equiv="refresh" content="0;url=/om/admin/runtime-workspace.html?tab=rtm040">
+  <title>RTM-040 → 워크스페이스</title>
+  <script>location.replace('/om/admin/runtime-workspace.html?tab=rtm040');</script>
 </head>
 <body>
-  <script src="/_shared/om-admin.js?v=20260711i"></script>
-  <script>
-    function renderRows(rows, columns, emptyText) {
-      if (!rows.length) {
-        return `<tr><td colspan="${columns}" class="om-empty">${emptyText}</td></tr>`;
-      }
-      return rows.join('');
-    }
-
-    function rowClass(step) {
-      if (step === 'EXECUTING_SQL') return 'om-row-sql';
-      if (step === 'WAIT_DB_CONNECTION') return 'om-row-db';
-      if (step === 'WAIT_EXTERNAL') return 'om-row-ext';
-      return '';
-    }
-
-    function stepChip(label, step) {
-      if (!label || label === '-') return '-';
-      const warn = ['SQL 실행', 'DB 대기', '외부 대기'];
-      if (warn.includes(label)) {
-        return `<span class="om-chip warn">${label}</span>`;
-      }
-      return `<span class="om-chip">${label}</span>`;
-    }
-
-    async function load(el) {
-      const { body, relay } = await OmAdmin.inquiry('runtimeDiagnostics', { includeDetails: 'Y' });
-      const list = body.activeTransactionListAnalysis || {};
-
-      document.getElementById('rtmStatus').textContent =
-        `${relay.elapsedMs}ms · 점검 ${body.checkedAt || '-'} · ${list.count ?? 0}건`;
-      document.getElementById('listHead').textContent =
-        `15.4 ${list.title || '실행 중 거래 목록'} · ${list.count ?? 0}건`;
-      document.getElementById('apiLabel').textContent = list.api || 'GET /internal/runtime/active-transactions';
-
-      const rows = (list.rows || []).map(r => `
-        <tr class="${rowClass(r.currentStep)}">
-          <td>${OmAdmin.field(r, 'businessCode')}</td>
-          <td class="om-mono">${OmAdmin.field(r, 'serviceId')}</td>
-          <td>${r.elapsedDisplay || '-'}</td>
-          <td>${stepChip(r.stepLabel, r.currentStep)}</td>
-          <td class="om-mono">${OmAdmin.field(r, 'sqlOrExternal')}</td>
-        </tr>`);
-
-      document.getElementById('activeListBody').innerHTML =
-        renderRows(rows, 5, '현재 실행 중인 TCF 거래가 없습니다.');
-    }
-
-    OmAdmin.initPage('runtime-active-transactions', '실행 중 거래', async (el) => {
-      el.innerHTML = `
-        <div class="om-alert info">
-          설계 15.4 실행 중 거래 — ActiveTransactionRegistry 기준 · 경과시간 내림차순.
-          <a href="/om/admin/runtime-diagnostics.html" style="margin-left:8px">← 런타임 진단 통합</a>
-          <a href="/om/admin/runtime-transaction-detail.html" style="margin-left:8px">거래·Thread 상세</a>
-          <a href="/om/admin/runtime-status-cards.html" style="margin-left:8px">핵심 상태 카드</a>
-        </div>
-        <section class="om-filter-bar">
-          <button class="btn-primary" id="refreshBtn" type="button">새로고침</button>
-          <span id="rtmStatus" style="color:var(--muted);font-size:0.85rem;align-self:center">조회 중...</span>
-        </section>
-
-        <div class="om-card">
-          <div class="om-card-head" id="listHead">15.4 실행 중 거래 목록</div>
-          <div class="om-card-body">
-            <div id="apiLabel" class="om-api-label" style="font-family:monospace;font-size:0.82rem;color:var(--muted);margin-bottom:10px">-</div>
-            <div class="om-table-wrap">
-              <table class="om-table">
-                <thead>
-                  <tr>
-                    <th>업무</th>
-                    <th>ServiceId</th>
-                    <th>실행시간</th>
-                    <th>단계</th>
-                    <th>SQL·외부</th>
-                  </tr>
-                </thead>
-                <tbody id="activeListBody">
-                  <tr><td colspan="5" class="om-empty">조회 중...</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div style="color:var(--muted);font-size:0.85rem;margin-top:8px">
-              SQL·외부: SQL 실행 → Mapper SQL ID · DB 대기 → - · 외부 대기 → 연계 시스템 코드
-            </div>
-          </div>
-        </div>`;
-
-      document.getElementById('refreshBtn').addEventListener('click', () => {
-        load(el).catch(err => OmAdmin.showErrorBanner(el, err.message));
-      });
-      await load(el);
-      window.setInterval(() => {
-        load(el).catch(() => {});
-      }, 30000);
-    });
-  </script>
+  <p><a href="/om/admin/runtime-workspace.html?tab=rtm040">런타임 워크스페이스 (RTM-040)</a>로 이동 중...</p>
 </body>
 </html>

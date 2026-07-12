@@ -8,6 +8,7 @@ import com.nh.nsight.tcf.core.support.runtime.model.ActiveTransactionInfo;
 import com.nh.nsight.tcf.core.support.runtime.model.RuntimeTransactionStep;
 import com.nh.nsight.tcf.core.support.runtime.model.SlowSqlInfo;
 import com.nh.nsight.tcf.core.support.runtime.model.SlowTransactionInfo;
+import com.nh.nsight.tcf.core.support.runtime.model.TransactionStepEvent;
 import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.HikariPoolMXBean;
 import java.lang.management.GarbageCollectorMXBean;
@@ -98,7 +99,9 @@ public class TcfRuntimeMonitor {
         List<Map<String, Object>> rows = new ArrayList<>();
         for (ActiveTransactionInfo info : registry.snapshot()) {
             Map<String, Object> row = new LinkedHashMap<>();
+            row.put("threadId", info.threadId());
             row.put("threadName", info.threadName());
+            row.put("threadState", resolveThreadState(info.threadId()));
             row.put("businessCode", info.businessCode());
             row.put("serviceId", info.serviceId());
             row.put("guid", maskGuid(info.guid()));
@@ -120,7 +123,30 @@ public class TcfRuntimeMonitor {
         instance.put("applicationName", applicationName);
         instance.put("businessCode", businessCode);
         instance.put("version", version);
+        instance.put("pid", resolveProcessId());
         return instance;
+    }
+
+    private long resolveProcessId() {
+        try {
+            String name = ManagementFactory.getRuntimeMXBean().getName();
+            int at = name.indexOf('@');
+            if (at > 0) {
+                return Long.parseLong(name.substring(0, at));
+            }
+        } catch (Exception ignored) {
+            // PID 미수집
+        }
+        return ProcessHandle.current().pid();
+    }
+
+    private String resolveThreadState(long threadId) {
+        ThreadMXBean threads = ManagementFactory.getThreadMXBean();
+        java.lang.management.ThreadInfo info = threads.getThreadInfo(threadId);
+        if (info == null || info.getThreadState() == null) {
+            return "UNKNOWN";
+        }
+        return info.getThreadState().name();
     }
 
     private Map<String, Object> buildSummary() {
@@ -198,6 +224,7 @@ public class TcfRuntimeMonitor {
         }
         double busyRatio = max > 0 ? busy * 100.0 / max : 0;
         long[] deadlocked = threads.findDeadlockedThreads();
+        int deadlockCount = deadlocked != null ? deadlocked.length : 0;
 
         Map<String, Object> row = new LinkedHashMap<>();
         row.put("max", max);
@@ -207,8 +234,17 @@ public class TcfRuntimeMonitor {
         row.put("activeTransactionCount", activeTx);
         row.put("slowTransactionCount", slowTransactionTracker.countRecent(System.currentTimeMillis() - 60_000L));
         row.put("blocked", countBlockedHttpThreads(threads));
-        row.put("deadlock", deadlocked != null && deadlocked.length > 0);
+        row.put("deadlock", deadlockCount > 0);
+        row.put("deadlockCount", deadlockCount);
         row.put("maxSource", tomcatPool.isPresent() ? "tomcat-jmx" : "estimated");
+        Optional<TomcatThreadPoolProbe.AcceptQueue> acceptQueue = TomcatThreadPoolProbe.resolveAcceptQueue();
+        if (acceptQueue.isPresent()) {
+            row.put("acceptQueue", acceptQueue.get().current());
+            row.put("acceptQueueMax", acceptQueue.get().max());
+        } else {
+            row.put("acceptQueue", row.get("blocked"));
+            row.put("acceptQueueMax", 500);
+        }
         if (tomcatPool.isPresent()) {
             row.put("poolName", tomcatPool.get().poolName());
         }
@@ -291,6 +327,7 @@ public class TcfRuntimeMonitor {
         row.put("heapRatio", round1(heapRatio));
         row.put("oldGenRatio", round1(resolveOldGenRatio()));
         row.put("metaspaceMb", round1(resolveMetaspaceMb()));
+        row.put("metaspaceMaxMb", round1(resolveMetaspaceMaxMb()));
         row.put("gcCountLastMinute", measureGcCountLastMinute());
         row.put("gcTimeLastMinuteMs", gcTimeLastMinute);
         row.put("liveThreadCount", ManagementFactory.getThreadMXBean().getThreadCount());
@@ -329,17 +366,37 @@ public class TcfRuntimeMonitor {
             row.put("serviceId", info.serviceId());
             row.put("businessCode", info.businessCode());
             row.put("guid", maskGuid(info.guid()));
+            row.put("traceId", maskTraceId(info.traceId()));
+            row.put("threadName", info.threadName());
+            row.put("threadId", info.threadId());
+            row.put("startTimeMillis", info.startTimeMillis());
+            row.put("transactionCode", info.transactionCode());
             row.put("elapsedMs", info.elapsedMillis());
             row.put("currentStep", info.currentStep() == null ? null : info.currentStep().name());
             row.put("sqlId", info.currentSqlId());
             row.put("mapperSql", formatMapperSql(info.currentSqlId(), null));
             row.put("externalSystemCode", info.externalSystemCode());
             row.put("dbWaitMs", resolveDbWaitMillis(info));
+            row.put("stepHistory", toStepHistoryRows(registry.getStepHistory(info.guid())));
             rows.add(row);
             index++;
             if (index >= limit) {
                 break;
             }
+        }
+        return rows;
+    }
+
+    private static List<Map<String, Object>> toStepHistoryRows(List<TransactionStepEvent> events) {
+        List<Map<String, Object>> rows = new ArrayList<>();
+        for (TransactionStepEvent event : events) {
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("stepKey", event.stepKey());
+            row.put("label", event.label());
+            row.put("timestampMillis", event.timestampMillis());
+            row.put("durationMs", event.durationMs());
+            row.put("highlight", event.highlight());
+            rows.add(row);
         }
         return rows;
     }
@@ -383,6 +440,7 @@ public class TcfRuntimeMonitor {
     private Map<String, Object> buildRuntimeConfig() {
         Map<String, Object> config = new LinkedHashMap<>();
         config.put("slowSqlThresholdMs", properties.getRuntimeSlowSqlThresholdMs());
+        config.put("onlineTimeoutSec", 60);
         return config;
     }
 
@@ -514,6 +572,18 @@ public class TcfRuntimeMonitor {
         return 0;
     }
 
+    private double resolveMetaspaceMaxMb() {
+        for (MemoryPoolMXBean pool : ManagementFactory.getMemoryPoolMXBeans()) {
+            if ("Metaspace".equals(pool.getName())) {
+                MemoryUsage usage = pool.getUsage();
+                if (usage != null && usage.getMax() > 0) {
+                    return usage.getMax() / 1024.0 / 1024.0;
+                }
+            }
+        }
+        return 0;
+    }
+
     private double resolveProcessCpuUsagePct() {
         OperatingSystemMXBean bean = ManagementFactory.getOperatingSystemMXBean();
         if (bean instanceof com.sun.management.OperatingSystemMXBean sunBean) {
@@ -568,6 +638,16 @@ public class TcfRuntimeMonitor {
             return "masked";
         }
         return guid.substring(0, 4) + "****" + guid.substring(guid.length() - 4);
+    }
+
+    private static String maskTraceId(String traceId) {
+        if (traceId == null || traceId.isBlank()) {
+            return "-";
+        }
+        if (traceId.length() < 8) {
+            return traceId;
+        }
+        return traceId.substring(0, 4) + "****" + traceId.substring(traceId.length() - 4);
     }
 
     private static double round1(double value) {

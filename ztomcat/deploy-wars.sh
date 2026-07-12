@@ -16,6 +16,7 @@ ALL_MODULES=(
   ep-service:ep.war:ep.war:ep
   ss-service:ss.war:ss.war:ss
   mg-service:mg.war:mg.war:mg
+  tcf-oc:oc.war:oc.war:oc
   tcf-om:tcf-om.war:om.war:om
   tcf-ui:tcf-ui.war:ui.war:ui
   tcf-jwt:jwt.war:jwt.war:jwt
@@ -30,8 +31,8 @@ Usage:
   deploy-wars.sh sv           Build and deploy one code (e.g. sv.war -> /sv)
   deploy-wars.sh sv ic om     Build and deploy multiple codes
 
-Codes: ic pc ms sv pd eb ep ss mg om ui jwt batch
-  (별칭: tcf-jwt, tcf-om, tcf-ui, tcf-batch)
+Codes: ic pc ms sv pd eb ep ss mg oc om ui jwt batch
+  (별칭: tcf-oc, tcf-jwt, tcf-om, tcf-ui, tcf-batch)
 EOF
 }
 
@@ -39,6 +40,7 @@ resolve_entry() {
   local code
   code="$(echo "$1" | tr '[:upper:]' '[:lower:]')"
   case "${code}" in
+    tcf-oc) code="oc" ;;
     tcf-jwt) code="jwt" ;;
     tcf-om) code="om" ;;
     tcf-ui) code="ui" ;;

@@ -1,8 +1,8 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-07-12T03:19:30.749Z",
+  "generatedAt": "2026-07-12T06:12:15.920Z",
   "source": "tcf-ui/src/main/resources/static",
-  "total": 96,
+  "total": 101,
   "overrideCount": 19,
   "screens": {
     "/bc/index-multi.html": {
@@ -293,6 +293,18 @@
       "docId": "om-admin",
       "title": "OM Admin · runtime incident flow"
     },
+    "/om/admin/runtime-incident-history.html": {
+      "docId": "om-admin",
+      "title": "OM Admin · runtime incident history"
+    },
+    "/om/admin/runtime-instance-detail.html": {
+      "docId": "om-admin",
+      "title": "OM Admin · runtime instance detail"
+    },
+    "/om/admin/runtime-integrated-dashboard.html": {
+      "docId": "om-admin",
+      "title": "OM Admin · runtime integrated dashboard"
+    },
     "/om/admin/runtime-jvm-analysis.html": {
       "docId": "om-admin",
       "title": "OM Admin · runtime jvm analysis"
@@ -309,9 +321,17 @@
       "docId": "om-admin",
       "title": "OM Admin · runtime thread analysis"
     },
+    "/om/admin/runtime-threshold-policy.html": {
+      "docId": "om-admin",
+      "title": "OM Admin · runtime threshold policy"
+    },
     "/om/admin/runtime-transaction-detail.html": {
       "docId": "om-admin",
       "title": "OM Admin · runtime transaction detail"
+    },
+    "/om/admin/runtime-workspace.html": {
+      "docId": "om-admin",
+      "title": "OM Admin · runtime workspace"
     },
     "/om/admin/service-catalog.html": {
       "docId": "om-admin",

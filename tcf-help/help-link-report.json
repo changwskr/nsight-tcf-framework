@@ -1,14 +1,14 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-07-12T02:37:23.924Z",
+  "generatedAt": "2026-07-12T06:12:22.077Z",
   "links": {
     "scanned": 94,
     "broken": 0,
     "warnings": 0
   },
   "screens": {
-    "totalHtml": 101,
-    "mapped": 99,
+    "totalHtml": 106,
+    "mapped": 104,
     "unmapped": 3,
     "manualOverrides": 19
   },

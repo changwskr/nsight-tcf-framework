@@ -33,6 +33,7 @@ nsight:
         - { ap-id: ss-ap, ap-name: 'ss-service (/ss)', base-url: '${nsight.gateway.base-url}/ss', enabled: true }
         - { ap-id: mg-ap, ap-name: 'mg-service (/mg)', base-url: '${nsight.gateway.base-url}/mg', enabled: true }
         - { ap-id: om-ap, ap-name: 'tcf-om (/om)', base-url: '${nsight.gateway.base-url}/om', enabled: true }
+        - { ap-id: oc-ap, ap-name: 'tcf-oc (/oc)', base-url: '${nsight.gateway.base-url}/oc', enabled: true }
         - { ap-id: batch-ap, ap-name: 'tcf-batch (/batch)', base-url: '${nsight.gateway.base-url}/batch', enabled: true }
         - { ap-id: ui-ap, ap-name: 'tcf-ui (/ui)', base-url: '${nsight.gateway.base-url}/ui', enabled: true }
     db-status:
@@ -61,6 +62,8 @@ nsight:
         - { scope-id: EP-AP, scope-name: 'ep-service HTTP Session (/ep)', source-type: actuator, base-url: '${nsight.gateway.base-url}/ep', metric-name: tomcat.sessions.active.current, enabled: true }
         - { scope-id: SS-AP, scope-name: 'ss-service HTTP Session (/ss)', source-type: actuator, base-url: '${nsight.gateway.base-url}/ss', metric-name: tomcat.sessions.active.current, enabled: true }
         - { scope-id: MG-AP, scope-name: 'mg-service HTTP Session (/mg)', source-type: actuator, base-url: '${nsight.gateway.base-url}/mg', metric-name: tomcat.sessions.active.current, enabled: true }
+        - { scope-id: OM-AP, scope-name: 'tcf-om HTTP Session (/om)', source-type: actuator, base-url: '${nsight.gateway.base-url}/om', metric-name: tomcat.sessions.active.current, enabled: true }
+        - { scope-id: OC-AP, scope-name: 'tcf-oc HTTP Session (/oc)', source-type: actuator, base-url: '${nsight.gateway.base-url}/oc', metric-name: tomcat.sessions.active.current, enabled: true }
         - { scope-id: BATCH-AP, scope-name: 'tcf-batch HTTP Session (/batch)', source-type: actuator, base-url: '${nsight.gateway.base-url}/batch', metric-name: tomcat.sessions.active.current, enabled: true }
         - { scope-id: UI-AP, scope-name: 'tcf-ui HTTP Session (/ui)', source-type: actuator, base-url: '${nsight.gateway.base-url}/ui', metric-name: tomcat.sessions.active.current, enabled: true }
     deploy-status:
@@ -113,6 +116,11 @@ nsight:
         - business-code: OM
           war-name: om.war
           base-url: ${nsight.gateway.base-url}/om
+          source-type: actuator
+          enabled: true
+        - business-code: OC
+          war-name: oc.war
+          base-url: ${nsight.gateway.base-url}/oc
           source-type: actuator
           enabled: true
         - business-code: BATCH

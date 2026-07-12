@@ -34,6 +34,7 @@ $AllModules = @(
     @{ Module = 'ep-service';  Src = 'ep.war';       Dest = 'ep.war';       Ctx = 'ep' }
     @{ Module = 'ss-service';  Src = 'ss.war';       Dest = 'ss.war';       Ctx = 'ss' }
     @{ Module = 'mg-service';  Src = 'mg.war';       Dest = 'mg.war';       Ctx = 'mg' }
+    @{ Module = 'tcf-oc';      Src = 'oc.war';       Dest = 'oc.war';       Ctx = 'oc' }
     @{ Module = 'tcf-om';      Src = 'tcf-om.war';   Dest = 'om.war';       Ctx = 'om' }
     @{ Module = 'tcf-ui';      Src = 'tcf-ui.war';   Dest = 'ui.war';       Ctx = 'ui' }
     @{ Module = 'tcf-uj';      Src = 'tcf-uj.war';   Dest = 'uj.war';       Ctx = 'uj' }
@@ -84,8 +85,8 @@ Usage: deploy-wars.ps1 [codes...] [options]
 tcf-cicd 설정 sync -> WAR 빌드 -> ztomcat webapps 배포 (최대 13 context, workspace에 있는 모듈만).
 
 Codes (생략 또는 all = 전체):
-  ic pc ms sv pd eb ep ss mg om ui uj jwt gw batch
-  (별칭: tcf-jwt → jwt, tcf-gateway → gw, tcf-om → om, tcf-ui → ui, tcf-uj → uj, tcf-batch → batch)
+  ic pc ms sv pd eb ep ss mg oc om ui uj jwt gw batch
+  (별칭: tcf-oc → oc, tcf-jwt → jwt, tcf-gateway → gw, tcf-om → om, tcf-ui → ui, tcf-uj → uj, tcf-batch → batch)
 
 Options:
   -SyncProfile dev|local   framework sync 프로파일 (기본 dev — Tomcat setenv)
@@ -181,6 +182,7 @@ function Normalize-CicdDeployCode {
         'tcf-jwt' { return 'jwt' }
         'tcf-gateway' { return 'gw' }
         'gateway' { return 'gw' }
+        'tcf-oc' { return 'oc' }
         'tcf-om' { return 'om' }
         'tcf-ui' { return 'ui' }
         'tcf-uj' { return 'uj' }
@@ -273,6 +275,23 @@ function Invoke-BatchDashboardCollect {
 
     if (-not $up) {
         Write-Warning '[deploy-wars] tcf-batch not UP yet — Health Check DB/AP는 스케줄(5분) 또는 수동 POST /batch/jobs/db-status/run 후 갱신됩니다.'
+        return
+    }
+
+    Write-Host '[deploy-wars] waiting for batch context to finish redeploy (~40s quiet) ...'
+    Start-Sleep -Seconds 40
+    $okStreak = 0
+    $stableDeadline = (Get-Date).AddMinutes(3)
+    do {
+        try {
+            $health = Invoke-RestMethod -Uri "$batchBase/actuator/health" -TimeoutSec 10
+            if ($health.status -eq 'UP') { $okStreak++ } else { $okStreak = 0 }
+        } catch { $okStreak = 0 }
+        if ($okStreak -ge 2) { break }
+        Start-Sleep -Seconds 10
+    } while ((Get-Date) -lt $stableDeadline)
+    if ($okStreak -lt 2) {
+        Write-Warning '[deploy-wars] skip dashboard collect — batch redeploy still in progress'
         return
     }
 

@@ -20,24 +20,31 @@ window.OmAdmin = (function () {
     { id: 'audit-log', label: '감사로그 조회', href: '/om/admin/audit-log.html' }
   ];
 
+  /** 설계서 §2.1 런타임·장애진단 — RTM-010/020/030 워크스페이스 단일 진입 */
+  const NAV_RUNTIME = [
+    { id: 'runtime-diagnosis-guide', label: '진단 순서 가이드', href: '/om/admin/runtime-diagnosis-guide.html' },
+    { id: 'runtime-workspace', label: '런타임·장애진단', href: '/om/admin/runtime-workspace.html' },
+    { id: 'runtime-diagnostics', label: '런타임 진단 (상세 raw)', href: '/om/admin/runtime-diagnostics.html' },
+    { id: 'runtime-status-cards', label: '핵심 상태 카드', href: '/om/admin/runtime-status-cards.html' },
+    { id: 'runtime-thread-analysis', label: 'Thread 분석', href: '/om/admin/runtime-thread-analysis.html' },
+    { id: 'runtime-jvm-analysis', label: 'JVM 분석 (RTM-020)', href: '/om/admin/runtime-jvm-analysis.html' },
+    { id: 'runtime-dbpool-analysis', label: 'DB Pool 분석', href: '/om/admin/runtime-dbpool-analysis.html' },
+    { id: 'runtime-dominance-analysis', label: 'WAR·자원 독점', href: '/om/admin/runtime-dominance-analysis.html' },
+    { id: 'runtime-business-occupancy', label: '업무 점유 현황', href: '/om/admin/runtime-business-occupancy.html' },
+    { id: 'runtime-active-transactions', label: '실행 중 거래 (RTM-040)', href: '/om/admin/runtime-active-transactions.html' },
+    { id: 'runtime-sql-analysis', label: 'Slow SQL·외부연계 (RTM-060)', href: '/om/admin/runtime-workspace.html?tab=rtm060' },
+    { id: 'runtime-transaction-detail', label: '거래 추적 상세 (RTM-050)', href: '/om/admin/runtime-workspace.html?tab=rtm050' },
+    { id: 'runtime-cause-analysis', label: '장애 진단 및 보고서 (RTM-070)', href: '/om/admin/runtime-cause-analysis.html' },
+    { id: 'runtime-incident-flow', label: '장애 흐름', href: '/om/admin/runtime-incident-flow.html' },
+    { id: 'runtime-incident-history', label: '장애 이력 (RTM-080)', href: '/om/admin/runtime-incident-history.html' },
+    { id: 'runtime-threshold-policy', label: '임계치·수집설정 (RTM-090)', href: '/om/admin/runtime-threshold-policy.html' }
+  ];
+
   const NAV_SECONDARY = [
     { id: 'error-code', label: '오류코드 / 메시지', href: '/om/admin/error-code.html' },
     { id: 'batch', label: '배치 / 스케줄', href: '/om/admin/batch.html' },
     { id: 'deploy', label: '배포 관리', href: '/om/admin/deploy.html' },
     { id: 'health-check', label: 'Health Check', href: '/om/admin/health-check.html' },
-    { id: 'runtime-diagnosis-guide', label: '진단 순서 가이드', href: '/om/admin/runtime-diagnosis-guide.html' },
-    { id: 'runtime-diagnostics', label: '런타임 진단', href: '/om/admin/runtime-diagnostics.html' },
-    { id: 'runtime-thread-analysis', label: 'Thread 분석', href: '/om/admin/runtime-thread-analysis.html' },
-    { id: 'runtime-jvm-analysis', label: 'JVM 분석', href: '/om/admin/runtime-jvm-analysis.html' },
-    { id: 'runtime-dbpool-analysis', label: 'DB Pool 분석', href: '/om/admin/runtime-dbpool-analysis.html' },
-    { id: 'runtime-sql-analysis', label: 'SQL 분석', href: '/om/admin/runtime-sql-analysis.html' },
-    { id: 'runtime-dominance-analysis', label: '자원 독점 분석', href: '/om/admin/runtime-dominance-analysis.html' },
-    { id: 'runtime-transaction-detail', label: '거래·Thread 상세', href: '/om/admin/runtime-transaction-detail.html' },
-    { id: 'runtime-cause-analysis', label: '자동 원인판정', href: '/om/admin/runtime-cause-analysis.html' },
-    { id: 'runtime-status-cards', label: '핵심 상태 카드', href: '/om/admin/runtime-status-cards.html' },
-    { id: 'runtime-active-transactions', label: '실행 중 거래', href: '/om/admin/runtime-active-transactions.html' },
-    { id: 'runtime-business-occupancy', label: '업무 점유 현황', href: '/om/admin/runtime-business-occupancy.html' },
-    { id: 'runtime-incident-flow', label: '장애 흐름', href: '/om/admin/runtime-incident-flow.html' },
     { id: 'system-config', label: '환경설정 조회', href: '/om/admin/system-config.html' },
     { id: 'file-management', label: '파일 관리', href: '/om/admin/file-management.html' }
   ];
@@ -48,7 +55,7 @@ window.OmAdmin = (function () {
     { id: 'cache', label: 'Cache 관리', href: '/om/admin/cache.html' }
   ];
 
-  const NAV = [...NAV_PRIMARY, ...NAV_SECONDARY, ...NAV_TERTIARY];
+  const NAV = [...NAV_PRIMARY, ...NAV_RUNTIME, ...NAV_SECONDARY, ...NAV_TERTIARY];
 
   const TX = {
     authLogin: { serviceId: 'OM.Auth.login', transactionCode: 'OM-AUT-0002' },
@@ -839,6 +846,10 @@ window.OmAdmin = (function () {
               <div class="om-nav-label">1차 운영관리</div>
               ${renderNavSection(NAV_PRIMARY, pageId)}
             </div>
+            <div class="om-nav-section om-nav-runtime">
+              <div class="om-nav-label">런타임·장애진단</div>
+              ${renderNavSection(NAV_RUNTIME, pageId)}
+            </div>
             <div class="om-nav-section">
               <div class="om-nav-label">2차 운영관리</div>
               ${renderNavSection(NAV_SECONDARY, pageId)}
@@ -1217,7 +1228,7 @@ window.OmAdmin = (function () {
   }
 
   return {
-    NAV, TX, config, targetUrl, SESSION_KEY,
+    NAV, NAV_RUNTIME, TX, config, targetUrl, SESSION_KEY,
     todayIsoDate, todaySystemDate, newGuid, nowIsoKst, field, uiPath,
     buildStandardHeader, relayMessage,
     chipForHealth, chipForResult,

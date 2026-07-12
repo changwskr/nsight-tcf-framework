@@ -27,7 +27,10 @@ final class FunctionAuthSeedData {
 
     private static final String[] SCREEN_MENUS = {
             "OM_DASH", "OM_TX", "OM_TXC", "OM_TMO", "OM_SVC", "OM_MSG", "OM_AUTH", "OM_AUDIT", "OM_SES",
-            "OM_ERR", "OM_BAT", "OM_HLT", "OM_RTM", "OM_CFG", "OM_FIL", "OM_DPL",
+            "OM_ERR", "OM_BAT", "OM_HLT", "OM_RTM", "OM_RTM_GUIDE", "OM_RTM_WS", "OM_RTM_DASH", "OM_RTM_CARDS",
+            "OM_RTM_THREAD", "OM_RTM_JVM", "OM_RTM_DBPOOL", "OM_RTM_DOM", "OM_RTM_OCC", "OM_RTM_ACTIVE",
+            "OM_RTM_SQL", "OM_RTM_TXDET", "OM_RTM_CAUSE", "OM_RTM_FLOW", "OM_RTM_HIST", "OM_RTM_THR",
+            "OM_CFG", "OM_FIL", "OM_DPL",
             "OM_CDC", "OM_FAU", "OM_DAU", "OM_AHT", "OM_CCH"
     };
 

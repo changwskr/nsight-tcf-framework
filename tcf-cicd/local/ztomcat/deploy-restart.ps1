@@ -21,6 +21,7 @@ function Normalize-DeployCode {
     $c = $Code.ToLowerInvariant()
     switch ($c) {
         'tcf-jwt' { return 'jwt' }
+        'tcf-oc' { return 'oc' }
         'tcf-om' { return 'om' }
         'tcf-ui' { return 'ui' }
         'tcf-batch' { return 'batch' }
@@ -29,7 +30,7 @@ function Normalize-DeployCode {
 }
 
 function Get-ZtomcatContextList {
-    return @('ic', 'pc', 'ms', 'sv', 'pd', 'eb', 'ep', 'ss', 'mg', 'om', 'ui', 'jwt', 'batch')
+    return @('ic', 'pc', 'ms', 'sv', 'pd', 'eb', 'ep', 'ss', 'mg', 'oc', 'om', 'ui', 'jwt', 'batch')
 }
 
 function Show-Help {
@@ -46,8 +47,8 @@ Usage: deploy-restart.ps1 [codes...] [options]
       전체 재기동 시 tcf-batch(zz-batch.war)는 나머지 18개 WAR 기동 후 마지막에 배포됩니다.
 
 Codes (생략 또는 all = 전체):
-  ic pc ms sv pd eb ep ss mg om ui jwt batch
-  (별칭: tcf-jwt → jwt, tcf-om → om, tcf-ui → ui, tcf-batch → batch)
+  ic pc ms sv pd eb ep ss mg oc om ui jwt batch
+  (별칭: tcf-oc → oc, tcf-jwt → jwt, tcf-om → om, tcf-ui → ui, tcf-batch → batch)
 
 Options:
   -SkipSync     dev config sync 생략
@@ -92,6 +93,31 @@ function Test-TomcatRunning {
     }
 }
 
+function Wait-BatchContextStable {
+    param(
+        [string]$BatchBase = 'http://localhost:8080/batch',
+        [int]$MinQuietSeconds = 40,
+        [int]$TimeoutMinutes = 4
+    )
+    Write-Host "[local-ztomcat] waiting for batch context to finish redeploy (~$MinQuietSeconds s quiet) ..."
+    Start-Sleep -Seconds $MinQuietSeconds
+    $deadline = (Get-Date).AddMinutes($TimeoutMinutes)
+    $okStreak = 0
+    do {
+        try {
+            $health = Invoke-RestMethod -Uri "$BatchBase/actuator/health" -TimeoutSec 10
+            if ($health.status -eq 'UP') { $okStreak++ } else { $okStreak = 0 }
+        } catch { $okStreak = 0 }
+        if ($okStreak -ge 2) {
+            Write-Host '[local-ztomcat] batch context stable (health UP x2)'
+            return $true
+        }
+        Start-Sleep -Seconds 10
+    } while ((Get-Date) -lt $deadline)
+    Write-Warning '[local-ztomcat] batch context not stable yet — dashboard collect may be skipped or partial'
+    return $false
+}
+
 function Invoke-BatchDashboardCollect {
     param(
         [int]$MaxWaitSeconds = 180,
@@ -118,6 +144,11 @@ function Invoke-BatchDashboardCollect {
 
     if (-not $up) {
         Write-Warning '[local-ztomcat] tcf-batch not UP yet — Tomcat catalina.out 또는 /batch/actuator/health 확인. 수동: POST /batch/jobs/db-status/run'
+        return
+    }
+
+    if (-not (Wait-BatchContextStable -BatchBase $batchBase)) {
+        Write-Warning '[local-ztomcat] skip dashboard collect — batch redeploy still in progress'
         return
     }
 
@@ -229,7 +260,7 @@ if ($fullRestart) {
 }
 
 if ($batchLastDeploy) {
-    Write-Host '[local-ztomcat] Phase 1: deploy 18 WARs (batch excluded) ...'
+    Write-Host "[local-ztomcat] Phase 1: deploy $($PreBatchContexts.Count) WARs (batch excluded) ..."
     Invoke-DeployWars -ExcludeBatch -SkipBatchCollect
 } elseif ($Codes.Count -gt 0) {
     $skipCollect = ($Codes.Count -eq 1) -and (($Codes | ForEach-Object { $_.ToLowerInvariant() }) -contains 'batch')
@@ -254,6 +285,8 @@ if ($fullRestart) {
     Write-Host '[local-ztomcat] Tomcat running — selected context(s) redeploy automatically (~15s).'
 }
 
+$pendingBatchCollect = $false
+
 if ($batchLastDeploy) {
     Write-Host "[local-ztomcat] Waiting for $($PreBatchContexts.Count) WARs before batch deploy (~5 min) ..."
     if (-not (Wait-ContextsHealthy -TargetContexts $PreBatchContexts -Label 'pre-batch')) {
@@ -262,7 +295,7 @@ if ($batchLastDeploy) {
     Write-Host '[local-ztomcat] Phase 2: deploy tcf-batch (zz-batch.war) last ...'
     Invoke-DeployWars -InputCodes @('batch') -SkipBuild -SkipBatchCollect
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-    Invoke-BatchDashboardCollect
+    $pendingBatchCollect = $true
 } elseif ($VerifyContexts -contains 'batch' -and -not $fullRestart) {
     Write-Host '[local-ztomcat] Tomcat autoDeploy — waiting before batch health (~20s) ...'
     Start-Sleep -Seconds 20
@@ -306,4 +339,9 @@ foreach ($ctx in $VerifyContexts) {
 
 Write-Host "[local-ztomcat] Result: $ok OK, $fail FAIL (total $($VerifyContexts.Count))"
 if ($fail -gt 0) { exit 1 }
+
+if ($pendingBatchCollect) {
+    Invoke-BatchDashboardCollect
+}
+
 Write-Host '[local-ztomcat] deploy-restart complete.'

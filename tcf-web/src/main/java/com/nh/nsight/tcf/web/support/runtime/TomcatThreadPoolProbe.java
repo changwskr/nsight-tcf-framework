@@ -11,6 +11,8 @@ final class TomcatThreadPoolProbe {
 
     record Stats(int maxThreads, int currentThreads, int busyThreads, String poolName) {}
 
+    record AcceptQueue(int current, int max) {}
+
     static Optional<Stats> resolvePrimaryHttpPool() {
         MBeanServer server = ManagementFactory.getPlatformMBeanServer();
         Optional<Stats> best = Optional.empty();
@@ -37,6 +39,29 @@ final class TomcatThreadPoolProbe {
             }
         }
         return best;
+    }
+
+    static Optional<AcceptQueue> resolveAcceptQueue() {
+        MBeanServer server = ManagementFactory.getPlatformMBeanServer();
+        for (String pattern : new String[] {"Catalina:type=Connector,*", "Tomcat:type=Connector,*"}) {
+            try {
+                for (ObjectName name : server.queryNames(new ObjectName(pattern), null)) {
+                    String protocol = name.getKeyProperty("protocol");
+                    if (protocol != null && !protocol.toLowerCase().contains("http")) {
+                        continue;
+                    }
+                    int current = intAttr(server, name, "acceptCount");
+                    int max = intAttr(server, name, "maxConnections");
+                    if (max <= 0) {
+                        max = 500;
+                    }
+                    return Optional.of(new AcceptQueue(Math.max(0, current), max));
+                }
+            } catch (Exception ignored) {
+                // 다음 패턴
+            }
+        }
+        return Optional.empty();
     }
 
     private static int intAttr(MBeanServer server, ObjectName name, String attribute) {

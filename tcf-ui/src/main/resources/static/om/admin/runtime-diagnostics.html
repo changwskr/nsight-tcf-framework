@@ -5,16 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OM 런타임 진단</title>
   <link rel="stylesheet" href="/_shared/online.css">
-  <link rel="stylesheet" href="/_shared/om-admin.css">
+  <link rel="stylesheet" href="/_shared/om-admin.css?v=20260712b">
 </head>
 <body>
-  <script src="/_shared/om-admin.js?v=20260710a"></script>
+  <script src="/_shared/om-admin.js?v=20260712a"></script>
+  <script src="/_shared/om-runtime.js?v=20260712b"></script>
   <script>
     function statusLabel(overallStatus) {
-      if (overallStatus === 'CRITICAL') return '위험';
-      if (overallStatus === 'WARN') return '주의';
-      if (overallStatus === 'UNKNOWN') return '미확인';
-      return '정상';
+      return OmRuntime.statusLabel(overallStatus);
     }
 
     function renderRows(rows, columns, emptyText) {
@@ -30,9 +28,9 @@
     }
 
     async function load(el) {
-      const { body, relay } = await OmAdmin.inquiry('runtimeDiagnostics', { includeDetails: 'Y' });
+      const { body, relay } = await OmRuntime.loadDiagnostics({ includeDetails: 'Y' });
       const cards = body.cards || {};
-      const statusClass = (body.overallStatus || 'NORMAL').toLowerCase();
+      const statusClass = OmRuntime.statusClass(body.overallStatus);
 
       document.getElementById('rtmStatus').textContent =
         `${relay.elapsedMs}ms · 점검 ${body.checkedAt || '-'}`;
@@ -125,7 +123,9 @@
 
     OmAdmin.initPage('runtime-diagnostics', '런타임 진단', async (el) => {
       el.innerHTML = `
-        <div class="om-alert info">각 WAR의 <code>/internal/runtime/*</code> 진단 API를 조회해 Thread·JVM·DB Pool·ServiceId·SQL 상태를 통합 표시합니다.
+        <div class="om-alert info">설계 RTM-010 통합 대시보드:
+          <a href="/om/admin/runtime-integrated-dashboard.html" style="margin-left:8px;font-weight:600">통합 진단 대시보드</a>
+          · 아래는 WAR·거래 raw 상세 테이블입니다.
           <a href="/om/admin/runtime-diagnosis-guide.html" style="margin-left:8px;font-weight:600">진단 순서 가이드</a>
           <a href="/om/admin/runtime-thread-analysis.html" style="margin-left:8px">Thread 분석</a>
           <a href="/om/admin/runtime-jvm-analysis.html" style="margin-left:8px">JVM 분석</a>

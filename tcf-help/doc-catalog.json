@@ -2,9 +2,9 @@
   "version": "1.1",
   "title": "NSIGHT TCF 문서 라이브러리",
   "description": "nsight-tcf-framework 저장소 전체 마크다운 카탈로그",
-  "generatedAt": "2026-07-12T02:37:22.552Z",
+  "generatedAt": "2026-07-12T06:12:21.255Z",
   "repoRoot": "nsight-tcf-framework",
-  "total": 655,
+  "total": 658,
   "corpora": [
     {
       "id": "help-meta",
@@ -207,7 +207,7 @@
       "order": 99,
       "meta": "meta/root-개요.md",
       "metaDocId": "meta-root",
-      "count": 2
+      "count": 5
     }
   ],
   "featured": [
@@ -1904,6 +1904,20 @@
       "priority": 170
     },
     {
+      "id": "tcf-oc--docs--architecture-inspection-checklist",
+      "corpus": "root",
+      "source": "tcf-oc/docs/architecture-inspection-checklist.md",
+      "title": "TCF-OC 아키텍처 점검리스트",
+      "summary": "> NSIGHT 마케팅플랫폼 용량·환경설정 아키텍처를 점검하기 위한 통합 체크리스트입니다.",
+      "module": "tcf-oc",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
       "id": "tcf-oc--docs--cap-new-design",
       "corpus": "root",
       "source": "tcf-oc/docs/cap-new-design.md",
@@ -1922,11 +1936,39 @@
       "priority": 168
     },
     {
+      "id": "tcf-oc--docs--capacity-design-standard",
+      "corpus": "root",
+      "source": "tcf-oc/docs/capacity-design-standard.md",
+      "title": "TCF-OC 용량산정 설계기준",
+      "summary": "> NSIGHT 마케팅플랫폼 용량·환경설정의 산정 전제·공식·판정 기준을 tcf-oc 구현 관점에서 정리한 문서입니다.",
+      "module": "tcf-oc",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
       "id": "tcf-om--README",
       "corpus": "module-readme",
       "source": "tcf-om/README.md",
       "title": "tcf-om — 운영관리 (OM) TCF 서비스",
       "summary": "기존 `om-service`를 TCF 프레임워크(`TransactionHandler`, `tcf-core`) 기반으로 마이그레이션한 운영관리 독립 실행 모듈입니다. 파일 업·다운로드(UD) API도 내장합니다.",
+      "module": "tcf-om",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-om--docs--runtime-diagnostics-design",
+      "corpus": "root",
+      "source": "tcf-om/docs/runtime-diagnostics-design.md",
+      "title": "TCF-OM 런타임·장애진단 설계 요약",
+      "summary": "> 원본: `NSIGHT TCF-OM 런타임 장애 진단 화면 설계서.docx` (2026-07-12)",
       "module": "tcf-om",
       "audience": [
         "developer"

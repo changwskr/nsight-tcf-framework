@@ -49,6 +49,7 @@ $script:CicdAllModules = @(
     @{ Module = 'ep-service';  Src = 'ep.war';        Dest = 'ep.war';        Ctx = 'ep' }
     @{ Module = 'ss-service';  Src = 'ss.war';        Dest = 'ss.war';        Ctx = 'ss' }
     @{ Module = 'mg-service';  Src = 'mg.war';        Dest = 'mg.war';        Ctx = 'mg' }
+    @{ Module = 'tcf-oc';      Src = 'oc.war';        Dest = 'oc.war';        Ctx = 'oc' }
     @{ Module = 'tcf-om';      Src = 'tcf-om.war';    Dest = 'om.war';        Ctx = 'om' }
     @{ Module = 'tcf-ui';      Src = 'tcf-ui.war';    Dest = 'ui.war';        Ctx = 'ui' }
     @{ Module = 'tcf-jwt';     Src = 'jwt.war';       Dest = 'jwt.war';       Ctx = 'jwt' }
@@ -97,6 +98,7 @@ function Resolve-CicdModules {
     $normalized = @($InputCodes | ForEach-Object {
         $c = $_.ToLowerInvariant()
         switch ($c) {
+            'tcf-oc' { 'oc' }
             'tcf-jwt' { 'jwt' }
             'tcf-om' { 'om' }
             'tcf-ui' { 'ui' }

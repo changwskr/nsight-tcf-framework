@@ -65,11 +65,8 @@ public class OmDatabaseMigration implements ApplicationRunner {
         jdbcTemplate.update("""
                 MERGE INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN) KEY (MENU_ID)
                 VALUES (?, ?, ?, ?, ?, ?)
-                """, "OM_RTM", "런타임 진단", "/om/admin/runtime-diagnostics.html", "OM_GRP_SYS", 14, "Y");
-        jdbcTemplate.update("""
-                MERGE INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN) KEY (MENU_ID)
-                VALUES (?, ?, ?, ?, ?, ?)
                 """, "OM_FIL", "파일 관리", "/om/admin/file-management.html", "OM_GRP_SYS", 16, "Y");
+        ensureRuntimeDiagnosticsMenus();
         jdbcTemplate.update("""
                 MERGE INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN) KEY (MENU_ID)
                 VALUES (?, ?, ?, ?, ?, ?)
@@ -452,6 +449,7 @@ public class OmDatabaseMigration implements ApplicationRunner {
     /** OM_MENU 상위 그룹(폴더) — 기능권한·메뉴관리 계층. 기존에 상위가 없는 시드만 자동 연결. */
     private void ensureMenuHierarchy() {
         mergeMenuFolder("OM_GRP_OPS", "운영", 0);
+        mergeMenuFolder("OM_GRP_RTM", "런타임·장애진단", 5);
         mergeMenuFolder("OM_GRP_SYS", "시스템·배포", 10);
         mergeMenuFolder("OM_GRP_AUTH", "권한·코드", 20);
 
@@ -525,6 +523,51 @@ public class OmDatabaseMigration implements ApplicationRunner {
                    SET MENU_URL = '/om/admin/user-auth.html',
                        USE_YN = 'N'
                  WHERE MENU_ID = 'OM_DAU'
+                """);
+    }
+
+    /** 설계서 §2.1 런타임·장애진단 메뉴 그룹 (RTM-010~090) */
+    private void ensureRuntimeDiagnosticsMenus() {
+        mergeMenuFolder("OM_GRP_RTM", "런타임·장애진단", 5);
+        String[][] menus = {
+                {"OM_RTM_GUIDE", "진단 순서 가이드", "/om/admin/runtime-diagnosis-guide.html", "1"},
+                {"OM_RTM_WS", "런타임·장애진단", "/om/admin/runtime-workspace.html", "2"},
+                {"OM_RTM_DASH", "런타임 진단 상세", "/om/admin/runtime-diagnostics.html", "3"},
+                {"OM_RTM_CARDS", "핵심 상태 카드", "/om/admin/runtime-status-cards.html", "4"},
+                {"OM_RTM_THREAD", "Thread 분석", "/om/admin/runtime-thread-analysis.html", "5"},
+                {"OM_RTM_JVM", "JVM 분석", "/om/admin/runtime-jvm-analysis.html", "6"},
+                {"OM_RTM_DBPOOL", "DB Pool 분석", "/om/admin/runtime-dbpool-analysis.html", "7"},
+                {"OM_RTM_DOM", "WAR·자원 독점", "/om/admin/runtime-dominance-analysis.html", "8"},
+                {"OM_RTM_OCC", "업무 점유 현황", "/om/admin/runtime-business-occupancy.html", "9"},
+                {"OM_RTM_ACTIVE", "실행 중 거래", "/om/admin/runtime-active-transactions.html", "10"},
+                {"OM_RTM_SQL", "Slow SQL·외부연계", "/om/admin/runtime-sql-analysis.html", "11"},
+                {"OM_RTM_TXDET", "거래·Thread 상세", "/om/admin/runtime-transaction-detail.html", "12"},
+                {"OM_RTM_CAUSE", "장애 진단 및 보고서", "/om/admin/runtime-cause-analysis.html", "13"},
+                {"OM_RTM_FLOW", "장애 흐름", "/om/admin/runtime-incident-flow.html", "14"},
+                {"OM_RTM_HIST", "장애 이력", "/om/admin/runtime-incident-history.html", "15"},
+                {"OM_RTM_THR", "임계치·수집설정", "/om/admin/runtime-threshold-policy.html", "16"}
+        };
+        for (String[] menu : menus) {
+            jdbcTemplate.update("""
+                    MERGE INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN) KEY (MENU_ID)
+                    VALUES (?, ?, ?, 'OM_GRP_RTM', ?, 'Y')
+                    """, menu[0], menu[1], menu[2], Integer.parseInt(menu[3]));
+        }
+        jdbcTemplate.update("""
+                UPDATE OM_MENU
+                   SET PARENT_MENU_ID = 'OM_GRP_RTM',
+                       MENU_NAME = '런타임 진단 상세',
+                       MENU_URL = '/om/admin/runtime-diagnostics.html',
+                       SORT_ORDER = 3,
+                       USE_YN = 'Y'
+                 WHERE MENU_ID = 'OM_RTM'
+                """);
+        jdbcTemplate.update("""
+                MERGE INTO OM_MENU (MENU_ID, MENU_NAME, MENU_URL, PARENT_MENU_ID, SORT_ORDER, USE_YN) KEY (MENU_ID)
+                VALUES ('OM_RTM_WS', '런타임·장애진단', '/om/admin/runtime-workspace.html', 'OM_GRP_RTM', 2, 'Y')
+                """);
+        jdbcTemplate.update("""
+                UPDATE OM_MENU SET USE_YN = 'N' WHERE MENU_ID IN ('OM_RTM_010', 'OM_RTM_020')
                 """);
     }
 

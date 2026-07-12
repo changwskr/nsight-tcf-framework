@@ -22,6 +22,7 @@
 - **데이터권한** 조회 (`OM.DataAuth.inquiry`) — user-auth 탭 통합
 - EhCache 공통코드 캐싱 (`tcf-cache` 연동)
 - 거래로그·감사로그·Health Check·배치·Cache·배포 관리
+- **런타임·장애진단** (`OM.Runtime.inquiry`) — WAR별 Thread/JVM/DB Pool/SQL 수집·자동 원인판정
 - 운영 대시보드 (tcf-batch 수집 데이터 조회)
 - 환경설정 (Tomcat/bootRun 배포 모드별 런타임 값 표시)
 - 파일 업·다운로드 REST (`/ud/files`, `entry/web/OmUpdownloadFileController`, TcfGateway 경유)
@@ -49,6 +50,9 @@
 | `OM.ErrorCode.inquiry` ~ `.delete` | 오류코드 CRUD |
 | `OM.Cache.inquiry` / `.delete` | EhCache 조회·삭제 |
 | `OM.Batch.execute` | 배치 실행 |
+| `OM.Runtime.inquiry` | 런타임·장애진단 (RTM-010~090) |
+
+**런타임·장애진단 설계:** [`docs/runtime-diagnostics-design.md`](docs/runtime-diagnostics-design.md)
 
 전체 목록: `tcf-ui/src/main/resources/sample-requests/om-transactions.json`
 
@@ -93,7 +97,9 @@ curl -X POST http://localhost:8080/om/online \
 | bootRun | http://localhost:8099/om/admin/login.html |
 | ztomcat | http://localhost:8080/ui/om/admin/login.html |
 
-관련 설계안: [docs/설계자료/README.md](../docs/설계자료/README.md)
+런타임·장애진단: `/om/admin/runtime-diagnostics.html` (사이드바 **런타임·장애진단** 메뉴)
+
+관련 설계안: [docs/설계자료/README.md](../docs/설계자료/README.md) · [docs/runtime-diagnostics-design.md](docs/runtime-diagnostics-design.md)
 
 ## 패키지 구조
 
