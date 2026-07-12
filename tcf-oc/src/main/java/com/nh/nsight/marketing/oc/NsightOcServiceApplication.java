@@ -6,7 +6,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = "com.nh.nsight")
-@MapperScan("com.nh.nsight.marketing.oc.persistence.mapper")
+@MapperScan({
+        "com.nh.nsight.marketing.oc.persistence.mapper",
+        "com.nh.nsight.marketing.oc.capnew.persistence.mapper"
+})
 public class NsightOcServiceApplication extends NsightWarBootstrap {
     public NsightOcServiceApplication() {
         super(NsightOcServiceApplication.class);
