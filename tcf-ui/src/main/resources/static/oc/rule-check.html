@@ -250,7 +250,7 @@
             <ul id="assessmentCriteriaList" class="env-assessment-criteria__list"></ul>
         </div>
         <div class="table-wrap table-wrap--sticky-head hidden" id="assessmentResultsTableWrap">
-            <table class="dump-report__table dump-report__table--data dump-report__table--env-assess" id="assessmentTable">
+            <table class="dump-report__table dump-report__table--data dump-report__table--env-assess env-assess-table" id="assessmentTable">
                 <colgroup>
                     <col class="col-as-rule"/>
                     <col class="col-as-type"/>
@@ -264,15 +264,15 @@
                 </colgroup>
                 <thead>
                 <tr>
-                    <th>Rule</th>
-                    <th>유형</th>
-                    <th>심각도</th>
-                    <th>설정 파일</th>
-                    <th>설정 파라미터</th>
-                    <th>설명</th>
-                    <th>가이드 권장</th>
-                    <th>실측 값</th>
-                    <th>판정</th>
+                    <th scope="col">Rule</th>
+                    <th scope="col">유형</th>
+                    <th scope="col">심각도</th>
+                    <th scope="col">설정 파일</th>
+                    <th scope="col">설정 파라미터</th>
+                    <th scope="col">설명</th>
+                    <th scope="col">가이드 권장</th>
+                    <th scope="col">실측 값</th>
+                    <th scope="col">판정</th>
                 </tr>
                 </thead>
                 <tbody id="assessmentResultsBody"></tbody>

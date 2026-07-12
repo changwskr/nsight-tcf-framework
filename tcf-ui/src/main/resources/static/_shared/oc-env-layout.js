@@ -35,7 +35,10 @@
   </div>
   <nav class="tcf-env-topbar__nav" aria-label="TCF UI">
     <a class="tcf-env-topbar__link" href="/index.html#moduleSection">TCF UI</a>
+    <a class="tcf-env-topbar__link" href="/oc/index.html">OC 포털</a>
     <a class="tcf-env-topbar__link" href="/oc/capacity.html">용량 산정</a>
+    <a class="tcf-env-topbar__link" href="/oc/cap-new/index.html">NEW 용량산정</a>
+    <a class="tcf-env-topbar__link" href="/help.html">HELP</a>
     <span class="badge">ENV</span>
   </nav>
 </header>

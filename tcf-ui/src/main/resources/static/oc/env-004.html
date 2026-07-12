@@ -20,23 +20,43 @@
 
     <section class="card env-screen" id="env004Section">
         <div class="card-title row-title">
-            <div class="env-env004-criteria-wrap">
+            <div>
                 <h2>ENV-004 계층별 설정 점검</h2>
                 <p class="env-env004-criteria__stack-hint">스택: UI → GSLB → L4 → Apache → Tomcat → <strong>JVM</strong> → Spring Boot → MyBatis</p>
-                <div id="env004CriteriaPanel" class="env-env004-criteria env-env004-criteria--empty" role="region" aria-label="점검 기준값">
-                    <p class="env-env004-criteria__placeholder">ENV-002 산정 실행 후 점검 기준값이 표시됩니다.</p>
-                </div>
             </div>
             <button type="button" class="secondary env-export-excel-btn" data-env-export="ENV004">Excel 다운로드</button>
         </div>
 
-        <div class="env-env004-tabs" id="env004LayerTabs">
-            <p class="env-env004-tabs__hint">계층 탭을 선택하면 해당 스택의 권장값·현재값·조치 가이드를 확인합니다.</p>
-            <div class="env-env004-tabs__nav-wrap">
-                <div class="env-env004-tabs__nav" id="env004TabNav" role="tablist" aria-label="스택 계층"></div>
+        <div id="env004Summary" class="env004-summary env004-summary--empty" aria-label="계층 점검 요약">
+            <p class="env004-summary__placeholder">ENV-002 산정 실행 후 계층별 점검 요약이 표시됩니다.</p>
+        </div>
+
+        <div id="env004StackBar" class="env004-stack-bar env004-stack-bar--empty" aria-label="스택 계층 흐름"></div>
+
+        <details class="env004-criteria-panel" open>
+            <summary class="env004-criteria-panel__summary">점검 기준값</summary>
+            <div id="env004CriteriaPanel" class="env-env004-criteria env-env004-criteria--empty" role="region" aria-label="점검 기준값">
+                <p class="env-env004-criteria__placeholder">ENV-002 산정 실행 후 기준값 표가 표시됩니다.</p>
             </div>
-            <div class="env-env004-tabs__panels" id="env004TabPanels">
-                <p class="env-empty-cell">산정 실행 후 계층별 설정이 표시됩니다.</p>
+        </details>
+
+        <div class="env004-layer-section">
+            <div class="env004-layer-section__head">
+                <h3>계층별 설정 Grid</h3>
+                <p class="env004-table-legend">
+                    <span class="env004-legend-item env004-legend-item--ok">정상</span>
+                    <span class="env004-legend-item env004-legend-item--warn">경고</span>
+                    <span class="env004-legend-item env004-legend-item--crit">위험</span>
+                    · 탭을 선택하면 해당 계층의 권장값·현재값·조치 가이드를 표로 확인합니다.
+                </p>
+            </div>
+            <div class="env-env004-tabs" id="env004LayerTabs">
+                <div class="env-env004-tabs__nav-wrap">
+                    <div class="env-env004-tabs__nav" id="env004TabNav" role="tablist" aria-label="스택 계층"></div>
+                </div>
+                <div class="env-env004-tabs__panels" id="env004TabPanels">
+                    <p class="env-empty-cell">산정 실행 후 계층별 설정이 표시됩니다.</p>
+                </div>
             </div>
         </div>
 

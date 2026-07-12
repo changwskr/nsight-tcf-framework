@@ -41,6 +41,36 @@ public class OcEnvPageController {
         return "redirect:/oc/rule-check.html";
     }
 
+    @GetMapping({"/help", "/help/"})
+    public String help() {
+        return "redirect:/help.html";
+    }
+
+    @GetMapping({"/help/view", "/help/view/"})
+    public String helpView() {
+        return "redirect:/help/view.html";
+    }
+
+    @GetMapping({"/help/library", "/help/library/"})
+    public String helpLibrary() {
+        return "redirect:/help/library.html";
+    }
+
+    @GetMapping({"/help/health", "/help/health/"})
+    public String helpHealth() {
+        return "redirect:/help/health.html";
+    }
+
+    @GetMapping({"/error-popup", "/error-popup/"})
+    public String legacyErrorPopup() {
+        return "redirect:/help.html#errors";
+    }
+
+    @GetMapping({"/oc", "/oc/"})
+    public String ocRoot() {
+        return "redirect:/oc/index.html";
+    }
+
     @GetMapping({"/oc/env", "/oc/env/"})
     public String ocEnvRoot() {
         return "redirect:/oc/env-001.html";
@@ -84,5 +114,25 @@ public class OcEnvPageController {
     @GetMapping({"/oc/capacity", "/oc/capacity/"})
     public String capacity() {
         return "redirect:/oc/capacity.html";
+    }
+
+    @GetMapping({"/oc/cap-new", "/oc/cap-new/"})
+    public String capNewRoot() {
+        return "redirect:/oc/cap-new/index.html";
+    }
+
+    @GetMapping("/oc/cap-new/wizard")
+    public String capNewWizard() {
+        return "redirect:/oc/cap-new/wizard.html";
+    }
+
+    @GetMapping("/oc/cap-new/compare")
+    public String capNewCompare() {
+        return "redirect:/oc/cap-new/compare.html";
+    }
+
+    @GetMapping("/oc/cap-new/approved")
+    public String capNewApproved() {
+        return "redirect:/oc/cap-new/approved.html";
     }
 }

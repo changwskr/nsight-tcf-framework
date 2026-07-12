@@ -226,7 +226,9 @@
     }
 
     function statusPill(status, label) {
-        const cls = status === 'NORMAL' ? 'ok' : status === 'CRITICAL' ? 'no' : status === 'WARN' ? '' : '';
+        const cls = status === 'NORMAL' ? 'status-ok'
+            : status === 'CRITICAL' ? 'status-critical'
+                : status === 'WARN' ? 'status-warn' : '';
         return `<span class="pill ${cls}">${escapeHtml(label || status)}</span>`;
     }
 
@@ -539,28 +541,26 @@
                 <pre class="env-env004-jvm__code env-env004-jvm__code--sv">${escapeHtml(j.exampleOptsSingleView)}</pre>
             </details>`;
         const wrapClass = compact ? 'env-check-report__jvm' : 'env-env004-jvm';
+        const heapTable = compact ? '' : `
+            <div class="table-wrap env004-jvm-table-wrap">
+                <table class="dump-report__table dump-report__table--data env004-jvm-table">
+                    <thead>
+                        <tr><th>항목</th><th>일반 AP</th><th>SingleView</th><th>비고</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Heap (Xms~Xmx)</td><td class="env004-criteria-val"><strong>${generalRange}</strong></td><td class="env004-criteria-val"><strong>${svMax}</strong></td><td>SV 전용 상한</td></tr>
+                        <tr><td>GC</td><td colspan="2">${escapeHtml(j.gcAlgorithm)} · MaxGCPauseMillis ${j.maxGcPauseMillis}ms</td><td>—</td></tr>
+                        <tr><td>Thread Stack</td><td colspan="2">-Xss${escapeHtml(j.threadStackSize)}</td><td>—</td></tr>
+                        <tr><td>Metaspace</td><td colspan="2">${j.metaspaceSizeMb}~${j.maxMetaspaceSizeMb} MB</td><td>—</td></tr>
+                        <tr><td>OOM Dump</td><td colspan="2">HeapDumpOnOOM → /logs/dump</td><td>—</td></tr>
+                    </tbody>
+                </table>
+            </div>`;
         return `
             <div class="${wrapClass}">
                 <h3 class="env-env004-jvm__title">JVM 사이징 <span class="env-env004-jvm__profile">${escapeHtml(j.vmProfileId)} · ${j.vmCores}코어 / ${j.vmMemoryGb}GB RAM</span></h3>
                 <p class="env-env004-jvm__note">${escapeHtml(j.heapRatioNote)}</p>
-                <div class="env-env004-jvm__cols">
-                    <section class="env-env004-jvm__block">
-                        <h4 class="env-env004-jvm__heading">Heap</h4>
-                        <dl class="env-env004-jvm__dl">
-                            <div><dt>일반 AP</dt><dd><strong>${generalRange}</strong> <span class="env-env004-jvm__tag">Xms~Xmx</span></dd></div>
-                            <div><dt>SingleView</dt><dd><strong>${svMax}</strong> <span class="env-env004-jvm__tag">SV 전용</span></dd></div>
-                        </dl>
-                    </section>
-                    <section class="env-env004-jvm__block">
-                        <h4 class="env-env004-jvm__heading">GC · 스레드 · Metaspace</h4>
-                        <dl class="env-env004-jvm__dl">
-                            <div><dt>GC</dt><dd>${escapeHtml(j.gcAlgorithm)} · MaxGCPauseMillis ${j.maxGcPauseMillis}ms</dd></div>
-                            <div><dt>Thread Stack</dt><dd>-Xss${escapeHtml(j.threadStackSize)}</dd></div>
-                            <div><dt>Metaspace</dt><dd>${j.metaspaceSizeMb}~${j.maxMetaspaceSizeMb} MB</dd></div>
-                            <div><dt>OOM Dump</dt><dd>HeapDumpOnOOM → /logs/dump</dd></div>
-                        </dl>
-                    </section>
-                </div>
+                ${heapTable}
                 <p class="env-env004-jvm__lead">${escapeHtml(j.sizingNote)}</p>
                 ${examples}
             </div>`;
@@ -667,7 +667,92 @@
             </div>`;
     }
 
-    /** ENV-004 — 점검 기준값(사용자·TPS·세션·VM 등) 전체 표시 */
+    /** ENV-004 상단 요약 KPI */
+    function renderEnv004Summary(view) {
+        const el = document.getElementById('env004Summary');
+        if (!el || !view?.planner) return;
+        const p = view.planner;
+        const grid = view.layerGrid || [];
+        const layers = view.stackLayers || [];
+        if (!grid.length) {
+            el.className = 'env004-summary env004-summary--empty';
+            el.innerHTML = '<p class="env004-summary__placeholder">ENV-002 산정 실행 후 계층별 점검 요약이 표시됩니다.</p>';
+            return;
+        }
+        const counts = countLayerGridStatus(grid);
+        const layerOk = layers.filter(l => l.layerValid).length;
+        const layerWarn = layers.length - layerOk;
+        el.className = 'env004-summary';
+        el.innerHTML = `
+            <div class="env004-kpi-grid">
+                <article class="env004-kpi">
+                    <span class="env004-kpi__label">시나리오</span>
+                    <strong class="env004-kpi__value">${escapeHtml(view.scenarioId || '—')}</strong>
+                    <span class="env004-kpi__sub">${escapeHtml(p.scenarioLabel || '—')}</span>
+                </article>
+                <article class="env004-kpi">
+                    <span class="env004-kpi__label">점검 항목</span>
+                    <strong class="env004-kpi__value">${grid.length}건</strong>
+                    <span class="env004-kpi__sub">${layers.length}개 계층</span>
+                </article>
+                <article class="env004-kpi env004-kpi--status">
+                    <span class="env004-kpi__label">설정 판정</span>
+                    <div class="env004-kpi__badges">
+                        <span class="pill status-ok">정상 ${counts.NORMAL}</span>
+                        <span class="pill status-warn">경고 ${counts.WARN}</span>
+                        <span class="pill status-critical">위험 ${counts.CRITICAL}</span>
+                    </div>
+                </article>
+                <article class="env004-kpi">
+                    <span class="env004-kpi__label">계층 판정</span>
+                    <strong class="env004-kpi__value">${layerOk} / ${layers.length} 정상</strong>
+                    <span class="env004-kpi__sub">${layerWarn > 0 ? `점검 필요 ${layerWarn}계층` : '전 계층 정상'}</span>
+                </article>
+                <article class="env004-kpi env004-kpi--highlight">
+                    <span class="env004-kpi__label">VM · TPS 기준</span>
+                    <strong class="env004-kpi__value">${escapeHtml(p.vmProfileId || '—')}</strong>
+                    <span class="env004-kpi__sub">${p.vmCores}코어 · VM TPS ${(p.vmTpsAt35 ?? 0).toLocaleString()} · Core ${p.tpsPerCoreBase} TPS</span>
+                </article>
+            </div>`;
+    }
+
+    function layerNodeStatusClass(layer) {
+        const crit = (layer.settings || []).some(s => s.status === 'CRITICAL');
+        if (crit) return 'env004-stack-node--crit';
+        if (!layer.layerValid) return 'env004-stack-node--warn';
+        return 'env004-stack-node--ok';
+    }
+
+    /** ENV-004 스택 계층 흐름 바 */
+    function renderEnv004StackBar(view) {
+        const el = document.getElementById('env004StackBar');
+        if (!el) return;
+        const layers = (view.stackLayers || []).slice().sort((a, b) => (a.order || 0) - (b.order || 0));
+        if (!layers.length) {
+            el.className = 'env004-stack-bar env004-stack-bar--empty';
+            el.innerHTML = '';
+            return;
+        }
+        el.className = 'env004-stack-bar';
+        el.innerHTML = layers.map((layer, i) => {
+            const count = (layer.settings || []).length;
+            const arrow = i < layers.length - 1 ? '<span class="env004-stack-arrow" aria-hidden="true">→</span>' : '';
+            return `
+                <button type="button" class="env004-stack-node ${layerNodeStatusClass(layer)}" data-env004-tab="${escapeHtml(layer.layerId)}" title="${escapeHtml(layer.layerName)} 탭으로 이동">
+                    <span class="env004-stack-node__name">${escapeHtml(layer.layerName)}</span>
+                    <span class="env004-stack-node__count">${count}</span>
+                </button>${arrow}`;
+        }).join('');
+        el.querySelectorAll('.env004-stack-node[data-env004-tab]').forEach(btn => {
+            btn.addEventListener('click', () => activateEnv004Tab(btn.dataset.env004Tab));
+        });
+    }
+
+    function renderEnv004CriteriaTableRow(group, item, value) {
+        return `<tr><td class="env004-criteria-group" data-label="구분">${escapeHtml(group)}</td><td data-label="항목">${escapeHtml(item)}</td><td class="env004-criteria-val" data-label="값">${value}</td></tr>`;
+    }
+
+    /** ENV-004 — 점검 기준값(사용자·TPS·세션·VM 등) 표 형식 */
     function renderEnv004CriteriaPanel(view) {
         const el = document.getElementById('env004CriteriaPanel');
         if (!el || !view?.planner) return;
@@ -691,69 +776,56 @@
         const aa = p.activeActive ? '적용 (권장 VM ×2)' : '미적용';
         const coreTpsBlock = renderCoreTpsCriteriaHtml(p);
         const jvmCrit = resolveJvmSizing(view);
-        const jvmCritBlock = jvmCrit ? `
-                <section class="env-env004-criteria__block env-env004-criteria__block--jvm">
-                    <h4 class="env-env004-criteria__heading">4. JVM 사이징</h4>
-                    <dl class="env-env004-criteria__dl">
-                        <div><dt>일반 Heap</dt><dd><strong>${jvmCrit.heapGeneralMinGb}~${jvmCrit.heapGeneralMaxGb} GB</strong></dd></div>
-                        <div><dt>SingleView</dt><dd><strong>≤${jvmCrit.heapSingleViewMaxGb} GB</strong></dd></div>
-                        <div><dt>GC</dt><dd>${escapeHtml(jvmCrit.gcAlgorithm)} · ${jvmCrit.maxGcPauseMillis}ms</dd></div>
-                    </dl>
-                    <p class="env-env004-criteria__note">상세·기동 옵션은 <strong>JVM</strong> 탭</p>
-                </section>` : '';
+        const jvmRowList = jvmCrit ? [
+            renderEnv004CriteriaTableRow('JVM', '일반 Heap', `<strong>${jvmCrit.heapGeneralMinGb}~${jvmCrit.heapGeneralMaxGb} GB</strong>`),
+            renderEnv004CriteriaTableRow('JVM', 'SingleView Heap', `<strong>≤${jvmCrit.heapSingleViewMaxGb} GB</strong>`),
+            renderEnv004CriteriaTableRow('JVM', 'GC', `${escapeHtml(jvmCrit.gcAlgorithm)} · ${jvmCrit.maxGcPauseMillis}ms`)
+        ] : [];
 
-        const repBlock = ex ? `
-            <section class="env-env004-criteria__block env-env004-criteria__block--rep">
-                <h4 class="env-env004-criteria__heading">대표 산정 시나리오 (${ex.requestRatePercent}% · ${ex.timeoutSec}초)</h4>
-                <dl class="env-env004-criteria__dl">
-                    <div><dt>동시 요청률</dt><dd>${ex.requestRatePercent}%</dd></div>
-                    <div><dt>실요청자</dt><dd><strong>${ex.realRequesters.toLocaleString()}</strong>명</dd></div>
-                    <div><dt>응답 Timeout</dt><dd>${ex.timeoutSec}초</dd></div>
-                    <div><dt>목표 TPS</dt><dd><strong>${ex.targetTps.toLocaleString()}</strong> 건/초</dd></div>
-                    <div><dt>전사 TPMC</dt><dd>${ex.requiredTpmc.toLocaleString()} /초</dd></div>
-                    <div><dt>필요 VM</dt><dd>${ex.requiredVmSingleCenter}대 (A-A 권장 ${ex.recommendedVmActiveActive}대)</dd></div>
-                    <div><dt>DB Pool 총량</dt><dd>${ex.dbPoolTotal.toLocaleString()}</dd></div>
-                </dl>
-            </section>` : '';
+        const criteriaRows = [
+            renderEnv004CriteriaTableRow('사용자·세션', '지점 수', (p.branchCount ?? 0).toLocaleString()),
+            renderEnv004CriteriaTableRow('사용자·세션', '지점당 사용자', `${p.usersPerBranch ?? 0}명`),
+            renderEnv004CriteriaTableRow('사용자·세션', '전체 사용자', `<strong>${(p.totalUsers ?? 0).toLocaleString()}</strong>명`),
+            renderEnv004CriteriaTableRow('사용자·세션', '설계 세션', `${(p.designSessions ?? 0).toLocaleString()}명 <span class="env004-criteria-note">(전체×1.3)</span>`),
+            renderEnv004CriteriaTableRow('사용자·세션', '세션 Idle', `${sessionLabel} <span class="env004-criteria-note">점검 ${sessionMin}분</span>`),
+            renderEnv004CriteriaTableRow('시나리오', '동시 요청률', pctLabel || '—'),
+            renderEnv004CriteriaTableRow('시나리오', '응답 Timeout', `${timeoutLabel || '—'} <span class="env004-criteria-note">Grid ${timeoutSec}초</span>`),
+            renderEnv004CriteriaTableRow('VM·부하', 'VM 프로파일', `${escapeHtml(p.vmProfileId || '—')} · ${p.vmCores}코어 / ${p.vmMemoryGb}GB`),
+            renderEnv004CriteriaTableRow('VM·부하', 'TPMC/TPS', `<strong>${(p.tpmcPerTps ?? 0).toLocaleString()}</strong>`),
+            renderEnv004CriteriaTableRow('VM·부하', 'Active-Active', aa),
+            ...jvmRowList
+        ].join('');
+
+        const repTable = ex ? `
+            <h4 class="env004-section-title">대표 산정 시나리오 (${ex.requestRatePercent}% · ${ex.timeoutSec}초)</h4>
+            <div class="table-wrap env004-criteria-wrap">
+                <table class="dump-report__table dump-report__table--data env004-rep-table">
+                    <thead><tr><th>항목</th><th>값</th></tr></thead>
+                    <tbody>
+                        <tr><td data-label="항목">실요청자</td><td class="env004-criteria-val" data-label="값"><strong>${ex.realRequesters.toLocaleString()}</strong>명</td></tr>
+                        <tr><td data-label="항목">목표 TPS</td><td class="env004-criteria-val" data-label="값"><strong>${ex.targetTps.toLocaleString()}</strong> 건/초</td></tr>
+                        <tr><td data-label="항목">전사 TPMC</td><td class="env004-criteria-val" data-label="값">${ex.requiredTpmc.toLocaleString()} /초</td></tr>
+                        <tr><td data-label="항목">필요 VM</td><td class="env004-criteria-val" data-label="값">${ex.requiredVmSingleCenter}대 (A-A 권장 ${ex.recommendedVmActiveActive}대)</td></tr>
+                        <tr><td data-label="항목">DB Pool 총량</td><td class="env004-criteria-val" data-label="값">${ex.dbPoolTotal.toLocaleString()}</td></tr>
+                    </tbody>
+                </table>
+            </div>` : '';
 
         el.className = 'env-env004-criteria';
         el.innerHTML = `
-            <h3 class="env-env004-criteria__title">점검 기준값 <span class="env-env004-criteria__id">${escapeHtml(view.scenarioId || '')}</span></h3>
-            <p class="env-env004-criteria__scenario">${escapeHtml(p.scenarioLabel || '—')}</p>
-            <div class="env-env004-criteria__cols">
-                <section class="env-env004-criteria__block">
-                    <h4 class="env-env004-criteria__heading">1. 사용자 · 세션</h4>
-                    <dl class="env-env004-criteria__dl">
-                        <div><dt>지점 수</dt><dd>${(p.branchCount ?? 0).toLocaleString()}</dd></div>
-                        <div><dt>지점당 사용자</dt><dd>${p.usersPerBranch ?? 0}명</dd></div>
-                        <div><dt>전체 사용자</dt><dd><strong>${(p.totalUsers ?? 0).toLocaleString()}</strong>명</dd></div>
-                        <div><dt>설계 세션</dt><dd>${(p.designSessions ?? 0).toLocaleString()}명 <span class="env-env004-criteria__note">(전체×1.3)</span></dd></div>
-                        <div><dt>세션 Idle</dt><dd>${sessionLabel} <span class="env-env004-criteria__note">점검 기준 ${sessionMin}분</span></dd></div>
-                    </dl>
-                </section>
-                <section class="env-env004-criteria__block">
-                    <h4 class="env-env004-criteria__heading">2. 시나리오 조합 (ENV-002)</h4>
-                    <dl class="env-env004-criteria__dl">
-                        <div><dt>동시 요청률</dt><dd>${pctLabel || '—'}</dd></div>
-                        <div><dt>응답 Timeout</dt><dd>${timeoutLabel || '—'} <span class="env-env004-criteria__note">Grid 기준 ${timeoutSec}초</span></dd></div>
-                        <div><dt>세션</dt><dd>${sessionLabel || '—'}</dd></div>
-                    </dl>
-                </section>
-                <section class="env-env004-criteria__block env-env004-criteria__block--vm">
-                    <h4 class="env-env004-criteria__heading">3. VM · 부하</h4>
-                    <dl class="env-env004-criteria__dl">
-                        <div><dt>VM 프로파일</dt><dd>${escapeHtml(p.vmProfileId || '—')} · ${p.vmCores}코어 / ${p.vmMemoryGb}GB</dd></div>
-                        <div><dt>요청 1건 부하</dt><dd><strong>${(p.tpmcPerTps ?? 0).toLocaleString()}</strong> TPMC/TPS</dd></div>
-                        <div><dt>Active-Active</dt><dd>${aa}</dd></div>
-                    </dl>
-                    <div class="env-env004-criteria__core-tps-wrap">
-                        <span class="env-env004-criteria__core-tps-label">Core당 TPS · 선정값</span>
-                        ${coreTpsBlock}
-                    </div>
-                </section>
-                ${jvmCritBlock}
+            <p class="env-env004-criteria__scenario">${escapeHtml(p.scenarioLabel || '—')} <span class="env-env004-criteria__id">${escapeHtml(view.scenarioId || '')}</span></p>
+            <h4 class="env004-section-title">기준값 요약표</h4>
+            <div class="table-wrap env004-criteria-wrap">
+                <table class="dump-report__table dump-report__table--data env004-criteria-table">
+                    <thead>
+                        <tr><th scope="col">구분</th><th scope="col">항목</th><th scope="col">값</th></tr>
+                    </thead>
+                    <tbody>${criteriaRows}</tbody>
+                </table>
             </div>
-            ${repBlock}`;
+            ${repTable}
+            <h4 class="env004-section-title">Core당 TPS 선정</h4>
+            <div class="env004-core-tps-panel">${coreTpsBlock}</div>`;
     }
 
     /** ENV-004 — JVM Heap·GC 사이징 (VM 프로파일 연동) */
@@ -795,13 +867,17 @@
             document.getElementById('env003ScenarioLabel') &&
                 (document.getElementById('env003ScenarioLabel').textContent =
                     `${p.scenarioLabel} · VM 기준 처리량 ${(p.vmTpsAt35 ?? 0).toLocaleString()}건/초 (${p.vmCores}코어×${p.tpsPerCoreBase} TPS)`);
+            renderEnv003Summary(p);
             renderEnv003FormulaGuide(p);
             renderVmResults(p);
         }
         if (document.getElementById('env004TabNav')) {
+            renderEnv004Summary(view);
+            renderEnv004StackBar(view);
             renderEnv004CriteriaPanel(view);
             renderEnv004LayerTabs(view);
         } else if (document.getElementById('env004CriteriaPanel') || document.getElementById('layerGridBody')) {
+            renderEnv004Summary(view);
             renderEnv004CriteriaPanel(view);
             renderEnv004JvmPanel(view);
             renderLayerGrid(view.layerGrid);
@@ -1252,6 +1328,84 @@
         };
     }
 
+    /** ENV-003 상단 요약 KPI */
+    function renderEnv003Summary(plannerIn) {
+        const el = document.getElementById('env003Summary');
+        if (!el || !plannerIn) return;
+        const p = enrichPlannerFromEnv002(plannerIn);
+        const rows = p.vmResults || [];
+        if (!rows.length) {
+            el.className = 'env003-summary env003-summary--empty';
+            el.innerHTML = '<p class="env003-summary__placeholder">ENV-002에서 산정 실행 후 요약 지표가 표시됩니다.</p>';
+            return;
+        }
+        const crit = rows.filter(r => r.status === 'CRITICAL').length;
+        const warn = rows.filter(r => r.status === 'WARN').length;
+        const ok = rows.filter(r => r.status === 'NORMAL').length;
+        const peak = pickExampleVmRow(p) || rows[rows.length - 1];
+        const aaLabel = p.activeActive ? 'A-A ON' : 'A-A OFF';
+        el.className = 'env003-summary';
+        el.innerHTML = `
+            <div class="env003-kpi-grid">
+                <article class="env003-kpi">
+                    <span class="env003-kpi__label">시나리오</span>
+                    <strong class="env003-kpi__value">${escapeHtml(p.scenarioLabel || '—')}</strong>
+                    <span class="env003-kpi__sub">전체 사용자 ${(p.totalUsers ?? 0).toLocaleString()}명</span>
+                </article>
+                <article class="env003-kpi env003-kpi--highlight">
+                    <span class="env003-kpi__label">피크 TPS (예: ${peak.requestRatePercent}% · ${peak.timeoutSec}초)</span>
+                    <strong class="env003-kpi__value">${peak.targetTps.toLocaleString()} <small>건/초</small></strong>
+                    <span class="env003-kpi__sub">TPMC ${peak.requiredTpmc.toLocaleString()}</span>
+                </article>
+                <article class="env003-kpi">
+                    <span class="env003-kpi__label">VM 프로파일</span>
+                    <strong class="env003-kpi__value">${escapeHtml(p.vmProfileId || '—')}</strong>
+                    <span class="env003-kpi__sub">${p.vmCores}코어 · ${p.vmMemoryGb}GB · VM TPS ${(p.vmTpsAt35 ?? 0).toLocaleString()}</span>
+                </article>
+                <article class="env003-kpi">
+                    <span class="env003-kpi__label">권장 VM (${aaLabel})</span>
+                    <strong class="env003-kpi__value">총 ${peak.recommendedVmActiveActive}대</strong>
+                    <span class="env003-kpi__sub">센터당 ${peak.requiredVmSingleCenter}대 · DB Pool 합계 ${(peak.dbPoolTotal ?? 0).toLocaleString()}</span>
+                </article>
+                <article class="env003-kpi env003-kpi--status">
+                    <span class="env003-kpi__label">행별 판정 (${rows.length}건)</span>
+                    <div class="env003-kpi__badges">
+                        <span class="pill status-ok">정상 ${ok}</span>
+                        <span class="pill status-warn">경고 ${warn}</span>
+                        <span class="pill status-critical">위험 ${crit}</span>
+                    </div>
+                </article>
+            </div>`;
+    }
+
+    /** ENV-003 표 — 열 정의 참조표 HTML */
+    function renderEnv003ColumnRefTable(p, tpmcPerReq) {
+        const aaOn = p.activeActive === true;
+        return `
+            <table class="env003-col-ref dump-report__table dump-report__table--data">
+                <thead>
+                    <tr>
+                        <th scope="col">열</th>
+                        <th scope="col">의미</th>
+                        <th scope="col">산식 / 기준</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>요청률 / 초</strong></td><td>부하 시나리오 키</td><td>ENV-002 선택 (동시요청%, 응답 Timeout초)</td></tr>
+                    <tr><td><strong>실요청자</strong></td><td>동시 요청 사용자</td><td>ceil(전체 사용자 × 요청률%)</td></tr>
+                    <tr class="env003-col-ref__highlight"><td><strong>목표 TPS</strong></td><td>초당 처리 요청</td><td>ceil(실요청자 ÷ Timeout초)</td></tr>
+                    <tr class="env003-col-ref__highlight"><td><strong>TPMC</strong></td><td>전사 초당 부하</td><td>목표 TPS × ${tpmcPerReq.toLocaleString()}</td></tr>
+                    <tr><td><strong>VM 사양</strong></td><td>AP VM 프로파일</td><td>${escapeHtml(p.vmProfileId || '—')} (${p.vmCores} vCPU / ${p.vmMemoryGb} GB)</td></tr>
+                    <tr><td><strong>VM TPS</strong></td><td>VM 1대 처리량</td><td>vCPU × Core TPS(선정) = ${(p.vmTpsAt35 ?? 0).toLocaleString()} 건/초</td></tr>
+                    <tr><td><strong>필요 VM</strong></td><td>센터 1곳 대수</td><td>ceil(목표 TPS ÷ VM TPS)</td></tr>
+                    <tr><td><strong>A-A 권장</strong></td><td>양센터 배포</td><td>${aaOn ? '필요 VM × 2' : '필요 VM (= 권장)'}</td></tr>
+                    <tr><td><strong>JVM / WAS / Pool</strong></td><td>VM당 리소스</td><td>Heap · maxThreads · Hikari maximum-pool-size</td></tr>
+                    <tr><td><strong>Pool 합계</strong></td><td>DB 커넥션 총합</td><td>권장 VM × VM당 Pool (한도 ${p.dbSessionLimit ? p.dbSessionLimit.toLocaleString() : '500'})</td></tr>
+                    <tr><td><strong>판정</strong></td><td>정상 / 경고 / 위험</td><td>TPS 대비 VM 처리량·DB Pool 한도 초과 여부</td></tr>
+                </tbody>
+            </table>`;
+    }
+
     /** ENV-003 표 — 목표 TPS·TPMC 등 산식 설명 */
     function renderEnv003FormulaGuide(plannerIn) {
         const el = document.getElementById('env003FormulaGuide');
@@ -1295,22 +1449,25 @@
             const poolTotal = ex.dbPoolTotal ?? vmAa * poolPerVm;
             exampleBlock = `
                 <section class="env-env003-guide__example">
-                    <h4 class="env-env003-guide__example-title">계산 예시 (표의 ${pct}% · ${sec}초 행)</h4>
-                    <ol class="env-env003-guide__example-steps">
-                        <li><strong>실요청자</strong> = ceil(${usersFmt} × ${pct}%) = <strong>${real.toLocaleString()}명</strong></li>
-                        <li><strong>목표 TPS</strong> = ceil(${real.toLocaleString()} ÷ ${sec}) = <strong>${ceilTps.toLocaleString()}건/초</strong>${ceilTps !== tps ? ` (표시 ${tps.toLocaleString()})` : ''}</li>
-                        <li><strong>TPMC</strong> = ${tps.toLocaleString()} × ${tpmcPerReq.toLocaleString()} = <strong>${tpmc.toLocaleString()}</strong></li>
-                        <li><strong>VM TPS</strong> = ${cores} × ${p.tpsPerCoreBase} = <strong>${vmTps.toLocaleString()}건/초</strong></li>
-                        <li><strong>필요 VM</strong> = ceil(${tps.toLocaleString()} ÷ ${vmTps.toLocaleString()}) = <strong>${ceilVm}대</strong>${vmNeed !== ceilVm ? ` (표시 ${vmNeed}대)` : ''}</li>
-                        ${aaOn ? `<li><strong>A-A 권장</strong> = ${vmNeed} × 2 = <strong>총 ${vmAa}대</strong></li>` : `<li><strong>권장 VM</strong> = <strong>${vmAa}대</strong> (A-A 미적용)</li>`}
-                        <li><strong>VM당 JVM Heap</strong> = ${escapeHtml(heapLabel)}${heapSvLabel ? ` · SV ${escapeHtml(heapSvLabel)}` : ''}
-                            <span class="env-env003-guide__example-sub">(${escapeHtml(jvmDesc.derivationLines?.[4] || jvmDesc.derivationLines?.[jvmDesc.derivationLines.length - 1] || '')})</span></li>
-                        <li><strong>VM당 WAS Threads</strong> = <strong>${escapeHtml(wasLabel)}</strong>
-                            <span class="env-env003-guide__example-sub">(${escapeHtml(wasDerivationLines?.[4] || 'Tomcat maxThreads')})</span></li>
-                        <li><strong>VM당 DB Pool</strong> = <strong>${poolPerVm.toLocaleString()}</strong>
-                            (${escapeHtml(poolDesc.derivationLines?.[4] || '§4 권장')})
-                            · <strong>합계</strong> = ${vmAa} × ${poolPerVm} = <strong>${poolTotal.toLocaleString()}</strong></li>
-                    </ol>
+                    <h4 class="env-env003-guide__example-title">계산 예시 — 표의 ${pct}% · ${sec}초 행</h4>
+                    <div class="table-wrap env003-example-wrap">
+                        <table class="env003-example-table dump-report__table dump-report__table--data">
+                            <thead>
+                                <tr><th>단계</th><th>항목</th><th>계산식</th><th>결과</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>1</td><td>실요청자</td><td>ceil(${usersFmt} × ${pct}%)</td><td><strong>${real.toLocaleString()}명</strong></td></tr>
+                                <tr><td>2</td><td>목표 TPS</td><td>ceil(${real.toLocaleString()} ÷ ${sec})</td><td><strong>${tps.toLocaleString()}건/초</strong></td></tr>
+                                <tr><td>3</td><td>TPMC</td><td>${tps.toLocaleString()} × ${tpmcPerReq.toLocaleString()}</td><td><strong>${tpmc.toLocaleString()}</strong></td></tr>
+                                <tr><td>4</td><td>VM TPS</td><td>${cores} × ${p.tpsPerCoreBase}</td><td><strong>${vmTps.toLocaleString()}건/초</strong></td></tr>
+                                <tr><td>5</td><td>필요 VM</td><td>ceil(${tps.toLocaleString()} ÷ ${vmTps.toLocaleString()})</td><td><strong>${vmNeed}대</strong> (센터 1곳)</td></tr>
+                                <tr><td>6</td><td>A-A 권장</td><td>${aaOn ? `${vmNeed} × 2` : '필요 VM 그대로'}</td><td><strong>총 ${vmAa}대</strong></td></tr>
+                                <tr><td>7</td><td>JVM Heap</td><td>${escapeHtml(jvmDesc.formula)}</td><td><strong>${escapeHtml(heapLabel)}</strong>${heapSvLabel ? `<br/><span class="env-vm-per-spec__sub">SV ${escapeHtml(heapSvLabel)}</span>` : ''}</td></tr>
+                                <tr><td>8</td><td>WAS Threads</td><td>maxThreads</td><td><strong>${escapeHtml(wasLabel)}</strong></td></tr>
+                                <tr><td>9</td><td>DB Pool</td><td>VM당 Pool × 권장 VM</td><td><strong>${poolPerVm.toLocaleString()}</strong> · 합계 <strong>${poolTotal.toLocaleString()}</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </section>`;
         }
 
@@ -1321,11 +1478,14 @@
 
         el.className = 'env-env003-guide';
         el.innerHTML = `
-            <h3 class="env-env003-guide__title">표 항목 · 산식 설명</h3>
             <p class="env-env003-guide__lead">
                 한 행은 「동시 요청률(%) + 응답 Timeout(초)」 조합입니다.
                 현재 VM: <strong>${escapeHtml(vmProfileId)}</strong> (${cores}코어 / ${ramGb}GB) · ${coreTpsFormula}
             </p>
+            <h4 class="env-env003-guide__section-title">열 정의표</h4>
+            <div class="table-wrap env003-col-ref-wrap">${renderEnv003ColumnRefTable(p, tpmcPerReq)}</div>
+            ${exampleBlock}
+            <h4 class="env-env003-guide__section-title">항목별 상세 설명</h4>
             <div class="env-env003-guide__grid">
                 <article class="env-env003-guide__card">
                     <h4>요청률 / Timeout</h4>
@@ -1432,8 +1592,7 @@
                         A-A 시 센터당 VM 2대 미만 검토. 그 외 정상.
                     </p>
                 </article>
-            </div>
-            ${exampleBlock}`;
+            </div>`;
     }
 
     function renderVmResults(planner) {
@@ -1449,22 +1608,23 @@
             const heapSv = r.jvmHeapSvPerVm ? escapeHtml(r.jvmHeapSvPerVm) : '';
             const was = escapeHtml(r.wasThreadsPerVm || '—');
             const poolVm = r.dbPoolPerVm != null ? r.dbPoolPerVm.toLocaleString() : '—';
+            const statusLabel = r.status === 'NORMAL' ? '정상' : r.status === 'WARN' ? '경고' : '위험';
+            const reason = r.statusReason ? `<div class="env003-status-reason">${escapeHtml(r.statusReason)}</div>` : '';
             return `
             <tr class="${rowStatusClass(r.status)}">
-                <td>${r.requestRatePercent}% / ${r.timeoutSec}초</td>
-                <td><strong>${r.realRequesters.toLocaleString()}</strong></td>
-                <td>${r.targetTps.toLocaleString()}</td>
-                <td>${r.requiredTpmc.toLocaleString()}</td>
-                <td>${escapeHtml(r.vmProfileLabel)}</td>
-                <td>${r.vmTpsAtBase.toLocaleString()}</td>
-                <td>${r.requiredVmSingleCenter}대</td>
-                <td>총 ${r.recommendedVmActiveActive}대</td>
-                <td class="env-vm-per-spec"><strong>${heap}</strong>${heapSv ? `<br/><span class="env-vm-per-spec__sub">SV ${heapSv}</span>` : ''}</td>
-                <td><strong>${was}</strong></td>
-                <td><strong>${poolVm}</strong></td>
-                <td>${(r.dbPoolTotal ?? 0).toLocaleString()}</td>
-                <td>${statusPill(r.status, r.status === 'NORMAL' ? '정상' : r.status === 'WARN' ? '경고' : '위험')}
-                    <small>${escapeHtml(r.statusReason)}</small></td>
+                <td data-label="요청률"><span class="env003-scenario-key">${r.requestRatePercent}%</span><span class="env003-scenario-sub">${r.timeoutSec}초</span></td>
+                <td data-label="실요청자" class="env003-num"><strong>${r.realRequesters.toLocaleString()}</strong><span class="env003-unit">명</span></td>
+                <td data-label="목표 TPS" class="env003-num env003-num--highlight"><strong>${r.targetTps.toLocaleString()}</strong></td>
+                <td data-label="TPMC" class="env003-num">${r.requiredTpmc.toLocaleString()}</td>
+                <td data-label="VM 사양"><code class="env003-vm-spec">${escapeHtml(r.vmProfileLabel)}</code></td>
+                <td data-label="VM TPS" class="env003-num">${r.vmTpsAtBase.toLocaleString()}</td>
+                <td data-label="필요 VM" class="env003-num"><strong>${r.requiredVmSingleCenter}</strong><span class="env003-unit">대</span></td>
+                <td data-label="A-A 권장" class="env003-num"><strong>총 ${r.recommendedVmActiveActive}</strong><span class="env003-unit">대</span></td>
+                <td data-label="JVM Heap" class="env-vm-per-spec"><strong>${heap}</strong>${heapSv ? `<span class="env-vm-per-spec__sub">SV ${heapSv}</span>` : ''}</td>
+                <td data-label="WAS" class="env003-num"><strong>${was}</strong></td>
+                <td data-label="DB Pool" class="env003-num"><strong>${poolVm}</strong></td>
+                <td data-label="Pool 합계" class="env003-num">${(r.dbPoolTotal ?? 0).toLocaleString()}</td>
+                <td data-label="판정" class="env003-status-cell">${statusPill(r.status, statusLabel)}${reason}</td>
             </tr>`;
         }).join('');
     }
@@ -1490,25 +1650,35 @@
         }
         const showLayer = opts.showLayer === true;
         const layerHead = showLayer ? '<th>계층</th>' : '';
-        const body = rows.map(r => `
+        const body = rows.map(r => {
+            const reason = r.reason
+                ? `<div class="env004-status-reason">${escapeHtml(r.reason)}</div>` : '';
+            return `
             <tr class="${rowStatusClass(r.status)}">
-                ${showLayer ? `<td><strong>${escapeHtml(r.layer)}</strong></td>` : ''}
-                <td>${escapeHtml(r.settingLabel)}</td>
-                <td>${escapeHtml(r.recommendedValue)}</td>
-                <td><code>${escapeHtml(r.currentValue)}</code></td>
-                <td>${statusPill(r.status, r.statusLabel)}</td>
-                <td class="env-cell-reason">${escapeHtml(r.reason)}</td>
-                <td>${escapeHtml(r.configLocation)}</td>
-                <td><code class="env-example">${escapeHtml(r.settingExample)}</code></td>
-                <td>${escapeHtml(r.actionGuide)}</td>
-            </tr>`).join('');
-        const colSpan = showLayer ? 9 : 8;
+                ${showLayer ? `<td data-label="계층"><strong>${escapeHtml(r.layer)}</strong></td>` : ''}
+                <td data-label="설정 항목"><strong>${escapeHtml(r.settingLabel)}</strong></td>
+                <td data-label="권장값" class="env004-rec-val">${escapeHtml(r.recommendedValue)}</td>
+                <td data-label="현재값"><code class="env004-cur-val">${escapeHtml(r.currentValue)}</code></td>
+                <td data-label="판정" class="env004-status-cell">${statusPill(r.status, r.statusLabel)}${reason}</td>
+                <td data-label="설정 위치" class="env004-loc-cell">${escapeHtml(r.configLocation)}</td>
+                <td data-label="설정 예시"><code class="env-example env004-example-code">${escapeHtml(r.settingExample)}</code></td>
+                <td data-label="조치 가이드" class="env004-action-cell">${escapeHtml(r.actionGuide)}</td>
+            </tr>`;
+        }).join('');
+        const colSpan = showLayer ? 8 : 7;
         return `
-            <table class="dump-report__table dump-report__table--data dump-report__table--layer-grid">
-                <thead><tr>
+            <table class="dump-report__table dump-report__table--data dump-report__table--layer-grid env004-layer-table">
+                <thead>
+                    <tr class="env004-group-head">
+                        ${showLayer ? '<th colspan="1" scope="colgroup">계층</th>' : ''}
+                        <th colspan="${showLayer ? 3 : 3}" scope="colgroup">설정 비교</th>
+                        <th colspan="1" scope="colgroup">판정</th>
+                        <th colspan="3" scope="colgroup">위치 · 예시 · 조치</th>
+                    </tr>
+                    <tr>
                     ${layerHead}
-                    <th>설정 항목</th><th>권장값</th><th>현재값</th><th>판정</th>
-                    <th>판정 사유</th><th>설정 위치</th><th>설정 예시</th><th>조치 가이드</th>
+                    <th scope="col">설정 항목</th><th scope="col">권장값</th><th scope="col">현재값</th><th scope="col">판정</th>
+                    <th scope="col">설정 위치</th><th scope="col">설정 예시</th><th scope="col">조치 가이드</th>
                 </tr></thead>
                 <tbody>${body || `<tr><td colspan="${colSpan}" class="env-empty-cell">—</td></tr>`}</tbody>
             </table>`;
@@ -1761,6 +1931,8 @@
 
         loadDefaults().then(() => {
             syncCoreTpsFromTpmc();
+            const savedReq = loadPersistedRequest();
+            if (savedReq) applyDefaults(savedReq);
             const saved = loadPersistedCapacityView();
             if (saved) applyCapacityView(saved);
             analyze();

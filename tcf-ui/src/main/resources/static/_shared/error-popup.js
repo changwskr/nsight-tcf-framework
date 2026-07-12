@@ -96,7 +96,7 @@ window.NsightErrorPopup = (function () {
       </div>
       <div class="nsight-error-popup-foot">
         <button type="button" data-action="close">닫기</button>
-        <button type="button" class="primary" data-action="detail">상세 페이지</button>
+        <button type="button" class="primary" data-action="detail">HELP</button>
       </div>`;
 
     rootEl.querySelector('.nsight-error-popup-close').addEventListener('click', hide);
@@ -117,8 +117,22 @@ window.NsightErrorPopup = (function () {
     } catch (e) {
       /* ignore */
     }
-    const url = uiPrefix() + '/error-popup.html';
-    window.open(url, 'nsightErrorDetail', 'width=520,height=640,scrollbars=yes');
+    const url = resolveHelpUrl(info);
+    window.open(url, 'nsightErrorDetail', 'width=560,height=680,scrollbars=yes');
+  }
+
+  function resolveHelpUrl(info) {
+    const n = normalize(info);
+    const relayHint = n.httpStatus || n.targetUrl
+      || /relay|fetch|failed|network|HTTP/i.test(n.errorMessage || '')
+      || /^(E|R)[0-9]{3,}/.test(n.errorCode || '');
+    if (relayHint) {
+      return uiPrefix() + '/help/view.html?doc=relay-failure';
+    }
+    if (n.resultCode && n.resultCode !== '-' && n.resultCode !== '0') {
+      return uiPrefix() + '/help/view.html?doc=error-response';
+    }
+    return uiPrefix() + '/help.html#errors';
   }
 
   function fromPayload(payload, relay, fallbackMessage) {

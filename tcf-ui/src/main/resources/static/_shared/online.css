@@ -390,3 +390,49 @@ body.tcf-home {
 .hub-card--oc .links--stack a {
   font-size: 0.88rem;
 }
+
+/* 화면 컨텍스트 HELP (OC·업무 화면) */
+.help-context-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.28rem 0.55rem;
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.help-context-btn:hover {
+  text-decoration: none;
+  background: rgba(56, 189, 248, 0.2);
+  border-color: rgba(56, 189, 248, 0.65);
+}
+
+.help-context-btn__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: rgba(56, 189, 248, 0.25);
+  font-size: 0.72rem;
+  line-height: 1;
+}
+
+.help-context-link {
+  color: var(--accent);
+}
+
+.help-context-btn--float {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 9000;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}

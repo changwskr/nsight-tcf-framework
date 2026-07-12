@@ -1,12 +1,30 @@
 @echo off
-setlocal
-cd /d "%~dp0\..\.."
+setlocal enabledelayedexpansion
 
+set "PROJECT_HOME=%~dp0..\.."
+for %%I in ("!PROJECT_HOME!") do set "PROJECT_HOME=%%~fI"
+if exist "!PROJECT_HOME!\scripts\env-jdk21.bat" call "!PROJECT_HOME!\scripts\env-jdk21.bat"
+set "GRADLE_HOME=C:\Programming(23-08-15)\gradle-8.10.1"
+set "GRADLE=!GRADLE_HOME!\bin\gradle.bat"
 set "MODULE=tcf-oc"
-set "JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8"
 
-if "%SPRING_PROFILES_ACTIVE%"=="" set "SPRING_PROFILES_ACTIVE=local"
+if defined GRADLE_HOME_OVERRIDE set "GRADLE_HOME=!GRADLE_HOME_OVERRIDE!"
+if defined GRADLE_HOME set "GRADLE=!GRADLE_HOME!\bin\gradle.bat"
+if not exist "!GRADLE!" for /f "delims=" %%G in ('where gradle.bat 2^>nul') do (
+    set "GRADLE=%%G"
+    goto :gradle_ok
+)
+if not exist "!GRADLE!" (
+    where gradle >nul 2>&1
+    if not errorlevel 1 set "GRADLE=gradle"
+)
+:gradle_ok
+if not exist "!GRADLE!" (
+    echo [oc-run] gradle not found.
+    exit /b 1
+)
 
-echo [oc-run] gradle :%MODULE%:bootRun ^(port 8094^)
-call gradlew :%MODULE%:bootRun -Dspring.profiles.active=%SPRING_PROFILES_ACTIVE%
-endlocal
+cd /d "!PROJECT_HOME!"
+echo [oc-run] gradle :!MODULE!:bootRun ^(port 8094^)
+call "!GRADLE!" :!MODULE!:bootRun
+exit /b %errorlevel%

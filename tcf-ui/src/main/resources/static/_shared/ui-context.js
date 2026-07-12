@@ -33,10 +33,30 @@
     document.head.appendChild(script);
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', injectErrorPopup);
-  } else {
+  function injectHelpContext() {
+    if (window.NsightHelpContext || document.querySelector('script[data-nsight-help-context]')) {
+      return;
+    }
+    const body = document.body;
+    if (body && (body.classList.contains('tcf-help-viewer') || body.classList.contains('tcf-help-library'))) {
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = uiContext + '/_shared/help-context.js';
+    script.defer = true;
+    script.setAttribute('data-nsight-help-context', '');
+    document.head.appendChild(script);
+  }
+
+  function onReady() {
     injectErrorPopup();
+    injectHelpContext();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', onReady);
+  } else {
+    onReady();
   }
 
   if (!uiContext) {

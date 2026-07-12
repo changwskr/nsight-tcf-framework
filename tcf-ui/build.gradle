@@ -26,3 +26,14 @@ bootWar {
 war {
     archiveFileName = 'tcf-ui.war'
 }
+
+def exportHelp = tasks.register('exportHelpDocs') {
+    dependsOn ':tcf-help:exportHelp'
+}
+
+processResources {
+    dependsOn exportHelp
+    from(project(':tcf-help').layout.buildDirectory.dir('help')) {
+        into 'static/help'
+    }
+}

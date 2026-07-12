@@ -152,6 +152,46 @@ public class OcEnvPageController {
 
     }
 
+
+
+    @GetMapping({"/oc/cap-new", "/oc/cap-new/"})
+
+    public String capNewRoot() {
+
+        return "redirect:/oc/cap-new/index.html";
+
+    }
+
+
+
+    @GetMapping("/oc/cap-new/wizard")
+
+    public String capNewWizard() {
+
+        return "redirect:/oc/cap-new/wizard.html";
+
+    }
+
+
+
+    @GetMapping("/oc/cap-new/compare")
+
+    public String capNewCompare() {
+
+        return "redirect:/oc/cap-new/compare.html";
+
+    }
+
+
+
+    @GetMapping("/oc/cap-new/approved")
+
+    public String capNewApproved() {
+
+        return "redirect:/oc/cap-new/approved.html";
+
+    }
+
 }
 
 

@@ -67,6 +67,165 @@ function sevClass(severity) {
     return '';
 }
 
+/** SC-007·Rule Engine 표 — 계층(스택) 정렬 순서 */
+const SC007_LAYER_ORDER = [
+    '용량산정 TPS', '세션 60분', '동시 요청자', '실요청 사용자', '지점·사용자', '기준 용량',
+    'WebTopSuite',
+    'GSLB / 인프라',
+    'L4 / 인프라',
+    'Proxy / L4',
+    'Tomcat / WAS',
+    'Actuator',
+    'Spring Boot',
+    'HikariCP / MyBatis',
+    'CruzAPIM / 연계',
+    '모니터링',
+    'Timeout 계층',
+    '실요청·TPS',
+    '기타'
+];
+
+const ASSESS_DOMAIN_LAYER = {
+    BASELINE: '용량산정 기준',
+    CAPACITY: '실요청·TPS',
+    WEBTOP: 'WebTopSuite',
+    TOMCAT: 'Tomcat / WAS',
+    SPRING: 'Spring Boot',
+    DB: 'HikariCP / MyBatis',
+    INTEGRATION: 'CruzAPIM / 연계',
+    L4: 'L4 / 인프라',
+    GSLB: 'GSLB / 인프라',
+    NETWORK: 'Proxy / L4',
+    MONITOR: '모니터링',
+    TIMEOUT: 'Timeout 계층'
+};
+
+function layerSortIndex(layer) {
+    const idx = SC007_LAYER_ORDER.indexOf(layer);
+    return idx >= 0 ? idx : SC007_LAYER_ORDER.length - 1;
+}
+
+function groupItemsByLayer(items, layerKey = 'layer') {
+    const map = new Map();
+    (items || []).forEach(item => {
+        const layer = item[layerKey] || '기타';
+        if (!map.has(layer)) map.set(layer, []);
+        map.get(layer).push(item);
+    });
+    return Array.from(map.entries())
+        .sort((a, b) => layerSortIndex(a[0]) - layerSortIndex(b[0]))
+        .map(([layer, groupItems]) => ({ layer, items: groupItems }));
+}
+
+function sc007GroupStatusBadges(items) {
+    const match = items.filter(i => i.status === 'MATCH').length;
+    const warn = items.filter(i => i.status === 'WARN').length;
+    const info = items.length - match - warn;
+    const parts = [];
+    if (match) parts.push(`<span class="pill ok">일치 ${match}</span>`);
+    if (warn) parts.push(`<span class="pill no">주의 ${warn}</span>`);
+    if (info) parts.push(`<span class="pill">참고 ${info}</span>`);
+    return parts.join(' ') || '';
+}
+
+function renderSc007LayerGroupHead(layer, items, colSpan = 5) {
+    return `
+        <tr class="env-sc007-group-head">
+            <td colspan="${colSpan}">
+                <div class="env-sc007-group-head__inner">
+                    <span class="env-sc007-group-head__layer">${escapeHtml(layer)}</span>
+                    <span class="env-sc007-group-head__count">${items.length}항목</span>
+                    <span class="env-sc007-group-head__badges">${sc007GroupStatusBadges(items)}</span>
+                </div>
+            </td>
+        </tr>`;
+}
+
+function renderSc007ItemRow(item) {
+    return `
+        <tr class="env-row env-row--${settingRowClass(item.status)}">
+            <td class="env-cell--label" data-label="항목">
+                <strong>${escapeHtml(item.label)}</strong>
+                ${item.note ? `<p class="env-note">${escapeHtml(item.note)}</p>` : ''}
+            </td>
+            <td class="env-cell--guide" data-label="가이드 권장"><code>${escapeHtml(item.guideValue)}</code></td>
+            <td class="env-cell--actual" data-label="현재 설정"><code>${escapeHtml(item.actualValue)}</code></td>
+            <td class="env-cell--src" data-label="출처">${escapeHtml(item.source)}</td>
+            <td class="env-cell--status" data-label="판정"><span class="pill ${settingClass(item.status)}">${settingLabel(item.status)}</span></td>
+        </tr>`;
+}
+
+function renderSc007CategoryRows(items) {
+    const groups = groupItemsByLayer(items, 'layer');
+    if (!groups.length) {
+        return '<tr><td colspan="5" class="env-empty-cell">비교 항목 없음</td></tr>';
+    }
+    return groups.map(g =>
+        renderSc007LayerGroupHead(g.layer, g.items) +
+        g.items.map(renderSc007ItemRow).join('')
+    ).join('');
+}
+
+function assessDomainLayer(domain) {
+    return ASSESS_DOMAIN_LAYER[domain] || domain || '기타';
+}
+
+function assessGroupStatusBadges(items) {
+    const pass = items.filter(i => i.status === 'PASS').length;
+    const warn = items.filter(i => i.status === 'WARN').length;
+    const fail = items.filter(i => i.status === 'FAIL' || i.status === 'EXCEPTION').length;
+    const parts = [];
+    if (pass) parts.push(`<span class="pill ok">통과 ${pass}</span>`);
+    if (warn) parts.push(`<span class="pill">주의 ${warn}</span>`);
+    if (fail) parts.push(`<span class="pill no">실패 ${fail}</span>`);
+    return parts.join(' ') || '';
+}
+
+function renderAssessLayerGroupHead(layer, items, colSpan = 9) {
+    return `
+        <tr class="env-assess-group-head">
+            <td colspan="${colSpan}">
+                <div class="env-assess-group-head__inner">
+                    <span class="env-assess-group-head__layer">${escapeHtml(layer)}</span>
+                    <span class="env-assess-group-head__count">${items.length}규칙</span>
+                    <span class="env-assess-group-head__badges">${assessGroupStatusBadges(items)}</span>
+                </div>
+            </td>
+        </tr>`;
+}
+
+function renderAssessmentResultRow(r) {
+    const configFile = r.configFile || r.source || '—';
+    const propertyKey = r.propertyKey || '—';
+    return `
+        <tr class="env-row env-row--${assessRowClass(r.status)}">
+            <td class="env-cell--rule" data-label="Rule"><code>${escapeHtml(r.ruleId)}</code></td>
+            <td class="env-cell--type" data-label="유형">${escapeHtml(r.ruleType)}</td>
+            <td class="env-cell--sev" data-label="심각도"><span class="pill ${assessClass(r.status)} ${sevClass(r.severity)}">${escapeHtml(r.severity)}</span></td>
+            <td class="env-cell--file" data-label="설정 파일">${escapeHtml(configFile)}</td>
+            <td class="env-cell--param" data-label="설정 파라미터"><code>${escapeHtml(propertyKey)}</code></td>
+            <td class="env-cell--desc" data-label="설명"><p class="env-desc-text">${escapeHtml(r.description)}</p></td>
+            <td class="env-cell--expected" data-label="가이드 권장"><code>${escapeHtml(r.expectedValue)}</code></td>
+            <td class="env-cell--actual" data-label="실측 값"><code>${escapeHtml(r.actualValue)}</code></td>
+            <td class="env-cell--status" data-label="판정"><span class="pill ${assessClass(r.status)}">${assessLabel(r.status)}</span></td>
+        </tr>`;
+}
+
+function renderAssessmentResultRows(results) {
+    const enriched = (results || []).map(r => ({
+        ...r,
+        _layer: assessDomainLayer(r.domain)
+    }));
+    const groups = groupItemsByLayer(enriched, '_layer');
+    if (!groups.length) {
+        return '<tr><td colspan="9" class="env-empty-cell">점검 결과 없음</td></tr>';
+    }
+    return groups.map(g =>
+        renderAssessLayerGroupHead(g.layer, g.items) +
+        g.items.map(renderAssessmentResultRow).join('')
+    ).join('');
+}
+
 function baselineRow(category, item, valueHtml, highlight) {
     const cls = highlight ? ' env-baseline-row--highlight' : '';
     return `
@@ -217,16 +376,20 @@ function renderAssessmentCriteria(criteria, guideVersion) {
 function renderCategories(categories) {
     const root = document.getElementById('envCategories');
     if (!root) return;
-    root.innerHTML = (categories || []).map(cat => `
+    root.innerHTML = (categories || []).map(cat => {
+        const layerGroups = groupItemsByLayer(cat.items || [], 'layer');
+        const layerSummary = layerGroups.length
+            ? `<p class="env-sc007-layer-summary">${layerGroups.length}개 계층 · ${(cat.items || []).length}항목</p>`
+            : '';
+        return `
         <section class="card env-category-card">
             <div class="card-title">
                 <h2>${escapeHtml(cat.title)} (SC-007)</h2>
-                <p>${escapeHtml(cat.description)}</p>
+                <p>${escapeHtml(cat.description)}${layerSummary}</p>
             </div>
-            <div class="table-wrap table-wrap--sticky-head">
-                <table class="dump-report__table dump-report__table--data dump-report__table--env-settings">
+            <div class="table-wrap table-wrap--sticky-head env-sc007-table-wrap">
+                <table class="dump-report__table dump-report__table--data dump-report__table--env-settings env-sc007-table">
                     <colgroup>
-                        <col class="col-env-layer"/>
                         <col class="col-env-label"/>
                         <col class="col-env-guide"/>
                         <col class="col-env-actual"/>
@@ -235,33 +398,20 @@ function renderCategories(categories) {
                     </colgroup>
                     <thead>
                     <tr>
-                        <th>계층</th>
-                        <th>항목</th>
-                        <th>가이드 권장</th>
-                        <th>현재 설정</th>
-                        <th>출처</th>
-                        <th>판정</th>
+                        <th scope="col">항목</th>
+                        <th scope="col">가이드 권장</th>
+                        <th scope="col">현재 설정</th>
+                        <th scope="col">출처</th>
+                        <th scope="col">판정</th>
                     </tr>
                     </thead>
                     <tbody>
-                    ${(cat.items || []).map(item => `
-                        <tr class="env-row env-row--${settingRowClass(item.status)}">
-                            <td class="env-cell--layer">${escapeHtml(item.layer)}</td>
-                            <td class="env-cell--label">
-                                <strong>${escapeHtml(item.label)}</strong>
-                                ${item.note ? `<p class="env-note">${escapeHtml(item.note)}</p>` : ''}
-                            </td>
-                            <td class="env-cell--guide"><code>${escapeHtml(item.guideValue)}</code></td>
-                            <td class="env-cell--actual"><code>${escapeHtml(item.actualValue)}</code></td>
-                            <td class="env-cell--src">${escapeHtml(item.source)}</td>
-                            <td class="env-cell--status"><span class="pill ${settingClass(item.status)}">${settingLabel(item.status)}</span></td>
-                        </tr>
-                    `).join('')}
+                    ${renderSc007CategoryRows(cat.items)}
                     </tbody>
                 </table>
             </div>
-        </section>
-    `).join('');
+        </section>`;
+    }).join('');
 }
 
 function applySettingsView(view) {
@@ -368,22 +518,7 @@ function renderAssessmentResults(run) {
     runBadge.textContent = run.status;
     runBadge.className = 'env-score ' + (run.status === 'PASS' ? 'env-score--match' : 'env-score--warn');
 
-    document.getElementById('assessmentResultsBody').innerHTML = (run.results || []).map(r => {
-        const configFile = r.configFile || r.source || '—';
-        const propertyKey = r.propertyKey || '—';
-        return `
-        <tr class="env-row env-row--${assessRowClass(r.status)}">
-            <td class="env-cell--rule"><code>${escapeHtml(r.ruleId)}</code></td>
-            <td class="env-cell--type">${escapeHtml(r.ruleType)}</td>
-            <td class="env-cell--sev"><span class="pill ${assessClass(r.status)} ${sevClass(r.severity)}">${escapeHtml(r.severity)}</span></td>
-            <td class="env-cell--file">${escapeHtml(configFile)}</td>
-            <td class="env-cell--param"><code>${escapeHtml(propertyKey)}</code></td>
-            <td class="env-cell--desc"><p class="env-desc-text">${escapeHtml(r.description)}</p></td>
-            <td class="env-cell--expected"><code>${escapeHtml(r.expectedValue)}</code></td>
-            <td class="env-cell--actual"><code>${escapeHtml(r.actualValue)}</code></td>
-            <td class="env-cell--status"><span class="pill ${assessClass(r.status)}">${assessLabel(r.status)}</span></td>
-        </tr>`;
-    }).join('');
+    document.getElementById('assessmentResultsBody').innerHTML = renderAssessmentResultRows(run.results);
 
     if (run.timeoutMap) {
         renderTimeoutMap(run.timeoutMap);

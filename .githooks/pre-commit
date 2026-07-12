@@ -1,0 +1,21 @@
+#!/bin/sh
+# HELP 품질 검증 pre-commit (선택 설치: tcf-help/scripts/install-githooks.*)
+
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT" || exit 1
+
+CHANGED="$(git diff --cached --name-only)"
+if ! echo "$CHANGED" | grep -qE '^(tcf-help/|tcf-ui/src/main/resources/static/|.*\.md$)'; then
+  exit 0
+fi
+
+echo "[pre-commit] HELP verify (tcf-help changed)..."
+if command -v gradle >/dev/null 2>&1; then
+  gradle :tcf-help:verifyHelp --no-daemon -q || exit 1
+else
+  node tcf-help/_scripts/verify-help.mjs || exit 1
+  node tcf-help/_scripts/check-help-links.mjs --fail-on-error || exit 1
+fi
+
+echo "[pre-commit] HELP OK"
+exit 0

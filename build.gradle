@@ -4,8 +4,7 @@
 // =============================================================================
 
 plugins {
-    id 'java-library'
-    // boot 플러그인은 하위 모듈(tcf-ui, *-service)에서만 apply
+    // 루트는 서브프로젝트 집계만 담당 — java-library는 subprojects 블록에서 적용
     id 'org.springframework.boot' version '3.3.5' apply false
     id 'io.spring.dependency-management' version '1.1.6' apply false
 }
@@ -88,6 +87,12 @@ project(':tcf-util') {
 // HTTP 레이어: /online Controller, Filter, ExceptionHandler — tcf-web/build.gradle
 
 // TCF 테스트 UI — tcf-ui/build.gradle
+
+project(':tcf-help') {
+    tasks.named('compileJava') { enabled = false }
+    tasks.named('compileTestJava') { enabled = false }
+    tasks.named('jar') { enabled = false }
+}
 
 // TCF OM 운영관리 서비스 — tcf-om/build.gradle
 
