@@ -85,6 +85,9 @@
       const ebEventLink = code === 'EB'
         ? `<a href="${uiUrl(`/${lower}/event-monitor.html`)}">이벤트·배치 모니터</a>`
         : '';
+      const ebSystemTxLink = code === 'EB'
+        ? `<a href="${uiUrl(`/${lower}/system-tx-status.html`)}">시스템 거래 현황(19410)</a>`
+        : '';
       const svSampleLink = code === 'SV'
         ? `<a href="${uiUrl(`/${lower}/sample-list.html`)}">샘플 목록 (페이징)</a>`
         : '';
@@ -100,6 +103,7 @@
             ${updownloadLink}
             ${ebUserLink}
             ${ebEventLink}
+            ${ebSystemTxLink}
             ${svSampleLink}
           </div>
         </article>

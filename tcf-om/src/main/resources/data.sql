@@ -143,6 +143,7 @@ INSERT INTO OM_SERVICE_CATALOG (CATALOG_ID, BUSINESS_CODE, SERVICE_ID, TRANSACTI
 ('CAT-051', 'PD', 'PD.Sample.inquiry', 'PD-INQ-0001', 'INQUIRY', 'PdSampleHandler', 'ROLE_PD_INQ', 'N', 5, 'Y', 'PD 샘플 조회'),
 ('CAT-052', 'CM', 'CM.Sample.inquiry', 'CM-INQ-0001', 'INQUIRY', 'CmSampleInquiryHandler', 'ROLE_CM_INQ', 'N', 5, 'Y', 'CM 샘플 조회'),
 ('CAT-053', 'EB', 'EB.Sample.inquiry', 'EB-INQ-0001', 'INQUIRY', 'EbSampleHandler', 'ROLE_EB_INQ', 'N', 5, 'Y', 'EB 샘플 조회'),
+('CAT-113', 'EB', 'EB.SystemTx.inquiry', 'EB-STX-0001', 'INQUIRY', 'EbSystemTxHandler', 'ROLE_EB_INQ', 'N', 5, 'Y', 'EB 시스템 거래 현황(19410)'),
 ('CAT-054', 'EP', 'EP.Sample.inquiry', 'EP-INQ-0001', 'INQUIRY', 'EpSampleHandler', 'ROLE_EP_INQ', 'N', 5, 'Y', 'EP 샘플 조회'),
 ('CAT-055', 'BP', 'BP.Sample.inquiry', 'BP-INQ-0001', 'INQUIRY', 'BpSampleInquiryHandler', 'ROLE_BP_INQ', 'N', 5, 'Y', 'BP 샘플 조회'),
 ('CAT-056', 'BD', 'BD.Sample.inquiry', 'BD-INQ-0001', 'INQUIRY', 'BdSampleInquiryHandler', 'ROLE_BD_INQ', 'N', 5, 'Y', 'BD 샘플 조회'),

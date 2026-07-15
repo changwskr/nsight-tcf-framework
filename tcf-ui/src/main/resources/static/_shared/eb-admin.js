@@ -10,7 +10,8 @@ window.EbAdmin = (function () {
     userInquiry: { serviceId: 'EB.User.inquiry', transactionCode: 'EB-USR-0002', serviceName: 'EB 사용자 조회' },
     userCreate: { serviceId: 'EB.User.create', transactionCode: 'EB-USR-0001', serviceName: 'EB 사용자 등록' },
     eventInquiry: { serviceId: 'EB.Event.inquiry', transactionCode: 'EB-EVT-0001', serviceName: 'EB 이벤트 조회' },
-    batchInquiry: { serviceId: 'EB.Batch.inquiry', transactionCode: 'EB-BAT-0001', serviceName: 'EB 배치 상태 조회' }
+    batchInquiry: { serviceId: 'EB.Batch.inquiry', transactionCode: 'EB-BAT-0001', serviceName: 'EB 배치 상태 조회' },
+    systemTxInquiry: { serviceId: 'EB.SystemTx.inquiry', transactionCode: 'EB-STX-0001', serviceName: '시스템 거래 현황(19410)' }
   };
 
   let config = { deploymentMode: 'bootrun', bootrunHost: 'http://127.0.0.1', tomcatGatewayUrl: 'http://localhost:8080' };

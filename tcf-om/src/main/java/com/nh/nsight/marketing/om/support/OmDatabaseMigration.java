@@ -196,6 +196,7 @@ public class OmDatabaseMigration implements ApplicationRunner {
                 Map.entry("CAT-051", "PD 샘플 조회"),
                 Map.entry("CAT-052", "CM 샘플 조회"),
                 Map.entry("CAT-053", "EB 샘플 조회"),
+                Map.entry("CAT-113", "EB 시스템 거래 현황(19410)"),
                 Map.entry("CAT-054", "EP 샘플 조회"),
                 Map.entry("CAT-055", "BP 샘플 조회"),
                 Map.entry("CAT-056", "BD 샘플 조회"),

@@ -69,6 +69,35 @@ OM Cache 관리 화면:
 - bootRun: http://localhost:8099/om/admin/cache.html
 - ztomcat: http://localhost:8080/ui/om/admin/cache.html
 
+## 공통코드 캐시 샘플
+
+EhCache `commonCode` 영역에 공통코드를 저장·조회·Evict 하는 **참고 구현**과 **데모 화면**이 포함되어 있습니다.
+
+### Java 샘플
+
+| 클래스 | 설명 |
+|--------|------|
+| `sample.model.CommonCodeEntry` | 공통코드 행 모델 |
+| `sample.support.CommonCodeCacheKeys` | 캐시 키 규칙 (`__ALL_GROUPS__`) |
+| `sample.persistence.InMemoryCommonCodeSampleRepository` | 인메모리 DB (테스트·데모) |
+| `sample.application.service.CommonCodeCacheSampleService` | `@Cacheable` / `@CacheEvict` 패턴 |
+
+실제 OM 구현: `tcf-om` → `OmCommonCodeCacheService`
+
+```bash
+gradle :tcf-cache:test --tests CommonCodeCacheSampleServiceTest
+```
+
+### 데모 화면
+
+| 위치 | URL (bootRun) | URL (ztomcat) |
+|------|---------------|---------------|
+| `samples/common-code-cache/index.html` | 파일 직접 열기 | — |
+| `tcf-ui` 연동 | http://localhost:8099/cache/common-code-sample.html | http://localhost:8080/ui/cache/common-code-sample.html |
+
+로컬 시뮬: browser localStorage = DB, JS Map = `commonCode` EhCache  
+tcf-om 기동 시: **OM DB 저장** · **실제 EhCache 스냅샷** 버튼으로 Relay 연동
+
 ## 빌드
 
 ```bash

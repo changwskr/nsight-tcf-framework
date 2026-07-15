@@ -163,6 +163,8 @@ final class ServiceCatalogSeedData {
                     "CmSampleInquiryHandler", "ROLE_CM_INQ", "N", 5, "Y", "CM 샘플 조회"),
             entry("CAT-053", "EB", "EB.Sample.inquiry", "EB-INQ-0001", "INQUIRY",
                     "EbSampleHandler", "ROLE_EB_INQ", "N", 5, "Y", "EB 샘플 조회"),
+            entry("CAT-113", "EB", "EB.SystemTx.inquiry", "EB-STX-0001", "INQUIRY",
+                    "EbSystemTxHandler", "ROLE_EB_INQ", "N", 5, "Y", "EB 시스템 거래 현황(19410)"),
             entry("CAT-054", "EP", "EP.Sample.inquiry", "EP-INQ-0001", "INQUIRY",
                     "EpSampleHandler", "ROLE_EP_INQ", "N", 5, "Y", "EP 샘플 조회"),
             entry("CAT-055", "BP", "BP.Sample.inquiry", "BP-INQ-0001", "INQUIRY",
