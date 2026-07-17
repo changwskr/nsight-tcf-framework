@@ -2,14 +2,14 @@
 
 NSIGHT HTTP/JSON **표준 전문**을 **TCF(Transaction Control Framework)** 로 처리하는 멀티 모듈 Gradle 프로젝트입니다.
 
-> 공식 설계안: [docs/설계자료/README.md](docs/설계자료/README.md)  
-> 구현 아키텍처: [docs/architecture/architecture.md](docs/architecture/architecture.md)
+> 공식 설계안: [zdocs-1/설계자료/README.md](zdocs-1/설계자료/README.md)  
+> 구현 아키텍처: [zdocs-1/architecture/architecture.md](zdocs-1/architecture/architecture.md)
 
 ## 핵심 설계 원칙
 
 1. **Handler 중심** — 업무 개발자는 `TransactionHandler` + `serviceId` 등록에 집중 (도메인당 핸들러 1개, `serviceIds()`로 다중 거래 처리)
 2. **공통 파이프라인** — Header 검증·세션·권한·거래통제·Timeout·로깅·응답 조립은 STF/TCF/ETF가 담당
-3. **업무 독립 WAR** — 9개 업무 + OM은 동일 패턴의 Spring Boot WAR
+3. **업무 독립 WAR** — 9개 업무 + OM·OC는 동일 패턴의 Spring Boot WAR
 4. **이중 배포** — 개발 `bootRun`(포트 분리) · 통합 `ztomcat`(8080 게이트웨이)
 
 ## 모듈 구조
@@ -19,16 +19,19 @@ nsight-tcf-framework
 ├─ tcf-util              공통 유틸 (Spring 없음)
 ├─ tcf-core              TCF 엔진 (STF/TCF/ETF, Dispatcher, 거래통제·Timeout)
 ├─ tcf-web               HTTP (/online, TcfGateway, AutoConfiguration, 거래로그 DB)
+├─ tcf-eai               업무 간 표준 전문 연동 공통 모듈 (EAI, serviceId 기반 호출)
 ├─ tcf-cache             EhCache / Spring Cache
 ├─ tcf-om                운영관리 OM + 파일 업·다운로드 UD
+├─ tcf-oc                용량 산정(CAP)·통합 환경설정(ENV) (bootRun :8094, WAR /oc)
 ├─ tcf-batch             AP/DB/세션/배포 수집 · 운영 대시보드 데이터
 ├─ tcf-ui                거래 테스트 UI · OM Admin Relay (bootRun :8099)
 ├─ tcf-uj                gateway 경유 테스트 UI (bootRun :8102)
 ├─ tcf-gateway           API Gateway · SESSIONDB 관문 (bootRun :8100)
 ├─ tcf-jwt               JWT 발급·JWKS (bootRun :8110, WAR /jwt) — 검증은 Gateway
+├─ tcf-help              HELP 마크다운 문서 리소스 (Java 없음)
 ├─ tcf-scripts           빌드·실행·배포 스크립트
 ├─ tcf-cicd              local/dev/prod 설정 SoT
-├─ ztomcat               로컬 Tomcat 8080 (12 context)
+├─ ztomcat               로컬 Tomcat 8080 (16 context)
 └─ ic-service … mg-service   9개 업무 WAR
 ```
 
@@ -36,13 +39,16 @@ nsight-tcf-framework
 |------|--------|--------|
 | `tcf-core` | JAR | [tcf-core/README.md](tcf-core/README.md) |
 | `tcf-web` | JAR | [tcf-web/README.md](tcf-web/README.md) |
+| `tcf-eai` | JAR | — |
 | `tcf-cache` | JAR | [tcf-cache/README.md](tcf-cache/README.md) |
 | `tcf-om` | WAR `/om` | [tcf-om/README.md](tcf-om/README.md) |
+| `tcf-oc` | WAR `/oc` | [tcf-oc/README.md](tcf-oc/README.md) |
 | `tcf-batch` | WAR `/batch` | [tcf-batch/README.md](tcf-batch/README.md) |
 | `tcf-ui` | WAR `/ui` | [tcf-ui/README.md](tcf-ui/README.md) |
 | `tcf-uj` | WAR `/uj` | [tcf-uj/README.md](tcf-uj/README.md) |
 | `tcf-gateway` | WAR `/gw` | [tcf-gateway/README.md](tcf-gateway/README.md) |
 | `tcf-jwt` | WAR `/jwt` | [tcf-jwt/README.md](tcf-jwt/README.md) |
+| `tcf-help` | 문서 리소스 | [tcf-help/README.md](tcf-help/README.md) |
 | `tcf-scripts` | 스크립트 | [tcf-scripts/README.md](tcf-scripts/README.md) |
 | `tcf-cicd` | 설정 | [tcf-cicd/README.md](tcf-cicd/README.md) |
 | `ztomcat` | Tomcat | [ztomcat/README.md](ztomcat/README.md) |
@@ -117,13 +123,13 @@ TCF.process()
 
 | 영역 | 테이블 / 구성 | 적용 시점 | 설계안 |
 |------|---------------|-----------|--------|
-| 거래통제 | `TCF_TRANSACTION_CONTROL` | STF — 7필드 + `BLOCK_YN=Y` 차단 | [거래통제](docs/설계자료/NSIGHT%20거래통제%20설계안.docx) |
-| Timeout | `TCF_SERVICE_TIMEOUT_POLICY` | STF 조회 → Online/TX/MyBatis 적용 | [서비스별 Timeout](docs/설계자료/서비스별%20Timeout%20설계안.docx) |
-| 거래로그 | `TCF_TRANSACTION_LOG` | STF PROCESSING → ETF SUCCESS/FAIL | [거래로그](docs/설계자료/NSIGHT%20거래로그%20관리%20설계안.docx) |
-| 세션 | `SPRING_SESSION` (JDBC) | STF SessionValidator | [세션관리](docs/설계자료/NSIGHT%20TCF%20Framework%20세션관리%20설계안.docx) |
-| Cache | EhCache (`tcf-cache`) | 공통코드·ServiceId 등 | [Cache 관리](docs/설계자료/NSIGHT%20TCF%20Framework%20Cache%20관리%20설계안.docx) |
-| 오류코드 | `OM_ERROR_CODE` | ETF — `E-{DOMAIN}-{CATEGORY}-{NNNN}` | [오류코드·메시지](docs/설계자료/NSIGHT%20오류코드·메시지%20설계안.docx) |
-| ServiceId | `OM_SERVICE_CATALOG` | Dispatcher Handler 매핑 | [서비스 ID](docs/설계자료/NSIGHT%20서비스%20ID%20관리%20설계안.docx) |
+| 거래통제 | `TCF_TRANSACTION_CONTROL` | STF — 7필드 + `BLOCK_YN=Y` 차단 | [거래통제](zdocs-1/설계자료/NSIGHT%20거래통제%20설계안.docx) |
+| Timeout | `TCF_SERVICE_TIMEOUT_POLICY` | STF 조회 → Online/TX/MyBatis 적용 | [서비스별 Timeout](zdocs-1/설계자료/서비스별%20Timeout%20설계안.docx) |
+| 거래로그 | `TCF_TRANSACTION_LOG` | STF PROCESSING → ETF SUCCESS/FAIL | [거래로그](zdocs-1/설계자료/NSIGHT%20거래로그%20관리%20설계안.docx) |
+| 세션 | `SPRING_SESSION` (JDBC) | STF SessionValidator | [세션관리](zdocs-1/설계자료/NSIGHT%20TCF%20Framework%20세션관리%20설계안.docx) |
+| Cache | EhCache (`tcf-cache`) | 공통코드·ServiceId 등 | [Cache 관리](zdocs-1/설계자료/NSIGHT%20TCF%20Framework%20Cache%20관리%20설계안.docx) |
+| 오류코드 | `OM_ERROR_CODE` | ETF — `E-{DOMAIN}-{CATEGORY}-{NNNN}` | [오류코드·메시지](zdocs-1/설계자료/NSIGHT%20오류코드·메시지%20설계안.docx) |
+| ServiceId | `OM_SERVICE_CATALOG` | Dispatcher Handler 매핑 | [서비스 ID](zdocs-1/설계자료/NSIGHT%20서비스%20ID%20관리%20설계안.docx) |
 
 ### Timeout 적용 (구현)
 
@@ -139,26 +145,27 @@ nsight.tcf:
   timeout-policy-enabled: true
 ```
 
-상세: [40-header-7-transaction-control.md](docs/architecture/40-header-7-transaction-control.md), [41-service-timeout-policy.md](docs/architecture/41-service-timeout-policy.md)
+상세: [40-header-7-transaction-control.md](zdocs-1/architecture/40-header-7-transaction-control.md), [41-service-timeout-policy.md](zdocs-1/architecture/41-service-timeout-policy.md)
 
 ## 배포 모드
 
 | 모드 | 설명 | 대표 URL |
 |------|------|----------|
 | **bootRun** | 모듈별 독립 JVM | `http://localhost:8086/sv/online`, OM UI `:8099` |
-| **ztomcat** | Tomcat 8080 · WAR 12개 | `http://localhost:8080/sv/online`, OM UI `/ui` |
+| **ztomcat** | Tomcat 8080 · WAR 16개 | `http://localhost:8080/sv/online`, OM UI `/ui` |
 
 ```text
 ztomcat (8080)              bootRun (별도 프로세스)
 ────────────────            ─────────────────────
 /ic … /mg  업무 9           8082–8096  *-service
 /om        tcf-om           8097       tcf-om
+/oc        tcf-oc           8094       tcf-oc
 /batch     tcf-batch        8098       tcf-batch
 /ui        tcf-ui           8099       tcf-ui
 ```
 
 WAR 패키징: 각 WAR의 `WEB-INF/lib`에 `tcf-*` JAR 포함 (Tomcat `lib/` 공유 배치 아님).  
-상세: [배포관리 설계안](docs/설계자료/NSIGHT%20TCF%20Framework%20배포관리%20설계안.docx), [ztomcat/README.md](ztomcat/README.md)
+상세: [배포관리 설계안](zdocs-1/설계자료/NSIGHT%20TCF%20Framework%20배포관리%20설계안.docx), [ztomcat/README.md](ztomcat/README.md)
 
 ## 빠른 시작
 
@@ -187,8 +194,8 @@ verify-deploy.ps1
 ## 빌드
 
 ```bash
-gradle buildBusinessWars    # 업무 10 WAR (9 *-service + tcf-om)
-gradle buildZtomcatWars     # 12 WAR (+ tcf-batch, tcf-ui)
+gradle buildBusinessWars    # 업무 11 WAR (9 *-service + tcf-om + tcf-oc)
+gradle buildZtomcatWars     # 16 WAR (+ tcf-batch, tcf-ui, tcf-uj, tcf-jwt, tcf-gateway)
 tcf-scripts\build.bat ztomcat
 ```
 
@@ -200,7 +207,8 @@ tcf-scripts\build.bat ztomcat
 | 8083 | pc | 8090 | ep |
 | 8085 | ms | 8093 | ss |
 | 8086 | sv | 8096 | mg |
-| 8087 | pd | 8097 | **tcf-om** |
+| 8087 | pd | 8094 | **tcf-oc** |
+| | | 8097 | **tcf-om** |
 | | | 8098 | **tcf-batch** |
 | | | 8099 | **tcf-ui** |
 | | | 8100 | **tcf-gateway** |
@@ -268,24 +276,34 @@ curl -X POST http://localhost:8080/sv/online \
 
 | | |
 |--|--|
-| **설계안 전체 목록** | [docs/설계자료/README.md](docs/설계자료/README.md) |
+| **설계안 전체 목록** | [zdocs-1/설계자료/README.md](zdocs-1/설계자료/README.md) |
 
 ### 아키텍처 (Markdown)
 
 | 문서 | 경로 |
 |------|------|
-| 아키텍처 정의서 | [docs/architecture/architecture.md](docs/architecture/architecture.md) |
-| TCF 개발 가이드 | [docs/TCF_FRAMEWORK_GUIDE.md](docs/TCF_FRAMEWORK_GUIDE.md) |
-| 빌드·모듈 | [docs/architecture/22-build-project.md](docs/architecture/22-build-project.md) |
-| 거래통제 (7필드) | [docs/architecture/40-header-7-transaction-control.md](docs/architecture/40-header-7-transaction-control.md) |
-| Timeout 정책 | [docs/architecture/41-service-timeout-policy.md](docs/architecture/41-service-timeout-policy.md) |
-| 스크립트 | [docs/architecture/38-script.md](docs/architecture/38-script.md) |
+| 아키텍처 정의서 | [zdocs-1/architecture/architecture.md](zdocs-1/architecture/architecture.md) |
+| TCF 개발 가이드 | [zdocs-1/TCF_FRAMEWORK_GUIDE.md](zdocs-1/TCF_FRAMEWORK_GUIDE.md) |
+| 빌드·모듈 | [zdocs-1/architecture/22-build-project.md](zdocs-1/architecture/22-build-project.md) |
+| 거래통제 (7필드) | [zdocs-1/architecture/40-header-7-transaction-control.md](zdocs-1/architecture/40-header-7-transaction-control.md) |
+| Timeout 정책 | [zdocs-1/architecture/41-service-timeout-policy.md](zdocs-1/architecture/41-service-timeout-policy.md) |
+| 스크립트 | [zdocs-1/architecture/38-script.md](zdocs-1/architecture/38-script.md) |
 
 ### 운영 매뉴얼
 
 | 문서 | 경로 |
 |------|------|
-| Gradle 명령 | [docs/manual/gradle.md](docs/manual/gradle.md) |
-| 환경변수 | [docs/manual/environment-variables.md](docs/manual/environment-variables.md) |
-| 산출물·기동 | [docs/manual/artifacts.md](docs/manual/artifacts.md) |
+| Gradle 명령 | [zdocs-1/manual/gradle.md](zdocs-1/manual/gradle.md) |
+| 환경변수 | [zdocs-1/manual/environment-variables.md](zdocs-1/manual/environment-variables.md) |
+| 산출물·기동 | [zdocs-1/manual/artifacts.md](zdocs-1/manual/artifacts.md) |
 | CI/CD SoT | [tcf-cicd/README.md](tcf-cicd/README.md) |
+
+### 교재·매뉴얼 아카이브
+
+| 폴더 | 내용 |
+|------|------|
+| `ztcf-개발북/` | NSIGHT TCF 개발 입문서 제1~20부 (docx 원본) |
+| `znsight-man/` | 개발 입문서·개발 매뉴얼·구축 방법론 마크다운 변환본 |
+| `znsight-guide-word/` | TCF 개발 매뉴얼 78~87 등 (docx 원본) |
+| `znsight-구축방법론/` | 아키텍처 구축 방법론 1~3 (docx 원본) |
+| `zdocs-2/` | 주제별 개발 노트 (AOP·페이징·세션·SSO 등) |
