@@ -26,3 +26,8 @@ ztomcat/_war_bak/
 ztomcat/data/
 ztomcat/run/
 node_modules
+
+# temporary docx extraction workspaces
+.tmp-*/
+ztcf-book-capacity-md/_extract/
+ztcf-book-capacity-md/_tmp-toc/
