@@ -31,3 +31,7 @@ node_modules
 .tmp-*/
 ztcf-book-capacity-md/_extract/
 ztcf-book-capacity-md/_tmp-toc/
+
+# nested git repositories (not submodules)
+znsight-config-info/nsight_env_config/
+znsight-config-info/nsight_env_config_one/
