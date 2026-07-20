@@ -90,8 +90,6 @@ public class OmCacheService {
 
         String reason = OmBodySupport.stringValue(body, "deleteReason");
         recorder.recordAdminAudit(context, "CACHE_DELETE", "Cache 삭제", reason, "SUCCESS");
-        recorder.recordAuthHistory(context, "CACHE", cacheName,
-                "exists", "deleted:" + deleted, reason);
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("businessCode", "OM");

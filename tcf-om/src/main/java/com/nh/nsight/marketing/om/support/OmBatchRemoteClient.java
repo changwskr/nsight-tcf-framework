@@ -41,20 +41,6 @@ public class OmBatchRemoteClient {
     }
 
     @SuppressWarnings("unchecked")
-    public Map<String, Object> runSessionStatusCollect() {
-        try {
-            Map<String, Object> response = restTemplate.postForObject(
-                    batchServiceUrl + "/jobs/session-status/run",
-                    null,
-                    Map.class);
-            return response != null ? response : Map.of();
-        } catch (RestClientException e) {
-            throw new BusinessException("E-OM-BIZ-0003",
-                    "tcf-batch 세션 현황 수집 호출 실패: " + e.getMessage());
-        }
-    }
-
-    @SuppressWarnings("unchecked")
     public Map<String, Object> runDbStatusCollect() {
         try {
             Map<String, Object> response = restTemplate.postForObject(

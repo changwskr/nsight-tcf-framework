@@ -3,7 +3,6 @@ package com.nh.nsight.tcf.batch.support;
 import com.nh.nsight.tcf.batch.service.ApStatusCollectService;
 import com.nh.nsight.tcf.batch.service.DbStatusCollectService;
 import com.nh.nsight.tcf.batch.service.DeployStatusCollectService;
-import com.nh.nsight.tcf.batch.service.SessionStatusCollectService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,20 +23,17 @@ public class DashboardCollectStartupRunner implements ApplicationRunner {
 
     private final ApStatusCollectService apStatusCollectService;
     private final DbStatusCollectService dbStatusCollectService;
-    private final SessionStatusCollectService sessionStatusCollectService;
     private final DeployStatusCollectService deployStatusCollectService;
     private final TaskScheduler taskScheduler;
     private final long initialDelayMs;
 
     public DashboardCollectStartupRunner(ApStatusCollectService apStatusCollectService,
                                          DbStatusCollectService dbStatusCollectService,
-                                         SessionStatusCollectService sessionStatusCollectService,
                                          DeployStatusCollectService deployStatusCollectService,
                                          TaskScheduler taskScheduler,
                                          @Value("${nsight.batch.startup-collect.initial-delay-ms:0}") long initialDelayMs) {
         this.apStatusCollectService = apStatusCollectService;
         this.dbStatusCollectService = dbStatusCollectService;
-        this.sessionStatusCollectService = sessionStatusCollectService;
         this.deployStatusCollectService = deployStatusCollectService;
         this.taskScheduler = taskScheduler;
         this.initialDelayMs = initialDelayMs;
@@ -58,7 +54,6 @@ public class DashboardCollectStartupRunner implements ApplicationRunner {
         log.info("Initial dashboard status collect on tcf-batch startup");
         apStatusCollectService.collectAndPersist();
         dbStatusCollectService.collectAndPersist();
-        sessionStatusCollectService.collectAndPersist();
         deployStatusCollectService.collectAndPersist();
         log.info("Initial dashboard status collect finished");
     }

@@ -49,15 +49,6 @@
             <td>${OmAdmin.field(r, 'poolUsagePct', 0)}%</td>
           </tr>`).join('') || '<tr><td colspan="3" class="om-empty">배치 수집 전 · tcf-batch BAT-BATCH-002 실행 필요</td></tr>';
 
-        const sessionRows = (body.sessionStatus || []).map(r => `
-          <tr>
-            <td>${OmAdmin.field(r, 'scopeName')}</td>
-            <td>${OmAdmin.chipForHealth(OmAdmin.field(r, 'healthStatus'))}</td>
-            <td>${OmAdmin.field(r, 'activeCount', 0)}</td>
-            <td>${OmAdmin.field(r, 'expiredCount', 0)}</td>
-            <td>${OmAdmin.field(r, 'uniqueUserCount', 0)}</td>
-          </tr>`).join('') || '<tr><td colspan="5" class="om-empty">배치 수집 전 · tcf-batch 실행 필요</td></tr>';
-
         const recentWindow = body.recentWindowMinutes ?? body.slowTransactionWindowMinutes ?? 15;
 
         const formatTxTime = (value) => {
@@ -109,12 +100,9 @@
             <span class="om-stat-pill">Timeout ${body.timeoutCount ?? summary.timeoutCount ?? 0}건</span>
             <span class="om-stat-pill">금일 거래 ${summary.totalCount ?? 0}건</span>
             <span class="om-stat-pill">평균 응답 ${Math.round(summary.avgElapsedMs ?? body.avgElapsedMs ?? 0)}ms</span>
-            <span class="om-stat-pill">활성 세션 ${body.activeSessionCount ?? 0}</span>
-            <span class="om-stat-pill">만료 세션 ${body.expiredSessionCount ?? 0}</span>
-            <span class="om-stat-pill">로그인 사용자 ${body.uniqueUserCount ?? 0}</span>
           </section>
 
-          <div class="om-grid-3">
+          <div class="om-grid-2">
             <div class="om-card">
               <div class="om-card-head">AP 상태 (tcf-batch 수집)</div>
               <div class="om-card-body om-table-wrap">
@@ -125,15 +113,6 @@
               <div class="om-card-head">DB 상태 (tcf-batch 수집)</div>
               <div class="om-card-body om-table-wrap">
                 <table class="om-table"><thead><tr><th>DB</th><th>상태</th><th>Pool</th></tr></thead><tbody>${dbRows}</tbody></table>
-              </div>
-            </div>
-            <div class="om-card">
-              <div class="om-card-head">세션 현황 (tcf-batch 수집)</div>
-              <div class="om-card-body om-table-wrap">
-                <table class="om-table">
-                  <thead><tr><th>범위</th><th>상태</th><th>활성</th><th>만료</th><th>사용자</th></tr></thead>
-                  <tbody>${sessionRows}</tbody>
-                </table>
               </div>
             </div>
           </div>

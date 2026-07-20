@@ -73,8 +73,6 @@ public class OmErrorCodeService {
 
         Map<String, Object> row = toRow(body);
         dao.insertErrorCode(row);
-        recorder.recordAuthHistory(context, "ERROR_CODE", errorCode,
-                null, String.valueOf(row), OmBodySupport.stringValue(body, "changeReason"));
 
         return savedResult("오류코드 등록", errorCode, "REGISTER");
     }
@@ -93,8 +91,6 @@ public class OmErrorCodeService {
 
         Map<String, Object> row = toRow(body);
         dao.updateErrorCode(row);
-        recorder.recordAuthHistory(context, "ERROR_CODE", errorCode,
-                String.valueOf(before), String.valueOf(row), OmBodySupport.stringValue(body, "changeReason"));
 
         return savedResult("오류코드 수정", errorCode, "UPDATE");
     }
@@ -116,9 +112,6 @@ public class OmErrorCodeService {
         if (updated == 0) {
             throw new BusinessException("E-OM-BIZ-0002", "삭제할 오류코드를 찾을 수 없습니다.");
         }
-
-        recorder.recordAuthHistory(context, "ERROR_CODE", errorCode,
-                String.valueOf(before), "USE_YN=N", OmBodySupport.stringValue(body, "changeReason"));
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("businessCode", "OM");

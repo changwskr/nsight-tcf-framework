@@ -130,7 +130,6 @@ configure(sharedBusinessModules.collect { project(":${it}") }) {
         implementation 'org.springframework.boot:spring-boot-starter-actuator'
         implementation 'org.springframework.boot:spring-boot-starter-jdbc'
         implementation 'org.springframework.boot:spring-boot-starter-aop'
-        implementation 'org.springframework.session:spring-session-jdbc'
         implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
         runtimeOnly 'com.h2database:h2'
         // WAR 배포 시 외부 Tomcat 제공
@@ -159,3 +158,5 @@ tasks.register('buildZtomcatWars') {
     description = 'Build all WAR files for ztomcat (19 modules: business + tcf-batch + tcf-ui).'
     dependsOn 'buildBusinessWars', ':tcf-batch:bootWar', ':tcf-ui:bootWar'
 }
+
+apply from: 'offline.gradle'

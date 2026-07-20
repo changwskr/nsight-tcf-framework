@@ -5,13 +5,18 @@
 window.OmAdmin = (function () {
   const BUSINESS_CODE = 'OM';
   const SESSION_KEY = 'nsight.om.session';
+  const GUEST_SESSION = {
+    userId: 'GUEST',
+    userName: '게스트',
+    branchId: '',
+    authGroupId: '',
+    authGroupName: ''
+  };
   const NAV_PRIMARY = [
     { id: 'dashboard', label: '운영 대시보드', href: '/om/admin/dashboard.html' },
     { id: 'transaction-log', label: '거래로그 조회', href: '/om/admin/transaction-log.html' },
     { id: 'service-catalog', label: 'ServiceId 관리', href: '/om/admin/service-catalog.html' },
     { id: 'message-composer', label: '공통 전문 조립', href: '/om/admin/message-composer.html' },
-    { id: 'user-auth', label: '사용자 / 권한 / 메뉴', href: '/om/admin/user-auth.html' },
-    { id: 'session', label: '세션 관리', href: '/om/admin/session.html' },
     { id: 'audit-log', label: '감사로그 조회', href: '/om/admin/audit-log.html' }
   ];
 
@@ -25,18 +30,12 @@ window.OmAdmin = (function () {
 
   const NAV_TERTIARY = [
     { id: 'common-code', label: '공통코드 관리', href: '/om/admin/common-code.html' },
-    { id: 'function-auth', label: '기능권한', href: '/om/admin/function-auth.html' },
-    { id: 'data-auth', label: '데이터권한', href: '/om/admin/data-auth.html' },
-    { id: 'auth-history', label: '권한이력', href: '/om/admin/auth-history.html' },
     { id: 'cache', label: 'Cache 관리', href: '/om/admin/cache.html' }
   ];
 
   const NAV = [...NAV_PRIMARY, ...NAV_SECONDARY, ...NAV_TERTIARY];
 
   const TX = {
-    authLogin: { serviceId: 'OM.Auth.login', transactionCode: 'OM-AUT-0002' },
-    authLogout: { serviceId: 'OM.Auth.logout', transactionCode: 'OM-AUT-0003' },
-    authSession: { serviceId: 'OM.Auth.session', transactionCode: 'OM-AUT-0004' },
     dashboard: { serviceId: 'OM.Dashboard.inquiry', transactionCode: 'OM-DSH-0001' },
     transactionLog: { serviceId: 'OM.TransactionLog.inquiry', transactionCode: 'OM-TXL-0001' },
     transactionLogDeleteAll: { serviceId: 'OM.TransactionLog.deleteAll', transactionCode: 'OM-TXL-0002' },
@@ -45,13 +44,6 @@ window.OmAdmin = (function () {
     serviceCatalogSave: { serviceId: 'OM.ServiceCatalog.save', transactionCode: 'OM-SVC-0002' },
     serviceCatalogUpdate: { serviceId: 'OM.ServiceCatalog.update', transactionCode: 'OM-SVC-0004' },
     serviceCatalogDelete: { serviceId: 'OM.ServiceCatalog.delete', transactionCode: 'OM-SVC-0005' },
-    user: { serviceId: 'OM.User.inquiry', transactionCode: 'OM-USR-0001' },
-    userDetail: { serviceId: 'OM.User.detail', transactionCode: 'OM-USR-0002' },
-    userSave: { serviceId: 'OM.User.save', transactionCode: 'OM-USR-0003' },
-    userUpdate: { serviceId: 'OM.User.update', transactionCode: 'OM-USR-0004' },
-    userDelete: { serviceId: 'OM.User.delete', transactionCode: 'OM-USR-0005' },
-    menu: { serviceId: 'OM.Menu.inquiry', transactionCode: 'OM-MNU-0001' },
-    authGroup: { serviceId: 'OM.AuthGroup.inquiry', transactionCode: 'OM-AUT-0001' },
     auditLog: { serviceId: 'OM.AuditLog.inquiry', transactionCode: 'OM-AUD-0001' },
     errorCode: { serviceId: 'OM.ErrorCode.inquiry', transactionCode: 'OM-ERR-0001' },
     batch: { serviceId: 'OM.Batch.inquiry', transactionCode: 'OM-BAT-0001' },
@@ -69,13 +61,8 @@ window.OmAdmin = (function () {
     errorCodeDelete: { serviceId: 'OM.ErrorCode.delete', transactionCode: 'OM-ERR-0005' },
     batchExecute: { serviceId: 'OM.Batch.execute', transactionCode: 'OM-BAT-0002' },
     batchHistoryDeleteAll: { serviceId: 'OM.Batch.deleteAll', transactionCode: 'OM-BAT-0003' },
-    functionAuth: { serviceId: 'OM.FunctionAuth.inquiry', transactionCode: 'OM-FAU-0001' },
-    dataAuth: { serviceId: 'OM.DataAuth.inquiry', transactionCode: 'OM-DAU-0001' },
-    authHistory: { serviceId: 'OM.AuthHistory.inquiry', transactionCode: 'OM-AHT-0001' },
     cache: { serviceId: 'OM.Cache.inquiry', transactionCode: 'OM-CCH-0001' },
-    cacheDelete: { serviceId: 'OM.Cache.delete', transactionCode: 'OM-CCH-0002' },
-    session: { serviceId: 'OM.Session.inquiry', transactionCode: 'OM-SES-0001' },
-    sessionDelete: { serviceId: 'OM.Session.delete', transactionCode: 'OM-SES-0002' }
+    cacheDelete: { serviceId: 'OM.Cache.delete', transactionCode: 'OM-CCH-0002' }
   };
 
   let config = { deploymentMode: 'bootrun', bootrunHost: 'http://127.0.0.1', tomcatGatewayUrl: 'http://localhost:8080' };
@@ -237,32 +224,19 @@ window.OmAdmin = (function () {
   }
 
   async function requireAuth() {
-    if (location.pathname.endsWith('login.html')) {
-      return null;
-    }
-    try {
-      await loadConfig();
-      const { body } = await call('authSession', {}, 'INQUIRY');
-      if (body.loggedIn) {
-        return syncSessionFromBody(body);
-      }
-    } catch (e) {
-      /* 서버 세션 없음 */
-    }
-    clearSession();
-    location.href = uiPath('/om/admin/login.html');
-    return null;
+    const session = getSession() || GUEST_SESSION;
+    setSession(session);
+    return session;
   }
 
   async function logout() {
-    try {
-      await mutate('authLogout', {}, 'EXECUTE');
-    } catch (e) {
-      /* ignore */
-    } finally {
-      clearSession();
-      location.href = uiPath('/om/admin/login.html');
-    }
+    clearSession();
+    setSession(GUEST_SESSION);
+  }
+
+  async function login() {
+    setSession(GUEST_SESSION);
+    return GUEST_SESSION;
   }
 
   function buildStandardHeader(options) {
@@ -344,45 +318,6 @@ window.OmAdmin = (function () {
       targetUrl = data.targetUrl || targetUrl;
     }
     return config;
-  }
-
-  async function login(userId, password) {
-    const tx = TX.authLogin;
-    const request = {
-      header: { ...buildHeader(tx, 'EXECUTE'), userId: userId || 'GUEST', branchId: '' },
-      body: { userId, password }
-    };
-    const res = await relayFetch(`/api/relay/${BUSINESS_CODE}/online?${buildRelayQuery()}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify(request)
-    });
-    const relay = await parseRelayResponse(res);
-    let payload;
-    try {
-      payload = JSON.parse(relay.responseBody);
-    } catch (e) {
-      throw new Error('응답 JSON 파싱 실패');
-    }
-    if (relay.httpStatus >= 400) {
-      let msg = payload.result?.errorMessage || payload.result?.message || payload.error;
-      if (!msg && relay.httpStatus === 502) {
-        msg = isTomcatUiDeployment()
-          ? 'tcf-om(/om)에 연결할 수 없습니다. Tomcat 기동 상태를 확인하세요.'
-          : 'tcf-om(8097)에 연결할 수 없습니다. tcf-om을 먼저 실행하세요.';
-      }
-      throw new Error(msg || `HTTP ${relay.httpStatus}`);
-    }
-    if (payload.result && payload.result.resultCode && payload.result.resultCode !== 'S0000') {
-      throw new Error(payload.result.errorMessage || payload.result.resultMessage || '로그인에 실패했습니다.');
-    }
-    const body = payload.body || {};
-    if (!body.loggedIn) {
-      throw new Error('로그인에 실패했습니다.');
-    }
-    syncSessionFromBody(body);
-    return body;
   }
 
   async function relayMessage(businessCode, request) {
@@ -522,7 +457,6 @@ window.OmAdmin = (function () {
             <h2>${title}</h2>
             <div class="om-topbar-meta">
               ${userLabel ? `<span class="om-user-badge">${userLabel}</span>` : ''}
-              <button type="button" class="btn-secondary om-logout-btn" id="omLogoutBtn">로그아웃</button>
               <span id="omTargetUrl" title="tcf-om URL">${targetUrl}</span>
             </div>
           </header>
@@ -531,10 +465,6 @@ window.OmAdmin = (function () {
           </div>
         </main>
       </div>`;
-    const logoutBtn = document.getElementById('omLogoutBtn');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', () => logout());
-    }
     return document.getElementById('omContent');
   }
 

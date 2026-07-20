@@ -56,20 +56,13 @@ public class OmDashboardService {
         List<Map<String, Object>> apStatus = dao.selectApStatus();
         List<Map<String, Object>> dbStatus = dao.selectDbStatus();
         List<Map<String, Object>> deployStatus = dao.selectDeployStatus();
-        List<Map<String, Object>> sessionStatus = dao.selectSessionStatus();
-        String batchLastCollectedAt = resolveLatestCollectedAt(apStatus, dbStatus, sessionStatus, deployStatus);
+        String batchLastCollectedAt = resolveLatestCollectedAt(apStatus, dbStatus, deployStatus);
         result.put("apStatus", apStatus);
         result.put("dbStatus", dbStatus);
         result.put("deployStatus", deployStatus);
-        result.put("sessionStatus", sessionStatus);
         result.put("batchServiceUrl", batchServiceUrl);
         result.put("batchLastCollectedAt", batchLastCollectedAt);
         result.put("batchDataStale", isBatchDataStale(batchLastCollectedAt));
-        int activeFromBatch = dao.sumSessionStatusActiveCount();
-        result.put("activeSessionCount", sessionStatus.isEmpty()
-                ? dao.selectActiveSessionCount() : activeFromBatch);
-        result.put("expiredSessionCount", dao.sumSessionStatusExpiredCount());
-        result.put("uniqueUserCount", dao.sumSessionStatusUniqueUsers());
         String toTime = DateTimeUtil.nowKst();
         String fromTime = OffsetDateTime.now(KST).minusMinutes(RECENT_WINDOW_MINUTES).toString();
         result.put("recentWindowMinutes", RECENT_WINDOW_MINUTES);
@@ -90,12 +83,10 @@ public class OmDashboardService {
 
     private String resolveLatestCollectedAt(List<Map<String, Object>> apStatus,
                                           List<Map<String, Object>> dbStatus,
-                                          List<Map<String, Object>> sessionStatus,
                                           List<Map<String, Object>> deployStatus) {
         OffsetDateTime latest = null;
         latest = maxCheckedAt(latest, apStatus, "checkedAt");
         latest = maxCheckedAt(latest, dbStatus, "checkedAt");
-        latest = maxCheckedAt(latest, sessionStatus, "checkedAt");
         latest = maxCheckedAt(latest, deployStatus, "deployedAt");
         return latest == null ? null : latest.toString();
     }
@@ -134,5 +125,3 @@ public class OmDashboardService {
         }
     }
 }
-
-

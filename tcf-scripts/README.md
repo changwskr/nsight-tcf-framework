@@ -70,6 +70,21 @@ tcf-scripts/deploy.sh sv cc om
 
 > 전체 Tomcat 배포·검증은 `ztomcat/deploy-wars.bat`, `ztomcat/verify-deploy.ps1` 사용을 권장합니다.
 
+## offlinebuild — 무인터넷 빌드·이관
+
+상세: [docs/manual/offline-build.md](../docs/manual/offline-build.md)
+
+```bat
+tcf-scripts\offlinebuild\prepare-offline-bundle.bat   rem 인터넷 PC 1회
+tcf-scripts\offlinebuild\build-offline-run.bat        rem 사내 빌드
+```
+
+| 스크립트 | 설명 |
+|----------|------|
+| `prepare-offline-bundle.*` | offline-repo + Gradle zip 번들 준비 |
+| `build-offline.*` / `build-offline-run.bat` | `--offline` 빌드 |
+| `gen-business-profiles.ps1` / `.py` | 업무 WAR application-*.yml 일괄 생성 |
+
 ## 포트 참고 (bootRun)
 
 | 모듈 | 포트 |

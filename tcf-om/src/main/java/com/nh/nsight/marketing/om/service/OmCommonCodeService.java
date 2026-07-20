@@ -107,9 +107,6 @@ public class OmCommonCodeService {
         Map<String, Object> row = toRow(body, now, now);
         dao.insertCommonCode(row);
         commonCodeCacheService.evictCodeGroup(String.valueOf(row.get("codeGroup")));
-        recorder.recordAuthHistory(context, "COMMON_CODE",
-                row.get("codeGroup") + ":" + row.get("code"),
-                null, String.valueOf(row), OmBodySupport.stringValue(body, "changeReason"));
 
         return savedResult("공통코드 등록", row, "REGISTER");
     }
@@ -131,9 +128,6 @@ public class OmCommonCodeService {
         Map<String, Object> row = toRow(body, String.valueOf(before.get("createdAt")), now);
         dao.updateCommonCode(row);
         commonCodeCacheService.evictCodeGroup(String.valueOf(row.get("codeGroup")));
-        recorder.recordAuthHistory(context, "COMMON_CODE",
-                row.get("codeGroup") + ":" + row.get("code"),
-                String.valueOf(before), String.valueOf(row), OmBodySupport.stringValue(body, "changeReason"));
 
         return savedResult("공통코드 수정", row, "UPDATE");
     }
@@ -158,9 +152,6 @@ public class OmCommonCodeService {
         }
 
         commonCodeCacheService.evictCodeGroup(String.valueOf(key.get("codeGroup")));
-        recorder.recordAuthHistory(context, "COMMON_CODE",
-                row.get("codeGroup") + ":" + row.get("code"),
-                String.valueOf(before), "USE_YN=N", OmBodySupport.stringValue(body, "changeReason"));
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("businessCode", "OM");

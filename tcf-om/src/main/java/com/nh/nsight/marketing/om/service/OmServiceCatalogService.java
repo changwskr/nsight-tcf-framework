@@ -3,7 +3,6 @@ package com.nh.nsight.marketing.om.service;
 import com.nh.nsight.marketing.om.dao.OmOperationDao;
 import com.nh.nsight.marketing.om.rule.OmOperationRule;
 import com.nh.nsight.marketing.om.support.OmBodySupport;
-import com.nh.nsight.marketing.om.support.OmChangeRecorder;
 import com.nh.nsight.tcf.core.context.TransactionContext;
 import com.nh.nsight.tcf.core.error.BusinessException;
 import java.util.HashMap;
@@ -18,12 +17,10 @@ import org.springframework.util.StringUtils;
 public class OmServiceCatalogService {
     private final OmOperationRule rule;
     private final OmOperationDao dao;
-    private final OmChangeRecorder recorder;
 
-    public OmServiceCatalogService(OmOperationRule rule, OmOperationDao dao, OmChangeRecorder recorder) {
+    public OmServiceCatalogService(OmOperationRule rule, OmOperationDao dao) {
         this.rule = rule;
         this.dao = dao;
-        this.recorder = recorder;
     }
 
     public Map<String, Object> inquiry(Map<String, Object> body, TransactionContext context) {
@@ -84,8 +81,6 @@ public class OmServiceCatalogService {
 
         Map<String, Object> row = toRow(body, catalogId);
         dao.insertServiceCatalog(row);
-        recorder.recordAuthHistory(context, "SERVICE_CATALOG", catalogId,
-                null, String.valueOf(row), OmBodySupport.stringValue(body, "changeReason"));
 
         return savedResult("ServiceId 등록", row, "REGISTER");
     }
@@ -113,8 +108,6 @@ public class OmServiceCatalogService {
 
         Map<String, Object> row = toRow(body, OmBodySupport.stringValue(body, "catalogId"));
         dao.updateServiceCatalog(row);
-        recorder.recordAuthHistory(context, "SERVICE_CATALOG", String.valueOf(key.get("catalogId")),
-                String.valueOf(before), String.valueOf(row), OmBodySupport.stringValue(body, "changeReason"));
 
         return savedResult("ServiceId 수정", row, "UPDATE");
     }
@@ -134,9 +127,6 @@ public class OmServiceCatalogService {
         if (updated == 0) {
             throw new BusinessException("E-OM-BIZ-0002", "삭제할 서비스 카탈로그를 찾을 수 없습니다.");
         }
-
-        recorder.recordAuthHistory(context, "SERVICE_CATALOG", String.valueOf(key.get("catalogId")),
-                String.valueOf(before), "USE_YN=N", OmBodySupport.stringValue(body, "changeReason"));
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("businessCode", "OM");

@@ -5,15 +5,6 @@ server:
       charset: UTF-8
       enabled: true
       force: true
-    session:
-      timeout: 60m
-      tracking-modes: cookie
-      cookie:
-        name: JSESSIONID
-        path: /
-        http-only: true
-        secure: false
-        same-site: Lax
 
 spring:
   profiles:
@@ -71,14 +62,9 @@ nsight:
     cache:
       enabled: true
       config-location: classpath:ehcache.xml
-    session-validation-enabled: false
-    authorization-validation-enabled: false
     idempotency-enabled: false
     audit-enabled: true
     transaction-log-enabled: true
   timeout:
     online-transaction-seconds: 5
     db-query-seconds: 3
-  om:
-    session-cleanup:
-      fixed-rate-ms: 10000

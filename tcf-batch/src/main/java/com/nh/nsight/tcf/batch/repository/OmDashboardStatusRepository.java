@@ -3,7 +3,6 @@ package com.nh.nsight.tcf.batch.repository;
 import com.nh.nsight.tcf.batch.model.ApStatusSnapshot;
 import com.nh.nsight.tcf.batch.model.DbStatusSnapshot;
 import com.nh.nsight.tcf.batch.model.DeployStatusSnapshot;
-import com.nh.nsight.tcf.batch.model.SessionStatusSnapshot;
 import java.util.UUID;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -51,27 +50,6 @@ public class OmDashboardStatusRepository {
 
     public void deleteDb(String dbId) {
         jdbcTemplate.update("DELETE FROM OM_DB_STATUS WHERE DB_ID = ?", dbId);
-    }
-
-    public void upsertSession(SessionStatusSnapshot snapshot) {
-        jdbcTemplate.update("""
-                MERGE INTO OM_SESSION_STATUS (SCOPE_ID, SCOPE_NAME, ACTIVE_COUNT, EXPIRED_COUNT,
-                                              TOTAL_COUNT, UNIQUE_USER_COUNT, HEALTH_STATUS, CHECKED_AT)
-                KEY (SCOPE_ID)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                snapshot.scopeId(),
-                snapshot.scopeName(),
-                snapshot.activeCount(),
-                snapshot.expiredCount(),
-                snapshot.totalCount(),
-                snapshot.uniqueUserCount(),
-                snapshot.healthStatus(),
-                snapshot.checkedAt());
-    }
-
-    public void deleteSession(String scopeId) {
-        jdbcTemplate.update("DELETE FROM OM_SESSION_STATUS WHERE SCOPE_ID = ?", scopeId);
     }
 
     public void upsertDeploy(DeployStatusSnapshot snapshot) {

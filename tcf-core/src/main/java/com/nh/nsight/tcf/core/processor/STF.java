@@ -6,8 +6,6 @@ import com.nh.nsight.tcf.core.idempotency.IdempotencyChecker;
 import com.nh.nsight.tcf.core.logging.TransactionLogService;
 import com.nh.nsight.tcf.core.message.StandardHeader;
 import com.nh.nsight.tcf.core.message.StandardRequest;
-import com.nh.nsight.tcf.core.security.AuthorizationValidator;
-import com.nh.nsight.tcf.core.security.SessionValidator;
 import com.nh.nsight.tcf.core.validation.StandardHeaderValidator;
 import com.nh.nsight.tcf.util.GuidGenerator;
 import java.util.Map;
@@ -18,19 +16,13 @@ import org.springframework.util.StringUtils;
 @Component
 public class STF {
     private final StandardHeaderValidator headerValidator;
-    private final SessionValidator sessionValidator;
-    private final AuthorizationValidator authorizationValidator;
     private final IdempotencyChecker idempotencyChecker;
     private final TransactionLogService transactionLogService;
 
     public STF(StandardHeaderValidator headerValidator,
-               SessionValidator sessionValidator,
-               AuthorizationValidator authorizationValidator,
                IdempotencyChecker idempotencyChecker,
                TransactionLogService transactionLogService) {
         this.headerValidator = headerValidator;
-        this.sessionValidator = sessionValidator;
-        this.authorizationValidator = authorizationValidator;
         this.idempotencyChecker = idempotencyChecker;
         this.transactionLogService = transactionLogService;
     }
@@ -50,10 +42,6 @@ public class STF {
         TransactionContext context = new TransactionContext(header);
         TransactionContextHolder.set(context);
         putMdc(header);
-        System.out.println(" ======================================================================[STF.preProcess] sessionValidator.validate");
-        sessionValidator.validate(header);
-        System.out.println(" ======================================================================[STF.preProcess] authorizationValidator.validate");
-        authorizationValidator.validate(header);
         System.out.println(" ======================================================================[STF.preProcess] idempotencyChecker.checkAndMarkProcessing");
         idempotencyChecker.checkAndMarkProcessing(header);
         System.out.println(" ======================================================================[STF.preProcess] transactionLogService.start");

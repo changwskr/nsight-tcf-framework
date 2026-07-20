@@ -59,7 +59,7 @@ flowchart TB
     end
     subgraph cicd [설정 동기화]
         ST[tcf-cicd/scripts/sync-to-framework]
-        PF[scripts/gen-business-profiles]
+        PF[tcf-scripts/offlinebuild/gen-business-profiles]
     end
     RL --> GR
     TB --> GR

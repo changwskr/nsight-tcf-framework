@@ -82,7 +82,7 @@ spring:
 | `tcf-ui` | ✅ | ✅ | ✅ | ✅ |
 | `*-service` ×16 + `om-service` | ✅ | ✅ | ✅ | ✅ |
 
-업무 WAR 일괄 생성: `scripts/gen-business-profiles.ps1`
+업무 WAR 일괄 생성: `tcf-scripts/offlinebuild/gen-business-profiles.ps1`
 
 **환경 설정 SoT:** [`tcf-cicd/`](../../tcf-cicd/README.md) — `local`/`dev`/`prod` yml·setenv·Apache. 빌드 전 `tcf-cicd/scripts/sync-to-framework.ps1 -Profile dev|prod`.
 

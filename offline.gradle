@@ -1,0 +1,93 @@
+// =============================================================================
+// 오프라인 배포: 의존성/플러그인을 offline-repo/ (Maven layout) 에 수집
+// 사용: gradle populateOfflineRepo
+//       또는 tcf-scripts/offlinebuild/prepare-offline-bundle.ps1|.sh
+// =============================================================================
+
+def offlineRepoDir = layout.projectDirectory.dir('offline-repo')
+
+tasks.register('resolveAllDependencies') {
+    group = 'offline'
+    description = '모든 서브프로젝트의 resolvable configuration 을 해석해 캐시를 채운다.'
+    doLast {
+        def resolved = 0
+        def failed = 0
+        rootProject.allprojects.each { proj ->
+            proj.configurations.matching { it.canBeResolved }.each { cfg ->
+                try {
+                    cfg.resolve()
+                    resolved++
+                } catch (Exception ex) {
+                    failed++
+                    logger.info("Skip resolve {}:{} — {}", proj.name, cfg.name, ex.message)
+                }
+            }
+        }
+        logger.lifecycle("Resolved configurations: ok={}, skipped={}", resolved, failed)
+    }
+}
+
+tasks.register('populateOfflineRepo') {
+    group = 'offline'
+    description = 'Gradle 캐시의 jar/pom/module 을 offline-repo/ Maven 레이아웃으로 복사한다.'
+    dependsOn 'resolveAllDependencies'
+    doLast {
+        def repoDir = offlineRepoDir.asFile
+        def cacheRoot = new File(gradle.gradleUserHomeDir, 'caches/modules-2/files-2.1')
+        if (!cacheRoot.exists()) {
+            throw new GradleException("Gradle 모듈 캐시가 없습니다: ${cacheRoot}. 먼저 온라인에서 build 를 한 번 실행하세요.")
+        }
+
+        repoDir.mkdirs()
+        int copied = 0
+        cacheRoot.eachDir { groupDir ->
+            def group = groupDir.name
+            def groupPath = group.replace('.', '/')
+            groupDir.eachDir { artifactDir ->
+                def artifact = artifactDir.name
+                artifactDir.eachDir { versionDir ->
+                    def version = versionDir.name
+                    def destDir = new File(repoDir, "${groupPath}/${artifact}/${version}")
+                    destDir.mkdirs()
+                    versionDir.eachDir { hashDir ->
+                        hashDir.eachFile { f ->
+                            if (f.isFile()) {
+                                def dest = new File(destDir, f.name)
+                                if (!dest.exists() || dest.length() != f.length()) {
+                                    ant.copy(file: f, tofile: dest, overwrite: true)
+                                    copied++
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        logger.lifecycle("offline-repo populated: {} file(s) → {}", copied, repoDir.absolutePath)
+
+        // 모드 안내 파일
+        def marker = new File(repoDir, 'README.txt')
+        marker.text = """NSIGHT TCF offline Maven repository
+Generated: ${new Date()}
+Usage: set nsight.dependency.mode=offline in gradle.properties
+Then: gradle build -x test   (no internet required)
+"""
+    }
+}
+
+tasks.register('verifyOfflineRepo') {
+    group = 'offline'
+    description = 'offline-repo 존재 여부와 대략적인 artifact 수를 확인한다.'
+    doLast {
+        def repoDir = offlineRepoDir.asFile
+        if (!repoDir.exists()) {
+            throw new GradleException("offline-repo/ 없음. populateOfflineRepo 를 먼저 실행하세요.")
+        }
+        def jars = fileTree(repoDir) { include '**/*.jar' }.files.size()
+        def poms = fileTree(repoDir) { include '**/*.pom' }.files.size()
+        logger.lifecycle("offline-repo OK — jar={}, pom={}, path={}", jars, poms, repoDir.absolutePath)
+        if (jars < 10) {
+            throw new GradleException("offline-repo 가 비어 있는 것 같습니다 (jar=${jars}). populateOfflineRepo 를 다시 실행하세요.")
+        }
+    }
+}

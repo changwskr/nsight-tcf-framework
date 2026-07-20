@@ -12,7 +12,7 @@
 
 ```text
 TCF.process(request)
-  ├─ STF.preProcess()        Header 검증, GUID/TraceId, 세션·권한, 멱등성, 거래 시작 로그
+  ├─ STF.preProcess()        Header 검증, GUID/TraceId, 멱등성, 거래 시작 로그
   ├─ TransactionDispatcher   serviceId → TransactionHandler
   └─ ETF.success/fail/error  표준 응답, 감사·메트릭
 ```
@@ -27,7 +27,6 @@ TCF.process(request)
 | `transaction` | `TransactionHandler` 인터페이스 |
 | `context` | `TransactionContext`, `TransactionContextHolder` |
 | `validation` | `StandardHeaderValidator` |
-| `security` | `SessionValidator`, `AuthorizationValidator` |
 | `idempotency` | `IdempotencyChecker` |
 | `logging` | `TransactionLogService`, `AuditLogService` |
 | `error` | `BusinessException`, `ErrorCode` |

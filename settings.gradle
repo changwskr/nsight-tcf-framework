@@ -1,14 +1,51 @@
 pluginManagement {
+    def offlineRepo = new File(rootDir, 'offline-repo')
+    def mode = settings.providers.gradleProperty('nsight.dependency.mode')
+            .orElse('hybrid').get()
+
     repositories {
-        gradlePluginPortal()
-        mavenCentral()
+        if (mode == 'offline' || mode == 'hybrid') {
+            if (offlineRepo.exists()) {
+                maven {
+                    name = 'nsightOfflineRepo'
+                    url = offlineRepo.toURI()
+                }
+            } else if (mode == 'offline') {
+                throw new GradleException(
+                        "nsight.dependency.mode=offline 인데 offline-repo/ 가 없습니다. " +
+                        "인터넷 가능한 PC에서 tcf-scripts/offlinebuild/prepare-offline-bundle 을 먼저 실행하세요.")
+            }
+        }
+        if (mode != 'offline') {
+            gradlePluginPortal()
+            mavenCentral()
+        }
     }
 }
 
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+
+    def offlineRepo = new File(rootDir, 'offline-repo')
+    def mode = settings.providers.gradleProperty('nsight.dependency.mode')
+            .orElse('hybrid').get()
+
     repositories {
-        mavenCentral()
+        if (mode == 'offline' || mode == 'hybrid') {
+            if (offlineRepo.exists()) {
+                maven {
+                    name = 'nsightOfflineRepo'
+                    url = offlineRepo.toURI()
+                }
+            } else if (mode == 'offline') {
+                throw new GradleException(
+                        "nsight.dependency.mode=offline 인데 offline-repo/ 가 없습니다. " +
+                        "인터넷 가능한 PC에서 tcf-scripts/offlinebuild/prepare-offline-bundle 을 먼저 실행하세요.")
+            }
+        }
+        if (mode != 'offline') {
+            mavenCentral()
+        }
     }
 }
 

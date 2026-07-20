@@ -5,15 +5,6 @@ server:
       charset: UTF-8
       enabled: true
       force: true
-    session:
-      timeout: 60m
-      tracking-modes: cookie
-      cookie:
-        name: JSESSIONID
-        path: /
-        http-only: true
-        secure: false
-        same-site: Lax
 
 spring:
   profiles:
@@ -31,8 +22,6 @@ spring:
       max-lifetime: 1800000
       keepalive-time: 300000
       auto-commit: false
-  session:
-    store-type: none
   transaction:
     default-timeout: 5
 
@@ -61,8 +50,6 @@ nsight:
   system-id: NSIGHT-MP
   domain: nh.marketing.com
   tcf:
-    session-validation-enabled: false
-    authorization-validation-enabled: false
     idempotency-enabled: true
     audit-enabled: true
     transaction-log-enabled: true

@@ -56,7 +56,6 @@ public class OmTransactionLogService {
         int deletedCount = dao.deleteAllTransactionLogs();
         String reason = OmBodySupport.stringValue(body, "deleteReason");
         recorder.recordAdminAudit(context, "TX_LOG_DELETE_ALL", "거래로그 전체 삭제", reason, "SUCCESS");
-        recorder.recordAuthHistory(context, "TX_LOG", "TCF_TX_LOG", "all", "deleted:" + deletedCount, reason);
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("businessCode", "OM");

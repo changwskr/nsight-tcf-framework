@@ -30,10 +30,6 @@ nsight:
     db-status:
       job-id: BAT-BATCH-002
       cron: "30 */5 * * * *"
-    session-status:
-      job-id: BAT-BATCH-003
-      cron: "45 */5 * * * *"
-      warn-active-threshold: 200
     deploy-status:
       job-id: BAT-BATCH-004
       cron: "55 */5 * * * *"

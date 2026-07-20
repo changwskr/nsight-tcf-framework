@@ -58,18 +58,6 @@ nsight:
           source-type: actuator
           base-url: http://127.0.0.1:8081
           enabled: true
-    session-status:
-      targets:
-        - scope-id: OM-PORTAL
-          scope-name: OM 운영 포털 (Spring Session)
-          source-type: spring-session
-          enabled: true
-        - scope-id: SV-AP
-          scope-name: sv-service Tomcat Session
-          source-type: actuator
-          base-url: http://127.0.0.1:8086
-          metric-name: tomcat.sessions.active.current
-          enabled: true
     deploy-status:
       targets:
         - business-code: OM
