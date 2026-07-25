@@ -1,4 +1,4 @@
-# tcf-ai-methology — NSIGHT Model Studio
+﻿# tcf-ai-methodology — NSIGHT Model Studio
 
 Python MVP(`ref/nsight_model_studio`)를 **Spring Boot 3.3 / JDK 21** 모듈로 이식한  
 NSIGHT-TCF 업무모델 정의·검증·코드생성 도구입니다.
@@ -49,14 +49,14 @@ run.bat
 또는 저장소 루트:
 
 ```bash
-./gradlew :tcf-ai-methology:bootRun
+./gradlew :tcf-ai-methodology:bootRun
 ```
 
 - UI: http://127.0.0.1:8787  
 - H2 Console: http://127.0.0.1:8787/h2-console  
 
 > IDE에서 `AiMethodologyApplication`을 직접 Run 하면 JPA classpath가 빠질 수 있습니다.  
-> **Gradle `bootRun`** 또는 Run and Debug의 `tcf-ai-methology (Gradle project)`를 사용하세요.
+> **Gradle `bootRun`** 또는 Run and Debug의 `tcf-ai-methodology (Gradle project)`를 사용하세요.
 
 ## UI 사용
 
@@ -74,7 +74,7 @@ run.bat
 | DB 파일 | `%USERPROFILE%/nsight-model-studio/models-db` |
 | JDBC URL | `NSIGHT_MODEL_STUDIO_DB_URL` (기본 H2 file) |
 | 시드 JSON | `src/main/resources/data/models-seed.json` |
-| 시드 재생성 | `node tcf-ai-methology/generate-domain-models.js` |
+| 시드 재생성 | `node tcf-ai-methodology/generate-domain-models.js` |
 | DB 재적재 | `POST /api/models/reseed` |
 | 인벤토리 | [docs/DOMAIN_MODEL_INVENTORY.md](docs/DOMAIN_MODEL_INVENTORY.md) |
 
@@ -99,13 +99,13 @@ run.bat
 ## 테스트
 
 ```bash
-./gradlew :tcf-ai-methology:test
+./gradlew :tcf-ai-methodology:test
 ```
 
 ## 모듈 구조
 
 ```text
-tcf-ai-methology/
+tcf-ai-methodology/
 ├── src/main/java/.../aimethodology/
 │   ├── AiMethodologyApplication.java
 │   ├── config / store / validation / generator / web / model

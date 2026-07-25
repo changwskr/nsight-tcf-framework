@@ -1,5 +1,5 @@
 // NSIGHT AI Methodology — Model Studio (Spring Boot)
-// bootRun: gradle :tcf-ai-methology:bootRun  (포트 8787)
+// bootRun: gradle :tcf-ai-methodology:bootRun  (포트 8787)
 plugins {
     id 'org.springframework.boot'
     id 'war'
@@ -32,13 +32,13 @@ tasks.register('writeIdeClasspath') {
 }
 
 bootJar {
-    archiveFileName = 'tcf-ai-methology.jar'
+    archiveFileName = 'tcf-ai-methodology.jar'
 }
 
 bootWar {
-    archiveFileName = 'tcf-ai-methology.war'
+    archiveFileName = 'tcf-ai-methodology.war'
 }
 
 war {
-    archiveFileName = 'tcf-ai-methology.war'
+    archiveFileName = 'tcf-ai-methodology.war'
 }

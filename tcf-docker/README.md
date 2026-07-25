@@ -1,4 +1,4 @@
-# tcf-docker
+﻿# tcf-docker
 
 NSIGHT TCF Framework Docker 자산 루트.  
 모듈별 Docker 파일(`Dockerfile`, compose, 스크립트)을 이 아래에 둡니다.
@@ -22,7 +22,7 @@ tcf-docker/
   tcf-gateway/
   tcf-oc/
   tcf-help/
-  tcf-ai-methology/
+  tcf-ai-methodology/
   ic-service/
   pc-service/
   ms-service/

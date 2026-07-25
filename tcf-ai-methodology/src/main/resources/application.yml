@@ -4,7 +4,7 @@ server:
 
 spring:
   application:
-    name: tcf-ai-methology
+    name: tcf-ai-methodology
   jackson:
     default-property-inclusion: non_null
     serialization:

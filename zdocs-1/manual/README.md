@@ -1,4 +1,4 @@
-# NSIGHT TCF — 운영·개발 매뉴얼
+﻿# NSIGHT TCF — 운영·개발 매뉴얼
 
 | 항목 | 내용 |
 |------|------|
@@ -35,7 +35,7 @@
 | 구분 | 모듈 |
 |------|------|
 | **프레임워크 lib** | `tcf-util`, `tcf-core`, `tcf-web`, `tcf-eai`, `tcf-cache` |
-| **플랫폼 WAR/JAR** | `tcf-om`, `tcf-oc`, `tcf-batch`, `tcf-ui`, `tcf-uj`, `tcf-gateway`, `tcf-jwt`, `tcf-help`, `tcf-ai-methology` |
+| **플랫폼 WAR/JAR** | `tcf-om`, `tcf-oc`, `tcf-batch`, `tcf-ui`, `tcf-uj`, `tcf-gateway`, `tcf-jwt`, `tcf-help`, `tcf-ai-methodology` |
 | **업무 WAR** | `ic-service`, `pc-service`, `ms-service`, `sv-service`, `pd-service`, `eb-service`, `ep-service`, `ss-service`, `mg-service` |
 | **레거시 (CI/CD 제외)** | `om-service` → **`tcf-om` 사용** |
 
