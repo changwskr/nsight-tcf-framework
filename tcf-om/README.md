@@ -67,7 +67,7 @@ tcf-scripts/run-local.bat tcf-om
 ztomcat/deploy-wars.bat om
 ```
 
-ztomcat WAR: `spring.profiles.active=dev` — `application-dev.yml` ([25-env-profile.md](../docs/architecture/25-env-profile.md))
+ztomcat WAR: `spring.profiles.active=dev` — `application-dev.yml` ([25-env-profile.md](../zdocs-1/architecture/25-env-profile.md))
 
 ## API
 
@@ -99,7 +99,7 @@ curl -X POST http://localhost:8080/om/online \
 
 런타임·장애진단: `/om/admin/runtime-diagnostics.html` (사이드바 **런타임·장애진단** 메뉴)
 
-관련 설계안: [docs/설계자료/README.md](../docs/설계자료/README.md) · [docs/runtime-diagnostics-design.md](docs/runtime-diagnostics-design.md)
+관련 설계안: [docs/설계자료/README.md](../zdocs-1/설계자료/README.md) · [docs/runtime-diagnostics-design.md](docs/runtime-diagnostics-design.md)
 
 ## 패키지 구조
 

@@ -99,4 +99,4 @@ com.nh.nsight.auth.jwt
 |------|--------|
 | tcf-gateway (JWT 검증) | [tcf-gateway/README.md](../tcf-gateway/README.md) |
 | tcf-om (SSO → ssoIssue) | [tcf-om/README.md](../tcf-om/README.md) |
-| SSO·토큰 처리 설계 | [zdoc/SSO-TOKEN처리.md](../zdoc/SSO-TOKEN처리.md) |
+| SSO·토큰 처리 설계 | [zdoc/SSO-TOKEN처리.md](../zdocs-2/SSO-TOKEN처리.md) |

@@ -50,7 +50,7 @@ XxxProxyController
 
 ## 세션 관문 (SESSIONDB)
 
-Gateway는 **17개 업무 WAR·OM·다중 WAS·장애 전환** 환경에서 세션 기준을 일관되게 유지하기 위해 세션을 **소유하지 않고** SESSIONDB만 참조합니다.
+Gateway는 **다수 업무 WAR·OM·다중 WAS·장애 전환** 환경에서 세션 기준을 일관되게 유지하기 위해 세션을 **소유하지 않고** SESSIONDB만 참조합니다. 현재 ztomcat의 전체 배포 대상은 16 WAR입니다.
 
 ```text
 클라이언트 ──Cookie(JSESSIONID/NSIGHTSID)──► Gateway ──동일 Cookie 전달──► 업무 WAS
@@ -146,6 +146,8 @@ TARGET_URL = TARGET_BASE_URL + CONTEXT_PATH + ONLINE_PATH
 | PRD | `prod` | `http://msa-b-service:9090/sv/online` |
 
 ### LOCAL bootRun 포트 (시드 기준)
+
+> 아래 목록은 Gateway 라우팅 시드의 전체 카탈로그입니다. `CC`, `BC`처럼 현재 저장소에 대응 서비스 모듈이 없는 레거시·확장용 경로도 포함합니다.
 
 | 업무 | 포트 | Target URL |
 |------|------|------------|
@@ -355,4 +357,4 @@ data/gateway-route.mv.db   (프로젝트 루트)
 |------|--------|
 | tcf-uj (Relay UI) | [tcf-uj/README.md](../tcf-uj/README.md) |
 | tcf-jwt (JWT 발급·JWKS) | [tcf-jwt/README.md](../tcf-jwt/README.md) |
-| TCF 처리 순서 | [docs/TCF_FRAMEWORK_GUIDE.md](../docs/TCF_FRAMEWORK_GUIDE.md) |
+| TCF 처리 순서 | [docs/TCF_FRAMEWORK_GUIDE.md](../zdocs-1/TCF_FRAMEWORK_GUIDE.md) |

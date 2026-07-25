@@ -2,8 +2,8 @@
 
 로컬 개발용 Gradle 래퍼 스크립트 모음입니다. **프로젝트 루트**에서 실행합니다.
 
-> 전체 스크립트 맵: [docs/architecture/38-script.md](../docs/architecture/38-script.md)  
-> Gradle·산출물·lib 경로: [docs/manual/gradle.md](../docs/manual/gradle.md), [docs/manual/lib-module.md](../docs/manual/lib-module.md)
+> 전체 스크립트 맵: [docs/architecture/38-script.md](../zdocs-1/architecture/38-script.md)
+> Gradle·산출물·lib 경로: [docs/manual/gradle.md](../zdocs-1/manual/gradle.md), [docs/manual/lib-module.md](../zdocs-1/manual/lib-module.md)
 
 ## 공통 — Gradle 경로
 
@@ -45,9 +45,9 @@ tcf-scripts/build.sh <target>
 
 | 인자 | 설명 |
 |------|------|
-| `all` | `clean` + `buildBusinessWars` (10 WAR) |
-| `wars` | `buildBusinessWars` (9 *-service + tcf-om) |
-| `ztomcat` | `buildZtomcatWars` (12 WAR — batch + ui 포함) |
+| `all` | `clean` + `buildBusinessWars` (11 WAR) |
+| `wars` | `buildBusinessWars` (9 *-service + tcf-om + tcf-oc) |
+| `ztomcat` | `buildZtomcatWars` (16 WAR — batch + ui + uj + jwt + gateway 포함) |
 | `tcf` | `tcf-util`, `tcf-core`, `tcf-web` |
 | `ui` | `tcf-ui` bootJar |
 | `batch` | `tcf-batch` bootWar |
@@ -78,7 +78,7 @@ tcf-scripts\deploy.bat batch ui
 
 | 인자 | 설명 |
 |------|------|
-| (없음) / `all` | 업무 10 WAR (`buildBusinessWars`) |
+| (없음) / `all` | 업무 11 WAR (`buildBusinessWars`) |
 | `sv`, `ic`, … | 선택 업무 — `tcf-*` lib 선행 빌드 + `bootWar` |
 | `ud`, `tcf-om`, `om` | `tcf-om.war` → `om.war` |
 | `batch`, `tcf-batch` | `tcf-batch.war` → `ztomcat/wars/zz-batch.war` + `batch.xml` |
@@ -86,7 +86,7 @@ tcf-scripts\deploy.bat batch ui
 
 환경 변수: `TOMCAT_WEBAPPS`, `GRADLE_HOME` / `GRADLE_HOME_OVERRIDE`
 
-> **12 WAR 전체** (sync·검증 포함): `ztomcat/deploy-wars.bat all`, `ztomcat/verify-deploy.ps1`
+> **16 WAR 전체 배포**: `ztomcat/deploy-wars.bat all`. 현재 `ztomcat/verify-deploy.ps1`은 이 중 13개 context를 검증합니다.
 
 ## 포트 참고 (bootRun)
 
@@ -113,8 +113,8 @@ Tomcat(ztomcat) 모드: 모든 context **8080** — `/ic` … `/mg`, `/om`, `/ba
 ## Gradle 직접 호출
 
 ```bash
-gradle buildBusinessWars     # 10 WAR
-gradle buildZtomcatWars      # 12 WAR
+gradle buildBusinessWars     # 11 WAR
+gradle buildZtomcatWars      # 16 WAR
 gradle :tcf-om:bootRun
 gradle :tcf-batch:bootRun
 gradle :tcf-ui:bootRun

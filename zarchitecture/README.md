@@ -2,7 +2,7 @@
 
 NSIGHT TCF Framework의 **아키텍처 설계**를 영역(도메인)별로 정리한 문서 모음입니다.
 
-> **근거 자료:** [`zguide/`](../zguide/) 프로젝트별 개발가이드 · [`zman/`](../zman/) 설계서 설명 · [`zdoc/`](../zdoc/) 개발 규칙 · [`docs/`](../docs/) 아키텍처 정의  
+> **근거 자료:** [`zguide/`](../zguide/) 프로젝트별 개발가이드 · [`zman/`](../zman/) 설계서 설명 · [`zdoc/`](../zdocs-2/) 개발 규칙 · [`docs/`](../zdocs-1/) 아키텍처 정의
 > **원본 설계서:** [`zman/NSIGHT Framework 설계서.docx`](../zman/NSIGHT%20Framework%20설계서.docx)
 
 ---

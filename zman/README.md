@@ -86,4 +86,4 @@
 
 ## 관련
 
-- [`docs/`](../docs/) · [`zdoc/`](../zdoc/) · [루트 README](../README.md)
+- [`docs/`](../zdocs-1/) · [`zdoc/`](../zdocs-2/) · [루트 README](../README.md)

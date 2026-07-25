@@ -1,5 +1,7 @@
 # NSIGHT 17개 WAR + Apache + Tomcat DeltaManager + Spring Boot 환경설정 파일
 
+> **참조 구성:** 17 WAR 목표 아키텍처를 설명하는 설정 자료이며, 현재 저장소의 ztomcat 16 WAR 배포 목록과는 별도입니다.
+
 ## 1. 구성 목적
 
 `nh.marketing.com` 단일 도메인에서 Apache Reverse Proxy가 17개 WAR context를 동일 Tomcat Cluster로 라우팅하고, Tomcat DeltaManager로 센터 내부 세션을 복제하는 기준 환경설정 파일입니다.

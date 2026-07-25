@@ -103,7 +103,7 @@ bootRun·Tomcat 공통으로 프로젝트 `data/nsight-txlog/` H2 파일을 공�
 - `application-dev.yml` — ztomcat·개발 서버 (`dev` 프로파일)
 - `application-prod.yml` — 운영 (`prod` 프로파일, `NSIGHT_GATEWAY_BASE_URL`)
 
-상세: [docs/architecture/25-env-profile.md](../docs/architecture/25-env-profile.md)
+상세: [docs/architecture/25-env-profile.md](../zdocs-1/architecture/25-env-profile.md)
 
 ## 의존 관계
 

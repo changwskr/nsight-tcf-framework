@@ -34,8 +34,8 @@
 
 | 구분 | 모듈 |
 |------|------|
-| **프레임워크 lib** | `tcf-util`, `tcf-core`, `tcf-web`, `tcf-cache` |
-| **플랫폼 WAR/JAR** | `tcf-om`, `tcf-batch`, `tcf-ui`, `tcf-uj`, `tcf-gateway`, `tcf-jwt` |
+| **프레임워크 lib** | `tcf-util`, `tcf-core`, `tcf-web`, `tcf-eai`, `tcf-cache` |
+| **플랫폼 WAR/JAR** | `tcf-om`, `tcf-oc`, `tcf-batch`, `tcf-ui`, `tcf-uj`, `tcf-gateway`, `tcf-jwt`, `tcf-help`, `tcf-ai-methology` |
 | **업무 WAR** | `ic-service`, `pc-service`, `ms-service`, `sv-service`, `pd-service`, `eb-service`, `ep-service`, `ss-service`, `mg-service` |
 | **레거시 (CI/CD 제외)** | `om-service` → **`tcf-om` 사용** |
 
@@ -53,8 +53,7 @@
 | 8102 | `tcf-uj` |
 | 8110 | `tcf-jwt` |
 
-Tomcat(ztomcat): `deploy-wars.sh` 기준 **13 WAR** on **8080** — `/ic` … `/mg`, `/om`, `/batch`, `/ui`, `/jwt`  
-bootRun 전용: `tcf-gateway`(:8100), `tcf-uj`(:8102)
+Tomcat(ztomcat): `deploy-wars.sh` 기준 **16 WAR** on **8080** — `/ic` … `/mg`, `/oc`, `/om`, `/batch`, `/ui`, `/uj`, `/jwt`, `/gw`
 
 ---
 
@@ -72,7 +71,7 @@ com.nh.nsight.marketing.{code}
 └── support/
 ```
 
-모듈별 README: [README.md](../../README.md#업무-war-readme)
+모듈별 README: [README.md](../../README.md#업무-war-service)
 
 ---
 

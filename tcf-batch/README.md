@@ -31,10 +31,10 @@ OM 운영 대시보드에 표시되는 **AP/DB/세션/배포 상태**를 수집�
 
 - `application.yml` — 공통
 - `application-local.yml` — local bootRun 수집 대상
-- `application-dev.yml` — 19 context 전체 수집
+- `application-dev.yml` — AP 상태 수집 대상으로 등록된 13개 context
 - `application-prod.yml` — 운영 gateway URL
 
-ztomcat WAR 배포 시: `spring.profiles.active=dev` ([25-env-profile.md](../docs/architecture/25-env-profile.md))
+ztomcat WAR 배포 시: `spring.profiles.active=dev` ([25-env-profile.md](../zdocs-1/architecture/25-env-profile.md))
 
 ## 실행
 

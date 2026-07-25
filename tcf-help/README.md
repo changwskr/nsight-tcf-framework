@@ -28,10 +28,10 @@ tcf-help/
 | help-native | tcf-help/docs | 12 |
 | zguide | 모듈별 개발 가이드 | 22 |
 | zman | 설계·코드 대조 | 27 |
-| zdoc | 기능·운영 | 27 |
+| zdocs-2 | 기능·운영 개발 노트 | 자동 산정 |
 | znsight-man | 개발 표준 | 119 |
 | capacity | 용량·환경설정 | 90 |
-| architecture | docs, zarchitecture | 82 |
+| architecture | zdocs-1, zarchitecture | 자동 산정 |
 | ztcfbook* | TCF 교재 3계열 | 183 |
 | config | 설정 참고 | 46 |
 | module-readme | 모듈 README | 25 |

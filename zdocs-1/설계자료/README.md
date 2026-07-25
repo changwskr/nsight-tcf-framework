@@ -20,7 +20,7 @@
 | `tcf-uj` | gateway 경유 테스트 UI · JWT Admin (`/uj`) | [tcf-uj/README.md](../../tcf-uj/README.md) |
 | `tcf-gateway` | API Gateway · SESSIONDB 관문 (`/gw`) | [tcf-gateway/README.md](../../tcf-gateway/README.md) |
 | `tcf-jwt` | JWT 발급·갱신·폐기 (`/jwt`) | [tcf-jwt/README.md](../../tcf-jwt/README.md) |
-| `tcf-eai` | 서비스 간 HTTP/JSON 연동 Client | [tcf-eai/README.md](../../tcf-eai/README.md) |
+| `tcf-eai` | 서비스 간 HTTP/JSON 연동 Client | [tcf-eai/](../../tcf-eai/) |
 | `tcf-cicd` | local/dev/prod 설정 SoT | [tcf-cicd/README.md](../../tcf-cicd/README.md) |
 
 > **OM 배포:** `om-service`는 레거시 샘플 모듈입니다. CI/CD·ztomcat 배포는 **`tcf-om`** 을 사용합니다.

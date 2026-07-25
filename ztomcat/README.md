@@ -1,6 +1,6 @@
 # ztomcat — NSIGHT 로컬 Tomcat WAR 배포
 
-Spring Boot 3 **WAR** 12개를 **Apache Tomcat 10.1.34**에 올려 로컬에서 운영 환경과 동일한 context path로 테스트하기 위한 도구 모음입니다.
+Spring Boot 3 **WAR** 16개를 **Apache Tomcat 10.1.34**에 올려 로컬에서 운영 환경과 동일한 context path로 테스트하기 위한 도구 모음입니다.
 
 | 항목 | 값 |
 |------|-----|
@@ -85,7 +85,7 @@ ztomcat/
 ├── deploy-wars.*            # Gradle bootWar + webapps 복사
 ├── start.* / stop.*         # Tomcat 기동·중지
 ├── apply-config.*           # setenv 복사 + server.xml UTF-8
-├── verify-deploy.*          # 12 context health check
+├── verify-deploy.*          # 주요 13 context health check
 ├── deploy-restart.*         # stop → deploy all → start → verify
 ├── h2-txlog.ps1             # 공유 nsight_om H2 TCP 9092
 └── README.md
@@ -107,13 +107,13 @@ ztomcat/
 |----------|------|
 | `install-tomcat.bat` | Tomcat 10.1.34 Windows zip 다운로드·압축 해제 |
 | `deploy-wars.bat [코드…]` | WAR 빌드·배포 |
-| `deploy-wars.bat all` | 12개 전체 (인자 없음과 동일) |
+| `deploy-wars.bat all` | 16개 전체 (인자 없음과 동일) |
 | `deploy-wars.bat sv` | SV만 빌드·배포 |
 | `deploy-wars.bat sv cc om` | 복수 선택 배포 |
 | `start.bat` | Tomcat 기동 → 내부 `start.ps1` |
 | `stop.bat` | Tomcat 중지 → 내부 `stop.ps1` |
 | `apply-config.ps1` | UTF-8·setenv 적용 (`start` 시 자동 호출) |
-| `verify-deploy.ps1` | 12 context `/actuator/health` 검증 |
+| `verify-deploy.ps1` | 주요 13 context `/actuator/health` 검증(전체 배포 목록과 범위가 다름) |
 | `deploy-restart.ps1` | stop → deploy all → start → health 대기 → verify |
 
 > 프로젝트 경로에 괄호 `(23-08-15)`가 있어 `start.bat`/`stop.bat`은 **PowerShell 래퍼**(`start.ps1`/`stop.ps1`)를 사용합니다.
@@ -178,17 +178,17 @@ Gradle `bootWar`로 WAR를 빌드한 뒤 `webapps/`에 복사합니다.
 ### 사용법
 
 ```bash
-deploy-wars.sh              # 12개 전체
+deploy-wars.sh              # 16개 전체
 deploy-wars.sh all          # 동일
 deploy-wars.sh sv           # SV만
 deploy-wars.sh sv cc om     # 복수
 deploy-wars.sh help         # 도움말
 ```
 
-### 지원 코드 (12개)
+### 지원 코드 (16개)
 
 ```text
-ic pc ms sv pd eb ep ss mg om batch ui
+ic pc ms sv pd eb ep ss mg oc om batch ui uj jwt gw
 ```
 
 | 코드 | Gradle 모듈 | WAR (webapps) | Context |
@@ -202,15 +202,19 @@ ic pc ms sv pd eb ep ss mg om batch ui
 | ep | `ep-service` | `ep.war` | `/ep` |
 | ss | `ss-service` | `ss.war` | `/ss` |
 | mg | `mg-service` | `mg.war` | `/mg` |
+| oc | `tcf-oc` | `oc.war` | `/oc` |
 | om | `tcf-om` | `tcf-om.war` → `om.war` | `/om` |
 | batch | `tcf-batch` | `tcf-batch.war` → `zz-batch.war` | `/batch` |
 | ui | `tcf-ui` | `tcf-ui.war` → `ui.war` | `/ui` |
+| uj | `tcf-uj` | `tcf-uj.war` → `uj.war` | `/uj` |
+| jwt | `tcf-jwt` | `jwt.war` | `/jwt` |
+| gw | `tcf-gateway` | `gw.war` | `/gw` |
 
 ### 전체 vs 단건 배포
 
 | 모드 | Tomcat 재기동 | 소요 시간 | 비고 |
 |------|:-------------:|-----------|------|
-| `all` (12개) | **권장** (실행 중이면 restart) | 빌드 2~3분 + 기동·배포 3~5분 | `deploy-restart` 사용 |
+| `all` (16개) | **권장** (실행 중이면 restart) | 빌드 2~3분 + 기동·배포 3~5분 | `deploy-restart` 사용 |
 | 단건 (`sv` 등) | **불필요** | 빌드 ~30초 + autoDeploy ~15초 | WAR 교체 후 context 자동 재배포 |
 
 단건 배포 시 스크립트가 해당 `webapps/{code}/` exploded 디렉터리를 삭제한 뒤 WAR를 복사합니다.
@@ -219,7 +223,7 @@ ic pc ms sv pd eb ep ss mg om batch ui
 
 ## 7. 배포 검증 (verify-deploy)
 
-12개 context에 대해 `GET /{code}/actuator/health`를 호출합니다.
+현재 스크립트에 등록된 주요 13개 context에 대해 `GET /{code}/actuator/health`를 호출합니다. 전체 16개 WAR 배포 여부와 검증 범위는 동일하지 않습니다.
 
 ```powershell
 verify-deploy.ps1
@@ -318,12 +322,12 @@ http://localhost:8080/{code}/actuator/health
 ```text
 POST http://localhost:8080/sv/online
 POST http://localhost:8080/sv/SV/online
-POST http://localhost:8080/cc/online
+POST http://localhost:8080/eb/online
 ```
 
 - **Method:** POST only (`GET /online` → 404/405)
 - **Content-Type:** `application/json`
-- 샘플: [`docs/sample-requests/`](../docs/sample-requests/)
+- 샘플: [`docs/sample-requests/`](../zdocs-1/sample-requests/)
 
 ### tcf-ui 연동 (Tomcat 모드)
 
@@ -344,7 +348,7 @@ Relay 대상 업무 API: `http://localhost:8080/{code}/online` (게이트웨이)
 
 | 도구 / 모듈 | 포트 | 배포 | 역할 |
 |-------------|------|------|------|
-| **`ztomcat/`** | 8080 | Tomcat WAR **12개** | 업무 + tcf-om + tcf-batch + tcf-ui 통합 테스트 |
+| **`ztomcat/`** | 8080 | Tomcat WAR **16개** | 업무 + tcf-oc + tcf-om + batch/ui/uj/jwt/gateway 통합 테스트 |
 | [`tcf-scripts/`](../tcf-scripts/README.md) | — | Gradle 빌드·배포 단축 | `buildZtomcatWars`, `deploy.bat` → ztomcat webapps |
 | **`tcf-om`** | 8097 (bootRun) 또는 `/om` (Tomcat) | `bootWar` / `bootRun` | OM 운영 API·대시보드·세션·파일(UD) — **현행 모듈** |
 | **`om-service`** | 8097 | WAR (레거시) | 샘플 OM만 포함 — **deploy-wars 미사용**, `tcf-om` 사용 |
@@ -397,9 +401,9 @@ Tomcat 기동    →  ztomcat/start
 | 증상 | 원인 | 해결 |
 |------|------|------|
 | `/sv/online` 404, Spring 로그 없음 | Tomcat이 **JDK 18** 등으로 기동 | `start.ps1`/`start.sh`로 JDK 21 확인 |
-| health 타임아웃 (12개 중 일부) | 12 WAR 순차 autoDeploy 중 | `deploy-restart` 후 3~5분 대기 |
+| health 타임아웃 (검증 대상 일부) | 16 WAR 순차 autoDeploy 중 | `deploy-restart` 후 3~5분 대기 |
 | `GET /online` 404 | POST만 지원 | curl `-X POST` 또는 tcf-ui |
-| 8080 포트 충돌 | `cc-service` bootRun(8080) 등 | bootRun 중지 또는 Tomcat 포트 변경 |
+| 8080 포트 충돌 | 다른 로컬 서버가 8080 사용 | 해당 프로세스 중지 또는 Tomcat 포트 변경 |
 | 한글 깨짐 | Connector encoding | `start` 재실행 (`apply-config`), 로그 UTF-8로 열기 |
 | `gradle not found` | Gradle 미설치 | Gradle 8.x PATH 또는 `deploy-wars.bat`의 `GRADLE` 경로 수정 |
 | 대시보드 AP/DB 패널 비어 있음 | `tcf-batch` 미기동 또는 수집 전 | `/batch` health 확인, 수집 API 수동 실행 |
@@ -421,7 +425,7 @@ Spring Boot 기동 성공 시 `Started *Application` 로그가 context별로 출
 
 - [프로젝트 README](../README.md) — 전체 가이드·모듈·포트
 - [tcf-scripts/README.md](../tcf-scripts/README.md) — Gradle 빌드·Tomcat 배포
-- [docs/architecture/38-script.md](../docs/architecture/38-script.md) — 전체 스크립트 맵·시나리오
+- [docs/architecture/38-script.md](../zdocs-1/architecture/38-script.md) — 전체 스크립트 맵·시나리오
 - [tcf-ui/README.md](../tcf-ui/README.md) — 브라우저 Relay·OM Admin UI
 - [tcf-batch/README.md](../tcf-batch/README.md) — 대시보드 수집 배치
 - [tcf-om/README.md](../tcf-om/README.md) — OM 운영 API (tcf-om vs om-service)

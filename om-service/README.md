@@ -19,7 +19,7 @@
 
 ## 실행
 
-`om-service`는 Gradle에 포함되지 않습니다. **`tcf-om`** 을 사용하세요.
+`om-service`는 `settings.gradle`에는 포함되어 있지만 `buildBusinessWars`와 CI/CD 배포 대상에서는 제외된 레거시 모듈입니다. 신규 개발·배포에는 **`tcf-om`** 을 사용하세요.
 
 ```bash
 gradle :tcf-om:bootRun
@@ -39,7 +39,7 @@ tcf-om/scripts/run-local.bat
 | 모듈 | 설명 |
 |------|------|
 | `tcf-om` | TCF 마이그레이션 완료본 (**권장**) — OM Admin 22 서비스, UD 내장, **6계층 패키지** |
-| `om-service` | 샘플 Handler만 포함한 레거시 모듈 (Gradle·CI/CD 미포함) |
+| `om-service` | 샘플 Handler만 포함한 레거시 모듈 (`settings.gradle` 등록, 일괄 빌드·CI/CD 배포 제외) |
 
 ## 패키지 구조 (tcf-om 기준)
 

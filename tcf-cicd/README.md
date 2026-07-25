@@ -8,7 +8,7 @@
 | `dev/` | ztomcat 통합 검증 | `dev/spring/`, `dev/ztomcat/` |
 | `prod/` | 운영 Tomcat + Apache | `prod/spring/`, `prod/ztomcat/`, `prod/apache/` |
 
-상세: [docs/architecture/25-env-profile.md](../docs/architecture/25-env-profile.md)
+상세: [docs/architecture/25-env-profile.md](../zdocs-1/architecture/25-env-profile.md)
 
 ---
 
@@ -64,10 +64,10 @@ cd tcf-cicd/scripts
 ```powershell
 cd tcf-cicd/local/script
 .\build-all.ps1              # sync local + gradle build (전 모듈)
-.\build-all.ps1 -Target wars # sync + buildZtomcatWars (19 WAR)
+.\build-all.ps1 -Target wars # sync + buildZtomcatWars (16 WAR)
 ```
 
-**local Tomcat 배포 (19 WAR):**
+**local Tomcat 배포 (16 WAR):**
 
 ```powershell
 cd tcf-cicd/local/script
@@ -86,9 +86,9 @@ tcf-cicd/local/script/deploy-wars.sh sv om batch --restart
 ```powershell
 cd tcf-cicd/local/ztomcat
 .\start.ps1              # sync dev + apply-config + batch/ui deploy + start
-.\start.ps1 -DeployAll   # 19 WAR 전체 배포 후 기동
+.\start.ps1 -DeployAll   # 16 WAR 전체 배포 후 기동
 .\stop.ps1
-.\deploy-restart.ps1     # stop + 19 WAR deploy + start + health verify
+.\deploy-restart.ps1     # stop + 16 WAR deploy + start + health verify
 .\deploy-restart.ps1 sv om
 ```
 
@@ -167,7 +167,9 @@ tcf-cicd/scripts/cicd-build.sh --target wars
 | `deploy` | 기존 WAR → ztomcat webapps |
 | `config` | prod runtime yml mount (`CATALINA_BASE` 필요) |
 
-12 context: `ic pc ms sv pd eb ep ss mg om ui batch` (workspace에 있는 모듈만)
+배포 대상 16 context: `ic pc ms sv pd eb ep ss mg oc om ui uj jwt gw batch`.
+
+> `manifest.yaml`의 설정 관리 범위와 위 배포 스크립트의 WAR 범위는 다를 수 있습니다. 배포 가능 여부는 `local/script/deploy-wars.ps1`의 모듈 목록을 기준으로 합니다.
 
 ---
 

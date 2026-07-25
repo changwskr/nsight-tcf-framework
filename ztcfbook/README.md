@@ -53,5 +53,5 @@ node _gen-book-chapters.cjs
 
 ## 원본 자료
 
-- [znsight-man](../znsight-man/README.md) · [docs/architecture](../docs/architecture/architecture.md)
+- [znsight-man](../znsight-man/README.md) · [docs/architecture](../zdocs-1/architecture/architecture.md)
 - [zarchitecture](../zarchitecture/README.md) · [zguide](../zguide/README.md) · [zman](../zman/README.md)

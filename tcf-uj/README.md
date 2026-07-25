@@ -119,7 +119,7 @@ Query 파라미터: `deploymentMode`, `bootrunHost`, `tomcatGatewayUrl` — gate
 | UD | Common UpDownload | 공통 | 8097 |
 | JWT | JWT Auth | 인증 | 8110 |
 
-> gateway에 등록된 업무(EB, EP, IC, MG, MS, OM, PC, PD, SS, SV, JWT)만 relay가 성공합니다. CC·BC 등 미등록 코드는 [tcf-gateway](../tcf-gateway/README.md) 카탈로그 추가가 필요합니다.
+> 위 표는 UI의 레거시·확장용 전체 카탈로그입니다. 현재 저장소에 실행 모듈이 있는 업무는 IC, PC, MS, SV, PD, EB, EP, SS, MG, OM, JWT입니다. CC·BC·CM·BP·BD·CS·CT는 대응 모듈이 없어 즉시 실행할 수 없으며, CS의 8094 표기는 현재 `tcf-oc` 포트와도 충돌합니다. relay 성공 여부는 Gateway 라우트 등록과 대상 서비스 실행 상태에 따릅니다.
 
 ## 배포 모드
 
@@ -220,4 +220,4 @@ com.nh.nsight.tcf.uj
 |------|--------|
 | tcf-gateway (API Gateway) | [tcf-gateway/README.md](../tcf-gateway/README.md) |
 | tcf-jwt (JWT 발급) | [tcf-jwt/README.md](../tcf-jwt/README.md) |
-| TCF 처리 순서 | [docs/TCF_FRAMEWORK_GUIDE.md](../docs/TCF_FRAMEWORK_GUIDE.md) |
+| TCF 처리 순서 | [docs/TCF_FRAMEWORK_GUIDE.md](../zdocs-1/TCF_FRAMEWORK_GUIDE.md) |

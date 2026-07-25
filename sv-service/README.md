@@ -1,4 +1,4 @@
-﻿# sv-service — Single View (마케팅)
+# sv-service — Single View (마케팅)
 
 | 항목 | 값 |
 |------|-----|
@@ -19,7 +19,7 @@ NSIGHT 마케팅 플랫폼 **Single View (SV)** 업무 서비스입니다. 모�
 |-----------|------|
 | `SV.Sample.inquiry` | 샘플 목록 조회 (페이징, `list`/`totalPage`) |
 
-페이징 규약: [zdoc/업무페이징.md](../zdoc/업무페이징.md) · [zdoc/sv-service-페이징.md](../zdoc/sv-service-페이징.md) · [zdoc/sv-service-페이징-가이드.md](../zdoc/sv-service-페이징-가이드.md)
+페이징 규약: [zdoc/업무페이징.md](../zdocs-2/업무페이징.md) · [zdoc/sv-service-페이징.md](../zdocs-2/sv-service-페이징.md) · [zdoc/sv-service-페이징-가이드.md](../zdocs-2/sv-service-페이징-가이드.md)
 
 **tcf-ui 테스트 화면:** http://localhost:8099/sv/sample-list.html (bootRun)
 

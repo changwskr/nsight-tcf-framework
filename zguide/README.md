@@ -2,16 +2,16 @@
 
 업무 개발자·플랫폼 개발자가 **모듈별로 바로 시작**할 수 있도록 정리한 가이드 모음입니다.
 
-> 설계·아키텍처 상세: [`docs/`](../docs/) · [`zdoc/`](../zdoc/) · [`zman/`](../zman/)  
+> 설계·아키텍처 상세: [`docs/`](../zdocs-1/) · [`zdoc/`](../zdocs-2/) · [`zman/`](../zman/)
 > 모듈 요약: 각 프로젝트 `README.md`
 
 ---
 
 ## 읽는 순서 (처음 오신 분)
 
-1. [tcf-core-개발가이드.md](./tcf-core-개발가이드.md) — TCF 처리 흐름 이해  
-2. 담당 **업무 WAR** 가이드 (예: sv-service)  
-3. 연동 필요 시 [tcf-eai-개발가이드.md](./tcf-eai-개발가이드.md)  
+1. [tcf-core-개발가이드.md](./tcf-core-개발가이드.md) — TCF 처리 흐름 이해
+2. 담당 **업무 WAR** 가이드 (예: sv-service)
+3. 연동 필요 시 [tcf-eai-개발가이드.md](./tcf-eai-개발가이드.md)
 4. 로컬 테스트: [tcf-ui-개발가이드.md](./tcf-ui-개발가이드.md) 또는 [tcf-scripts-개발가이드.md](./tcf-scripts-개발가이드.md)
 
 ---
@@ -66,12 +66,12 @@ POST /{업무코드}/online
      → ETF (StandardResponse)
 ```
 
-- **Controller 만들지 않음** — `/online`은 tcf-web 공통  
-- **Handler = 도메인(application Service)당 1개**, `serviceIds()` + `switch`  
-- **WAR 간 호출** = tcf-eai (Java 직접 참조 금지)  
-- **serviceId 등록** = tcf-om Catalog + 거래통제  
+- **Controller 만들지 않음** — `/online`은 tcf-web 공통
+- **Handler = 도메인(application Service)당 1개**, `serviceIds()` + `switch`
+- **WAR 간 호출** = tcf-eai (Java 직접 참조 금지)
+- **serviceId 등록** = tcf-om Catalog + 거래통제
 
-자세히: [zman/08-업무Handler개발.md](../zman/08-업무Handler개발.md) · [docs/TCF_FRAMEWORK_GUIDE.md](../docs/TCF_FRAMEWORK_GUIDE.md)
+자세히: [zman/08-업무Handler개발.md](../zman/08-업무Handler개발.md) · [docs/TCF_FRAMEWORK_GUIDE.md](../zdocs-1/TCF_FRAMEWORK_GUIDE.md)
 
 ---
 

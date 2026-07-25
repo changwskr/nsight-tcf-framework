@@ -3,9 +3,9 @@
 NSIGHT TCF Framework Docker 자산 루트.  
 모듈별 Docker 파일(`Dockerfile`, compose, 스크립트)을 이 아래에 둡니다.
 
-## 구조
+## 목표 구조
 
-`settings.gradle` include 모듈과 동일한 디렉터리:
+아래는 중앙 Docker 자산을 구성할 때 사용할 목표 디렉터리 구조입니다. 현재 `tcf-docker/`에는 이 README만 있으며, 실제 Docker 자산은 일부 모듈의 `scripts/docker/`에 있습니다.
 
 ```
 tcf-docker/
@@ -22,6 +22,7 @@ tcf-docker/
   tcf-gateway/
   tcf-oc/
   tcf-help/
+  tcf-ai-methology/
   ic-service/
   pc-service/
   ms-service/

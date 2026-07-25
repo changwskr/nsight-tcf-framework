@@ -64,6 +64,6 @@ node _gen-book-h.cjs
 
 ## 관련
 
-- [docs/architecture](../docs/architecture/architecture.md)
+- [docs/architecture](../zdocs-1/architecture/architecture.md)
 - [zarchitecture](../zarchitecture/README.md)
 - [zguide](../zguide/README.md)

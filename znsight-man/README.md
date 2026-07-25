@@ -1,6 +1,6 @@
 # NSIGHT TCF 개발 Manual
 
-> **원본:** [`znsight-guide-word`](../znsight-guide-word/) (docx) · **대조:** [`zdoc`](../zdoc/) · [`zman`](../zman/) · [`zguide`](../zguide/) · **코드:** `develop`  
+> **원본:** [`znsight-guide-word`](../znsight-guide-word/) (docx) · **대조:** [`zdoc`](../zdocs-2/) · [`zman`](../zman/) · [`zguide`](../zguide/) · **코드:** `develop`
 > **갱신:** 2026-07-05 — `znsight-guide-word` docx 본문 + zdoc/zman 보완
 
 NSIGHT TCF Framework **업무 개발자용 통합 매뉴얼**입니다. **78장 + 부록 10개**가 각각 별도 Markdown 파일입니다.
@@ -166,9 +166,9 @@ NSIGHT TCF Framework **업무 개발자용 통합 매뉴얼**입니다. **78장 
 
 | 항목 | 값 |
 |------|-----|
-| 업무 WAR | 9개 + tcf-om |
-| ztomcat deploy | 13 WAR (`deploy-wars.sh`) |
-| buildZtomcatWars | 15 WAR |
+| 업무 WAR | 9개 + tcf-om + tcf-oc (11 WAR) |
+| ztomcat deploy | 16 WAR (`deploy-wars.sh`) |
+| buildZtomcatWars | 16 WAR |
 | 온라인 | `POST /{bc}/online` + `serviceId` |
 | 6계층 | Handler → Facade → Service → Rule → DAO → Mapper |
 
@@ -176,8 +176,8 @@ NSIGHT TCF Framework **업무 개발자용 통합 매뉴얼**입니다. **78장 
 
 ## 관련
 
-- [아키텍처 정의서](../docs/architecture/architecture.md) · [설계자료](../docs/설계자료/README.md)
-- [`zdoc/`](../zdoc/) · [`zman/`](../zman/) · [`zguide/`](../zguide/) · [`docs/architecture/`](../docs/architecture/)
+- [아키텍처 정의서](../zdocs-1/architecture/architecture.md) · [설계자료](../zdocs-1/설계자료/README.md)
+- [`zdoc/`](../zdocs-2/) · [`zman/`](../zman/) · [`zguide/`](../zguide/) · [`docs/architecture/`](../zdocs-1/architecture/)
 
 ---
 
