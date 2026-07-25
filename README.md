@@ -29,6 +29,7 @@ nsight-tcf-framework
 ├─ tcf-gateway           API Gateway · SESSIONDB 관문 (bootRun :8100)
 ├─ tcf-jwt               JWT 발급·JWKS (bootRun :8110, WAR /jwt) — 검증은 Gateway
 ├─ tcf-help              HELP 마크다운 문서 리소스 (Java 없음)
+├─ tcf-ai-methology      업무모델 자동화 Model Studio (bootRun :8787)
 ├─ tcf-scripts           빌드·실행·배포 스크립트
 ├─ tcf-cicd              local/dev/prod 설정 SoT
 ├─ ztomcat               로컬 Tomcat 8080 (16 context)
@@ -49,6 +50,7 @@ nsight-tcf-framework
 | `tcf-gateway` | WAR `/gw` | [tcf-gateway/README.md](tcf-gateway/README.md) |
 | `tcf-jwt` | WAR `/jwt` | [tcf-jwt/README.md](tcf-jwt/README.md) |
 | `tcf-help` | 문서 리소스 | [tcf-help/README.md](tcf-help/README.md) |
+| `tcf-ai-methology` | JAR/WAR | [tcf-ai-methology/README.md](tcf-ai-methology/README.md) |
 | `tcf-scripts` | 스크립트 | [tcf-scripts/README.md](tcf-scripts/README.md) |
 | `tcf-cicd` | 설정 | [tcf-cicd/README.md](tcf-cicd/README.md) |
 | `ztomcat` | Tomcat | [ztomcat/README.md](ztomcat/README.md) |
