@@ -116,13 +116,75 @@ public class ModelStore {
     public Optional<BusinessModel> duplicate(String modelId) {
         return get(modelId).map(model -> {
             model.setId(UUID.randomUUID().toString());
-            model.setServiceId(nullToEmpty(model.getServiceId()) + ".copy");
-            model.setTransactionCode("");
-            model.setEventId("");
-            model.setMethodName(nullToEmpty(model.getMethodName()) + "Copy");
-            model.setAggregateName(nullToEmpty(model.getAggregateName()) + "Copy");
+            model.setServiceId(copyServiceId(model.getServiceId()));
+            model.setMethodName(suffixCamel(nullToEmpty(model.getMethodName()), "Copy"));
+            model.setAggregateName(suffixPascal(nullToEmpty(model.getAggregateName()), "Copy"));
+            model.setServiceName(nullToEmpty(model.getServiceName()) + " (복제)");
+            model.setScreenName(nullToEmpty(model.getScreenName()) + " (복제)");
+            model.setScreenId(copyScreenId(model.getScreenId(), model.getBusinessCode()));
+            model.setEventId(model.getScreenId() + "-E01");
+            model.setEventName(nullToEmpty(model.getEventName()) + " (복제)");
+            model.setTransactionCode(copyTransactionCode(model.getTransactionCode(), model.getBusinessCode(), model.getOperation()));
             return save(model);
         });
+    }
+
+    /** ServiceId 행위 구간에 Copy 접미사: SV.Customer.selectSummary → SV.Customer.selectSummaryCopy */
+    public static String copyServiceId(String serviceId) {
+        if (!StringUtils.hasText(serviceId)) {
+            return "";
+        }
+        String[] parts = serviceId.split("\\.");
+        if (parts.length != 3) {
+            return serviceId + "Copy";
+        }
+        return parts[0] + "." + parts[1] + "." + suffixCamel(parts[2], "Copy");
+    }
+
+    public static String copyScreenId(String screenId, String businessCode) {
+        String bc = StringUtils.hasText(businessCode) ? businessCode : "XX";
+        if (StringUtils.hasText(screenId) && screenId.matches("^[A-Z]{2,3}-[A-Z0-9]{2,5}-\\d{4}$")) {
+            int dash = screenId.lastIndexOf('-');
+            String prefix = screenId.substring(0, dash);
+            int seq = 9000 + (Math.abs(UUID.randomUUID().hashCode()) % 1000);
+            return prefix + "-" + String.format("%04d", seq);
+        }
+        return bc + "-CPY-" + String.format("%04d", Math.abs(UUID.randomUUID().hashCode()) % 10000);
+    }
+
+    public static String copyTransactionCode(String transactionCode, String businessCode, String operation) {
+        String bc = StringUtils.hasText(businessCode) ? businessCode : "XX";
+        String type = switch (operation == null ? "" : operation) {
+            case "INSERT" -> "REG";
+            case "UPDATE" -> "UPD";
+            case "DELETE" -> "DEL";
+            default -> "INQ";
+        };
+        if (StringUtils.hasText(transactionCode) && transactionCode.matches("^[A-Z]{2,3}-(INQ|REG|UPD|DEL|EXE)-\\d{4}$")) {
+            type = transactionCode.split("-")[1];
+        }
+        int seq = 9000 + (Math.abs(UUID.randomUUID().hashCode()) % 1000);
+        return bc + "-" + type + "-" + String.format("%04d", seq);
+    }
+
+    private static String suffixCamel(String value, String suffix) {
+        if (!StringUtils.hasText(value)) {
+            return "copy" + suffix;
+        }
+        if (value.endsWith(suffix)) {
+            return value;
+        }
+        return value + suffix;
+    }
+
+    private static String suffixPascal(String value, String suffix) {
+        if (!StringUtils.hasText(value)) {
+            return "Copy" + suffix;
+        }
+        if (value.endsWith(suffix)) {
+            return value;
+        }
+        return value + suffix;
     }
 
     public BusinessModel loadSample() throws IOException {

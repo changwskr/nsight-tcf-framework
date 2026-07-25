@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -71,5 +72,15 @@ class AiMethodologyApplicationTest {
                 .map(i -> i.getCode() + " " + i.getPath() + " " + i.getMessage())
                 .reduce((a, b) -> a + " | " + b)
                 .orElse(""));
+    }
+
+    @Test
+    void duplicateServiceIdKeepsThreeSegments() {
+        assertEquals(
+                "SV.Customer.selectSummaryCopy",
+                ModelStore.copyServiceId("SV.Customer.selectSummary"));
+        assertTrue(ModelStore.copyScreenId("SV-CUS-0001", "SV").matches("^SV-CUS-\\d{4}$"));
+        assertTrue(ModelStore.copyTransactionCode("SV-INQ-0001", "SV", "SELECT_ONE")
+                .matches("^SV-INQ-\\d{4}$"));
     }
 }

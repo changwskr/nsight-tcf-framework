@@ -61,6 +61,24 @@ function newBlankFromSample(sample) {
   };
 }
 
+/** 조회·선택 모델을 '신규 업무모델' 초안으로 쓴다. DB 저장 없이 필드·도메인을 유지한다. */
+function newFromTemplate(source) {
+  if (!source) return null;
+  const model = structuredClone(source);
+  model.id = "";
+  model.serviceId = "";
+  model.serviceName = "";
+  model.transactionCode = "";
+  model.methodName = "";
+  model.aggregateName = "";
+  model.screenId = "";
+  model.screenName = (source.screenName || source.aggregateName || "신규 화면") + " (신규)";
+  model.eventId = "";
+  model.eventName = "";
+  model.uiObjectId = source.uiObjectId || "btnSearch";
+  return model;
+}
+
 async function loadModels(selectId = null) {
   const response = await api("/api/models");
   const data = await response.json();
@@ -172,12 +190,16 @@ function renderBrowseTable() {
       <td><span class="op-chip">${escapeHtml(operationLabel(model.operation))}</span></td>
       <td class="mono">${escapeHtml(model.tableName || "-")}</td>
       <td class="mono">${escapeHtml(model.transactionCode || "-")}</td>
-      <td><button type="button" class="ghost small open-model">열기</button></td>`;
+      <td>
+        <button type="button" class="ghost small open-model">열기</button>
+        <button type="button" class="ghost small template-model">템플릿으로 신규</button>
+      </td>`;
     tr.querySelector(".open-model").addEventListener("click", () => {
       showEditorView();
       setCurrent(model);
       showStep(1);
     });
+    tr.querySelector(".template-model").addEventListener("click", () => startFromTemplate(model));
     rows.appendChild(tr);
   });
 }
@@ -342,6 +364,10 @@ function updateDerived() {
     `${prefix}${domain}Handler`, `${prefix}${domain}Facade`, `${prefix}${domain}Service`, `${prefix}${domain}Rule`,
     `${prefix}${domain}Dao`, `${prefix}${domain}Mapper.${model.methodName || "sqlId"}`, model.tableName || "TABLE"
   ].map((value, i, arr) => `<span class="trace-node">${escapeHtml(value)}</span>${i < arr.length - 1 ? '<span class="trace-arrow">→</span>' : ''}`).join("");
+  if (state.view === "editor") {
+    const title = model.screenName || model.aggregateName || "업무모델 정의";
+    $("pageTitle").textContent = title;
+  }
 }
 
 async function saveModel() {
@@ -464,13 +490,28 @@ async function downloadZip(savedAll = false) {
 }
 
 async function duplicateCurrent() {
-  if (!state.current?.id) return toast("먼저 모델을 저장하십시오.");
+  if (!state.current?.id) {
+    return toast("저장된 모델을 연 다음 「복제 저장」을 사용하십시오. 미저장 초안은 「저장」을 먼저 하세요.");
+  }
   try {
+    showEditorView();
     const response = await api(`/api/models/${state.current.id}/duplicate`, { method: "POST", body: "{}" });
     const duplicated = await response.json();
     await loadModels(duplicated.id);
-    toast("모델을 복제했습니다. 식별자를 수정하십시오.");
+    showStep(1);
+    toast("DB에 복제본을 저장했습니다. ServiceId·화면ID를 업무에 맞게 수정하세요.");
+    status("복제 저장 완료");
   } catch (error) { toast(error.message); }
+}
+
+function startFromTemplate(source) {
+  const base = source || state.current;
+  if (!base) return toast("템플릿으로 쓸 모델을 먼저 조회·선택하십시오.");
+  showEditorView();
+  setCurrent(newFromTemplate(base));
+  showStep(1);
+  toast("선택 모델을 템플릿으로 신규 작성합니다. ServiceId·화면·거래를 채운 뒤 저장하세요.");
+  status("템플릿으로 신규 작성 중 (미저장)");
 }
 
 async function deleteCurrent() {
@@ -503,7 +544,10 @@ async function createNew() {
 
 function bindEvents() {
   document.querySelectorAll(".step").forEach(node => node.addEventListener("click", () => showStep(node.dataset.step)));
-  scalarIds.forEach(id => $(id)?.addEventListener("change", updateDerived));
+  scalarIds.forEach(id => {
+    $(id)?.addEventListener("change", updateDerived);
+    $(id)?.addEventListener("input", updateDerived);
+  });
   $("newModelBtn").addEventListener("click", createNew);
   $("browseBtn").addEventListener("click", () => {
     state.browseResults = [...state.models];
@@ -544,6 +588,7 @@ function bindEvents() {
   $("generateBtn").addEventListener("click", () => downloadZip(false));
   $("generateAllBtn").addEventListener("click", () => downloadZip(true));
   $("duplicateBtn").addEventListener("click", duplicateCurrent);
+  $("newFromTemplateBtn").addEventListener("click", () => startFromTemplate(state.current));
   $("deleteBtn").addEventListener("click", deleteCurrent);
   $("copyCodeBtn").addEventListener("click", async () => {
     await navigator.clipboard.writeText($("previewCode").textContent);

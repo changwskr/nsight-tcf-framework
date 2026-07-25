@@ -1,6 +1,12 @@
 # NSIGHT TCF 업무모델 자동화 개발 체계
 
-요청하신 내용을 **개발 방법론 + 화면 기반 모델링 절차 + 실행 가능한 자동화 도구 MVP**로 구현했습니다.
+> **도구 런타임 안내 (2026-07-25)**  
+> 실행 모듈은 Spring Boot `tcf-ai-methology` (포트 8787, H2 DB)입니다.  
+> 아래 본문은 방법론·절차 설명이며, Python `run.bat` 언급이 있으면  
+> `./gradlew :tcf-ai-methology:bootRun` 또는 모듈 `run.bat`으로 대체하십시오.  
+> 사용 안내: [README.md](README.md) · 모듈: [../README.md](../README.md)
+
+요청하신 내용을 **개발 방법론 + 화면 기반 모델링 절차 + 실행 가능한 자동화 도구**로 구현했습니다.
 
 NSIGHT TCF에서 화면 이벤트와 업무 프로그램을 연결하는 기준은 Controller가 아니라 `ServiceId`이며, 전체 추적 경로는 `화면 → 이벤트 → ServiceId → Handler → Facade → Service → Rule·DAO → Mapper → SQL → Table`로 유지해야 합니다.
 또한 현재 기준 소스는 도메인 Handler 하나가 `serviceIds()`를 통해 여러 ServiceId를 처리할 수 있으므로, 자동 생성기도 ServiceId마다 Handler를 복제하지 않고 **동일 도메인의 거래를 하나의 Handler로 병합**하도록 구현했습니다.

@@ -50,7 +50,7 @@ button { cursor: pointer; }
 .browse-table .mono { font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
 .bc-chip, .op-chip { display: inline-block; padding: 3px 8px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); font-size: 11px; font-weight: 800; }
 .op-chip { background: #eef6f1; color: var(--success); }
-.browse-empty { margin-top: 18px; padding: 28px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 10px; }
+.browse-table td button { margin: 2px 2px 2px 0; }
 @media (max-width: 1150px) {
   .browse-filters { grid-template-columns: 1fr 1fr; }
 }
