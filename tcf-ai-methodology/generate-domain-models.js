@@ -835,7 +835,7 @@ const md = [
   "## 재생성",
   "",
   "```bash",
-  "node tcf-ai-methology/generate-domain-models.js",
+  "node tcf-ai-methodology/generate-domain-models.js",
   "```",
   "",
   "DB 반영: `POST /api/models/reseed`",

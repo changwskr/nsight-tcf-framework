@@ -1,9 +1,9 @@
 # NSIGHT TCF 업무모델 자동화 개발 체계
 
 > **도구 런타임 안내 (2026-07-25)**  
-> 실행 모듈은 Spring Boot `tcf-ai-methology` (포트 8787, H2 DB)입니다.  
+> 실행 모듈은 Spring Boot `tcf-ai-methodology` (포트 8787, H2 DB)입니다.  
 > 아래 본문은 방법론·절차 설명이며, Python `run.bat` 언급이 있으면  
-> `./gradlew :tcf-ai-methology:bootRun` 또는 모듈 `run.bat`으로 대체하십시오.  
+> `./gradlew :tcf-ai-methodology:bootRun` 또는 모듈 `run.bat`으로 대체하십시오.  
 > 사용 안내: [README.md](README.md) · 모듈: [../README.md](../README.md)
 
 요청하신 내용을 **개발 방법론 + 화면 기반 모델링 절차 + 실행 가능한 자동화 도구**로 구현했습니다.

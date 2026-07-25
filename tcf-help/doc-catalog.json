@@ -387,12 +387,12 @@
       "priority": 155
     },
     {
-      "id": "tcf-ai-methology--README",
+      "id": "tcf-ai-methodology--README",
       "corpus": "module-readme",
-      "source": "tcf-ai-methology/README.md",
-      "title": "tcf-ai-methology — NSIGHT Model Studio",
+      "source": "tcf-ai-methodology/README.md",
+      "title": "tcf-ai-methodology — NSIGHT Model Studio",
       "summary": "Python MVP(`ref/nsight_model_studio`)를 Spring Boot 3.3 / JDK 21 모듈로 이식한",
-      "module": "tcf-ai-methology",
+      "module": "tcf-ai-methodology",
       "audience": [
         "developer"
       ],
@@ -401,12 +401,12 @@
       "priority": 0
     },
     {
-      "id": "tcf-ai-methology--docs--DOMAIN_MODEL_INVENTORY",
+      "id": "tcf-ai-methodology--docs--DOMAIN_MODEL_INVENTORY",
       "corpus": "root",
-      "source": "tcf-ai-methology/docs/DOMAIN_MODEL_INVENTORY.md",
+      "source": "tcf-ai-methodology/docs/DOMAIN_MODEL_INVENTORY.md",
       "title": "NSIGHT 업무모델 인벤토리 (코드 분석 기반)",
       "summary": "생성일: 2026-07-25 · 총 41건 · Model Studio v0.2.0",
-      "module": "tcf-ai-methology",
+      "module": "tcf-ai-methodology",
       "audience": [
         "developer"
       ],
@@ -415,12 +415,12 @@
       "priority": 0
     },
     {
-      "id": "tcf-ai-methology--docs--NSIGHT_Automated_Development_Methodology",
+      "id": "tcf-ai-methodology--docs--NSIGHT_Automated_Development_Methodology",
       "corpus": "root",
-      "source": "tcf-ai-methology/docs/NSIGHT_Automated_Development_Methodology.md",
+      "source": "tcf-ai-methodology/docs/NSIGHT_Automated_Development_Methodology.md",
       "title": "NSIGHT TCF 업무모델 자동화 개발 방법론 및 도구 설계서",
       "summary": "> 구현 상태 (2026-07-25)",
-      "module": "tcf-ai-methology",
+      "module": "tcf-ai-methodology",
       "audience": [
         "developer"
       ],
@@ -429,12 +429,12 @@
       "priority": 0
     },
     {
-      "id": "tcf-ai-methology--docs--README",
+      "id": "tcf-ai-methodology--docs--README",
       "corpus": "root",
-      "source": "tcf-ai-methology/docs/README.md",
+      "source": "tcf-ai-methodology/docs/README.md",
       "title": "NSIGHT Model Studio v0.2.0",
       "summary": "NSIGHT-TCF-FRAMEWORK 업무모델을 화면에서 정의하고",
-      "module": "tcf-ai-methology",
+      "module": "tcf-ai-methodology",
       "audience": [
         "developer"
       ],
@@ -443,12 +443,12 @@
       "priority": 0
     },
     {
-      "id": "tcf-ai-methology--docs--SOURCE_ALIGNMENT",
+      "id": "tcf-ai-methodology--docs--SOURCE_ALIGNMENT",
       "corpus": "root",
-      "source": "tcf-ai-methology/docs/SOURCE_ALIGNMENT.md",
+      "source": "tcf-ai-methodology/docs/SOURCE_ALIGNMENT.md",
       "title": "기준 소스 정합성 검토",
       "summary": "본 도구의 생성 템플릿은 nsight-tcf-framework 저장소의 대표 구현을 대조하여 작성·유지합니다.",
-      "module": "tcf-ai-methology",
+      "module": "tcf-ai-methodology",
       "audience": [
         "developer"
       ],
@@ -457,12 +457,12 @@
       "priority": 0
     },
     {
-      "id": "tcf-ai-methology--docs--ai-methlogy",
+      "id": "tcf-ai-methodology--docs--ai-methlogy",
       "corpus": "root",
-      "source": "tcf-ai-methology/docs/ai-methlogy.md",
+      "source": "tcf-ai-methodology/docs/ai-methlogy.md",
       "title": "NSIGHT TCF 업무모델 자동화 개발 체계",
       "summary": "> 도구 런타임 안내 (2026-07-25)",
-      "module": "tcf-ai-methology",
+      "module": "tcf-ai-methodology",
       "audience": [
         "developer"
       ],
@@ -471,12 +471,12 @@
       "priority": 0
     },
     {
-      "id": "tcf-ai-methology--ref--nsight_model_studio--README",
+      "id": "tcf-ai-methodology--ref--nsight_model_studio--README",
       "corpus": "root",
-      "source": "tcf-ai-methology/ref/nsight_model_studio/README.md",
+      "source": "tcf-ai-methodology/ref/nsight_model_studio/README.md",
       "title": "NSIGHT Model Studio v0.1.0",
       "summary": "NSIGHT-TCF-FRAMEWORK 업무모델을 화면에서 정의하고 Java·Mapper XML·SQL·설계 산출물을 생성하는 로컬 MVP입니다.",
-      "module": "tcf-ai-methology",
+      "module": "tcf-ai-methodology",
       "audience": [
         "developer"
       ],
@@ -485,12 +485,12 @@
       "priority": 0
     },
     {
-      "id": "tcf-ai-methology--ref--nsight_model_studio--docs--NSIGHT_Automated_Development_Methodology",
+      "id": "tcf-ai-methodology--ref--nsight_model_studio--docs--NSIGHT_Automated_Development_Methodology",
       "corpus": "root",
-      "source": "tcf-ai-methology/ref/nsight_model_studio/docs/NSIGHT_Automated_Development_Methodology.md",
+      "source": "tcf-ai-methodology/ref/nsight_model_studio/docs/NSIGHT_Automated_Development_Methodology.md",
       "title": "NSIGHT TCF 업무모델 자동화 개발 방법론 및 도구 설계서",
       "summary": "NSIGHT TCF 기반 개발 자동화의 목적은 개발자가 화면 몇 개를 입력하면 무조건 동작하는 프로그램을 만들어 주는 데 있지 않다. 자동화의 핵심 목적은 다음 연결을 하나의 기준정보로 관리하고, 반복 가능한 코드와 산출물은 기계가 생성하며, 업무 판단과 예외 판단은 사람이 승인하도록 만드는 것이다.",
-      "module": "tcf-ai-methology",
+      "module": "tcf-ai-methodology",
       "audience": [
         "developer"
       ],
@@ -499,12 +499,12 @@
       "priority": 0
     },
     {
-      "id": "tcf-ai-methology--ref--nsight_model_studio--docs--README",
+      "id": "tcf-ai-methodology--ref--nsight_model_studio--docs--README",
       "corpus": "root",
-      "source": "tcf-ai-methology/ref/nsight_model_studio/docs/README.md",
+      "source": "tcf-ai-methodology/ref/nsight_model_studio/docs/README.md",
       "title": "NSIGHT Model Studio v0.1.0",
       "summary": "NSIGHT-TCF-FRAMEWORK 업무모델을 화면에서 정의하고 Java·Mapper XML·SQL·설계 산출물을 생성하는 로컬 MVP입니다.",
-      "module": "tcf-ai-methology",
+      "module": "tcf-ai-methodology",
       "audience": [
         "developer"
       ],
@@ -513,12 +513,12 @@
       "priority": 0
     },
     {
-      "id": "tcf-ai-methology--ref--nsight_model_studio--docs--SOURCE_ALIGNMENT",
+      "id": "tcf-ai-methodology--ref--nsight_model_studio--docs--SOURCE_ALIGNMENT",
       "corpus": "root",
-      "source": "tcf-ai-methology/ref/nsight_model_studio/docs/SOURCE_ALIGNMENT.md",
+      "source": "tcf-ai-methodology/ref/nsight_model_studio/docs/SOURCE_ALIGNMENT.md",
       "title": "기준 소스 정합성 검토",
       "summary": "본 MVP의 생성 템플릿은 업로드된 `소스.zip`의 대표 구현을 대조하여 작성했습니다.",
-      "module": "tcf-ai-methology",
+      "module": "tcf-ai-methodology",
       "audience": [
         "developer"
       ],
@@ -527,12 +527,12 @@
       "priority": 0
     },
     {
-      "id": "tcf-ai-methology--ref--nsight_model_studio--docs--ai-methlogy",
+      "id": "tcf-ai-methodology--ref--nsight_model_studio--docs--ai-methlogy",
       "corpus": "root",
-      "source": "tcf-ai-methology/ref/nsight_model_studio/docs/ai-methlogy.md",
+      "source": "tcf-ai-methodology/ref/nsight_model_studio/docs/ai-methlogy.md",
       "title": "NSIGHT TCF 업무모델 자동화 개발 체계",
       "summary": "요청하신 내용을 개발 방법론 + 화면 기반 모델링 절차 + 실행 가능한 자동화 도구 MVP로 구현했습니다.",
-      "module": "tcf-ai-methology",
+      "module": "tcf-ai-methodology",
       "audience": [
         "developer"
       ],
@@ -541,12 +541,12 @@
       "priority": 0
     },
     {
-      "id": "tcf-ai-methology--ref--nsight_model_studio--examples--sample-generated--QUALITY_GATE",
+      "id": "tcf-ai-methodology--ref--nsight_model_studio--examples--sample-generated--QUALITY_GATE",
       "corpus": "root",
-      "source": "tcf-ai-methology/ref/nsight_model_studio/examples/sample-generated/QUALITY_GATE.md",
+      "source": "tcf-ai-methodology/ref/nsight_model_studio/examples/sample-generated/QUALITY_GATE.md",
       "title": "자동검증 및 품질 Gate",
       "summary": "- [ ] 화면 ID·이벤트 ID·ServiceId·거래코드 형식 검증",
-      "module": "tcf-ai-methology",
+      "module": "tcf-ai-methodology",
       "audience": [
         "developer"
       ],
@@ -555,12 +555,12 @@
       "priority": 0
     },
     {
-      "id": "tcf-ai-methology--ref--nsight_model_studio--examples--sample-generated--docs--screens--SV-CUS-0001_E01",
+      "id": "tcf-ai-methodology--ref--nsight_model_studio--examples--sample-generated--docs--screens--SV-CUS-0001_E01",
       "corpus": "root",
-      "source": "tcf-ai-methology/ref/nsight_model_studio/examples/sample-generated/docs/screens/SV-CUS-0001_E01.md",
+      "source": "tcf-ai-methodology/ref/nsight_model_studio/examples/sample-generated/docs/screens/SV-CUS-0001_E01.md",
       "title": "화면·이벤트 정의서",
       "summary": "화면 SV-CUS-0001",
-      "module": "tcf-ai-methology",
+      "module": "tcf-ai-methodology",
       "audience": [
         "developer"
       ],
@@ -569,12 +569,12 @@
       "priority": 0
     },
     {
-      "id": "tcf-ai-methology--ref--nsight_model_studio--examples--sample-generated--docs--transactions--SV_Customer_selectSummary",
+      "id": "tcf-ai-methodology--ref--nsight_model_studio--examples--sample-generated--docs--transactions--SV_Customer_selectSummary",
       "corpus": "root",
-      "source": "tcf-ai-methology/ref/nsight_model_studio/examples/sample-generated/docs/transactions/SV_Customer_selectSummary.md",
+      "source": "tcf-ai-methodology/ref/nsight_model_studio/examples/sample-generated/docs/transactions/SV_Customer_selectSummary.md",
       "title": "거래설계서 — SV.Customer.selectSummary",
       "summary": "화면 이벤트",
-      "module": "tcf-ai-methology",
+      "module": "tcf-ai-methodology",
       "audience": [
         "developer"
       ],
@@ -583,12 +583,12 @@
       "priority": 0
     },
     {
-      "id": "tcf-ai-methology--src--main--resources--static--guide--ai-methodology",
+      "id": "tcf-ai-methodology--src--main--resources--static--guide--ai-methodology",
       "corpus": "root",
-      "source": "tcf-ai-methology/src/main/resources/static/guide/ai-methodology.md",
+      "source": "tcf-ai-methodology/src/main/resources/static/guide/ai-methodology.md",
       "title": "NSIGHT TCF 업무모델 자동화 개발 절차서",
       "summary": "NSIGHT TCF 기반 업무 개발은 Java 클래스를 먼저 만드는 방식으로 시작해서는 안 된다.",
-      "module": "tcf-ai-methology",
+      "module": "tcf-ai-methodology",
       "audience": [
         "developer"
       ],

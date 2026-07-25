@@ -48,7 +48,7 @@ Client / UI
 | J | `ztcf-다이어리` | 일자별 작업·의사결정 메모 |
 
 **실무 빠른 경로:** A → B(01~04) → E(담당 WAR+tcf-core) → C(07~08) → I(필요 시)  
-**자동화 개발:** H의 `ai-방법론.md` + Model Studio(`tcf-ai-methology`)
+**자동화 개발:** H의 `ai-방법론.md` + Model Studio(`tcf-ai-methodology`)
 
 ---
 

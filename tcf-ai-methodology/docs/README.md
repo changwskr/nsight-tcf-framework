@@ -5,7 +5,7 @@ Java·Mapper XML·SQL·설계 산출물을 생성하는 **로컬 Spring Boot** �
 
 > 런타임: Spring Boot 3.3 / JDK 21 / H2  
 > 원본 Python MVP는 `../ref/nsight_model_studio/`에 보관합니다.  
-> Gradle 모듈: `:tcf-ai-methology` · 포트 **8787**
+> Gradle 모듈: `:tcf-ai-methodology` · 포트 **8787**
 
 ## 핵심 기능
 
@@ -50,7 +50,7 @@ businessCode   예: SV, OM          → 업무 WAR
 저장소 루트:
 
 ```bash
-./gradlew :tcf-ai-methology:bootRun
+./gradlew :tcf-ai-methodology:bootRun
 ```
 
 모듈 디렉터리:
@@ -77,7 +77,7 @@ JDBC URL 예: `jdbc:h2:file:C:/Users/<user>/nsight-model-studio/models-db`
 소스의 초록 Run이 `jdt.ls-java-project` classpath를 쓰면  
 `SpringApplication` / `JpaRepository` ClassNotFound가 납니다.  
 **Gradle bootRun**을 사용하거나 Java LS Workspace를 Clean 한 뒤  
-`projectName=tcf-ai-methology` launch 설정을 쓰십시오.
+`projectName=tcf-ai-methodology` launch 설정을 쓰십시오.
 
 ## 사용 절차
 
@@ -93,7 +93,7 @@ JDBC URL 예: `jdbc:h2:file:C:/Users/<user>/nsight-model-studio/models-db`
 ## 테스트
 
 ```bash
-./gradlew :tcf-ai-methology:test
+./gradlew :tcf-ai-methodology:test
 ```
 
 확인 항목:
@@ -127,7 +127,7 @@ com.nh.nsight.marketing.sv.customer.service
 ## 시드·인벤토리
 
 ```bash
-node tcf-ai-methology/generate-domain-models.js
+node tcf-ai-methodology/generate-domain-models.js
 ```
 
 - 시드: `src/main/resources/data/models-seed.json`

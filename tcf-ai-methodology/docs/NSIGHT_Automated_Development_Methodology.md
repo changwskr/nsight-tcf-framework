@@ -1,7 +1,7 @@
 # NSIGHT TCF 업무모델 자동화 개발 방법론 및 도구 설계서
 
 > **구현 상태 (2026-07-25)**  
-> 도구는 Gradle 모듈 `tcf-ai-methology` (Spring Boot 3.3 / JDK 21 / H2, 포트 8787)로 제공됩니다.  
+> 도구는 Gradle 모듈 `tcf-ai-methodology` (Spring Boot 3.3 / JDK 21 / H2, 포트 8787)로 제공됩니다.  
 > 시드 41건·조회 UI·Workspace ZIP 생성까지 포함합니다.  
 > 실행·API: [README.md](README.md) · 모듈 README: [../README.md](../README.md)  
 > 아래 본문은 방법론·설계 원칙의 SoT이며, 런타임 설명이 Python으로 남은 구간은 Spring Boot로 대체합니다.

@@ -212,16 +212,16 @@ EB 표준 패턴과 다르게 구현된 부분(계층 생략, 명명 불일치,
 
 ---
 
-# tcf-ai-methology (Model Studio) 전용 프롬프트
+# tcf-ai-methodology (Model Studio) 전용 프롬프트
 
-> 대상: `tcf-ai-methology` — 업무모델 정의·검증·코드생성 도구 (bootRun :8787)
-> 참조 문서: `tcf-ai-methology/README.md` · `docs/SOURCE_ALIGNMENT.md` ·
+> 대상: `tcf-ai-methodology` — 업무모델 정의·검증·코드생성 도구 (bootRun :8787)
+> 참조 문서: `tcf-ai-methodology/README.md` · `docs/SOURCE_ALIGNMENT.md` ·
 > `docs/DOMAIN_MODEL_INVENTORY.md` · `static/guide/ai-methodology.md` (20단계 절차)
 
 ## 9. ReAct — 생성기 품질 검증 (Model Studio 산출물 vs 수작업 표준 비교)
 
 ```text
-지금부터 tcf-ai-methology의 코드 생성 품질을 검증해야 해.
+지금부터 tcf-ai-methodology의 코드 생성 품질을 검증해야 해.
 
 먼저, 생성기 소스를 로드해서 산출물 목록을 수치화해:
 - generator/ 패키지 4개 클래스(DomainArtifactGenerator, DtoArtifactGenerator,
@@ -244,7 +244,7 @@ EB 표준 패턴과 다르게 구현된 부분(계층 생략, 명명 불일치,
 
 ```text
 너는 NSIGHT-TCF-FRAMEWORK 개발자야. 이번에는 수작업이 아니라
-tcf-ai-methology(Model Studio)를 활용해 신규 업무 모듈을 개발해.
+tcf-ai-methodology(Model Studio)를 활용해 신규 업무 모듈을 개발해.
 
 입력: 업무코드 {BC}, 도메인 {Domain}, 거래 목록 {ServiceId들}
 (없으면 나에게 먼저 질문해.)
@@ -274,7 +274,7 @@ Model Studio가 처리 못해서 수작업한 항목을 별도로 기록해줘.
 답변하기 전에, 먼저 다음 자료를 모두 검색해서 로드해:
 1. ztcf-methodology/ 의 설계서 기반 수동 방법론
    (EB-프로그램-설계서·EB-UI-레이아웃-설계서 — 9+6 섹션 체계)
-2. tcf-ai-methology/static/guide/ai-methodology.md 의 20단계(0~19) 자동화 절차와
+2. tcf-ai-methodology/static/guide/ai-methodology.md 의 20단계(0~19) 자동화 절차와
    docs/NSIGHT_Automated_Development_Methodology.md 본문
 3. docs/DOMAIN_MODEL_INVENTORY.md 시드 41건과
    실제 구현된 TransactionHandler 56개의 serviceId 대조표

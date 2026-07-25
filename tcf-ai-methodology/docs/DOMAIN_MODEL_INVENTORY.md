@@ -88,7 +88,7 @@ businessCode (업무 WAR)
 
 ```bash
 # 시드 JSON 재생성
-node tcf-ai-methology/generate-domain-models.js
+node tcf-ai-methodology/generate-domain-models.js
 
 # 앱 기동 후 DB 교체 적재
 curl -X POST http://127.0.0.1:8787/api/models/reseed
