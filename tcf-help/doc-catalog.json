@@ -2,9 +2,9 @@
   "version": "1.1",
   "title": "NSIGHT TCF 문서 라이브러리",
   "description": "nsight-tcf-framework 저장소 전체 마크다운 카탈로그",
-  "generatedAt": "2026-07-19T04:40:16.804Z",
+  "generatedAt": "2026-07-25T12:16:04.516Z",
   "repoRoot": "nsight-tcf-framework",
-  "total": 1447,
+  "total": 1514,
   "corpora": [
     {
       "id": "help-meta",
@@ -157,7 +157,7 @@
       "order": 12,
       "meta": "meta/module-readme-개요.md",
       "metaDocId": "meta-module-readme",
-      "count": 25
+      "count": 28
     },
     {
       "id": "infra",
@@ -194,7 +194,7 @@
       "order": 99,
       "meta": "meta/root-개요.md",
       "metaDocId": "meta-root",
-      "count": 168
+      "count": 232
     }
   ],
   "featured": [
@@ -387,6 +387,216 @@
       "priority": 155
     },
     {
+      "id": "tcf-ai-methology--README",
+      "corpus": "module-readme",
+      "source": "tcf-ai-methology/README.md",
+      "title": "tcf-ai-methology — NSIGHT Model Studio",
+      "summary": "Python MVP(`ref/nsight_model_studio`)를 Spring Boot 3.3 / JDK 21 모듈로 이식한",
+      "module": "tcf-ai-methology",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-ai-methology--docs--DOMAIN_MODEL_INVENTORY",
+      "corpus": "root",
+      "source": "tcf-ai-methology/docs/DOMAIN_MODEL_INVENTORY.md",
+      "title": "NSIGHT 업무모델 인벤토리 (코드 분석 기반)",
+      "summary": "생성일: 2026-07-25 · 총 41건 · Model Studio v0.2.0",
+      "module": "tcf-ai-methology",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-ai-methology--docs--NSIGHT_Automated_Development_Methodology",
+      "corpus": "root",
+      "source": "tcf-ai-methology/docs/NSIGHT_Automated_Development_Methodology.md",
+      "title": "NSIGHT TCF 업무모델 자동화 개발 방법론 및 도구 설계서",
+      "summary": "> 구현 상태 (2026-07-25)",
+      "module": "tcf-ai-methology",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-ai-methology--docs--README",
+      "corpus": "root",
+      "source": "tcf-ai-methology/docs/README.md",
+      "title": "NSIGHT Model Studio v0.2.0",
+      "summary": "NSIGHT-TCF-FRAMEWORK 업무모델을 화면에서 정의하고",
+      "module": "tcf-ai-methology",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-ai-methology--docs--SOURCE_ALIGNMENT",
+      "corpus": "root",
+      "source": "tcf-ai-methology/docs/SOURCE_ALIGNMENT.md",
+      "title": "기준 소스 정합성 검토",
+      "summary": "본 도구의 생성 템플릿은 nsight-tcf-framework 저장소의 대표 구현을 대조하여 작성·유지합니다.",
+      "module": "tcf-ai-methology",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-ai-methology--docs--ai-methlogy",
+      "corpus": "root",
+      "source": "tcf-ai-methology/docs/ai-methlogy.md",
+      "title": "NSIGHT TCF 업무모델 자동화 개발 체계",
+      "summary": "> 도구 런타임 안내 (2026-07-25)",
+      "module": "tcf-ai-methology",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-ai-methology--ref--nsight_model_studio--README",
+      "corpus": "root",
+      "source": "tcf-ai-methology/ref/nsight_model_studio/README.md",
+      "title": "NSIGHT Model Studio v0.1.0",
+      "summary": "NSIGHT-TCF-FRAMEWORK 업무모델을 화면에서 정의하고 Java·Mapper XML·SQL·설계 산출물을 생성하는 로컬 MVP입니다.",
+      "module": "tcf-ai-methology",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-ai-methology--ref--nsight_model_studio--docs--NSIGHT_Automated_Development_Methodology",
+      "corpus": "root",
+      "source": "tcf-ai-methology/ref/nsight_model_studio/docs/NSIGHT_Automated_Development_Methodology.md",
+      "title": "NSIGHT TCF 업무모델 자동화 개발 방법론 및 도구 설계서",
+      "summary": "NSIGHT TCF 기반 개발 자동화의 목적은 개발자가 화면 몇 개를 입력하면 무조건 동작하는 프로그램을 만들어 주는 데 있지 않다. 자동화의 핵심 목적은 다음 연결을 하나의 기준정보로 관리하고, 반복 가능한 코드와 산출물은 기계가 생성하며, 업무 판단과 예외 판단은 사람이 승인하도록 만드는 것이다.",
+      "module": "tcf-ai-methology",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-ai-methology--ref--nsight_model_studio--docs--README",
+      "corpus": "root",
+      "source": "tcf-ai-methology/ref/nsight_model_studio/docs/README.md",
+      "title": "NSIGHT Model Studio v0.1.0",
+      "summary": "NSIGHT-TCF-FRAMEWORK 업무모델을 화면에서 정의하고 Java·Mapper XML·SQL·설계 산출물을 생성하는 로컬 MVP입니다.",
+      "module": "tcf-ai-methology",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-ai-methology--ref--nsight_model_studio--docs--SOURCE_ALIGNMENT",
+      "corpus": "root",
+      "source": "tcf-ai-methology/ref/nsight_model_studio/docs/SOURCE_ALIGNMENT.md",
+      "title": "기준 소스 정합성 검토",
+      "summary": "본 MVP의 생성 템플릿은 업로드된 `소스.zip`의 대표 구현을 대조하여 작성했습니다.",
+      "module": "tcf-ai-methology",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-ai-methology--ref--nsight_model_studio--docs--ai-methlogy",
+      "corpus": "root",
+      "source": "tcf-ai-methology/ref/nsight_model_studio/docs/ai-methlogy.md",
+      "title": "NSIGHT TCF 업무모델 자동화 개발 체계",
+      "summary": "요청하신 내용을 개발 방법론 + 화면 기반 모델링 절차 + 실행 가능한 자동화 도구 MVP로 구현했습니다.",
+      "module": "tcf-ai-methology",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-ai-methology--ref--nsight_model_studio--examples--sample-generated--QUALITY_GATE",
+      "corpus": "root",
+      "source": "tcf-ai-methology/ref/nsight_model_studio/examples/sample-generated/QUALITY_GATE.md",
+      "title": "자동검증 및 품질 Gate",
+      "summary": "- [ ] 화면 ID·이벤트 ID·ServiceId·거래코드 형식 검증",
+      "module": "tcf-ai-methology",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-ai-methology--ref--nsight_model_studio--examples--sample-generated--docs--screens--SV-CUS-0001_E01",
+      "corpus": "root",
+      "source": "tcf-ai-methology/ref/nsight_model_studio/examples/sample-generated/docs/screens/SV-CUS-0001_E01.md",
+      "title": "화면·이벤트 정의서",
+      "summary": "화면 SV-CUS-0001",
+      "module": "tcf-ai-methology",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-ai-methology--ref--nsight_model_studio--examples--sample-generated--docs--transactions--SV_Customer_selectSummary",
+      "corpus": "root",
+      "source": "tcf-ai-methology/ref/nsight_model_studio/examples/sample-generated/docs/transactions/SV_Customer_selectSummary.md",
+      "title": "거래설계서 — SV.Customer.selectSummary",
+      "summary": "화면 이벤트",
+      "module": "tcf-ai-methology",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-ai-methology--src--main--resources--static--guide--ai-methodology",
+      "corpus": "root",
+      "source": "tcf-ai-methology/src/main/resources/static/guide/ai-methodology.md",
+      "title": "NSIGHT TCF 업무모델 자동화 개발 절차서",
+      "summary": "NSIGHT TCF 기반 업무 개발은 Java 클래스를 먼저 만드는 방식으로 시작해서는 안 된다.",
+      "module": "tcf-ai-methology",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
       "id": "tcf-batch--README",
       "corpus": "module-readme",
       "source": "tcf-batch/README.md",
@@ -435,6 +645,20 @@
       "title": "tcf-core — TCF 엔진 코어",
       "summary": "표준 HTTP/JSON 전문 모델, 거래 컨텍스트, STF/TCF/ETF 처리기, `TransactionHandler` 디스패처를 제공하는 프레임워크 핵심 모듈입니다.",
       "module": "tcf-core",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-docker--README",
+      "corpus": "module-readme",
+      "source": "tcf-docker/README.md",
+      "title": "tcf-docker",
+      "summary": "NSIGHT TCF Framework Docker 자산 루트.",
+      "module": "tcf-docker",
       "audience": [
         "developer"
       ],
@@ -956,6 +1180,34 @@
       "priority": 0
     },
     {
+      "id": "tcf-k8s--README",
+      "corpus": "module-readme",
+      "source": "tcf-k8s/README.md",
+      "title": "tcf-k8s",
+      "summary": "NSIGHT TCF Framework Kubernetes 배포 자산.",
+      "module": "tcf-k8s",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-k8s--configs--README",
+      "corpus": "root",
+      "source": "tcf-k8s/configs/README.md",
+      "title": "Optional per-module secrets for deploy.sh",
+      "summary": "",
+      "module": "tcf-k8s",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
       "id": "tcf-oc--README",
       "corpus": "module-readme",
       "source": "tcf-oc/README.md",
@@ -1096,6 +1348,48 @@
       "title": "TCF-OM 런타임·장애진단 설계 요약",
       "summary": "> 원본: `NSIGHT TCF-OM 런타임 장애 진단 화면 설계서.docx` (2026-07-12)",
       "module": "tcf-om",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-prompting--2026-07-26-av-service-개발지시-프롬프트",
+      "corpus": "root",
+      "source": "tcf-prompting/2026-07-26-av-service-개발지시-프롬프트.md",
+      "title": "2026 07 26 av service 개발지시 프롬프트",
+      "summary": "> 4번 메타프롬프팅 산출물 (2026-07-26)",
+      "module": "tcf-prompting",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-prompting--2026-07-26-exam",
+      "corpus": "root",
+      "source": "tcf-prompting/2026-07-26-exam.md",
+      "title": "2026 07 26 exam",
+      "summary": "[자기성찰식 답변 요구]",
+      "module": "tcf-prompting",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-prompting--2026-07-26-nsight-tcf-prompts",
+      "corpus": "root",
+      "source": "tcf-prompting/2026-07-26-nsight-tcf-prompts.md",
+      "title": "NSIGHT-TCF-FRAMEWORK 맞춤 프롬프팅 메시지 모음",
+      "summary": "> 원본 기법: [2026-07-26-exam.md](2026-07-26-exam.md)",
+      "module": "tcf-prompting",
       "audience": [
         "developer"
       ],
@@ -3995,7 +4289,7 @@
       "corpus": "config",
       "source": "znsight-config-info/nsight_system_manual/spring/README.md",
       "title": "NSIGHT Spring JDBC Session 전체 설정 파일",
-      "summary": "기존 Redis Session 기준을 제거하고, Spring Session JDBC 기반으로 세션을 관리합니다.",
+      "summary": "> 참조 구성: 17 WAR 목표 아키텍처를 설명하는 설정 자료이며, 현재 저장소의 ztomcat 16 WAR 배포 목록과는 별도입니다.",
       "module": null,
       "audience": [
         "operator",
@@ -4010,7 +4304,7 @@
       "corpus": "config",
       "source": "znsight-config-info/nsight_system_manual/tomcat/README.md",
       "title": "NSIGHT Tomcat 전체 설정 파일",
-      "summary": "구조:",
+      "summary": "> 참조 구성: 17 WAR 목표 아키텍처를 설명하는 설정 자료이며, 현재 저장소의 ztomcat 16 WAR 배포 목록과는 별도입니다.",
       "module": null,
       "audience": [
         "operator",
@@ -4130,7 +4424,7 @@
       "corpus": "config",
       "source": "znsight-config-value-word/NSIGHT_17WAR_Apache_Tomcat_DeltaManager_Config/README.md",
       "title": "NSIGHT 17개 WAR + Apache + Tomcat DeltaManager + Spring Boot 환경설정 파일",
-      "summary": "`nh.marketing.com` 단일 도메인에서 Apache Reverse Proxy가 17개 WAR context를 동일 Tomcat Cluster로 라우팅하고, Tomcat DeltaManager로 센터 내부 세션을 복제하는 기준 환경설정 파일입니다.",
+      "summary": "> 참조 구성: 17 WAR 목표 아키텍처를 설명하는 설정 자료이며, 현재 저장소의 ztomcat 16 WAR 배포 목록과는 별도입니다.",
       "module": null,
       "audience": [
         "operator",
@@ -5903,7 +6197,7 @@
       "corpus": "znsight-man",
       "source": "znsight-man/README.md",
       "title": "NSIGHT TCF 개발 Manual",
-      "summary": "> 원본: [`znsight-guide-word`](../znsight-guide-word/) (docx) · 대조: [`zdoc`](../zdoc/) · [`zman`](../zman/) · [`zguide`](../zguide/) · 코드: `develop`",
+      "summary": "> 원본: [`znsight-guide-word`](../znsight-guide-word/) (docx) · 대조: [`zdoc`](../zdocs-2/) · [`zman`](../zman/) · [`zguide`](../zguide/) · 코드: `develop`",
       "module": "znsight-man",
       "audience": [
         "developer",
@@ -7778,6 +8072,650 @@
       "audience": [
         "architect",
         "capacity"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--00-inventory--인벤토리-설정",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/00-inventory/인벤토리-설정.md",
+      "title": "00-inventory — 안내",
+      "summary": "Tomcat 노드·WAR Context CSV 위치.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--01-README",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/01-README.md",
+      "title": "NSIGHT TCF — Apache + Tomcat DeltaManager 환경설정",
+      "summary": "> 읽는 순서: `01` → `12` (본 파일부터)",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--01-apache--ssl--README_cert_placeholders",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/01-apache/ssl/README_cert_placeholders.md",
+      "title": "SSL 인증서 배치 위치",
+      "summary": "운영 적용 전 아래 파일을 실제 인증서로 교체합니다.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--01-apache--아파치-설정",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/01-apache/아파치-설정.md",
+      "title": "01-apache — 안내",
+      "summary": "SSL 종료·Reverse Proxy·Sticky 설정 디렉터리.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--02-ARCHITECTURE",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/02-ARCHITECTURE.md",
+      "title": "TCF WAR 통합 배포 아키텍처 (ARC05)",
+      "summary": "수치·타임아웃 상세 → [03-아키텍처-셋팅정보.md](./03-아키텍처-셋팅정보.md) 및 `04`~`10` 계층 셋팅정보",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--02-tomcat--톰캣-설정",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/02-tomcat/톰캣-설정.md",
+      "title": "02-tomcat — 안내",
+      "summary": "외장 Tomcat + DeltaManager 설정 디렉터리.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--03-spring-boot--스프링부트-설정",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/03-spring-boot/스프링부트-설정.md",
+      "title": "03-spring-boot — 안내",
+      "summary": "외장 Tomcat용 Spring Boot WAR 공통 샘플.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--03-아키텍처-셋팅정보",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/03-아키텍처-셋팅정보.md",
+      "title": "NSIGHT Engine — 아키텍처 셋팅정보 (인덱스)",
+      "summary": "> 읽는 순서: 03 / 전체: [01-README.md](./01-README.md)",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--04-inventory-셋팅정보",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/04-inventory-셋팅정보.md",
+      "title": "Inventory 셋팅정보",
+      "summary": "> 읽는 순서: 04 · 인덱스: [03-아키텍처-셋팅정보.md](./03-아키텍처-셋팅정보.md)",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--04-l4-gslb--L4-GSLB-설정",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/04-l4-gslb/L4-GSLB-설정.md",
+      "title": "04-l4-gslb — 안내",
+      "summary": "센터 앞단 L4/GSLB 템플릿.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--04-l4-gslb--l4-gslb-template",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/04-l4-gslb/l4-gslb-template.md",
+      "title": "L4 / GSLB 템플릿 (장비 반영용)",
+      "summary": "SoT·설명: [../05-L4-GSLB-셋팅정보.md](../05-L4-GSLB-셋팅정보.md)",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--05-L4-GSLB-셋팅정보",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/05-L4-GSLB-셋팅정보.md",
+      "title": "L4 / GSLB 셋팅정보",
+      "summary": "> 읽는 순서: 05 · 인덱스: [03-아키텍처-셋팅정보.md](./03-아키텍처-셋팅정보.md)",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--05-deploy--배포-설정",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/05-deploy/배포-설정.md",
+      "title": "05-deploy — 안내",
+      "summary": "WAR 배치·health 검증 스크립트.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--06-apache-셋팅정보",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/06-apache-셋팅정보.md",
+      "title": "Apache 셋팅정보",
+      "summary": "> 읽는 순서: 06 · 인덱스: [03-아키텍처-셋팅정보.md](./03-아키텍처-셋팅정보.md)",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--06-operations--monitoring-metrics",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/06-operations/monitoring-metrics.md",
+      "title": "운영 모니터링 기준",
+      "summary": "SoT: [../10-operations-셋팅정보.md](../10-operations-셋팅정보.md)",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--06-operations--security-checklist",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/06-operations/security-checklist.md",
+      "title": "보안 점검표",
+      "summary": "SoT: [../10-operations-셋팅정보.md](../10-operations-셋팅정보.md)",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--06-operations--session-replication-checklist",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/06-operations/session-replication-checklist.md",
+      "title": "Session Replication 점검표",
+      "summary": "SoT: [../10-operations-셋팅정보.md](../10-operations-셋팅정보.md)",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--06-operations--timeout-chain",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/06-operations/timeout-chain.md",
+      "title": "Timeout Chain 기준",
+      "summary": "SoT: [../10-operations-셋팅정보.md](../10-operations-셋팅정보.md)",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--06-operations--운영-설정",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/06-operations/운영-설정.md",
+      "title": "06-operations — 안내",
+      "summary": "Timeout·세션·보안·모니터링 체크리스트.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--07-tomcat-셋팅정보",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/07-tomcat-셋팅정보.md",
+      "title": "Tomcat 셋팅정보",
+      "summary": "> 읽는 순서: 07 · 인덱스: [03-아키텍처-셋팅정보.md](./03-아키텍처-셋팅정보.md)",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--08-spring-boot-셋팅정보",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/08-spring-boot-셋팅정보.md",
+      "title": "Spring Boot 셋팅정보",
+      "summary": "> 읽는 순서: 08 · 인덱스: [03-아키텍처-셋팅정보.md](./03-아키텍처-셋팅정보.md)",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--09-deploy-셋팅정보",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/09-deploy-셋팅정보.md",
+      "title": "Deploy 셋팅정보",
+      "summary": "> 읽는 순서: 09 · 인덱스: [03-아키텍처-셋팅정보.md](./03-아키텍처-셋팅정보.md)",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--10-operations-셋팅정보",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/10-operations-셋팅정보.md",
+      "title": "Operations 셋팅정보",
+      "summary": "> 읽는 순서: 10 · 인덱스: [03-아키텍처-셋팅정보.md](./03-아키텍처-셋팅정보.md)",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-engine-config-info--11-정합-점검",
+      "corpus": "root",
+      "source": "ztcf-engine-config-info/11-정합-점검.md",
+      "title": "정합 점검 (engine-config ↔ nsight-tcf-framework)",
+      "summary": "> 읽는 순서: 11 · 시작: [01-README.md](./01-README.md)",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-methodology--EB-UI-레이아웃-설계서",
+      "corpus": "root",
+      "source": "ztcf-methodology/EB-UI-레이아웃-설계서.md",
+      "title": "EB(Event Bridge) UI 레이아웃 설계서",
+      "summary": "> 대상 모듈: `eb-service` (업무코드 EB) · UI 소스: `tcf-ui/src/main/resources/static/eb/`",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-methodology--EB-프로그램-설계서",
+      "corpus": "root",
+      "source": "ztcf-methodology/EB-프로그램-설계서.md",
+      "title": "EB(Event Bridge) 프로그램 설계서",
+      "summary": "> 대상 모듈: `eb-service` (업무코드 EB) · 기준 소스: `eb-service/src/main/java/com/nh/nsight/marketing/eb/`",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-19--ARC02-어플리케이션-구성도",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-19/ARC02-어플리케이션 구성도.md",
+      "title": "NSIGHT TCF Framework - 애플리케이션 구성도",
+      "summary": "NSIGHT TCF Framework의 애플리케이션 구성도는 Spring Boot 기반의 공통 거래 처리 프레임워크(TCF) 와 업무별 마이크로서비스(WAR) 구조로 설계되었습니다.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-19--ARC03-비즈니스-개괄-구성도",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-19/ARC03-비즈니스 개괄 구성도.md",
+      "title": "ARC03 - NSIGHT TCF 비즈니스 개괄 구성도",
+      "summary": "- NSIGHT TCF Framework 프로젝트의 비즈니스 관점 통합 아키텍처 구성도 제공",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-19--ARC04-통합아키텍처-구성도",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-19/ARC04-통합아키텍처 구성도.md",
+      "title": "ARC04 - NSIGHT TCF 통합 아키텍처 구성도",
+      "summary": "- NSIGHT TCF Framework의 통합 아키텍처 관점 종합 구성도 제공",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-19--ARC05-네이밍",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-19/ARC05-네이밍.md",
+      "title": "ARC05 - NSIGHT TCF 네이밍(명명규칙) 전체 정리",
+      "summary": "- NSIGHT TCF Framework의 명명규칙 전체 맵을 한 문서로 제공",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-19--DATABASE_README",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-19/DATABASE_README.md",
+      "title": "NSIGHT TCF — 데이터베이스 초기화 및 가이드",
+      "summary": "NSIGHT TCF Framework는 업무 WAR별 데이터소스와 공통 저장소(거래로그·Gateway 라우트·세션) 를 분리합니다.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-19--README_RUN",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-19/README_RUN.md",
+      "title": "NSIGHT TCF Framework — 실행 가이드",
+      "summary": "멀티모듈 Gradle 프로젝트의 로컬 실행(bootRun) · Tomcat WAR · Docker · Kubernetes 방법을 안내합니다.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-25-전체-파일-목차--NSIGHT-TCF-개발자-핵심지식",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-25 전체 파일 목차/NSIGHT-TCF-개발자-핵심지식.md",
+      "title": "NSIGHT TCF — 개발자가 알아야 할 핵심 (목차 A~J 종합)",
+      "summary": "생성일: 2026-07-25",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-25-전체-파일-목차--NSIGHT-TCF-목차순서별-핵심내용",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-25 전체 파일 목차/NSIGHT-TCF-목차순서별-핵심내용.md",
+      "title": "NSIGHT TCF — 목차 순서별 핵심 내용 (Markdown 1:1, 풍부판)",
+      "summary": "생성일: 2026-07-25",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-25-전체-파일-목차--NSIGHT-TCF-읽기순서별-요약",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-25 전체 파일 목차/NSIGHT-TCF-읽기순서별-요약.md",
+      "title": "NSIGHT TCF — 읽기순서(A~J) 목차별 핵심 내용",
+      "summary": "생성일: 2026-07-25",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-25-전체-파일-목차--NSIGHT-TCF-전체문서-읽기순서",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-25 전체 파일 목차/NSIGHT-TCF-전체문서-읽기순서.md",
+      "title": "NSIGHT TCF 전체 문서 읽기 순서 목차",
+      "summary": "생성일: 2026-07-25",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-25-전체-파일-목차--NSIGHT-TCF-전체문서-핵심요약",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-25 전체 파일 목차/NSIGHT-TCF-전체문서-핵심요약.md",
+      "title": "NSIGHT TCF 전체 문서 — 핵심 요약",
+      "summary": "생성일: 2026-07-25",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-25-전체-파일-목차--NSIGHT_TCF_개발자_핵심지식",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-25 전체 파일 목차/NSIGHT_TCF_개발자_핵심지식.md",
+      "title": "NSIGHT TCF 개발자 핵심 지식",
+      "summary": "> 작성 기준: `nsight-tcf-framework`의 Markdown, Gradle 설정, Java/XML/YAML 및 스크립트",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-25-전체-파일-목차--NSIGHT_TCF_개발자_핵심지식_상세판",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-25 전체 파일 목차/NSIGHT_TCF_개발자_핵심지식_상세판.md",
+      "title": "NSIGHT TCF 개발자 핵심 지식 상세판",
+      "summary": "> 목적: 신규 개발자가 NSIGHT TCF의 구조를 이해하고 거래 하나를 설계·구현·테스트·배포·장애분석할 수 있게 하는 실무 문서",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-25-전체-파일-목차--NSIGHT_TCF_개발자_핵심지식_상세판_개선판",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-25 전체 파일 목차/NSIGHT_TCF_개발자_핵심지식_상세판_개선판.md",
+      "title": "NSIGHT TCF 개발자 핵심 지식 상세판 (개선판)",
+      "summary": "> 목적: 신규 개발자가 NSIGHT TCF의 구조를 이해하고 거래 하나를 설계·구현·테스트·배포·장애분석할 수 있게 하는 실무 문서",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-25-전체-파일-목차--README",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-25 전체 파일 목차/README.md",
+      "title": "2026-07-25 전체 파일 목차",
+      "summary": "NSIGHT TCF 관련 문서 폴더를 읽기 순서 + 상대 링크로 정리한 목록입니다.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-25-AI-Methology--README",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-25-AI-Methology/README.md",
+      "title": "NSIGHT Model Studio v0.1.0",
+      "summary": "NSIGHT-TCF-FRAMEWORK 업무모델을 화면에서 정의하고 Java·Mapper XML·SQL·설계 산출물을 생성하는 로컬 MVP입니다.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-25-AI-Methology--SOURCE_ALIGNMENT",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-25-AI-Methology/SOURCE_ALIGNMENT.md",
+      "title": "기준 소스 정합성 검토",
+      "summary": "본 MVP의 생성 템플릿은 업로드된 `소스.zip`의 대표 구현을 대조하여 작성했습니다.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-25-AI-Methology--ai-methlogy",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-25-AI-Methology/ai-methlogy.md",
+      "title": "NSIGHT TCF 업무모델 자동화 개발 체계",
+      "summary": "요청하신 내용을 개발 방법론 + 화면 기반 모델링 절차 + 실행 가능한 자동화 도구 MVP로 구현했습니다.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-25-AI-Methology--ai-방법론",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-25-AI-Methology/ai-방법론.md",
+      "title": "NSIGHT TCF 업무모델 자동화 개발 절차서",
+      "summary": "NSIGHT TCF 기반 업무 개발은 Java 클래스를 먼저 만드는 방식으로 시작해서는 안 된다.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-07-26-어플리케이션-도메인-정의--어플리케이션도엠인코드",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-07-26 어플리케이션 도메인 정의/어플리케이션도엠인코드.md",
+      "title": "어플리케이션도엠인코드",
+      "summary": "아닙니다. 관계는 반대입니다.",
+      "module": null,
+      "audience": [
+        "developer"
       ],
       "tags": [],
       "featured": false,
@@ -11410,7 +12348,7 @@
       "corpus": "module-readme",
       "source": "ztomcat/README.md",
       "title": "ztomcat — NSIGHT 로컬 Tomcat WAR 배포",
-      "summary": "Spring Boot 3 WAR 12개를 Apache Tomcat 10.1.34에 올려 로컬에서 운영 환경과 동일한 context path로 테스트하기 위한 도구 모음입니다.",
+      "summary": "Spring Boot 3 WAR 16개를 Apache Tomcat 10.1.34에 올려 로컬에서 운영 환경과 동일한 context path로 테스트하기 위한 도구 모음입니다.",
       "module": "ztomcat",
       "audience": [
         "developer"
@@ -12773,7 +13711,7 @@
       "id": "ztomcat--apache-tomcat-10-1-34--webapps--ui--WEB-INF--classes--static--help--library--sv-service--README",
       "corpus": "infra",
       "source": "ztomcat/apache-tomcat-10.1.34/webapps/ui/WEB-INF/classes/static/help/library/sv-service/README.md",
-      "title": "bootRun",
+      "title": "sv-service — Single View (마케팅)",
       "summary": "NSIGHT 마케팅 플랫폼 Single View (SV) 업무 서비스입니다. 모든 거래는 TCF 파이프라인(`POST /online` 또는 `POST /sv/online`)을 통해 처리됩니다.",
       "module": null,
       "audience": [
@@ -16854,7 +17792,7 @@
       "corpus": "infra",
       "source": "ztomcat/apache-tomcat-10.1.34/webapps/ui/WEB-INF/classes/static/help/library/znsight-man/README.md",
       "title": "NSIGHT TCF 개발 Manual",
-      "summary": "> 원본: [`znsight-guide-word`](../znsight-guide-word/) (docx) · 대조: [`zdoc`](../zdoc/) · [`zman`](../zman/) · [`zguide`](../zguide/) · 코드: `develop`",
+      "summary": "> 원본: [`znsight-guide-word`](../znsight-guide-word/) (docx) · 대조: [`zdoc`](../zdocs-2/) · [`zman`](../zman/) · [`zguide`](../zguide/) · 코드: `develop`",
       "module": null,
       "audience": [
         "operator",

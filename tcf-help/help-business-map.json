@@ -1,10 +1,15 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-07-19T04:40:14.021Z",
+  "generatedAt": "2026-07-25T12:16:00.991Z",
   "source": "tcf-ui/src/main/resources/static",
-  "total": 101,
+  "total": 102,
   "overrideCount": 19,
   "screens": {
+    "/av/sample-list.html": {
+      "docId": "business-modules",
+      "title": "AV · sample list",
+      "module": "av"
+    },
     "/bc/index-multi.html": {
       "docId": "business-modules",
       "title": "BC · 다중 서비스 테스트",

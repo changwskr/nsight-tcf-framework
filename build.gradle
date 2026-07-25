@@ -102,6 +102,7 @@ project(':tcf-help') {
 // WAR 배포: Tomcat context-path /{업무코드} (예: /sv)
 // -----------------------------------------------------------------------------
 ext.businessModules = [
+    'av-service',
     'ic-service',
     'pc-service',
     'ms-service',

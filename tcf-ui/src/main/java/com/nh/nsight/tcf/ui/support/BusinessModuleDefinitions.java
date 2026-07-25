@@ -15,6 +15,7 @@ public final class BusinessModuleDefinitions {
             new ModuleDefinition("PD", "Product", "마케팅", 8087),
             new ModuleDefinition("CM", "Campaign", "마케팅", 8088),
             new ModuleDefinition("EB", "EBM", "마케팅", 8089),
+            new ModuleDefinition("AV", "AV Service", "마케팅", 8101),
             new ModuleDefinition("EP", "Event Processing", "실시간", 8090),
             new ModuleDefinition("BP", "Behavior Processing", "실시간", 8091),
             new ModuleDefinition("BD", "Behavior Data", "데이터", 8092),
