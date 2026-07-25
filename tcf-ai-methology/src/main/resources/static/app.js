@@ -5,7 +5,7 @@ const state = {
   current: null,
   artifacts: [],
   previewPath: null,
-  view: "editor", // editor | browse
+  view: "editor", // editor | browse | guide
   sidebarQuery: "",
 };
 
@@ -226,8 +226,10 @@ function showBrowseView() {
   if (!state.browseResults.length) state.browseResults = [...state.models];
   $("browseView").classList.remove("hidden");
   $("editorView").classList.add("hidden");
+  $("guideView")?.classList.add("hidden");
   $("editorToolbar").classList.add("hidden");
   $("browseToolbar").classList.remove("hidden");
+  $("guideToolbar")?.classList.add("hidden");
   $("pageTitle").textContent = "저장된 업무모델 조회";
   renderBrowseTable();
   status(`조회 화면 · 저장 ${state.models.length}건`);
@@ -236,9 +238,11 @@ function showBrowseView() {
 function showEditorView() {
   state.view = "editor";
   $("browseView").classList.add("hidden");
+  $("guideView")?.classList.add("hidden");
   $("editorView").classList.remove("hidden");
   $("editorToolbar").classList.remove("hidden");
   $("browseToolbar").classList.add("hidden");
+  $("guideToolbar")?.classList.add("hidden");
   if (state.current) {
     $("pageTitle").textContent = state.current.screenName || state.current.aggregateName || "업무모델 정의";
   } else {
@@ -553,6 +557,13 @@ function bindEvents() {
     state.browseResults = [...state.models];
     showBrowseView();
   });
+  $("guideBtn")?.addEventListener("click", () => {
+    if (typeof showGuideView === "function") showGuideView();
+  });
+  $("reloadGuideBtn")?.addEventListener("click", () => {
+    if (typeof reloadGuideContent === "function") reloadGuideContent();
+  });
+  $("backFromGuideBtn")?.addEventListener("click", showEditorView);
   $("backToEditorBtn").addEventListener("click", showEditorView);
   $("refreshBrowseBtn").addEventListener("click", async () => {
     await loadModels(state.current?.id);

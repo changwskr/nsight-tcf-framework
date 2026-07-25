@@ -18,6 +18,7 @@
       </div>
       <button id="newModelBtn" class="primary full">+ 신규 업무모델</button>
       <button id="browseBtn" class="ghost full">저장된 모델 조회</button>
+      <button id="guideBtn" class="ghost full">개발 절차서</button>
       <div class="sidebar-heading">저장 모델 <span id="sidebarCount" class="count-pill">0</span></div>
       <input id="sidebarSearch" class="sidebar-search" type="search" placeholder="사이드바 검색…">
       <div id="modelList" class="model-list"></div>
@@ -46,7 +47,26 @@
           <button id="refreshBrowseBtn" class="ghost">새로고침</button>
           <button id="backToEditorBtn" class="primary">편집으로</button>
         </div>
+        <div class="toolbar hidden" id="guideToolbar">
+          <button id="reloadGuideBtn" class="ghost">새로고침</button>
+          <button id="backFromGuideBtn" class="primary">편집으로</button>
+        </div>
       </header>
+
+      <section id="guideView" class="guide-panel hidden">
+        <div class="panel-title">
+          <div>
+            <h3>NSIGHT TCF 업무모델 자동화 개발 절차서</h3>
+            <p>요구사항부터 배포·변경관리까지 20단계 표준 절차와 품질 게이트를 안내합니다.</p>
+          </div>
+          <span class="badge">단계 0–19</span>
+        </div>
+        <div class="guide-phases" id="guidePhases" aria-label="개발 단계 바로가기"></div>
+        <div class="guide-layout">
+          <nav class="guide-toc" id="guideToc" aria-label="목차"></nav>
+          <div class="guide-content" id="guideContent"></div>
+        </div>
+      </section>
 
       <section id="browseView" class="browse-panel hidden">
         <div class="panel-title">
@@ -252,6 +272,7 @@
     </main>
   </div>
   <div id="toast" class="toast"></div>
+  <script src="/guide/guide.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>
