@@ -9,6 +9,7 @@ NSIGHT-TCF 업무모델 정의·검증·코드생성 도구입니다.
 | 포트 | `8787` |
 | 저장소 | H2 파일 DB (`business_model`) |
 | 시드 | 프레임워크 Handler·schema 분석 **41건** |
+| 관련 | CRUD 절차 위저드 [`tcf-ai-crud-meoy`](../tcf-ai-crud-meoy/) → http://127.0.0.1:8788 |
 
 ## 무엇을 하는가
 

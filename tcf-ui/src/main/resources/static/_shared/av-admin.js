@@ -7,7 +7,10 @@ window.AvAdmin = (function () {
   const CONTEXT_PATH = '/av';
 
   const TX = {
-    sampleInquiry: { serviceId: 'AV.Sample.inquiry', transactionCode: 'AV-INQ-0001', serviceName: 'AV 샘플 목록 조회' }
+    sampleInquiry: { serviceId: 'AV.Sample.inquiry', transactionCode: 'AV-INQ-0001', serviceName: 'AV 샘플 목록 조회' },
+    // 거래코드는 C06 미확정 상태의 잠정값 (공식 채번 시 교체)
+    selectList: { serviceId: 'AV.CustomerContact.selectList', transactionCode: 'AV-INQ-0002', serviceName: '고객연락처 목록조회' },
+    selectDetail: { serviceId: 'AV.CustomerContact.selectDetail', transactionCode: 'AV-INQ-0003', serviceName: '고객연락처 상세조회' }
   };
 
   let config = { deploymentMode: 'bootrun', bootrunHost: 'http://127.0.0.1', tomcatGatewayUrl: 'http://localhost:8080' };
