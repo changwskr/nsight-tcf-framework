@@ -91,6 +91,9 @@
       const svSampleLink = code === 'SV'
         ? `<a href="${uiUrl(`/${lower}/sample-list.html`)}">샘플 목록 (페이징)</a>`
         : '';
+      const lnContactLink = code === 'LN'
+        ? `<a href="${uiUrl(`/${lower}/contact-list.html`)}">고객연락처 목록</a>`
+        : '';
       return `
         <article class="hub-card">
           <h2>${code} <span class="group-tag">${module.group}</span></h2>
@@ -105,6 +108,7 @@
             ${ebEventLink}
             ${ebSystemTxLink}
             ${svSampleLink}
+            ${lnContactLink}
           </div>
         </article>
       `;

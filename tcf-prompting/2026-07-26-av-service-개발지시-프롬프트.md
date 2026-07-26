@@ -1,4 +1,26 @@
-﻿# AV(av-service) 신규 업무 모듈 개발 지시 프롬프트
+## ●●●●●●●●●●● 메타프롬프팅 — 신규 업무 모듈 개발 프롬프트 생성기 ●●●●●●●●●●●●●
+
+```text
+너는 세계 최고의 프롬프트 엔지니어이자
+NSIGHT-TCF-FRAMEWORK 아키텍처 전문가야.
+
+내가 새로운 업무 모듈(예: av-service)을
+이 프레임워크의 표준 패턴대로 개발하려 할 때 사용할,
+가장 완벽한 '개발 지시 프롬프트'를 만들어줘.
+
+프롬프트에는 반드시 다음이 포함되어야 해:
+- 6계층 패키지 규약 (entry/handler → facade → service → rule → dao/mapper)
+- ServiceId 형식 ({업무코드}.{업무명}.{처리유형})
+- NsightWarBootstrap 상속, settings.gradle·build.gradle 등록 절차
+- 레퍼런스로 삼을 파일 경로 (eb-service 기준)
+- 완료 검증 방법 (bootRun 포트, POST /{업무코드}/online 샘플 호출)
+
+내가 반드시 제공해야 할 정보들
+(업무코드, 도메인 엔티티, 거래 목록, DB 테이블 등)이 있다면
+프롬프트를 만들기 전에 나에게 먼저 질문해줘.
+```
+
+# AV(av-service) 신규 업무 모듈 개발 지시 프롬프트
 
 > 4번 메타프롬프팅 산출물 (2026-07-26)
 > 확정 정보: 업무코드 **AV** · 도메인 **Sample** · 거래 **목록 조회 1건(페이징)** ·
@@ -23,7 +45,7 @@
 - 메인 클래스: NsightAvServiceApplication
   → com.nh.nsight.tcf.web.support.NsightWarBootstrap 상속 (eb-service의
     NsightEbServiceApplication과 동일 구조)
-- 실행: Spring Boot WAR (av.war) · bootRun 포트 8101 · Tomcat context /av
+- 실행: Spring Boot WAR (av.war) · bootRun 포트 8084 · Tomcat context /av
 - 거래 엔드포인트: POST /online (bootRun) / POST /av/online (ztomcat)
 - DB: H2(local, MODE=Oracle) + MyBatis mapper XML (classpath:/mapper/av/*.xml)
 - 거래로그: 공유 H2 (nsight.txlog.path — eb-service application.yml 값 복사)
@@ -103,7 +125,7 @@ application/service → application/rule → persistence/dao → mapper
 2. av-service/build.gradle 생성 — eb-service/build.gradle 복사 후
    archiveFileName을 'av.war'로 변경
 3. 루트 build.gradle 의 ext.businessModules 배열에 'av-service' 추가
-4. av-service/src/main/resources/application.yml — server.port=8101,
+4. av-service/src/main/resources/application.yml — server.port=8084,
    business-code=AV, DB URL jdbc:h2:mem:nsight_av;MODE=Oracle
 5. 게이트: gradle :av-service:compileJava 성공 확인
 
@@ -125,9 +147,9 @@ application/service → application/rule → persistence/dao → mapper
 [8] 완료 검증 (모두 통과해야 완료)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 1. gradle :av-service:compileJava — 컴파일 성공
-2. gradle :av-service:bootRun — 8101 기동, schema.sql 초기화 로그 확인
+2. gradle :av-service:bootRun — 8084 기동, schema.sql 초기화 로그 확인
 3. 샘플 호출 (tcf-ui/src/main/resources/sample-requests/ 형식 참조):
-   curl -X POST http://localhost:8101/online -H "Content-Type: application/json"
+   curl -X POST http://localhost:8084/online -H "Content-Type: application/json"
    body: header{businessCode:"AV", serviceId:"AV.Sample.inquiry",
    transactionCode:"AV-INQ-0001", processingType:"INQUIRY"} +
    body{pageNo:1, pageSize:15}

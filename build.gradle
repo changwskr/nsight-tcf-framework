@@ -103,6 +103,7 @@ project(':tcf-help') {
 // -----------------------------------------------------------------------------
 ext.businessModules = [
     'av-service',
+    'ln-service',
     'ic-service',
     'pc-service',
     'ms-service',
