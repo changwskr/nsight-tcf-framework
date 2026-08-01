@@ -11,14 +11,14 @@ import nhnis.fw.tcf.context.TcfContext;
 import nhnis.fw.tcf.context.TcfContextHolder;
 import nhnis.fw.tcf.dto.StandardRequestDto;
 import nhnis.fw.tcf.dto.StandardResponseDto;
-import nhnis.fw.tcf.etf.Etf;
-import nhnis.fw.tcf.stf.Stf;
+import nhnis.fw.tcf.etf.ETF;
+import nhnis.fw.tcf.stf.STF;
 
 /**
  * {@link TcfTransaction} 거래의 선후처리를 엮는다.
  *
  * <p>
- * 이 클래스는 배선만 담당하고 판단은 {@link Stf}와 {@link Etf}에 있다. 그래야 선후처리 로직을
+ * 이 클래스는 배선만 담당하고 판단은 {@link STF}와 {@link ETF}에 있다. 그래야 선후처리 로직을
  * AOP 없이 단위 테스트할 수 있다.
  *
  * <p>
@@ -30,10 +30,10 @@ import nhnis.fw.tcf.stf.Stf;
 @Component
 public class TCFAspect {
 
-    private final Stf stf;
-    private final Etf etf;
+    private final STF stf;
+    private final ETF etf;
 
-    public TCFAspect(Stf stf, Etf etf) {
+    public TCFAspect(STF stf, ETF etf) {
         this.stf = stf;
         this.etf = etf;
     }

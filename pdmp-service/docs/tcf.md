@@ -25,10 +25,10 @@ nhnis/fw/tcf/
 ├─ aspect/
 │   └─ TCFAspect.java      @Around — STF/ETF 오케스트레이션만
 ├─ stf/
-│   ├─ Stf.java                       선처리 진입점
+│   ├─ STF.java                       선처리 진입점
 │   └─ StandardHeaderValidator.java   헤더 필수값 검증
 ├─ etf/
-│   └─ Etf.java                       후처리 진입점 + 실패 전문 조립
+│   └─ ETF.java                       후처리 진입점 + 실패 전문 조립
 ├─ context/
 │   ├─ TcfContext.java                거래 컨텍스트 (헤더, 시작시각, 클라이언트 원본헤더)
 │   └─ TcfContextHolder.java          ThreadLocal
@@ -38,7 +38,7 @@ nhnis/fw/tcf/
 └─ dto/                               (이미 있음)
 ```
 
-핵심은 **Aspect가 로직을 갖지 않는다**는 것입니다. Aspect는 `Stf`와 `Etf`를 순서대로 부르는 배선 담당이고, 실제 로직은 평범한 `@Component`에 있습니다. 그래야 STF/ETF를 AOP 없이 단위 테스트할 수 있고, 나중에 수단을 바꿔도 로직이 안 흔들립니다.
+핵심은 **Aspect가 로직을 갖지 않는다**는 것입니다. Aspect는 `STF`와 `ETF`를 순서대로 부르는 배선 담당이고, 실제 로직은 평범한 `@Component`에 있습니다. 그래야 STF/ETF를 AOP 없이 단위 테스트할 수 있고, 나중에 수단을 바꿔도 로직이 안 흔들립니다.
 
 ## 2. 요청 흐름
 
@@ -56,7 +56,7 @@ HTTP 요청
   │     컨트롤러 매칭 + Jackson 역직렬화 → StandardRequestDto<mpcoa9999DtoIn>
   │
   ├─④ TCFAspect ─ STF 시작 ───┐   [AOP @Around]
-  │     Stf.preProcess(request, @TcfTransaction)
+  │     STF.preProcess(request, @TcfTransaction)
   │       · 헤더 정규화 + 거래정의(@TcfTransaction) 보완
   │       · 필수값 검증
   │       · SecurityContext에서 userId 보강 → MDC 갱신
@@ -65,14 +65,14 @@ HTTP 요청
   ├─⑤ Controller → Service → DAO         │
   │                                       │
   ├─⑥ TCFAspect ─ ETF ────────┘
-  │     Etf.success / businessFail / systemError
+  │     ETF.success / businessFail / systemError
   │       · Result 코드 판정, 응답 헤더 echo
   │       · 소요시간·거래 종료 로그, TcfContext 정리
   │
   └─ Jackson 직렬화 → HTTP 응답
 ```
 
-제안하셨던 5단계와 비교하면 **EtfFilter가 사라지고 JWT가 Security 체인으로 옮겨간 것**이 차이입니다. ETF는 필터가 아니라 AOP의 후반부입니다.
+제안하셨던 5단계와 비교하면 **ETFFilter가 사라지고 JWT가 Security 체인으로 옮겨간 것**이 차이입니다. ETF는 필터가 아니라 AOP의 후반부입니다.
 
 ## 3. 컨트롤러 계약
 
@@ -99,10 +99,10 @@ public StandardResponseDto<List<mpcoa9999DtoOut>> selectSalesTipList(
 | --------------------- | ----------------------------------- | ---------------- |
 | Trace/JWT 필터        | Security `AuthenticationEntryPoint` | ✗                |
 | Jackson 역직렬화 실패 | `GlobalExceptionHandler`            | ✗                |
-| STF 헤더 검증         | Aspect → `Etf.businessFail`         | ✓                |
-| Service 업무 예외     | Aspect → `Etf.businessFail`         | ✓                |
+| STF 헤더 검증         | Aspect → `ETF.businessFail`         | ✓                |
+| Service 업무 예외     | Aspect → `ETF.businessFail`         | ✓                |
 
-네 경로가 서로 다른 포맷을 내면 클라이언트가 분기 처리를 해야 합니다. 그래서 **`Etf`가 실패 전문 조립을 단독으로 책임지고, `GlobalExceptionHandler`와 `AuthenticationEntryPoint`도 `Etf`를 주입받아 쓰도록** 설계했습니다. `Etf`가 AOP 전용이 아니라 공용 컴포넌트여야 하는 이유입니다.
+네 경로가 서로 다른 포맷을 내면 클라이언트가 분기 처리를 해야 합니다. 그래서 **`ETF`가 실패 전문 조립을 단독으로 책임지고, `GlobalExceptionHandler`와 `AuthenticationEntryPoint`도 `ETF`를 주입받아 쓰도록** 설계했습니다. `ETF`가 AOP 전용이 아니라 공용 컴포넌트여야 하는 이유입니다.
 
 ## 5. 성능 감시는 두 군데서 재는 게 낫습니다
 
@@ -113,7 +113,7 @@ public StandardResponseDto<List<mpcoa9999DtoOut>> selectSalesTipList(
 한 번에 다 넣지 않고 단계마다 독립적으로 검증 가능하게 쪼갰습니다.
 
 1. **TcfTraceFilter** — 기존 `MdcLoggingFilter` 개명·확장. 다른 코드 영향 없음
-2. **TcfTransaction + Aspect + Stf/Etf** — 전문 봉투 없이 성능·거래 로그만. 컨트롤러 시그니처 안 바뀜
+2. **TcfTransaction + Aspect + STF/ETF** — 전문 봉투 없이 성능·거래 로그만. 컨트롤러 시그니처 안 바뀜
 3. **표준 전문 적용** — 컨트롤러 시그니처 변경, pdmp-ui 샘플 JSON 동반 수정
 4. **JwtAuthenticationFilter** — Security 체인 등록
 
