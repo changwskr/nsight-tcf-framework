@@ -17,6 +17,7 @@ package nhnis.fw.commons.interceptor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -41,6 +42,7 @@ import nhnis.fw.commons.exception.NhBaseException;
  * @logicalName
  */
 @Component
+@ConditionalOnProperty(name = "nhnis.fw.commons.legacy-web.enabled", havingValue = "true")
 public class ServicePreventationInterceptor implements HandlerInterceptor {
 
     private Logger LOGGER = LoggerFactory.getLogger(ServicePreventationInterceptor.class);

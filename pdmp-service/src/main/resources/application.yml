@@ -50,7 +50,8 @@ spring:
 jwt:
   # 조회 전용 단계라 검증을 꺼 둔다. 토큰 발급이 붙으면 true로 올린다.
   enabled: false
-  secret: "${PDMP_JWT_SECRET:}"
+  # 로컬 개발용 기본값(32자+). 운영은 PDMP_JWT_SECRET 환경변수로 덮어쓴다.
+  secret: "${PDMP_JWT_SECRET:pdmp-local-dev-secret-key-change-me-32b}"
   access-token-expiration: 180000
 
 ---
@@ -61,5 +62,5 @@ spring:
 
 jwt:
   enabled: false
-  secret: "${PDMP_JWT_SECRET:}"
+  secret: "${PDMP_JWT_SECRET:pdmp-local-dev-secret-key-change-me-32b}"
   access-token-expiration: 240000

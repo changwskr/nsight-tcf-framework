@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,6 +37,7 @@ import nhnis.fw.commons.exception.NhBaseException.TYPE;
 import nhnis.fw.commons.message.MessageCache;
 
 @ControllerAdvice
+@ConditionalOnProperty(name = "nhnis.fw.commons.legacy-web.enabled", havingValue = "true")
 public class ResponseBodyArgumentResolver implements ResponseBodyAdvice<Object> {
 
     private final WebConfiguration webConfiguration;

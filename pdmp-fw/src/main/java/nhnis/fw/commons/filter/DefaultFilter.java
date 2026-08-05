@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.ThreadContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.reactive.ClientHttpConnector;
 import org.springframework.stereotype.Component;
@@ -34,6 +35,7 @@ import nhnis.fw.commons.jwt.JwtProvider;
 
 @Slf4j
 @Component
+@ConditionalOnProperty(name = "nhnis.fw.commons.filter.enabled", havingValue = "true")
 public class DefaultFilter implements Filter {
 
     private final ClientHttpConnector connector;
