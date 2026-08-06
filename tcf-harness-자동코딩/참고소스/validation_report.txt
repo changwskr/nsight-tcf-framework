@@ -1,0 +1,13 @@
+NSIGHT Auto Harness Design Package Validation
+================================================
+api_operations: 17
+db_indexes: 27
+db_tables: 35
+ddl_files: 4
+gate_rule_sets: 10
+gate_rules: 48
+json_schemas: 9
+workflow_steps: 27
+workflows: 3
+
+RESULT: PASS

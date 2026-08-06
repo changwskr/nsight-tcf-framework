@@ -66,6 +66,8 @@ Handler 중심 개발이란 업무 개발자가 Spring `@RestController`를 업�
 
 플랫폼 모듈(tcf-om, tcf-gateway, tcf-jwt, tcf-batch 등)도 동일한 TCF 파이프라인과 6계층 패키지 규칙을 따른다. OM 운영관리 화면의 거래도 `OM.Auth.login` 같은 ServiceId로 처리되며, 업무 WAR와 동일한 STF·ETF를 통과한다.
 
+**설계서 ↔ 코드 Gap (Handler 단위).** 설계 문서에는 ServiceId당 Handler 1개를 가정하는 서술이 많다. 현재 코드베이스는 도메인별 Handler가 `serviceIds()`로 여러 ServiceId를 등록하고 내부에서 분기하는 패턴이 주류이다(`zman/00-설계서-코드베이스-대조표.md`). 본 장은 “Handler 중심” 원칙을 가르치되, 신규 구현은 **코드의 `serviceIds()` 등록 방식**을 따른다.
+
 업무 WAR 독립성은 배포·운영 측면에서 중요한 이점을 제공한다. SV 업무만 변경되었을 때 `sv.war`만 재배포하면 되며, IC·PC 등 다른 WAR는 영향을 받지 않는다. 장애 격리도 용이하다. 특정 WAR의 Connection Pool 고갈이 다른 WAR로 전파되지 않도록 인스턴스·Pool이 분리된다. 다만 공통 프레임워크(`tcf-core`) 버전은 전 WAR가 동일하게 유지해야 하며, 릴리즈 전략 문서(제20장)의 호환성 매트릭스를 따른다.
 
 신규 팀원 온보딩 시 "Handler만 만들면 된다"는 말은 반은 맞고 반은 틀리다. Handler는 진입점일 뿐이며, Facade·Service·Rule·DAO·Mapper·DTO·OM 등록까지 포함한 **거래 단위 개발**이 완성된 것이 진정한 "거래 개발 완료"이다. 제3편(제8~11장)에서 이 실무 흐름을 상세히 다룬다.
@@ -96,6 +98,8 @@ REST 방식에서 URL은 리소스와 동작을 동시에 표현한다. `GET /cu
   }
 }
 ```
+
+Header 필드명은 코드 기준 `userId`·`branchId`를 쓴다. 일부 매뉴얼 예시는 `user`·`branch`로 적혀 있으나, 구현체(`StandardHeader` / `StandardHeaderDto`)는 이들을 `@JsonAlias`로 수용한다.
 
 | 구분 | REST 방식 | NSIGHT TCF 방식 |
 | --- | --- | --- |
@@ -184,7 +188,7 @@ NSIGHT TCF는 HTTP/JSON 표준 전문과 ServiceId Dispatcher를 기반으로 �
 
 - [znsight-man/03-TCF-개발원칙.md](../../znsight-man/03-TCF-개발원칙.md)
 - [zman/05-TCF처리구조.md](../../zman/05-TCF처리구조.md)
-- [docs/architecture/architecture.md](../../docs/architecture/architecture.md)
+- [zdocs-1/architecture/architecture.md](../../zdocs-1/architecture/architecture.md)
 - [znsight-man/22-Online-Endpoint-기준.md](../../znsight-man/22-Online-Endpoint-기준.md)
 - [zman/06-표준전문구조.md](../../zman/06-표준전문구조.md)
 - [znsight-man/10-bootRun-Tomcat-WAR-차이.md](../../znsight-man/10-bootRun-Tomcat-WAR-차이.md)

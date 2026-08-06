@@ -1,0 +1,27 @@
+traceabilityDraft:
+  - sourceType: REQUIREMENT
+    sourceId: REQ-AV-0001
+    targetType: ASSUMPTION
+    targetId: ASM-AV-0002
+    relationType: REFERENCES
+  - sourceType: REQUIREMENT
+    sourceId: REQ-AV-0001
+    targetType: GAP
+    targetId: GAP-AV-0001
+    relationType: REFERENCES
+  - sourceType: REQUIREMENT
+    sourceId: REQ-AV-0002
+    targetType: SOURCE_CODE
+    targetId: AV.CustomerContact.selectList
+    relationType: REFERENCES
+  - sourceType: REQUIREMENT
+    sourceId: REQ-AV-0003
+    targetType: ASSUMPTION
+    targetId: ASM-AV-0002
+    relationType: REFERENCES
+  - sourceType: REQUIREMENT
+    sourceId: REQ-AV-0005
+    targetType: CONSTRAINT
+    targetId: NO_OPS_DDL_NO_AUTOPUSH
+    relationType: SATISFIES
+note: ServiceId/Program/SQL 링크는 HG-30 설계 단계에서 확정한다. 미확정 식별자를 확정값으로 쓰지 않는다.

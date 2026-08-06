@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nsight.nh.local/harness/schemas/task-input-envelope.schema.json",
+  "title": "Agent Task Input Envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contractVersion",
+    "task",
+    "baseline",
+    "inputs",
+    "scope",
+    "policies"
+  ],
+  "properties": {
+    "contractVersion": {
+      "type": "string"
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runId",
+        "stageId",
+        "stepId",
+        "taskId",
+        "attempt",
+        "idempotencyKey"
+      ],
+      "properties": {
+        "runId": {
+          "type": "string"
+        },
+        "stageId": {
+          "type": "string"
+        },
+        "stepId": {
+          "type": "string"
+        },
+        "taskId": {
+          "type": "string"
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 500
+        }
+      }
+    },
+    "baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "baselineId",
+        "ruleSetVersion",
+        "promptVersion",
+        "toolsetVersion"
+      ],
+      "properties": {
+        "baselineId": {
+          "type": "string"
+        },
+        "gitRepository": {
+          "type": "string"
+        },
+        "branch": {
+          "type": "string"
+        },
+        "commitSha": {
+          "type": "string",
+          "pattern": "^[a-fA-F0-9]{7,64}$"
+        },
+        "documentBaselineHash": {
+          "type": "string"
+        },
+        "ruleSetVersion": {
+          "type": "string"
+        },
+        "promptVersion": {
+          "type": "string"
+        },
+        "toolsetVersion": {
+          "type": "string"
+        }
+      }
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "$ref": "common-definitions.schema.json#/$defs/artifactRef"
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "readPaths",
+        "writePaths",
+        "allowedTools",
+        "networkPolicy"
+      ],
+      "properties": {
+        "readPaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "writePaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "allowedTools": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "networkPolicy": {
+          "enum": [
+            "DENY_ALL",
+            "DENY_BY_DEFAULT",
+            "ALLOWLIST_ONLY"
+          ]
+        },
+        "allowedNetworkTargets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "policies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "maxExecutionSeconds",
+        "maxAttempts"
+      ],
+      "properties": {
+        "maxExecutionSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 86400
+        },
+        "maxAttempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "maxInputTokens": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxOutputTokens": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "failOnUnverifiedFact": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    }
+  }
+}

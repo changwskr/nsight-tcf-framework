@@ -1,0 +1,22 @@
+{
+  "inventoryId": "INV-DOC-SAMPLE-AV-0001",
+  "runId": "SAMPLE-AV-INQUIRY",
+  "documents": [
+    {
+      "path": "tcf-harness-자동코딩/NSIGHT-자동-하네스-요구사항-정의서.md",
+      "role": "REQUIREMENT_SOT"
+    },
+    {
+      "path": "tcf-harness-자동코딩/NSIGHT-자동-하네스-상세설계서.md",
+      "role": "DESIGN_SOT"
+    },
+    {
+      "path": "tcf-harness-자동코딩/코딩지침/개요.md",
+      "role": "CONTRACT_PACKAGE"
+    },
+    {
+      "path": "tcf-harness-자동코딩/AGENTS.md",
+      "role": "HARNESS_CONTRACT"
+    }
+  ]
+}

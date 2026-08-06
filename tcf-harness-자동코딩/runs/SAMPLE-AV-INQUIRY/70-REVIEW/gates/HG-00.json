@@ -1,0 +1,21 @@
+{
+  "gateResultId": "GTR-HG-00-SAMPLE-AV-0001",
+  "runId": "SAMPLE-AV-INQUIRY",
+  "stageId": "S00-INPUT",
+  "gateId": "HG-00",
+  "gateVersion": "1.0.0",
+  "decision": "PASS",
+  "qualityScore": 100,
+  "hardFailureCount": 0,
+  "requiredFailureCount": 0,
+  "evaluatedAt": "2026-08-06T00:22:00+09:00",
+  "summary": "input-manifest.json 등록, 요구원문 Hash 확인, quarantine 비어 있음, Secret 탐지 없음.",
+  "ruleResults": [
+    { "ruleId": "IN-MANIFEST-PRESENT", "status": "PASS" },
+    { "ruleId": "IN-HASH-PRESENT", "status": "PASS" },
+    { "ruleId": "IN-NO-SECRET", "status": "PASS" },
+    { "ruleId": "IN-QUARANTINE-EMPTY", "status": "PASS" }
+  ],
+  "approvalIds": [],
+  "exceptionIds": []
+}

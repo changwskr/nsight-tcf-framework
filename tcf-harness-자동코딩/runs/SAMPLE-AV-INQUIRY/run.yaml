@@ -1,0 +1,31 @@
+apiVersion: harness.nsight/v1
+kind: HarnessRun
+metadata:
+  runId: SAMPLE-AV-INQUIRY
+  projectId: NSIGHT-TCF
+  createdAt: '2026-08-05T15:15:54+00:00'
+  createdBy: harness-user
+spec:
+  workflow:
+    id: WF-ONLINE-INQUIRY
+    version: 1.0.0
+  baseline:
+    repository: nsight-tcf-framework
+    branch: develop
+    commitSha: 61eebdfef7edd4ae877ab091fcc66bdeb05a160d
+  scope:
+    businessCode: AV
+    domain: AssetValuation
+    targetModules:
+      - av-service
+  policies:
+    autoRetry: true
+    maxParallelTasks: 3
+    networkPolicy: DENY_BY_DEFAULT
+    promotionMode: GATE_CONTROLLED
+status:
+  phase: VERIFYING
+  currentStageId: S85-TRACE
+  version: 11
+  contractSync: '참고소스@2026-08-06'
+  notes: 'Stage IDs aligned to 참고소스 WF-ONLINE-INQUIRY (S120-TRACE→S85-TRACE)'

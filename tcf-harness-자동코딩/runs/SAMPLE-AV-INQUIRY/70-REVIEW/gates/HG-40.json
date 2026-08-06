@@ -1,0 +1,19 @@
+{
+  "gateResultId": "GTR-HG-40-SAMPLE-AV-0001",
+  "runId": "SAMPLE-AV-INQUIRY",
+  "stageId": "S80-IMPLEMENT",
+  "gateId": "HG-40",
+  "gateVersion": "1.0.0",
+  "decision": "PASS",
+  "qualityScore": 95,
+  "hardFailureCount": 0,
+  "requiredFailureCount": 0,
+  "evaluatedAt": "2026-08-06T00:45:00+09:00",
+  "summary": "HG-30 승인 설계 기반 구현. SOURCE_DIFF/Patch 제공. 원본 00-IN 미수정. av-service에 6계층 생성.",
+  "ruleResults": [
+    { "ruleId": "IMP-DESIGN-APPROVED", "status": "PASS" },
+    { "ruleId": "IMP-NO-ORIGINAL-OVERWRITE", "status": "PASS" },
+    { "ruleId": "IMP-DIFF-PRESENT", "status": "PASS" },
+    { "ruleId": "IMP-REQ-ID-TAGS", "status": "PASS", "score": 100 }
+  ]
+}

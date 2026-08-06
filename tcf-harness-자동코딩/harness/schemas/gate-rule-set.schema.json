@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nsight.nh.local/harness/schemas/gate-rule-set.schema.json",
+  "title": "Gate Rule Set",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "const": "harness.nsight/v1"
+    },
+    "kind": {
+      "const": "GateRuleSet"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gateId",
+        "version",
+        "name"
+      ],
+      "properties": {
+        "gateId": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decisionPolicy",
+        "requiredApprovals",
+        "rules"
+      ],
+      "properties": {
+        "decisionPolicy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "hardFailureDecision",
+            "requiredFailureDecision",
+            "minimumScore"
+          ],
+          "properties": {
+            "hardFailureDecision": {
+              "const": "FAIL"
+            },
+            "requiredFailureDecision": {
+              "const": "FAIL"
+            },
+            "minimumScore": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "allowPassWithException": {
+              "type": "boolean"
+            }
+          }
+        },
+        "requiredApprovals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "role",
+              "count"
+            ],
+            "properties": {
+              "role": {
+                "type": "string"
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        },
+        "requiredArtifacts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "requiredEvidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/rule"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "type",
+        "severity",
+        "evaluator",
+        "condition",
+        "failure",
+        "exceptionAllowed"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "HARD",
+            "REQUIRED",
+            "SCORED",
+            "ADVISORY",
+            "HUMAN"
+          ]
+        },
+        "severity": {
+          "enum": [
+            "INFO",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0
+        },
+        "evaluator": {
+          "type": "string"
+        },
+        "condition": {
+          "type": "object"
+        },
+        "failure": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "message"
+          ],
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "issueType": {
+              "type": "string"
+            }
+          }
+        },
+        "exceptionAllowed": {
+          "type": "boolean"
+        },
+        "requiredApproverRole": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

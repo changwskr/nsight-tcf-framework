@@ -1,0 +1,99 @@
+apiVersion: harness.nsight/v1
+kind: GateRuleSet
+metadata:
+  gateId: HG-70
+  version: 1.0.0
+  name: Security and Quality Gate
+  description: Security and Quality Gate 자동검증 기준
+spec:
+  decisionPolicy:
+    hardFailureDecision: FAIL
+    requiredFailureDecision: FAIL
+    minimumScore: 95
+    allowPassWithException: true
+  requiredApprovals:
+  - role: QA_LEAD
+    count: 1
+  requiredArtifacts:
+  - ARCHITECTURE_REPORT
+  - SECURITY_REPORT
+  requiredEvidence:
+  - QUALITY_EVIDENCE
+  - SECURITY_EVIDENCE
+  rules:
+  - id: SEC-SECRET-ZERO
+    name: Secret 검출 0건
+    type: HARD
+    severity: CRITICAL
+    evaluator: securityMetric
+    condition:
+      metric: secretFindingCount
+      operator: EQ
+      value: 0
+    failure:
+      message: Secret 또는 Private Key가 검출되었습니다.
+      issueType: SECURITY
+    exceptionAllowed: false
+  - id: SEC-CRITICAL-VULN-ZERO
+    name: Critical 취약점 0건
+    type: HARD
+    severity: CRITICAL
+    evaluator: securityMetric
+    condition:
+      metric: criticalVulnerabilityCount
+      operator: EQ
+      value: 0
+    failure:
+      message: Critical 취약점이 있습니다.
+      issueType: SECURITY
+    exceptionAllowed: false
+  - id: ARCH-NO-DIRECT-MAPPER
+    name: Service의 Mapper 직접호출 금지
+    type: HARD
+    severity: CRITICAL
+    evaluator: archUnitRule
+    condition:
+      rule: SERVICE_MUST_NOT_DEPEND_ON_MAPPER
+    failure:
+      message: Service가 Mapper를 직접 호출합니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: ARCH-RULE-PURE
+    name: Rule의 DB·외부호출 금지
+    type: HARD
+    severity: CRITICAL
+    evaluator: archUnitRule
+    condition:
+      rule: RULE_MUST_NOT_DEPEND_ON_DB_OR_CLIENT
+    failure:
+      message: Rule에서 DB 또는 외부 Client를 호출합니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: MAPPER-CONSISTENCY
+    name: Mapper Interface·XML 정합성
+    type: REQUIRED
+    severity: HIGH
+    evaluator: mapperMetric
+    condition:
+      metric: mapperMismatchCount
+      operator: EQ
+      value: 0
+    failure:
+      message: Mapper Interface와 XML이 일치하지 않습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: QUALITY-SCORE
+    name: 정적 품질 점수
+    type: SCORED
+    severity: MEDIUM
+    evaluator: qualityMetric
+    condition:
+      metric: staticQualityScore
+      operator: GTE
+      value: 90
+    failure:
+      message: 정적 품질 점수가 기준 미달입니다.
+      issueType: QUALITY
+    exceptionAllowed: true
+    weight: 15
+    requiredApproverRole: QA_LEAD

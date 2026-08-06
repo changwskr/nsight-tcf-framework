@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nsight.nh.local/harness/schemas/task-output-envelope.schema.json",
+  "title": "Agent Task Output Envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contractVersion",
+    "taskId",
+    "status",
+    "summary",
+    "outputs",
+    "findings",
+    "traceLinks",
+    "evidence",
+    "metrics"
+  ],
+  "properties": {
+    "contractVersion": {
+      "type": "string"
+    },
+    "taskId": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "SUCCEEDED",
+        "PARTIAL",
+        "FAILED_RETRYABLE",
+        "FAILED_NON_RETRYABLE",
+        "NEEDS_HUMAN_INPUT",
+        "BLOCKED_BY_DEPENDENCY",
+        "CANCELLED"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "$ref": "common-definitions.schema.json#/$defs/artifactRef"
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "common-definitions.schema.json#/$defs/finding"
+      }
+    },
+    "traceLinks": {
+      "type": "array",
+      "items": {
+        "$ref": "common-definitions.schema.json#/$defs/traceLink"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "common-definitions.schema.json#/$defs/artifactRef"
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "durationMs"
+      ],
+      "properties": {
+        "durationMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "inputTokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "outputTokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "toolInvocations": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "retryable": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "FAILED_RETRYABLE",
+              "FAILED_NON_RETRYABLE"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "error"
+        ]
+      }
+    }
+  ]
+}

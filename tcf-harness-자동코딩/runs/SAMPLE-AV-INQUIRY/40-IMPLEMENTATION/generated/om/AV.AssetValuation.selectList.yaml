@@ -1,0 +1,9 @@
+serviceId: AV.AssetValuation.selectList
+businessCode: AV
+processingType: INQUIRY
+timeoutSeconds: 5
+enabled: true
+module: av-service
+handler: AvAssetValuationHandler
+status: DRAFT_FOR_OM_REGISTER
+note: 운영 OM 반영은 별도 승인 절차. 본 파일은 초안.

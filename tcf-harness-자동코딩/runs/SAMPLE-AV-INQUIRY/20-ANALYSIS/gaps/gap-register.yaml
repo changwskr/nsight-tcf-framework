@@ -1,0 +1,30 @@
+gaps:
+  - gapId: GAP-AV-0001
+    severity: HIGH
+    statement: 자산평가 목록의 실제 DB 테이블·컬럼·소유 도메인이 확인되지 않았다.
+    impact: 해소됨 — DA 승인으로 AV_ASSET_VALUATION / 소유 도메인 AssetValuation 확정(개발 schema.sql).
+    relatedRequirements: [REQ-AV-0001]
+    resolutionOwner: DATA_ARCHITECT
+    status: RESOLVED
+    resolvedAt: '2026-08-06T00:38:00+09:00'
+    resolution: 테이블 AV_ASSET_VALUATION, ownerDomain=AssetValuation. 운영 DDL은 별도 절차.
+
+  - gapId: GAP-AV-0002
+    severity: HIGH
+    statement: 확정 ServiceId가 아직 없다.
+    impact: 해소됨 — BA 승인으로 AV.AssetValuation.selectList 확정.
+    relatedRequirements: [REQ-AV-0003]
+    resolutionOwner: APPLICATION_ARCHITECT
+    status: RESOLVED
+    resolvedAt: '2026-08-06T00:30:00+09:00'
+    resolution: ASM-AV-0002 APPROVED — ServiceId=AV.AssetValuation.selectList
+
+  - gapId: GAP-AV-0003
+    severity: MEDIUM
+    statement: 화면 이벤트/채널(UI) 연결 요구가 입력 원문에 명시되지 않았다.
+    impact: 해소됨 — BA 승인으로 1차 범위에서 화면 UI 제외(서버 거래만).
+    relatedRequirements: [REQ-AV-0001]
+    resolutionOwner: BUSINESS_ANALYST
+    status: RESOLVED
+    resolvedAt: '2026-08-06T00:30:00+09:00'
+    resolution: 화면 UI 1차 제외, 서버 조회 거래만 범위

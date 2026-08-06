@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nsight.nh.local/harness/schemas/gate-result.schema.json",
+  "title": "Gate Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "gateResultId",
+    "runId",
+    "gateId",
+    "gateVersion",
+    "decision",
+    "evaluatedAt",
+    "hardFailureCount",
+    "requiredFailureCount",
+    "ruleResults"
+  ],
+  "properties": {
+    "gateResultId": {
+      "type": "string"
+    },
+    "runId": {
+      "type": "string"
+    },
+    "stageId": {
+      "type": "string"
+    },
+    "gateId": {
+      "type": "string"
+    },
+    "gateVersion": {
+      "type": "string"
+    },
+    "decision": {
+      "enum": [
+        "PASS",
+        "PASS_WITH_EXCEPTION",
+        "PENDING_APPROVAL",
+        "FAIL",
+        "BLOCKED",
+        "NOT_APPLICABLE",
+        "ERROR"
+      ]
+    },
+    "qualityScore": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "hardFailureCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "requiredFailureCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "evaluatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "ruleResults": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "ruleId",
+          "status"
+        ],
+        "properties": {
+          "ruleId": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "WARNING",
+              "BLOCKED",
+              "NOT_APPLICABLE"
+            ]
+          },
+          "score": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          },
+          "evidenceIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "approvalIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "exceptionIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

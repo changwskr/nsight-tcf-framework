@@ -1,0 +1,21 @@
+{
+  "manifestId": "MAN-INPUT-SAMPLE-AV-0001",
+  "runId": "SAMPLE-AV-INQUIRY",
+  "manifestType": "INPUT",
+  "stage": "S00-INPUT",
+  "status": "VALIDATED",
+  "createdAt": "2026-08-06T00:20:00+09:00",
+  "createdBy": "intake-agent",
+  "gateResultId": "GTR-HG-00-SAMPLE-AV-0001",
+  "artifacts": [
+    {
+      "artifactId": "ART-REQSRC-0001",
+      "artifactType": "REQUIREMENT_SOURCE",
+      "logicalName": "샘플_자산평가_목록조회.md",
+      "uri": "workspace://SAMPLE-AV-INQUIRY/00-IN/requirements/샘플_자산평가_목록조회.md",
+      "contentHash": "sha256:e4570e7b07484f4ac0a046464b30b5ddba019e99a543a6cc4ccc58831e9df241",
+      "required": true
+    }
+  ],
+  "contentHash": "sha256:e4570e7b07484f4ac0a046464b30b5ddba019e99a543a6cc4ccc58831e9df241"
+}

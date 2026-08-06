@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nsight.nh.local/harness/schemas/requirement-register.schema.json",
+  "title": "Requirement Register",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "runId",
+    "requirements",
+    "assumptions",
+    "conflicts"
+  ],
+  "properties": {
+    "runId": {
+      "type": "string"
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "requirementId",
+          "type",
+          "title",
+          "statement",
+          "priority",
+          "status",
+          "acceptanceCriteria",
+          "sourceEvidenceIds"
+        ],
+        "properties": {
+          "requirementId": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "FUNCTIONAL",
+              "NON_FUNCTIONAL",
+              "BUSINESS_RULE",
+              "CONSTRAINT",
+              "SECURITY",
+              "OPERATION"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "statement": {
+            "type": "string"
+          },
+          "priority": {
+            "enum": [
+              "LOW",
+              "NORMAL",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "status": {
+            "enum": [
+              "DRAFT",
+              "CONFIRMED",
+              "REJECTED",
+              "SUPERSEDED"
+            ]
+          },
+          "acceptanceCriteria": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "sourceEvidenceIds": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "$ref": "common-definitions.schema.json#/$defs/finding"
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "$ref": "common-definitions.schema.json#/$defs/finding"
+      }
+    }
+  }
+}

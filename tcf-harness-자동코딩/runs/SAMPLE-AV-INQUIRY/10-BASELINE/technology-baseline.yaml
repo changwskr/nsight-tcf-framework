@@ -1,0 +1,18 @@
+technologyBaseline:
+  jdk: 21
+  springBoot: 3.x
+  mybatis: true
+  gradle: true
+  oracle: '19c+'
+naming:
+  serviceIdPattern: '{BusinessCode}.{Domain}.{operation}'
+  observedExamples:
+    - AV.Sample.inquiry
+    - AV.CustomerContact.selectList
+layering:
+  - Handler
+  - Facade
+  - Service
+  - Rule
+  - DAO
+  - Mapper

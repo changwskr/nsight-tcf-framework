@@ -1,0 +1,7 @@
+{
+  "runId": "SAMPLE-AV-INQUIRY",
+  "from": "S110-QUALITY",
+  "to": "S120-TRACE",
+  "at": "2026-08-05T15:28:57.487Z",
+  "stateVersion": 10
+}

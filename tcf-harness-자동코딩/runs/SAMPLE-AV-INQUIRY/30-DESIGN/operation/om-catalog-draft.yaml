@@ -1,0 +1,8 @@
+omDraft:
+  serviceId: AV.AssetValuation.selectList
+  businessCode: AV
+  processingType: INQUIRY
+  timeoutSeconds: 5
+  enabled: true
+  notes:
+    - Catalog 초안만 작성. 운영 OM 반영은 승인 후 별도 절차.

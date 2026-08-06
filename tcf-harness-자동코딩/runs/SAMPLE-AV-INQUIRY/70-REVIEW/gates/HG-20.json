@@ -1,0 +1,15 @@
+{
+  "gateResultId": "GTR-HG-20-1785943364062",
+  "runId": "SAMPLE-AV-INQUIRY",
+  "gateId": "HG-20",
+  "gateVersion": "1.0.0",
+  "decision": "PASS",
+  "qualityScore": 100,
+  "hardFailureCount": 0,
+  "requiredFailureCount": 0,
+  "evaluatedAt": "2026-08-05T15:22:44.061Z",
+  "summary": "BA approved: REQ confirmed, ServiceId AV.AssetValuation.selectList, UI out of scope",
+  "ruleResults": [],
+  "approvalIds": [],
+  "exceptionIds": []
+}

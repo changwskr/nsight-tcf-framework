@@ -1,0 +1,41 @@
+{
+  "manifestId": "MAN-ANALYSIS-SAMPLE-AV-0001",
+  "runId": "SAMPLE-AV-INQUIRY",
+  "manifestType": "ANALYSIS",
+  "stage": "S30-ANALYSIS",
+  "status": "REVIEWED",
+  "createdAt": "2026-08-06T00:25:00+09:00",
+  "createdBy": "requirement-agent",
+  "gateResultId": "GTR-HG-20-SAMPLE-AV-0001",
+  "artifacts": [
+    {
+      "artifactId": "ART-REQREG-0001",
+      "artifactType": "REQUIREMENT_REGISTER",
+      "uri": "workspace://SAMPLE-AV-INQUIRY/20-ANALYSIS/requirements/requirement-register.yaml",
+      "contentHash": "sha256:9fb7561237b7719e36eeff670611bc691731e838cf3480edeb44b9f66f9515da",
+      "required": true
+    },
+    {
+      "artifactId": "ART-ASM-0001",
+      "artifactType": "ASSUMPTION_REGISTER",
+      "uri": "workspace://SAMPLE-AV-INQUIRY/20-ANALYSIS/assumptions/assumption-register.yaml",
+      "contentHash": "sha256:c18809e2c37600f058a6c338607c64cecb37322ad25d102ddfe1cef44b018b7e",
+      "required": true
+    },
+    {
+      "artifactId": "ART-GAP-0001",
+      "artifactType": "GAP_REGISTER",
+      "uri": "workspace://SAMPLE-AV-INQUIRY/20-ANALYSIS/gaps/gap-register.yaml",
+      "contentHash": "sha256:63a6d56285753dce9dd9299d514c4f7a8e580198c9dc4adad68f84b9a55b0f9e",
+      "required": true
+    },
+    {
+      "artifactId": "ART-SEV-0001",
+      "artifactType": "SOURCE_EVIDENCE",
+      "uri": "workspace://SAMPLE-AV-INQUIRY/20-ANALYSIS/evidence/source-evidence.yaml",
+      "contentHash": "sha256:963cb3f9c7fd487bd57d7e2749310358a24e69ea1e8ceb15e9cf1880410fa0e8",
+      "required": true
+    }
+  ],
+  "contentHash": "sha256:4fa683085264e7f8f987bd8bc73fff40373bdb98fcb794260e83eb9f4f64bfae"
+}

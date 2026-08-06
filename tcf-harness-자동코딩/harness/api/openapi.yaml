@@ -1,0 +1,362 @@
+openapi: 3.1.0
+info:
+  title: NSIGHT Auto Harness API
+  version: 1.0.0
+  description: 요구분석·설계·구현·검증 자동 하네스 Control Plane API
+servers:
+  - url: /harness/api/v1
+security:
+  - bearerAuth: []
+tags:
+  - {name: Runs}
+  - {name: Tasks}
+  - {name: Artifacts}
+  - {name: Gates}
+  - {name: Approvals}
+  - {name: InternalAgents}
+paths:
+  /projects/{projectId}/runs:
+    post:
+      tags: [Runs]
+      operationId: createRun
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '../schemas/run-create-request.schema.json'}
+      responses:
+        '202':
+          description: Run registered
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/RunSummary'}
+        '400': {$ref: '#/components/responses/Problem'}
+        '409': {$ref: '#/components/responses/Problem'}
+  /runs/{runId}:
+    get:
+      tags: [Runs]
+      operationId: getRun
+      parameters: [{$ref: '#/components/parameters/RunId'}]
+      responses:
+        '200':
+          description: Run detail
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/RunDetail'}
+        '404': {$ref: '#/components/responses/Problem'}
+  /runs/{runId}:suspend:
+    post:
+      tags: [Runs]
+      operationId: suspendRun
+      parameters:
+        - $ref: '#/components/parameters/RunId'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody: {$ref: '#/components/requestBodies/ActionReason'}
+      responses:
+        '200': {description: Suspended, content: {application/json: {schema: {$ref: '#/components/schemas/RunSummary'}}}}
+        '409': {$ref: '#/components/responses/Problem'}
+        '412': {$ref: '#/components/responses/Problem'}
+  /runs/{runId}:resume:
+    post:
+      tags: [Runs]
+      operationId: resumeRun
+      parameters:
+        - $ref: '#/components/parameters/RunId'
+        - $ref: '#/components/parameters/IfMatch'
+      responses:
+        '200': {description: Resumed, content: {application/json: {schema: {$ref: '#/components/schemas/RunSummary'}}}}
+  /runs/{runId}:cancel:
+    post:
+      tags: [Runs]
+      operationId: cancelRun
+      parameters:
+        - $ref: '#/components/parameters/RunId'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody: {$ref: '#/components/requestBodies/ActionReason'}
+      responses:
+        '202': {description: Cancel requested, content: {application/json: {schema: {$ref: '#/components/schemas/RunSummary'}}}}
+  /runs/{runId}/stages:
+    get:
+      tags: [Runs]
+      operationId: listRunStages
+      parameters: [{$ref: '#/components/parameters/RunId'}]
+      responses:
+        '200':
+          description: Stage list
+          content:
+            application/json:
+              schema: {type: array, items: {$ref: '#/components/schemas/StageSummary'}}
+  /runs/{runId}/tasks:
+    get:
+      tags: [Tasks]
+      operationId: listRunTasks
+      parameters:
+        - $ref: '#/components/parameters/RunId'
+        - {name: status, in: query, schema: {type: string}}
+      responses:
+        '200':
+          description: Task list
+          content:
+            application/json:
+              schema: {type: array, items: {$ref: '#/components/schemas/TaskSummary'}}
+  /tasks/{taskId}:retry:
+    post:
+      tags: [Tasks]
+      operationId: retryTask
+      parameters:
+        - {name: taskId, in: path, required: true, schema: {type: string}}
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody: {$ref: '#/components/requestBodies/ActionReason'}
+      responses:
+        '202': {description: Retry scheduled}
+  /runs/{runId}/artifacts:
+    get:
+      tags: [Artifacts]
+      operationId: listArtifacts
+      parameters:
+        - $ref: '#/components/parameters/RunId'
+        - {name: type, in: query, schema: {type: string}}
+      responses:
+        '200':
+          description: Artifact list
+          content:
+            application/json:
+              schema: {type: array, items: {$ref: '#/components/schemas/ArtifactSummary'}}
+  /runs/{runId}/evidence:
+    get:
+      tags: [Artifacts]
+      operationId: listEvidence
+      parameters: [{$ref: '#/components/parameters/RunId'}]
+      responses:
+        '200':
+          description: Evidence list
+          content:
+            application/json:
+              schema: {type: array, items: {$ref: '#/components/schemas/ArtifactSummary'}}
+  /runs/{runId}/trace-links:
+    get:
+      tags: [Artifacts]
+      operationId: listTraceLinks
+      parameters:
+        - $ref: '#/components/parameters/RunId'
+        - {name: sourceId, in: query, schema: {type: string}}
+        - {name: targetId, in: query, schema: {type: string}}
+      responses:
+        '200':
+          description: Trace links
+          content:
+            application/json:
+              schema: {type: array, items: {$ref: '#/components/schemas/TraceLink'}}
+  /runs/{runId}/gates/{gateId}:evaluate:
+    post:
+      tags: [Gates]
+      operationId: evaluateGate
+      parameters:
+        - $ref: '#/components/parameters/RunId'
+        - {name: gateId, in: path, required: true, schema: {type: string}}
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [stageId, manifestId]
+              properties:
+                stageId: {type: string}
+                manifestId: {type: string}
+                forceReevaluation: {type: boolean, default: false}
+      responses:
+        '202': {description: Gate evaluation accepted}
+  /gate-results/{gateResultId}:
+    get:
+      tags: [Gates]
+      operationId: getGateResult
+      parameters:
+        - {name: gateResultId, in: path, required: true, schema: {type: string}}
+      responses:
+        '200':
+          description: Gate result
+          content:
+            application/json:
+              schema: {$ref: '../schemas/gate-result.schema.json'}
+  /approvals/{approvalId}:approve:
+    post:
+      tags: [Approvals]
+      operationId: approve
+      parameters:
+        - {name: approvalId, in: path, required: true, schema: {type: string}}
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ApprovalDecision'}
+      responses:
+        '200': {description: Approved}
+        '409': {$ref: '#/components/responses/Problem'}
+  /approvals/{approvalId}:reject:
+    post:
+      tags: [Approvals]
+      operationId: reject
+      parameters:
+        - {name: approvalId, in: path, required: true, schema: {type: string}}
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ApprovalDecision'}
+      responses:
+        '200': {description: Rejected}
+  /internal/agents/{agentId}/tasks:claim:
+    post:
+      tags: [InternalAgents]
+      operationId: claimTask
+      security: [{workerToken: []}]
+      parameters:
+        - {name: agentId, in: path, required: true, schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [workerId, supportedContracts, leaseSeconds]
+              properties:
+                workerId: {type: string}
+                supportedContracts: {type: array, items: {type: string}}
+                leaseSeconds: {type: integer, minimum: 30, maximum: 900}
+      responses:
+        '200':
+          description: Claimed task or empty result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '../schemas/task-input-envelope.schema.json'
+                  - type: 'null'
+  /internal/tasks/{taskId}/attempts/{attemptNo}:complete:
+    post:
+      tags: [InternalAgents]
+      operationId: completeTaskAttempt
+      security: [{workerToken: []}]
+      parameters:
+        - {name: taskId, in: path, required: true, schema: {type: string}}
+        - {name: attemptNo, in: path, required: true, schema: {type: integer, minimum: 1}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '../schemas/task-output-envelope.schema.json'}
+      responses:
+        '202': {description: Output accepted for validation}
+        '409': {$ref: '#/components/responses/Problem'}
+        '423': {$ref: '#/components/responses/Problem'}
+components:
+  securitySchemes:
+    bearerAuth: {type: http, scheme: bearer, bearerFormat: JWT}
+    workerToken: {type: http, scheme: bearer, bearerFormat: JWT}
+  parameters:
+    ProjectId: {name: projectId, in: path, required: true, schema: {type: string}}
+    RunId: {name: runId, in: path, required: true, schema: {type: string}}
+    IdempotencyKey: {name: Idempotency-Key, in: header, required: true, schema: {type: string, minLength: 16, maxLength: 200}}
+    IfMatch: {name: If-Match, in: header, required: true, schema: {type: string}}
+  requestBodies:
+    ActionReason:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [actorId, reason]
+            properties:
+              actorId: {type: string}
+              reason: {type: string, minLength: 1, maxLength: 2000}
+  responses:
+    Problem:
+      description: Problem response
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/ProblemDetail'}
+  schemas:
+    RunSummary:
+      type: object
+      required: [runId, projectId, status, workflowId, workflowVersion, version]
+      properties:
+        runId: {type: string}
+        projectId: {type: string}
+        status: {type: string}
+        workflowId: {type: string}
+        workflowVersion: {type: string}
+        currentStageId: {type: [string, 'null']}
+        version: {type: integer}
+        createdAt: {type: string, format: date-time}
+    RunDetail:
+      allOf:
+        - $ref: '#/components/schemas/RunSummary'
+        - type: object
+          properties:
+            baselineId: {type: string}
+            requestedBy: {type: string}
+            startedAt: {type: [string, 'null'], format: date-time}
+            endedAt: {type: [string, 'null'], format: date-time}
+            failureCode: {type: [string, 'null']}
+            failureMessage: {type: [string, 'null']}
+    StageSummary:
+      type: object
+      properties:
+        stageId: {type: string}
+        name: {type: string}
+        order: {type: integer}
+        status: {type: string}
+        gateId: {type: [string, 'null']}
+    TaskSummary:
+      type: object
+      properties:
+        taskId: {type: string}
+        stepId: {type: string}
+        agentId: {type: string}
+        status: {type: string}
+        currentAttemptNo: {type: integer}
+    ArtifactSummary:
+      type: object
+      properties:
+        artifactId: {type: string}
+        artifactType: {type: string}
+        logicalName: {type: string}
+        status: {type: string}
+        currentVersionId: {type: string}
+        uri: {type: string}
+        contentHash: {type: string}
+    TraceLink:
+      type: object
+      required: [sourceType, sourceId, targetType, targetId, relationType]
+      properties:
+        sourceType: {type: string}
+        sourceId: {type: string}
+        targetType: {type: string}
+        targetId: {type: string}
+        relationType: {type: string}
+        confidenceScore: {type: number}
+    ApprovalDecision:
+      type: object
+      required: [approverId, role, comment]
+      properties:
+        approverId: {type: string}
+        role: {type: string}
+        comment: {type: string, minLength: 1, maxLength: 4000}
+    ProblemDetail:
+      type: object
+      required: [type, title, status, code, traceId]
+      properties:
+        type: {type: string}
+        title: {type: string}
+        status: {type: integer}
+        detail: {type: string}
+        instance: {type: string}
+        code: {type: string}
+        traceId: {type: string}

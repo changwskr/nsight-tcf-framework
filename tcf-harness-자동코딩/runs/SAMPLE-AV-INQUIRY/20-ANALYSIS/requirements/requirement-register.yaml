@@ -1,0 +1,71 @@
+requirements:
+  - requirementId: REQ-AV-0001
+    type: FUNCTIONAL
+    statement: 사용자는 평가일자·상품코드 조건으로 자산평가 목록을 조회할 수 있어야 한다.
+    priority: HIGH
+    status: CONFIRMED
+    acceptanceCriteria:
+      - 평가일자(필수 여부 미확정)와 상품코드(선택)로 검색할 수 있다.
+      - 표준 요청/응답 전문(body)으로 조건을 전달한다.
+      - 조회 전용이며 DB INSERT/UPDATE/DELETE를 수행하지 않는다.
+    sourceEvidence:
+      - uri: workspace://SAMPLE-AV-INQUIRY/00-IN/requirements/샘플_자산평가_목록조회.md
+        locator: '기능 요구 #1'
+    relatedAssumptions: [ASM-AV-0001, ASM-AV-0002]
+    relatedGaps: [GAP-AV-0001, GAP-AV-0002]
+
+  - requirementId: REQ-AV-0002
+    type: FUNCTIONAL
+    statement: 조회 결과는 페이징되어야 한다.
+    priority: HIGH
+    status: CONFIRMED
+    acceptanceCriteria:
+      - pageNo, pageSize를 입력으로 받는다.
+      - 응답에 목록과 총건수(또는 동등 페이징 메타)를 포함한다.
+      - 기존 AV 페이징 패턴(AV.CustomerContact.selectList)과 동일한 방식을 우선 적용한다.
+    sourceEvidence:
+      - uri: workspace://SAMPLE-AV-INQUIRY/00-IN/requirements/샘플_자산평가_목록조회.md
+        locator: '기능 요구 #2'
+    relatedAssumptions: [ASM-AV-0003]
+    relatedGaps: []
+
+  - requirementId: REQ-AV-0003
+    type: BUSINESS_RULE
+    statement: ServiceId는 기존 AV 모듈 명명규칙({BusinessCode}.{Domain}.{operation})을 따른다.
+    priority: HIGH
+    status: CONFIRMED
+    acceptanceCriteria:
+      - ServiceId는 AV. 접두사를 사용한다.
+      - 도메인명은 AssetValuation 후보를 사용하되, BA/AA 승인 전 확정하지 않는다.
+      - 기존 ServiceId와 중복되지 않는다.
+    sourceEvidence:
+      - uri: workspace://SAMPLE-AV-INQUIRY/00-IN/requirements/샘플_자산평가_목록조회.md
+        locator: '기능 요구 #3'
+      - uri: source://av-service/.../AvCustomerContactHandler.java
+        locator: 'AV.CustomerContact.selectList'
+    relatedAssumptions: [ASM-AV-0002]
+    relatedGaps: [GAP-AV-0002]
+
+  - requirementId: REQ-AV-0004
+    type: NFR
+    statement: 표준 요청·응답 전문을 사용하고 거래 로그·감사 로그가 기록되어야 한다.
+    priority: MEDIUM
+    status: CONFIRMED
+    acceptanceCriteria:
+      - TCF StandardRequest/Response 경로를 사용한다.
+      - Handler→Facade→Service 경로로 처리되어 프레임워크 거래 로그가 남는다.
+    sourceEvidence:
+      - uri: workspace://SAMPLE-AV-INQUIRY/00-IN/requirements/샘플_자산평가_목록조회.md
+        locator: '비기능'
+
+  - requirementId: REQ-AV-0005
+    type: CONSTRAINT
+    statement: 운영 DB DDL 직접 실행과 승인 없는 Git Push는 금지한다.
+    priority: CRITICAL
+    status: CONFIRMED
+    acceptanceCriteria:
+      - 본 Run의 OUT 패키지에 운영 배포 스크립트를 포함하지 않는다.
+      - harness가 자동 Push/Merge를 수행하지 않는다.
+    sourceEvidence:
+      - uri: workspace://SAMPLE-AV-INQUIRY/00-IN/requirements/샘플_자산평가_목록조회.md
+        locator: '제약'

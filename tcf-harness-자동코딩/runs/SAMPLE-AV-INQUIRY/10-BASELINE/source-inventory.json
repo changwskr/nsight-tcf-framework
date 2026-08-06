@@ -1,0 +1,17 @@
+{
+  "inventoryId": "INV-SRC-SAMPLE-AV-0001",
+  "runId": "SAMPLE-AV-INQUIRY",
+  "baselineCommit": "61eebdfef7edd4ae877ab091fcc66bdeb05a160d",
+  "modules": [
+    {
+      "module": "av-service",
+      "packageRoot": "com.nh.nsight.marketing.av",
+      "handlers": [
+        "AvSampleHandler (AV.Sample.inquiry)",
+        "AvCustomerContactHandler (AV.CustomerContact.selectList, AV.CustomerContact.selectDetail)"
+      ],
+      "notes": "AssetValuation 도메인 Handler는 아직 없음. CustomerContact.selectList가 페이징 목록 조회 참고 패턴."
+    }
+  ],
+  "contentHash": "sha256:61eebdfef7edd4ae877ab091fcc66bdeb05a160d000000000000000000000000"
+}

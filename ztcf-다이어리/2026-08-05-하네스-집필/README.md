@@ -23,10 +23,12 @@ TCF/PDMP 관련 **하네스 패키지**를 한곳에 정리한 문서다.
 | `tcf-harness-world` | Codex용 **메타 하네스** (역할·스킬 설계/검증) |
 | `tcf-harness-pdmp` | PDMP **계약 문서 하네스** (대상 코드 수정 없음) |
 | `tcf-harness-exe-pdmp` | PDMP **실행 하네스** (`../pdmp-service` + phases + execute.py) |
+| `tcf-harness-exe-집필` | 책 **목차 구동 집필** (`TOC.md` + `chapters/{id}` → `../ztcfbook`) |
 
 ## 실무에서 지금 쓰는 것
 
 - **PDMP 기능/안정화 구현**: `tcf-harness-exe-pdmp` + Claude `/harness`
+- **책(ztcfbook) 집필·갱신**: `tcf-harness-exe-집필` + Claude `/harness`
 - **계약만 점검·핸드오프 정의**: `tcf-harness-pdmp`
 - **하네스 자체를 설계·검증**: `tcf-harness-world`
 - **신규 Claude 프로젝트 시드**: `tcf-harness-framework`
@@ -34,6 +36,7 @@ TCF/PDMP 관련 **하네스 패키지**를 한곳에 정리한 문서다.
 
 ## 대상 코드베이스
 
-- 실행 대상(기본): `pdmp-service`
+- PDMP 실행 대상(기본): `pdmp-service`
+- 책 집필 대상(기본): `ztcfbook` (변형: `ztcfbook-m`, `ztcfbook-h`)
 - 프레임워크 분리 후보: `pdmp-fw` (아직 service 의존 미연결)
 - 방법론·다이어리: `ztcf-다이어리`

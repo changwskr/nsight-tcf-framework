@@ -1,0 +1,96 @@
+apiVersion: harness.nsight/v1
+kind: Workflow
+metadata:
+  id: WF-NEW-BUSINESS-MODULE
+  version: 1.0.0
+  name: NSIGHT 신규 업무 WAR 생성 Workflow
+  description: 업무코드·도메인으로 Gradle 모듈과 첫 거래를 생성한다.
+  labels: {businessType: MODULE, processingType: NEW_WAR}
+spec:
+  runType: NEW_BUSINESS_MODULE
+  concurrency: {projectLock: WRITE, moduleWriteLock: true}
+  defaults: {timeoutSeconds: 3600, maxAttempts: 2}
+  stages:
+    - id: S10-BASELINE
+      name: 저장소·업무코드 기준선
+      order: 10
+      dependsOn: []
+      gate: HG-10
+      steps:
+        - id: MODULE-BASELINE
+          name: 모듈·포트·업무코드 충돌 검사
+          agent: baseline-agent
+          contract: {id: module-baseline, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 1800
+          retryPolicy: TOOL_STANDARD
+          inputs: [EXTERNAL_INPUT]
+          outputs: [BASELINE, SOURCE_INVENTORY, DOCUMENT_INVENTORY, MODULE_INVENTORY, PORT_INVENTORY, BUSINESS_CODE_INVENTORY]
+          writePaths: [10-BASELINE]
+          allowedTools: [git-readonly, source-indexer, gradle-model-reader, port-scanner-config]
+    - id: S30-DESIGN
+      name: 신규 모듈 설계
+      order: 30
+      dependsOn: [S10-BASELINE]
+      gate: HG-30
+      humanApproval: true
+      steps:
+        - id: MODULE-DESIGN
+          name: 모듈·WAR·패키지·첫 ServiceId 설계
+          agent: design-agent
+          contract: {id: module-design, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 3000
+          retryPolicy: LLM_STANDARD
+          inputs: [BASELINE, MODULE_INVENTORY, BUSINESS_CODE_INVENTORY]
+          outputs: [MODULE_DESIGN, TRANSACTION_DESIGN, PROGRAM_DESIGN, DATA_DESIGN, ADR_SET, TRACEABILITY_DRAFT]
+          writePaths: [30-DESIGN]
+          allowedTools: [source-search, dependency-analyzer]
+    - id: S50-IMPLEMENT
+      name: Gradle 모듈·첫 거래 생성
+      order: 50
+      dependsOn: [S30-DESIGN]
+      gate: HG-40
+      steps:
+        - id: MODULE-GENERATE
+          name: settings.gradle·build.gradle·Bootstrap·6계층 생성
+          agent: code-agent
+          contract: {id: module-generation, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 5400
+          retryPolicy: BUILD_REPAIR
+          inputs: [MODULE_DESIGN, TRANSACTION_DESIGN, PROGRAM_DESIGN, BASELINE]
+          outputs: [GRADLE_PATCH, JAVA_SOURCE, MAPPER_XML, TEST_SOURCE, SOURCE_PATCH, SOURCE_DIFF]
+          writePaths: [40-IMPLEMENTATION, 50-TEST]
+          allowedTools: [git-worktree, source-search, patch-writer, formatter]
+    - id: S70-VERIFY
+      name: Build·기동·호출·추적 검증
+      order: 70
+      dependsOn: [S50-IMPLEMENT]
+      gate: HG-80
+      humanApproval: true
+      steps:
+        - id: MODULE-VERIFY
+          name: Build·bootRun·POST 거래 검증
+          agent: build-agent
+          contract: {id: module-verification, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 7200
+          retryPolicy: BUILD_REPAIR
+          inputs: [GRADLE_PATCH, JAVA_SOURCE, TEST_SOURCE]
+          outputs: [BUILD_EVIDENCE, TEST_EVIDENCE, RUNTIME_EVIDENCE, QUALITY_EVIDENCE, SECURITY_EVIDENCE, TRACEABILITY_REPORT, TRACE_EVIDENCE, DRIFT_REPORT]
+          writePaths: [60-EVIDENCE]
+          allowedTools: [gradle-wrapper, java-21, boot-runner, http-client, archunit, secret-scanner, trace-analyzer]
+    - id: S90-FINAL
+      name: 최종 패키징
+      order: 90
+      dependsOn: [S70-VERIFY]
+      gate: HG-90
+      humanApproval: true
+      steps:
+        - id: MODULE-PACKAGE
+          name: 모듈 소스·문서·증적 패키징
+          agent: packaging-agent
+          contract: {id: release-packaging, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 1800
+          retryPolicy: TOOL_STANDARD
+          inputs: [APPROVED_MANIFEST, EVIDENCE_MANIFEST]
+          outputs: [RELEASE_MANIFEST, FINAL_REPORT, SOURCE_PACKAGE, DOCUMENT_PACKAGE, EVIDENCE_PACKAGE]
+          writePaths: [80-STAGING, 90-OUT]
+          allowedTools: [manifest-validator, archive-writer, hash-calculator]

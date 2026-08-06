@@ -1,0 +1,24 @@
+{
+  "gateResultId": "GTR-HG-80-SAMPLE-AV-0001",
+  "runId": "SAMPLE-AV-INQUIRY",
+  "stageId": "S120-TRACE",
+  "gateId": "HG-80",
+  "gateVersion": "1.0.0",
+  "decision": "PENDING_APPROVAL",
+  "qualityScore": 98,
+  "hardFailureCount": 0,
+  "requiredFailureCount": 0,
+  "evaluatedAt": "2026-08-06T00:49:00+09:00",
+  "summary": "추적성 100%, Critical Drift 0. AA 승인 대기. 통합 REST Evidence는 advisory gap.",
+  "ruleResults": [
+    { "ruleId": "TRACE-REQ-SERVICE", "status": "PASS" },
+    { "ruleId": "TRACE-SERVICE-PROGRAM", "status": "PASS" },
+    { "ruleId": "TRACE-SQL-DB", "status": "PASS" },
+    { "ruleId": "TRACE-OM", "status": "PASS" },
+    { "ruleId": "DRIFT-CRITICAL-ZERO", "status": "PASS" },
+    { "ruleId": "TRACE-TOTAL-SCORE", "status": "PASS", "score": 98 }
+  ],
+  "requiredApprovals": [
+    { "role": "APPLICATION_ARCHITECT", "items": ["Trace/Drift 보고서 검토", "구현 결과 As-Built 승인"] }
+  ]
+}

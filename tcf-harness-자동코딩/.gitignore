@@ -1,0 +1,15 @@
+# Run workspaces (keep samples tracked via !)
+runs/*
+!runs/README.md
+!runs/_TEMPLATE/
+!runs/_TEMPLATE/**
+!runs/SAMPLE-AV-INQUIRY/
+!runs/SAMPLE-AV-INQUIRY/**
+
+# Local agent scratch
+.harness-local/
+*.tmp
+*.log
+
+# Extract dumps (optional keep)
+# _extract*.txt

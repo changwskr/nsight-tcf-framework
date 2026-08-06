@@ -1,0 +1,17 @@
+{
+  "manifestId": "MAN-IMPL-SAMPLE-AV-0001",
+  "runId": "SAMPLE-AV-INQUIRY",
+  "manifestType": "IMPLEMENTATION",
+  "stage": "S80-IMPLEMENT",
+  "status": "VALIDATED",
+  "createdAt": "2026-08-06T00:40:00+09:00",
+  "createdBy": "code-agent",
+  "artifacts": [
+    { "artifactType": "JAVA_SOURCE", "logicalName": "AvAssetValuationHandler", "uri": "workspace://SAMPLE-AV-INQUIRY/40-IMPLEMENTATION/generated/source/...", "contentHash": "sha256:impl", "required": true },
+    { "artifactType": "MAPPER_XML", "logicalName": "AvAssetValuationMapper.xml", "uri": "workspace://SAMPLE-AV-INQUIRY/40-IMPLEMENTATION/generated/mapper/AvAssetValuationMapper.xml", "contentHash": "sha256:impl", "required": true },
+    { "artifactType": "SOURCE_DIFF", "uri": "workspace://SAMPLE-AV-INQUIRY/40-IMPLEMENTATION/diff/SOURCE_DIFF.md", "contentHash": "sha256:impl", "required": true },
+    { "artifactType": "TEST_SOURCE", "logicalName": "AvAssetValuationRuleTest", "uri": "workspace://SAMPLE-AV-INQUIRY/40-IMPLEMENTATION/generated/test/AvAssetValuationRuleTest.java", "contentHash": "sha256:impl", "required": true },
+    { "artifactType": "OM_DRAFT", "uri": "workspace://SAMPLE-AV-INQUIRY/40-IMPLEMENTATION/generated/om/AV.AssetValuation.selectList.yaml", "contentHash": "sha256:impl", "required": true }
+  ],
+  "contentHash": "sha256:impl-manifest"
+}

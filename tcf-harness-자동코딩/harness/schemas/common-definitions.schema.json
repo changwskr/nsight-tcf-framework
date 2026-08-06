@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nsight.nh.local/harness/schemas/common-definitions.schema.json",
+  "title": "NSIGHT Harness Common Definitions",
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-fA-F0-9]{64}$"
+    },
+    "artifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifactId",
+        "artifactType",
+        "uri",
+        "contentHash"
+      ],
+      "properties": {
+        "artifactId": {
+          "$ref": "#/$defs/id"
+        },
+        "artifactType": {
+          "$ref": "#/$defs/id"
+        },
+        "uri": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "contentHash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "schemaId": {
+          "type": "string"
+        },
+        "schemaVersion": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "traceLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceType",
+        "sourceId",
+        "targetType",
+        "targetId",
+        "relationType"
+      ],
+      "properties": {
+        "sourceType": {
+          "$ref": "#/$defs/id"
+        },
+        "sourceId": {
+          "$ref": "#/$defs/id"
+        },
+        "targetType": {
+          "$ref": "#/$defs/id"
+        },
+        "targetId": {
+          "$ref": "#/$defs/id"
+        },
+        "relationType": {
+          "enum": [
+            "DERIVED_FROM",
+            "SATISFIES",
+            "IMPLEMENTS",
+            "INVOKES",
+            "USES",
+            "TESTED_BY",
+            "EVIDENCED_BY",
+            "SUPERSEDES",
+            "CONFLICTS_WITH",
+            "DRIFTS_FROM"
+          ]
+        },
+        "confidenceScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "findingId",
+        "type",
+        "severity",
+        "message",
+        "requiresHumanDecision"
+      ],
+      "properties": {
+        "findingId": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "enum": [
+            "ASSUMPTION",
+            "GAP",
+            "CONFLICT",
+            "RISK",
+            "ISSUE",
+            "SECURITY",
+            "LIMITATION"
+          ]
+        },
+        "severity": {
+          "enum": [
+            "INFO",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "requiresHumanDecision": {
+          "type": "boolean"
+        },
+        "relatedIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

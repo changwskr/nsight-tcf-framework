@@ -1,0 +1,17 @@
+{
+  "gateResultId": "GTR-HG-50-SAMPLE-AV-0001",
+  "runId": "SAMPLE-AV-INQUIRY",
+  "gateId": "HG-50",
+  "gateVersion": "1.0.0",
+  "decision": "PASS",
+  "qualityScore": 100,
+  "hardFailureCount": 0,
+  "requiredFailureCount": 0,
+  "evaluatedAt": "2026-08-06T00:46:00+09:00",
+  "summary": "av-service compileJava/compileTestJava EXIT=0. Evidence: 60-EVIDENCE/build/av-service-compile.log",
+  "ruleResults": [
+    { "ruleId": "BLD-EXIT-ZERO", "status": "PASS" },
+    { "ruleId": "BLD-LOG-PRESENT", "status": "PASS" },
+    { "ruleId": "BLD-NO-SKIP-TESTS-FLAG", "status": "PASS" }
+  ]
+}

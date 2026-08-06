@@ -1,0 +1,249 @@
+apiVersion: harness.nsight/v1
+kind: Workflow
+metadata:
+  id: WF-ONLINE-INQUIRY
+  version: 1.0.0
+  name: NSIGHT 온라인 조회 거래 Golden Path
+  description: 요구사항 입력부터 조회 거래 설계·구현·검증·패키징까지 수행한다.
+  labels: {businessType: ONLINE, processingType: INQUIRY}
+spec:
+  runType: ONLINE_INQUIRY
+  concurrency: {projectLock: READ, moduleWriteLock: true}
+  defaults: {timeoutSeconds: 1800, maxAttempts: 2}
+  stages:
+    - id: S00-INPUT
+      name: 입력 검증
+      order: 0
+      dependsOn: []
+      gate: HG-00
+      humanApproval: false
+      steps:
+        - id: INTAKE-VALIDATE
+          name: 입력파일 검사와 Manifest 생성
+          agent: intake-agent
+          contract: {id: intake-validation, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 600
+          retryPolicy: TOOL_STANDARD
+          inputs: [EXTERNAL_INPUT]
+          outputs: [INPUT_MANIFEST, INPUT_VALIDATION_REPORT]
+          writePaths: [00-IN]
+          allowedTools: [file-inspector, malware-scanner, hash-calculator]
+    - id: S10-BASELINE
+      name: 기준선 확정
+      order: 10
+      dependsOn: [S00-INPUT]
+      gate: HG-10
+      humanApproval: false
+      steps:
+        - id: BASELINE-CREATE
+          name: Git·문서·Rule 기준선 생성
+          agent: baseline-agent
+          contract: {id: baseline-create, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 1200
+          retryPolicy: TOOL_STANDARD
+          inputs: [INPUT_MANIFEST]
+          outputs: [BASELINE, SOURCE_INVENTORY, DOCUMENT_INVENTORY]
+          writePaths: [10-BASELINE]
+          allowedTools: [git-readonly, source-indexer, document-indexer, hash-calculator]
+    - id: S20-ANALYSIS
+      name: 요구사항·도메인 분석
+      order: 20
+      dependsOn: [S10-BASELINE]
+      gate: HG-20
+      humanApproval: true
+      steps:
+        - id: REQUIREMENT-ANALYZE
+          name: 요구사항 구조화
+          agent: requirement-agent
+          contract: {id: requirement-analysis, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 2400
+          retryPolicy: LLM_STANDARD
+          inputs: [INPUT_MANIFEST, BASELINE]
+          outputs: [REQUIREMENT_REGISTER, ASSUMPTION_REGISTER, GAP_REGISTER, SOURCE_EVIDENCE]
+          writePaths: [20-ANALYSIS/requirements, 20-ANALYSIS/assumptions, 20-ANALYSIS/gaps, 20-ANALYSIS/evidence]
+          allowedTools: [document-search, source-search, schema-validator]
+        - id: DOMAIN-ANALYZE
+          name: 도메인·데이터 소유권 초안
+          agent: domain-agent
+          contract: {id: domain-analysis, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 1800
+          retryPolicy: LLM_STANDARD
+          inputs: [REQUIREMENT_REGISTER, BASELINE]
+          outputs: [DOMAIN_MODEL, DATA_OWNERSHIP_DRAFT]
+          writePaths: [20-ANALYSIS/domain]
+          allowedTools: [document-search, source-search]
+    - id: S30-DESIGN
+      name: 상세설계
+      order: 30
+      dependsOn: [S20-ANALYSIS]
+      gate: HG-30
+      humanApproval: true
+      steps:
+        - id: DESIGN-TRANSACTION
+          name: 화면·거래·프로그램·데이터 설계
+          agent: design-agent
+          contract: {id: detail-design, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 3600
+          retryPolicy: LLM_STANDARD
+          inputs: [REQUIREMENT_REGISTER, DOMAIN_MODEL, BASELINE]
+          outputs: [SCREEN_DESIGN, TRANSACTION_DESIGN, PROGRAM_DESIGN, DATA_DESIGN, TRACEABILITY_DRAFT]
+          writePaths: [30-DESIGN]
+          allowedTools: [document-search, source-search, db-metadata-readonly, schema-validator]
+        - id: DESIGN-ADR
+          name: ADR 초안
+          agent: adr-agent
+          contract: {id: adr-draft, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 1800
+          retryPolicy: LLM_STANDARD
+          inputs: [TRANSACTION_DESIGN, PROGRAM_DESIGN, DATA_DESIGN]
+          outputs: [ADR_SET]
+          writePaths: [30-DESIGN/adr]
+          allowedTools: [document-search]
+    - id: S40-PLAN
+      name: 구현·테스트 계획
+      order: 40
+      dependsOn: [S30-DESIGN]
+      humanApproval: false
+      steps:
+        - id: IMPLEMENTATION-PLAN
+          name: 생성·수정 파일계획
+          agent: planning-agent
+          contract: {id: implementation-plan, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 1200
+          retryPolicy: LLM_STANDARD
+          inputs: [SCREEN_DESIGN, TRANSACTION_DESIGN, PROGRAM_DESIGN, DATA_DESIGN]
+          outputs: [IMPLEMENTATION_PLAN, FILE_CHANGE_PLAN, TEST_PLAN]
+          writePaths: [30-DESIGN/plan]
+          allowedTools: [source-search, dependency-analyzer]
+    - id: S50-IMPLEMENT
+      name: 구현
+      order: 50
+      dependsOn: [S40-PLAN]
+      gate: HG-40
+      humanApproval: false
+      steps:
+        - id: CODE-GENERATE
+          name: Java·설정·Patch 생성
+          agent: code-agent
+          contract: {id: nsight-code-generation, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 3600
+          retryPolicy: BUILD_REPAIR
+          inputs: [IMPLEMENTATION_PLAN, PROGRAM_DESIGN, BASELINE]
+          outputs: [JAVA_SOURCE, CONFIGURATION, SOURCE_PATCH, SOURCE_DIFF]
+          writePaths: [40-IMPLEMENTATION/generated, 40-IMPLEMENTATION/patches, 40-IMPLEMENTATION/diff, 40-IMPLEMENTATION/worktree]
+          allowedTools: [git-worktree, source-search, patch-writer, formatter]
+        - id: SQL-GENERATE
+          name: Mapper·SQL·OM 등록 초안
+          agent: sql-agent
+          contract: {id: nsight-sql-generation, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 2400
+          retryPolicy: LLM_STANDARD
+          inputs: [DATA_DESIGN, TRANSACTION_DESIGN, BASELINE]
+          outputs: [MAPPER_INTERFACE, MAPPER_XML, SQL_DRAFT, OM_REGISTRATION_DRAFT]
+          writePaths: [40-IMPLEMENTATION/generated/mapper, 40-IMPLEMENTATION/generated/sql, 40-IMPLEMENTATION/generated/om]
+          allowedTools: [source-search, db-metadata-readonly, sql-parser]
+        - id: TEST-GENERATE
+          name: 테스트 생성
+          agent: test-agent
+          contract: {id: nsight-test-generation, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 2400
+          retryPolicy: LLM_STANDARD
+          inputs: [REQUIREMENT_REGISTER, TEST_PLAN, PROGRAM_DESIGN, JAVA_SOURCE]
+          outputs: [UNIT_TEST_SOURCE, INTEGRATION_TEST_SOURCE, ARCHITECTURE_TEST_SOURCE, TEST_SCENARIO]
+          writePaths: [50-TEST]
+          allowedTools: [source-search, test-template-engine]
+    - id: S60-BUILD
+      name: Clean Build
+      order: 60
+      dependsOn: [S50-IMPLEMENT]
+      gate: HG-50
+      humanApproval: false
+      steps:
+        - id: BUILD-CLEAN
+          name: Gradle Clean Build
+          agent: build-agent
+          contract: {id: gradle-build, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 3600
+          retryPolicy: BUILD_REPAIR
+          inputs: [SOURCE_PATCH, UNIT_TEST_SOURCE, INTEGRATION_TEST_SOURCE]
+          outputs: [BUILD_EVIDENCE, BUILD_ARTIFACT]
+          writePaths: [60-EVIDENCE/build]
+          allowedTools: [gradle-wrapper, java-21, build-log-collector]
+    - id: S70-TEST
+      name: 테스트 실행
+      order: 70
+      dependsOn: [S60-BUILD]
+      gate: HG-60
+      humanApproval: false
+      steps:
+        - id: TEST-EXECUTE
+          name: Unit·Integration·Architecture Test
+          agent: test-execution-agent
+          contract: {id: gradle-test, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 3600
+          retryPolicy: NONE
+          inputs: [BUILD_ARTIFACT, TEST_SCENARIO]
+          outputs: [TEST_EVIDENCE, TEST_REPORT]
+          writePaths: [60-EVIDENCE/test]
+          allowedTools: [gradle-wrapper, java-21, junit-report-reader]
+    - id: S80-VERIFY
+      name: 품질·보안 검증
+      order: 80
+      dependsOn: [S70-TEST]
+      gate: HG-70
+      humanApproval: true
+      steps:
+        - id: QUALITY-VERIFY
+          name: 구조·명명·Mapper 검증
+          agent: quality-agent
+          contract: {id: nsight-quality-verification, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 2400
+          retryPolicy: NONE
+          inputs: [PROGRAM_DESIGN, JAVA_SOURCE, MAPPER_XML, BUILD_EVIDENCE, TEST_EVIDENCE]
+          outputs: [QUALITY_EVIDENCE, ARCHITECTURE_REPORT]
+          writePaths: [60-EVIDENCE/quality]
+          allowedTools: [archunit, checkstyle, source-analyzer, mapper-validator]
+        - id: SECURITY-VERIFY
+          name: Secret·취약점 검사
+          agent: security-agent
+          contract: {id: security-verification, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 2400
+          retryPolicy: NONE
+          inputs: [JAVA_SOURCE, CONFIGURATION, SQL_DRAFT]
+          outputs: [SECURITY_EVIDENCE, SECURITY_REPORT]
+          writePaths: [60-EVIDENCE/security]
+          allowedTools: [secret-scanner, sast, dependency-vulnerability-scanner]
+    - id: S85-TRACE
+      name: 추적성·Drift 검증
+      order: 85
+      dependsOn: [S80-VERIFY]
+      gate: HG-80
+      humanApproval: true
+      steps:
+        - id: TRACE-VERIFY
+          name: 요구사항·설계·코드·테스트 추적
+          agent: trace-agent
+          contract: {id: trace-drift-verification, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 2400
+          retryPolicy: NONE
+          inputs: [REQUIREMENT_REGISTER, TRANSACTION_DESIGN, PROGRAM_DESIGN, JAVA_SOURCE, MAPPER_XML, TEST_REPORT]
+          outputs: [TRACEABILITY_REPORT, TRACE_EVIDENCE, DRIFT_REPORT]
+          writePaths: [60-EVIDENCE/trace, 60-EVIDENCE/drift]
+          allowedTools: [trace-analyzer, source-search, mapper-validator]
+    - id: S90-FINAL
+      name: 최종검토·패키징
+      order: 90
+      dependsOn: [S85-TRACE]
+      gate: HG-90
+      humanApproval: true
+      steps:
+        - id: PACKAGE-RELEASE
+          name: 승인 산출물 패키징
+          agent: packaging-agent
+          contract: {id: release-packaging, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 1800
+          retryPolicy: TOOL_STANDARD
+          inputs: [APPROVED_DESIGN_MANIFEST, APPROVED_IMPLEMENTATION_MANIFEST, EVIDENCE_MANIFEST]
+          outputs: [RELEASE_MANIFEST, DOCUMENT_PACKAGE, SOURCE_PACKAGE, EVIDENCE_PACKAGE, FINAL_REPORT]
+          writePaths: [80-STAGING, 90-OUT]
+          allowedTools: [manifest-validator, archive-writer, hash-calculator]

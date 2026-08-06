@@ -1,0 +1,102 @@
+apiVersion: harness.nsight/v1
+kind: GateRuleSet
+metadata:
+  gateId: HG-90
+  version: 1.0.0
+  name: Final Gate
+  description: Final Gate 자동검증 기준
+spec:
+  decisionPolicy:
+    hardFailureDecision: FAIL
+    requiredFailureDecision: FAIL
+    minimumScore: 100
+    allowPassWithException: false
+  requiredApprovals:
+  - role: APPLICATION_ARCHITECT
+    count: 1
+  - role: QA_LEAD
+    count: 1
+  requiredArtifacts:
+  - RELEASE_MANIFEST
+  - FINAL_REPORT
+  requiredEvidence:
+  - BUILD_EVIDENCE
+  - TEST_EVIDENCE
+  - QUALITY_EVIDENCE
+  - SECURITY_EVIDENCE
+  - TRACE_EVIDENCE
+  rules:
+  - id: FINAL-ALL-GATES
+    name: 선행 Gate 통과
+    type: HARD
+    severity: CRITICAL
+    evaluator: gateHistory
+    condition:
+      requiredGates:
+      - HG-00
+      - HG-10
+      - HG-20
+      - HG-30
+      - HG-40
+      - HG-50
+      - HG-60
+      - HG-70
+      - HG-80
+      decisionIn:
+      - PASS
+      - PASS_WITH_EXCEPTION
+    failure:
+      message: 통과하지 않은 선행 Gate가 있습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: FINAL-CRITICAL-ISSUE-ZERO
+    name: Critical Issue 0건
+    type: HARD
+    severity: CRITICAL
+    evaluator: issueMetric
+    condition:
+      metric: openCriticalIssueCount
+      operator: EQ
+      value: 0
+    failure:
+      message: 미해결 Critical Issue가 있습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: FINAL-EXCEPTION-VALID
+    name: 예외 유효성
+    type: HARD
+    severity: CRITICAL
+    evaluator: exceptionMetric
+    condition:
+      metric: expiredOrInvalidExceptionCount
+      operator: EQ
+      value: 0
+    failure:
+      message: 만료되거나 유효하지 않은 예외가 있습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: FINAL-MANIFEST-HASH
+    name: Release Manifest Hash 완전성
+    type: REQUIRED
+    severity: HIGH
+    evaluator: manifestMetric
+    condition:
+      metric: releaseManifestHashMismatchCount
+      operator: EQ
+      value: 0
+    failure:
+      message: Release Manifest Hash가 일치하지 않습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: FINAL-HUMAN-APPROVAL
+    name: 최종 승인
+    type: HUMAN
+    severity: CRITICAL
+    evaluator: approvalCheck
+    condition:
+      approvalType: FINAL_RELEASE
+    failure:
+      message: 최종 아키텍처·품질 승인이 필요합니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+    requiredApproverRole: APPLICATION_ARCHITECT

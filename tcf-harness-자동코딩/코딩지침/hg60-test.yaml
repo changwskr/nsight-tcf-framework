@@ -1,0 +1,75 @@
+apiVersion: harness.nsight/v1
+kind: GateRuleSet
+metadata:
+  gateId: HG-60
+  version: 1.0.0
+  name: Test Gate
+  description: Test Gate 자동검증 기준
+spec:
+  decisionPolicy:
+    hardFailureDecision: FAIL
+    requiredFailureDecision: FAIL
+    minimumScore: 95
+    allowPassWithException: true
+  requiredApprovals: []
+  requiredArtifacts:
+  - TEST_REPORT
+  requiredEvidence:
+  - TEST_EVIDENCE
+  rules:
+  - id: TEST-REQUIRED-PASS
+    name: 필수 테스트 성공
+    type: HARD
+    severity: CRITICAL
+    evaluator: testReportMetric
+    condition:
+      metric: requiredTestFailureCount
+      operator: EQ
+      value: 0
+    failure:
+      message: 필수 테스트가 실패했습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: TEST-NO-SKIP-HIDING
+    name: 임의 Skip 없음
+    type: HARD
+    severity: CRITICAL
+    evaluator: testReportMetric
+    condition:
+      metric: unauthorizedSkippedTestCount
+      operator: EQ
+      value: 0
+    failure:
+      message: 승인되지 않은 Skip 테스트가 있습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: TEST-REQ-COVERAGE
+    name: 요구사항 테스트 추적률
+    type: SCORED
+    severity: HIGH
+    evaluator: traceMetric
+    condition:
+      metric: requirementTestTraceRate
+      operator: GTE
+      value: 100
+    failure:
+      message: 요구사항 테스트 추적률이 100%가 아닙니다.
+      issueType: QUALITY
+    exceptionAllowed: true
+    weight: 30
+    requiredApproverRole: QA_LEAD
+  - id: TEST-COVERAGE
+    name: 코드 Coverage
+    type: SCORED
+    severity: MEDIUM
+    evaluator: testReportMetric
+    condition:
+      metric: lineCoverage
+      operator: GTE
+      value: 80
+    failure:
+      message: 코드 Coverage가 기준 미달입니다.
+      issueType: QUALITY
+    exceptionAllowed: true
+    weight: 10
+    requiredApproverRole: QA_LEAD

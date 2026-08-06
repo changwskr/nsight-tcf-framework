@@ -1,0 +1,7 @@
+{
+  "runId": "SAMPLE-AV-INQUIRY",
+  "from": "S100-TEST",
+  "to": "S110-QUALITY",
+  "at": "2026-08-05T15:28:57.392Z",
+  "stateVersion": 9
+}

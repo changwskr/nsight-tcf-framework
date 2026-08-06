@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nh.nsight.marketing.av.persistence.mapper.AvAssetValuationMapper">
+
+    <!-- REQ-AV-001: BRANCH_ID(auth) + BASE_DATE<= + DELETE_YN='N' -->
+    <sql id="valuationSearchWhere">
+        <where>
+            AND v.BRANCH_ID = #{branchId}
+            AND v.BASE_DATE &lt;= #{baseDate}
+            AND v.DELETE_YN = 'N'
+            <if test="customerNo != null and customerNo != ''">
+                AND v.CUSTOMER_NO = #{customerNo}
+            </if>
+            <if test="assetTypeCode != null and assetTypeCode != ''">
+                AND v.ASSET_TYPE_CODE = #{assetTypeCode}
+            </if>
+            <if test="valuationStatusCode != null and valuationStatusCode != ''">
+                AND v.VALUATION_STATUS_CODE = #{valuationStatusCode}
+            </if>
+        </where>
+    </sql>
+
+    <select id="searchValuations"
+            parameterType="com.nh.nsight.marketing.av.application.dto.assetvaluation.AssetValuationSearchCriteria"
+            resultType="com.nh.nsight.marketing.av.persistence.dto.assetvaluation.AssetValuationRow">
+        /* SQL_ID: AV.AssetValuation.selectList */
+        SELECT v.ASSET_ID AS assetId,
+               v.CUSTOMER_NO AS customerNo,
+               v.ASSET_TYPE_CODE AS assetTypeCode,
+               atype.CODE_NAME AS assetTypeName,
+               v.VALUATION_AMT AS valuationAmount,
+               v.VALUATION_DATE AS valuationDate,
+               v.VALUATION_STATUS_CODE AS valuationStatusCode,
+               astat.CODE_NAME AS valuationStatusName
+          FROM AV_ASSET_VALUATION v
+          LEFT JOIN CM_CODE_DETAIL atype
+            ON atype.CODE_GROUP = 'ASSET_TYPE'
+           AND atype.CODE_VALUE = v.ASSET_TYPE_CODE
+           AND atype.USE_YN = 'Y'
+          LEFT JOIN CM_CODE_DETAIL astat
+            ON astat.CODE_GROUP = 'VALUATION_STATUS'
+           AND astat.CODE_VALUE = v.VALUATION_STATUS_CODE
+           AND astat.USE_YN = 'Y'
+        <include refid="valuationSearchWhere"/>
+         ORDER BY v.VALUATION_DATE DESC, v.ASSET_ID ASC
+         OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
+    </select>
+
+    <select id="countValuations"
+            parameterType="com.nh.nsight.marketing.av.application.dto.assetvaluation.AssetValuationSearchCriteria"
+            resultType="int">
+        /* SQL_ID: AV.AssetValuation.selectList(count) */
+        SELECT COUNT(1)
+          FROM AV_ASSET_VALUATION v
+        <include refid="valuationSearchWhere"/>
+    </select>
+
+</mapper>

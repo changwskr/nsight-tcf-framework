@@ -1,0 +1,77 @@
+apiVersion: harness.nsight/v1
+kind: GateRuleSet
+metadata:
+  gateId: HG-40
+  version: 1.0.0
+  name: Implementation Gate
+  description: Implementation Gate 자동검증 기준
+spec:
+  decisionPolicy:
+    hardFailureDecision: FAIL
+    requiredFailureDecision: FAIL
+    minimumScore: 90
+    allowPassWithException: true
+  requiredApprovals: []
+  requiredArtifacts:
+  - SOURCE_PATCH
+  - SOURCE_DIFF
+  - JAVA_SOURCE
+  - MAPPER_XML
+  - TEST_SOURCE
+  requiredEvidence: []
+  rules:
+  - id: IMP-DESIGN-APPROVED
+    name: 승인 설계 기반 구현
+    type: HARD
+    severity: CRITICAL
+    evaluator: manifestReference
+    condition:
+      requiredGate: HG-30
+      decisionIn:
+      - PASS
+      - PASS_WITH_EXCEPTION
+    failure:
+      message: 승인된 설계 Manifest가 없습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: IMP-NO-ORIGINAL-OVERWRITE
+    name: 원본 직접수정 금지
+    type: HARD
+    severity: CRITICAL
+    evaluator: workspaceMetric
+    condition:
+      metric: immutableSourceModifiedCount
+      operator: EQ
+      value: 0
+    failure:
+      message: 불변 원본이 수정되었습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: IMP-DIFF-PRESENT
+    name: 변경 Diff 제공
+    type: REQUIRED
+    severity: HIGH
+    evaluator: artifactPresence
+    condition:
+      requiredTypes:
+      - SOURCE_DIFF
+      - SOURCE_PATCH
+    failure:
+      message: 소스 Diff 또는 Patch가 없습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: IMP-REQ-ID-TAGS
+    name: 요구사항 추적 태그
+    type: SCORED
+    severity: MEDIUM
+    evaluator: sourceMetric
+    condition:
+      metric: generatedFileRequirementTagRate
+      operator: GTE
+      value: 95
+    failure:
+      message: 생성 파일의 요구사항 추적 태그가 부족합니다.
+      issueType: QUALITY
+    exceptionAllowed: true
+    weight: 10
+    requiredApproverRole: APPLICATION_ARCHITECT

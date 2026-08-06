@@ -1,0 +1,69 @@
+apiVersion: harness.nsight/v1
+kind: GateRuleSet
+metadata:
+  gateId: HG-00
+  version: 1.0.0
+  name: Input Gate
+  description: Input Gate 자동검증 기준
+spec:
+  decisionPolicy:
+    hardFailureDecision: FAIL
+    requiredFailureDecision: FAIL
+    minimumScore: 100
+    allowPassWithException: false
+  requiredApprovals: []
+  requiredArtifacts:
+  - INPUT_MANIFEST
+  requiredEvidence:
+  - INPUT_VALIDATION_REPORT
+  rules:
+  - id: INPUT-MALWARE-FREE
+    name: 악성파일 없음
+    type: HARD
+    severity: CRITICAL
+    evaluator: artifactScan
+    condition:
+      metric: malwareDetectedCount
+      operator: EQ
+      value: 0
+    failure:
+      message: 악성 또는 의심 파일이 발견되었습니다.
+      issueType: SECURITY
+    exceptionAllowed: false
+  - id: INPUT-HASH-COMPLETE
+    name: 입력 Hash 완전성
+    type: REQUIRED
+    severity: HIGH
+    evaluator: manifestMetric
+    condition:
+      metric: missingContentHashCount
+      operator: EQ
+      value: 0
+    failure:
+      message: Hash가 없는 입력 Artifact가 존재합니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: INPUT-REQUIRED-PRESENT
+    name: 필수 입력 존재
+    type: REQUIRED
+    severity: HIGH
+    evaluator: artifactPresence
+    condition:
+      requiredTypes:
+      - REQUIREMENT_SOURCE
+    failure:
+      message: 요구사항 원본이 없습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: INPUT-PII-CLASSIFIED
+    name: 개인정보·보안등급 분류
+    type: HUMAN
+    severity: HIGH
+    evaluator: approvalCheck
+    condition:
+      approvalType: INPUT_DATA_CLASSIFICATION
+    failure:
+      message: 입력자료 보안등급 승인이 필요합니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+    requiredApproverRole: SECURITY_REVIEWER

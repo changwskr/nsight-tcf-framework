@@ -1,0 +1,12 @@
+architecture:
+  module: av-service
+  style: NSIGHT-TCF 6-layer WAR
+  serviceId: AV.AssetValuation.selectList
+  transactionType: INQUIRY
+  referencePattern: AV.CustomerContact.selectList
+decisions:
+  - ADR-001
+traceLinks:
+  - { sourceType: REQUIREMENT, sourceId: REQ-AV-0001, targetType: SERVICE_ID, targetId: AV.AssetValuation.selectList, relationType: SATISFIES }
+  - { sourceType: SERVICE_ID, sourceId: AV.AssetValuation.selectList, targetType: PROGRAM, targetId: AvAssetValuationHandler, relationType: IMPLEMENTS }
+  - { sourceType: SERVICE_ID, sourceId: AV.AssetValuation.selectList, targetType: DB_OBJECT, targetId: AV_ASSET_VALUATION, relationType: USES }

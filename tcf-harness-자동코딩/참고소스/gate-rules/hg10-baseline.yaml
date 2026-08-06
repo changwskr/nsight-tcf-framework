@@ -1,0 +1,69 @@
+apiVersion: harness.nsight/v1
+kind: GateRuleSet
+metadata:
+  gateId: HG-10
+  version: 1.0.0
+  name: Baseline Gate
+  description: Baseline Gate 자동검증 기준
+spec:
+  decisionPolicy:
+    hardFailureDecision: FAIL
+    requiredFailureDecision: FAIL
+    minimumScore: 100
+    allowPassWithException: false
+  requiredApprovals: []
+  requiredArtifacts:
+  - BASELINE
+  - SOURCE_INVENTORY
+  - DOCUMENT_INVENTORY
+  requiredEvidence: []
+  rules:
+  - id: BASE-GIT-SHA
+    name: Git Commit SHA 고정
+    type: HARD
+    severity: CRITICAL
+    evaluator: baselineField
+    condition:
+      field: gitCommitSha
+      pattern: ^[a-fA-F0-9]{7,64}$
+    failure:
+      message: Git Commit SHA가 확정되지 않았습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: BASE-RULE-VERSION
+    name: Rule 버전 고정
+    type: REQUIRED
+    severity: HIGH
+    evaluator: baselineField
+    condition:
+      field: ruleSetVersion
+      notBlank: true
+    failure:
+      message: Rule Set 버전이 없습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: BASE-PROMPT-VERSION
+    name: Prompt 버전 고정
+    type: REQUIRED
+    severity: HIGH
+    evaluator: baselineField
+    condition:
+      field: promptVersion
+      notBlank: true
+    failure:
+      message: Prompt 버전이 없습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: BASE-INVENTORY-HASH
+    name: 인벤토리 Hash 완전성
+    type: REQUIRED
+    severity: HIGH
+    evaluator: manifestMetric
+    condition:
+      metric: inventoryHashMissingCount
+      operator: EQ
+      value: 0
+    failure:
+      message: 인벤토리 Hash가 누락되었습니다.
+      issueType: QUALITY
+    exceptionAllowed: false

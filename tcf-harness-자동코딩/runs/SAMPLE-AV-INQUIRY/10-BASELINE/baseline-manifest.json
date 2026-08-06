@@ -1,0 +1,34 @@
+{
+  "manifestId": "MAN-BASELINE-SAMPLE-AV-0001",
+  "runId": "SAMPLE-AV-INQUIRY",
+  "manifestType": "BASELINE",
+  "stage": "S10-BASELINE",
+  "status": "VALIDATED",
+  "createdAt": "2026-08-06T00:21:00+09:00",
+  "createdBy": "baseline-agent",
+  "gateResultId": "GTR-HG-10-SAMPLE-AV-0001",
+  "artifacts": [
+    {
+      "artifactId": "ART-BASE-0001",
+      "artifactType": "BASELINE",
+      "uri": "workspace://SAMPLE-AV-INQUIRY/10-BASELINE/baseline.yaml",
+      "contentHash": "sha256:6bf92d9f51245c5020aefe8ad94353eea7b705247ddc30cb8284f959776b1951",
+      "required": true
+    },
+    {
+      "artifactId": "ART-SRCINV-0001",
+      "artifactType": "SOURCE_INVENTORY",
+      "uri": "workspace://SAMPLE-AV-INQUIRY/10-BASELINE/source-inventory.json",
+      "contentHash": "sha256:4b82195add575d05b2edea24b9c19a2a218273077e9beee59f89d8b8a1b2b985",
+      "required": true
+    },
+    {
+      "artifactId": "ART-DOCINV-0001",
+      "artifactType": "DOCUMENT_INVENTORY",
+      "uri": "workspace://SAMPLE-AV-INQUIRY/10-BASELINE/document-inventory.json",
+      "contentHash": "sha256:dafb9710446368b87ec48a45f3dffe55e6b7cab5049c937214fb0dd139394ec6",
+      "required": true
+    }
+  ],
+  "contentHash": "sha256:748eaa97104626810f3a82fdbf5a2508471d5053f39999eae6a2212ca317a96f"
+}

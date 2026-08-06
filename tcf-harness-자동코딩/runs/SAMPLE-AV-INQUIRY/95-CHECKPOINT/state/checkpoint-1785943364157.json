@@ -1,0 +1,7 @@
+{
+  "runId": "SAMPLE-AV-INQUIRY",
+  "from": "S30-ANALYSIS",
+  "to": "S50-DESIGN",
+  "at": "2026-08-05T15:22:44.157Z",
+  "stateVersion": 4
+}

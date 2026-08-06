@@ -1,0 +1,24 @@
+sourceEvidence:
+  - evidenceId: SEV-0001
+    type: REQUIREMENT_SOURCE
+    uri: workspace://SAMPLE-AV-INQUIRY/00-IN/requirements/샘플_자산평가_목록조회.md
+    contentHash: 'sha256:e4570e7b07484f4ac0a046464b30b5ddba019e99a543a6cc4ccc58831e9df241'
+    usedBy: [REQ-AV-0001, REQ-AV-0002, REQ-AV-0003, REQ-AV-0004, REQ-AV-0005]
+
+  - evidenceId: SEV-0002
+    type: SOURCE_CODE
+    uri: source://av-service/src/main/java/com/nh/nsight/marketing/av/entry/handler/AvCustomerContactHandler.java
+    locator: 'serviceIds AV.CustomerContact.selectList'
+    usedBy: [REQ-AV-0002, REQ-AV-0003, ASM-AV-0002, ASM-AV-0003]
+
+  - evidenceId: SEV-0003
+    type: SOURCE_CODE
+    uri: source://av-service/src/main/resources/mapper/av/AvCustomerContactMapper.xml
+    locator: 'OFFSET/FETCH paging + AV_CUSTOMER_CONTACT'
+    usedBy: [REQ-AV-0002, ASM-AV-0003]
+
+  - evidenceId: SEV-0004
+    type: BASELINE
+    uri: workspace://SAMPLE-AV-INQUIRY/10-BASELINE/baseline.yaml
+    locator: 'commitSha 61eebdfef7edd4ae877ab091fcc66bdeb05a160d'
+    usedBy: [REQ-AV-0005]

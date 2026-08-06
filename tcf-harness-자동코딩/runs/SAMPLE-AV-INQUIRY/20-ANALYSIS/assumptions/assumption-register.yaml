@@ -1,0 +1,30 @@
+assumptions:
+  - assumptionId: ASM-AV-0001
+    statement: 검색 조건의 평가일자는 단일일(evalDate) 기준이며, 기간 검색은 1차 범위에서 제외한다.
+    risk: MEDIUM
+    approvalStatus: APPROVED
+    approvedBy: BUSINESS_ANALYST
+    approvedAt: '2026-08-06T00:30:00+09:00'
+    requiresHumanDecision: true
+    relatedRequirements: [REQ-AV-0001]
+
+  - assumptionId: ASM-AV-0002
+    statement: 확정 ServiceId는 AV.AssetValuation.selectList 이다. (기존 CustomerContact.selectList 패턴 정렬)
+    risk: HIGH
+    approvalStatus: APPROVED
+    approvedBy: BUSINESS_ANALYST
+    approvedAt: '2026-08-06T00:30:00+09:00'
+    requiresHumanDecision: true
+    relatedRequirements: [REQ-AV-0001, REQ-AV-0003]
+    evidence:
+      - AvCustomerContactHandler SELECT_LIST = AV.CustomerContact.selectList
+      - BA 승인(2026-08-06): AV.AssetValuation.selectList 확정
+
+  - assumptionId: ASM-AV-0003
+    statement: 페이징은 pageNo/pageSize + OFFSET/FETCH 패턴을 CustomerContact와 동일하게 사용한다.
+    risk: LOW
+    approvalStatus: APPROVED
+    approvedBy: BUSINESS_ANALYST
+    approvedAt: '2026-08-06T00:30:00+09:00'
+    requiresHumanDecision: false
+    relatedRequirements: [REQ-AV-0002]

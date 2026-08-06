@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nsight.nh.local/harness/schemas/artifact-manifest.schema.json",
+  "title": "Artifact Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifestId",
+    "runId",
+    "manifestType",
+    "stage",
+    "status",
+    "createdAt",
+    "artifacts",
+    "contentHash"
+  ],
+  "properties": {
+    "manifestId": {
+      "type": "string"
+    },
+    "runId": {
+      "type": "string"
+    },
+    "manifestType": {
+      "enum": [
+        "INPUT",
+        "BASELINE",
+        "ANALYSIS",
+        "DESIGN",
+        "IMPLEMENTATION",
+        "TEST",
+        "EVIDENCE",
+        "REVIEW",
+        "STAGING",
+        "RELEASE",
+        "ARCHIVE"
+      ]
+    },
+    "stage": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "VALIDATED",
+        "APPROVED",
+        "PROMOTED",
+        "RELEASED",
+        "INVALIDATED"
+      ]
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "createdBy": {
+      "type": "string"
+    },
+    "gateResultId": {
+      "type": "string"
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "common-definitions.schema.json#/$defs/artifactRef"
+      }
+    },
+    "contentHash": {
+      "$ref": "common-definitions.schema.json#/$defs/sha256"
+    }
+  }
+}

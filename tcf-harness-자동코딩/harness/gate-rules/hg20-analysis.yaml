@@ -1,0 +1,88 @@
+apiVersion: harness.nsight/v1
+kind: GateRuleSet
+metadata:
+  gateId: HG-20
+  version: 1.0.0
+  name: Analysis Gate
+  description: Analysis Gate 자동검증 기준
+spec:
+  decisionPolicy:
+    hardFailureDecision: FAIL
+    requiredFailureDecision: FAIL
+    minimumScore: 90
+    allowPassWithException: true
+  requiredApprovals:
+  - role: BUSINESS_ANALYST
+    count: 1
+  requiredArtifacts:
+  - REQUIREMENT_REGISTER
+  - ASSUMPTION_REGISTER
+  - SOURCE_EVIDENCE
+  requiredEvidence: []
+  rules:
+  - id: ANL-REQ-SOURCE
+    name: 요구사항 원문 근거
+    type: HARD
+    severity: CRITICAL
+    evaluator: traceMetric
+    condition:
+      metric: requirementSourceEvidenceRate
+      operator: EQ
+      value: 100
+    failure:
+      message: 원문 근거가 없는 요구사항이 있습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: ANL-REQ-AC
+    name: 수용기준 존재
+    type: REQUIRED
+    severity: HIGH
+    evaluator: requirementMetric
+    condition:
+      metric: acceptanceCriteriaCoverage
+      operator: EQ
+      value: 100
+    failure:
+      message: 수용기준이 없는 요구사항이 있습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: ANL-CONFLICT-RESOLVED
+    name: Critical 충돌 해소
+    type: HARD
+    severity: CRITICAL
+    evaluator: findingMetric
+    condition:
+      metric: openCriticalConflictCount
+      operator: EQ
+      value: 0
+    failure:
+      message: 해결되지 않은 Critical 요구사항 충돌이 있습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: ANL-ASSUMPTION-APPROVED
+    name: 중요 가정 승인
+    type: HUMAN
+    severity: HIGH
+    evaluator: approvalCheck
+    condition:
+      approvalType: ASSUMPTION_CONFIRMATION
+    failure:
+      message: 중요 가정의 업무 승인이 필요합니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+    requiredApproverRole: BUSINESS_ANALYST
+  - id: ANL-REQ-COMPLETENESS
+    name: 요구사항 완전성
+    type: SCORED
+    severity: MEDIUM
+    evaluator: qualityMetric
+    condition:
+      metric: requirementCompletenessScore
+      operator: GTE
+      value: 90
+    failure:
+      message: 요구사항 완전성이 기준 미달입니다.
+      issueType: QUALITY
+    exceptionAllowed: true
+    weight: 20
+    requiredApproverRole: BUSINESS_ANALYST

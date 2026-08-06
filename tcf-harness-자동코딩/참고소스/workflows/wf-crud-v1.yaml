@@ -1,0 +1,113 @@
+apiVersion: harness.nsight/v1
+kind: Workflow
+metadata:
+  id: WF-CRUD
+  version: 1.0.0
+  name: NSIGHT CRUD 개발 Workflow
+  description: CRUD 기능 묶음을 분석·설계·생성·검증한다.
+  labels: {businessType: ONLINE, processingType: CRUD}
+spec:
+  runType: CRUD
+  concurrency: {projectLock: READ, moduleWriteLock: true}
+  defaults: {timeoutSeconds: 2400, maxAttempts: 2}
+  stages:
+    - id: S10-BASELINE
+      name: 입력·Baseline
+      order: 10
+      dependsOn: []
+      gate: HG-10
+      steps:
+        - id: CRUD-BASELINE
+          name: 입력 검증과 Baseline
+          agent: baseline-agent
+          contract: {id: crud-baseline, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 1800
+          retryPolicy: TOOL_STANDARD
+          inputs: [EXTERNAL_INPUT]
+          outputs: [INPUT_MANIFEST, BASELINE, SOURCE_INVENTORY]
+          writePaths: [00-IN, 10-BASELINE]
+          allowedTools: [file-inspector, git-readonly, source-indexer]
+    - id: S20-ANALYSIS
+      name: CRUD 분석
+      order: 20
+      dependsOn: [S10-BASELINE]
+      gate: HG-20
+      humanApproval: true
+      steps:
+        - id: CRUD-ANALYZE
+          name: C·R·U·D 요구사항 분석
+          agent: requirement-agent
+          contract: {id: crud-analysis, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 2400
+          retryPolicy: LLM_STANDARD
+          inputs: [INPUT_MANIFEST, BASELINE]
+          outputs: [REQUIREMENT_REGISTER, CRUD_FUNCTION_MATRIX, ASSUMPTION_REGISTER]
+          writePaths: [20-ANALYSIS]
+          allowedTools: [document-search, source-search, db-metadata-readonly]
+    - id: S30-DESIGN
+      name: CRUD 상세설계
+      order: 30
+      dependsOn: [S20-ANALYSIS]
+      gate: HG-30
+      humanApproval: true
+      steps:
+        - id: CRUD-DESIGN
+          name: ServiceId·DTO·6계층·SQL 설계
+          agent: design-agent
+          contract: {id: crud-design, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 3600
+          retryPolicy: LLM_STANDARD
+          inputs: [REQUIREMENT_REGISTER, CRUD_FUNCTION_MATRIX, BASELINE]
+          outputs: [CRUD_DESIGN_SET, TRACEABILITY_DRAFT]
+          writePaths: [30-DESIGN]
+          allowedTools: [source-search, db-metadata-readonly, schema-validator]
+    - id: S50-IMPLEMENT
+      name: CRUD 구현·Test 생성
+      order: 50
+      dependsOn: [S30-DESIGN]
+      gate: HG-40
+      steps:
+        - id: CRUD-GENERATE
+          name: Handler부터 Mapper·Test 생성
+          agent: code-agent
+          contract: {id: crud-generation, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 5400
+          retryPolicy: BUILD_REPAIR
+          inputs: [CRUD_DESIGN_SET, BASELINE]
+          outputs: [JAVA_SOURCE, MAPPER_XML, SQL_DRAFT, TEST_SOURCE, SOURCE_PATCH, SOURCE_DIFF]
+          writePaths: [40-IMPLEMENTATION, 50-TEST]
+          allowedTools: [git-worktree, source-search, patch-writer, test-template-engine]
+    - id: S70-VERIFY
+      name: Build·Test·품질·추적 검증
+      order: 70
+      dependsOn: [S50-IMPLEMENT]
+      gate: HG-80
+      humanApproval: true
+      steps:
+        - id: CRUD-VERIFY
+          name: 통합검증
+          agent: quality-agent
+          contract: {id: crud-verification, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 7200
+          retryPolicy: NONE
+          inputs: [JAVA_SOURCE, MAPPER_XML, TEST_SOURCE, CRUD_DESIGN_SET]
+          outputs: [BUILD_EVIDENCE, TEST_EVIDENCE, QUALITY_EVIDENCE, SECURITY_EVIDENCE, TRACEABILITY_REPORT, TRACE_EVIDENCE, DRIFT_REPORT]
+          writePaths: [60-EVIDENCE]
+          allowedTools: [gradle-wrapper, java-21, archunit, secret-scanner, trace-analyzer]
+    - id: S90-FINAL
+      name: 최종 패키징
+      order: 90
+      dependsOn: [S70-VERIFY]
+      gate: HG-90
+      humanApproval: true
+      steps:
+        - id: CRUD-PACKAGE
+          name: 승인 산출물 패키징
+          agent: packaging-agent
+          contract: {id: release-packaging, version: 1.0.0, inputSchema: schemas/task-input-envelope.schema.json, outputSchema: schemas/task-output-envelope.schema.json}
+          timeoutSeconds: 1800
+          retryPolicy: TOOL_STANDARD
+          inputs: [APPROVED_MANIFEST, EVIDENCE_MANIFEST]
+          outputs: [RELEASE_MANIFEST, FINAL_REPORT, SOURCE_PACKAGE, DOCUMENT_PACKAGE, EVIDENCE_PACKAGE]
+          writePaths: [80-STAGING, 90-OUT]
+          allowedTools: [manifest-validator, archive-writer, hash-calculator]

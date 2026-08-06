@@ -1,0 +1,20 @@
+{
+  "manifestId": "MAN-INPUT-0001",
+  "runId": "RUN-20260805-0001",
+  "manifestType": "INPUT",
+  "stage": "S00-INPUT",
+  "status": "VALIDATED",
+  "createdAt": "2026-08-05T23:38:00+09:00",
+  "createdBy": "intake-agent",
+  "gateResultId": "GTR-HG00-0001",
+  "artifacts": [
+    {
+      "artifactId": "ART-REQSRC-0001",
+      "artifactType": "REQUIREMENT_SOURCE",
+      "uri": "workspace://RUN-20260805-0001/00-IN/requirements/자동_하네스_요구사항_정의.txt",
+      "contentHash": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+      "required": true
+    }
+  ],
+  "contentHash": "sha256:abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789"
+}

@@ -1,0 +1,30 @@
+baselineId: BASE-SAMPLE-AV-0001
+runId: SAMPLE-AV-INQUIRY
+status: CONFIRMED
+createdAt: '2026-08-06T00:21:00+09:00'
+createdBy: baseline-agent
+git:
+  repository: nsight-tcf-framework
+  branch: develop
+  commitSha: 61eebdfef7edd4ae877ab091fcc66bdeb05a160d
+documentBaseline:
+  inputManifestId: MAN-INPUT-SAMPLE-AV-0001
+  inputManifestHash: 'sha256:e4570e7b07484f4ac0a046464b30b5ddba019e99a543a6cc4ccc58831e9df241'
+technology:
+  java: '21'
+  springBoot: '3.x'
+  build: Gradle
+  persistence: MyBatis
+versions:
+  ruleSetVersion: NSIGHT-ARCH-1.0
+  promptVersion: AUTO-CODING-HARNESS-1.0
+  workflowId: WF-ONLINE-INQUIRY
+  workflowVersion: 1.0.0
+scope:
+  businessCode: AV
+  domain: AssetValuation
+  targetModules:
+    - av-service
+notes:
+  - av-service 기존 ServiceId 패턴: AV.Sample.inquiry, AV.CustomerContact.selectList
+  - 작업 트리에 미커밋 harness 변경이 있으나 Baseline SHA는 origin/develop HEAD(61eebdf)로 고정

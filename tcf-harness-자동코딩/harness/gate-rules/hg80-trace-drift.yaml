@@ -1,0 +1,102 @@
+apiVersion: harness.nsight/v1
+kind: GateRuleSet
+metadata:
+  gateId: HG-80
+  version: 1.0.0
+  name: Trace and Drift Gate
+  description: Trace and Drift Gate 자동검증 기준
+spec:
+  decisionPolicy:
+    hardFailureDecision: FAIL
+    requiredFailureDecision: FAIL
+    minimumScore: 95
+    allowPassWithException: true
+  requiredApprovals:
+  - role: APPLICATION_ARCHITECT
+    count: 1
+  requiredArtifacts:
+  - TRACEABILITY_REPORT
+  - DRIFT_REPORT
+  requiredEvidence:
+  - TRACE_EVIDENCE
+  rules:
+  - id: TRACE-REQ-SERVICE
+    name: 요구사항–ServiceId 추적률
+    type: HARD
+    severity: CRITICAL
+    evaluator: traceMetric
+    condition:
+      metric: requirementServiceTraceRate
+      operator: EQ
+      value: 100
+    failure:
+      message: ServiceId에 연결되지 않은 요구사항이 있습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: TRACE-SERVICE-PROGRAM
+    name: ServiceId–프로그램 추적률
+    type: HARD
+    severity: CRITICAL
+    evaluator: traceMetric
+    condition:
+      metric: serviceProgramTraceRate
+      operator: EQ
+      value: 100
+    failure:
+      message: 프로그램에 연결되지 않은 ServiceId가 있습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: TRACE-SQL-DB
+    name: SQL–DB 객체 추적률
+    type: REQUIRED
+    severity: HIGH
+    evaluator: traceMetric
+    condition:
+      metric: sqlDbObjectTraceRate
+      operator: EQ
+      value: 100
+    failure:
+      message: DB 객체에 연결되지 않은 SQL이 있습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: TRACE-OM
+    name: ServiceId–OM Catalog 정합성
+    type: REQUIRED
+    severity: HIGH
+    evaluator: traceMetric
+    condition:
+      metric: serviceOmCatalogConsistencyRate
+      operator: EQ
+      value: 100
+    failure:
+      message: OM Catalog 등록 초안이 누락되거나 불일치합니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: DRIFT-CRITICAL-ZERO
+    name: Critical Drift 0건
+    type: HARD
+    severity: CRITICAL
+    evaluator: driftMetric
+    condition:
+      metric: openCriticalDriftCount
+      operator: EQ
+      value: 0
+    failure:
+      message: Critical Drift가 존재합니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: TRACE-TOTAL-SCORE
+    name: 전체 추적성 점수
+    type: SCORED
+    severity: HIGH
+    evaluator: traceMetric
+    condition:
+      metric: overallTraceabilityScore
+      operator: GTE
+      value: 98
+    failure:
+      message: 전체 추적성 점수가 기준 미달입니다.
+      issueType: QUALITY
+    exceptionAllowed: true
+    weight: 30
+    requiredApproverRole: APPLICATION_ARCHITECT

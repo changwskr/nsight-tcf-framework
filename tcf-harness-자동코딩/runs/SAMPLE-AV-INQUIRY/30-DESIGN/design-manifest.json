@@ -1,0 +1,48 @@
+{
+  "manifestId": "MAN-DESIGN-SAMPLE-AV-0001",
+  "runId": "SAMPLE-AV-INQUIRY",
+  "manifestType": "DESIGN",
+  "stage": "S50-DESIGN",
+  "status": "REVIEWED",
+  "createdAt": "2026-08-06T00:35:00+09:00",
+  "createdBy": "design-agent",
+  "gateResultId": "GTR-HG-30-SAMPLE-AV-0001",
+  "artifacts": [
+    {
+      "artifactId": "ART-TX-0001",
+      "artifactType": "TRANSACTION_DESIGN",
+      "uri": "workspace://SAMPLE-AV-INQUIRY/30-DESIGN/transaction/AV.AssetValuation.selectList.md",
+      "contentHash": "sha256:8c9a096fecd86a2bcba3aac22705a16c407477de0c0918ec472442e8ddd84ee9",
+      "required": true
+    },
+    {
+      "artifactId": "ART-PROG-0001",
+      "artifactType": "PROGRAM_DESIGN",
+      "uri": "workspace://SAMPLE-AV-INQUIRY/30-DESIGN/program/program-design.md",
+      "contentHash": "sha256:97e3d39edfdd2cf3d29fe1ba72166f5a840dfdd3fe08211c6c45a0455607717f",
+      "required": true
+    },
+    {
+      "artifactId": "ART-DATA-0001",
+      "artifactType": "DATA_DESIGN",
+      "uri": "workspace://SAMPLE-AV-INQUIRY/30-DESIGN/data/data-design.md",
+      "contentHash": "sha256:ae38f7c56a819ce20164936dc89a9c64c97404edb5785070d6784a22c0744b6a",
+      "required": true
+    },
+    {
+      "artifactId": "ART-SEC-0001",
+      "artifactType": "SECURITY_DESIGN",
+      "uri": "workspace://SAMPLE-AV-INQUIRY/30-DESIGN/security/security-design.md",
+      "contentHash": "sha256:30839106f5c44c047a0aab8af9bbb70d5675e3bf28141cee8f5987f558023b5f",
+      "required": true
+    },
+    {
+      "artifactId": "ART-ADR-0001",
+      "artifactType": "ADR_SET",
+      "uri": "workspace://SAMPLE-AV-INQUIRY/30-DESIGN/adr/ADR-001-assetvaluation-selectList.md",
+      "contentHash": "sha256:4720e60d8199bee15dd22bf0e42750537aeeca83ec8bec18eb530efb39f92ef0",
+      "required": true
+    }
+  ],
+  "contentHash": "sha256:9e3b26f7014b8e4a024da4c317563928a5c051b6abe5b43e918b796845f08e15"
+}

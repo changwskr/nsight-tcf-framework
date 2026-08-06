@@ -1,0 +1,19 @@
+{
+  "gateResultId": "GTR-HG-70-SAMPLE-AV-0001",
+  "runId": "SAMPLE-AV-INQUIRY",
+  "gateId": "HG-70",
+  "gateVersion": "1.0.0",
+  "decision": "PASS",
+  "qualityScore": 98,
+  "hardFailureCount": 0,
+  "requiredFailureCount": 0,
+  "evaluatedAt": "2026-08-06T00:48:00+09:00",
+  "summary": "Service→Mapper 직접호출 없음(Dao 경유). Secret 없음. ServiceId-Handler 일치.",
+  "ruleResults": [
+    { "ruleId": "QLT-LAYER-DEP", "status": "PASS" },
+    { "ruleId": "QLT-SECRET-ZERO", "status": "PASS" },
+    { "ruleId": "QLT-SERVICEID-HANDLER", "status": "PASS" },
+    { "ruleId": "QLT-MAPPER-NS", "status": "PASS" },
+    { "ruleId": "QLT-SCORE", "status": "PASS", "score": 98 }
+  ]
+}

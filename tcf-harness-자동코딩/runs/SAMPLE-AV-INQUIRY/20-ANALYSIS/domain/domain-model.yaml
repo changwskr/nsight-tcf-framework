@@ -1,0 +1,19 @@
+domainId: AssetValuation
+businessCode: AV
+module: av-service
+packageRoot: com.nh.nsight.marketing.av
+ownerOrganization: TBD
+boundaries:
+  inScope:
+    - 자산평가 목록 조회(INQUIRY)
+    - 페이징
+  outOfScope:
+    - 등록·변경·삭제
+    - 운영 DDL 실행
+    - 화면 UI 신규 개발(미확정, GAP-AV-0003)
+existingDomainsInModule:
+  - Sample (AV.Sample.inquiry)
+  - CustomerContact (AV.CustomerContact.selectList/selectDetail)
+dataOwnershipDraft:
+  status: UNCONFIRMED
+  note: GAP-AV-0001 — DA 확인 전 테이블 소유권을 확정하지 않음

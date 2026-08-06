@@ -1,0 +1,18 @@
+{
+  "gateResultId": "GTR-HG-60-SAMPLE-AV-0001",
+  "runId": "SAMPLE-AV-INQUIRY",
+  "gateId": "HG-60",
+  "gateVersion": "1.0.0",
+  "decision": "PASS",
+  "qualityScore": 96,
+  "hardFailureCount": 0,
+  "requiredFailureCount": 0,
+  "evaluatedAt": "2026-08-06T00:47:00+09:00",
+  "summary": "AvAssetValuationRuleTest PASS (EXIT=0). Evidence: 60-EVIDENCE/test/av-assetvaluation-rule-test.log",
+  "ruleResults": [
+    { "ruleId": "TEST-REQUIRED-PASS", "status": "PASS" },
+    { "ruleId": "TEST-NO-SKIP-HIDING", "status": "PASS" },
+    { "ruleId": "TEST-REQ-COVERAGE", "status": "PASS", "score": 100 },
+    { "ruleId": "TEST-COVERAGE", "status": "WARNING", "score": 80, "message": "Rule 단위 테스트만 실행. 통합 테스트는 후속." }
+  ]
+}

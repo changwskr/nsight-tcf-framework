@@ -1,0 +1,60 @@
+apiVersion: harness.nsight/v1
+kind: GateRuleSet
+metadata:
+  gateId: HG-50
+  version: 1.0.0
+  name: Build Gate
+  description: Build Gate 자동검증 기준
+spec:
+  decisionPolicy:
+    hardFailureDecision: FAIL
+    requiredFailureDecision: FAIL
+    minimumScore: 100
+    allowPassWithException: false
+  requiredApprovals: []
+  requiredArtifacts:
+  - BUILD_ARTIFACT
+  requiredEvidence:
+  - BUILD_EVIDENCE
+  rules:
+  - id: BUILD-EXIT-ZERO
+    name: Gradle 종료코드 0
+    type: HARD
+    severity: CRITICAL
+    evaluator: executionEvidence
+    condition:
+      evidenceType: BUILD_EVIDENCE
+      field: exitCode
+      operator: EQ
+      value: 0
+    failure:
+      message: Clean Build가 실패했습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: BUILD-CLEAN
+    name: Clean Build 수행
+    type: REQUIRED
+    severity: HIGH
+    evaluator: executionEvidence
+    condition:
+      evidenceType: BUILD_EVIDENCE
+      commandContains:
+      - clean
+      - build
+    failure:
+      message: Clean Build Evidence가 아닙니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: BUILD-NO-COMPILE-ERROR
+    name: 컴파일 오류 없음
+    type: HARD
+    severity: CRITICAL
+    evaluator: buildReportMetric
+    condition:
+      metric: compileErrorCount
+      operator: EQ
+      value: 0
+    failure:
+      message: 컴파일 오류가 있습니다.
+      issueType: QUALITY
+    exceptionAllowed: false

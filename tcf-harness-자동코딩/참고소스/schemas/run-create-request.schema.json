@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nsight.nh.local/harness/schemas/run-create-request.schema.json",
+  "title": "Create Run Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "workflowId",
+    "workflowVersion",
+    "runType",
+    "runName",
+    "requestedBy",
+    "inputArtifacts"
+  ],
+  "properties": {
+    "workflowId": {
+      "type": "string"
+    },
+    "workflowVersion": {
+      "type": "string"
+    },
+    "runType": {
+      "type": "string"
+    },
+    "runName": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "requestedBy": {
+      "type": "string"
+    },
+    "priority": {
+      "enum": [
+        "LOW",
+        "NORMAL",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "default": "NORMAL"
+    },
+    "baselineId": {
+      "type": "string"
+    },
+    "businessCode": {
+      "type": "string",
+      "pattern": "^[A-Z]{2,10}$"
+    },
+    "domainCode": {
+      "type": "string"
+    },
+    "inputArtifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "common-definitions.schema.json#/$defs/artifactRef"
+      }
+    }
+  }
+}

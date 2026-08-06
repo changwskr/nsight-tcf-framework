@@ -1,0 +1,118 @@
+apiVersion: harness.nsight/v1
+kind: GateRuleSet
+metadata:
+  gateId: HG-30
+  version: 1.0.0
+  name: Design Gate
+  description: Design Gate 자동검증 기준
+spec:
+  decisionPolicy:
+    hardFailureDecision: FAIL
+    requiredFailureDecision: FAIL
+    minimumScore: 90
+    allowPassWithException: true
+  requiredApprovals:
+  - role: APPLICATION_ARCHITECT
+    count: 1
+  - role: DATA_ARCHITECT
+    count: 1
+  - role: SECURITY_ARCHITECT
+    count: 1
+  requiredArtifacts:
+  - TRANSACTION_DESIGN
+  - PROGRAM_DESIGN
+  - DATA_DESIGN
+  - ADR_SET
+  - TRACEABILITY_DRAFT
+  requiredEvidence: []
+  rules:
+  - id: DES-SERVICEID-UNIQUE
+    name: ServiceId 중복 없음
+    type: HARD
+    severity: CRITICAL
+    evaluator: serviceCatalogMetric
+    condition:
+      metric: duplicateServiceIdCount
+      operator: EQ
+      value: 0
+    failure:
+      message: 중복 ServiceId가 존재합니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: DES-SERVICEID-HANDLER
+    name: ServiceId와 Handler 연결
+    type: REQUIRED
+    severity: HIGH
+    evaluator: traceMetric
+    condition:
+      metric: serviceIdHandlerDesignCoverage
+      operator: EQ
+      value: 100
+    failure:
+      message: Handler가 설계되지 않은 ServiceId가 있습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: DES-LAYER-COMPLETE
+    name: 6계층 책임 설계
+    type: REQUIRED
+    severity: HIGH
+    evaluator: programDesignMetric
+    condition:
+      metric: requiredLayerCoverage
+      operator: EQ
+      value: 100
+    failure:
+      message: 필수 프로그램 계층 설계가 누락되었습니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+  - id: DES-TX-BOUNDARY
+    name: 트랜잭션 경계 승인
+    type: HUMAN
+    severity: CRITICAL
+    evaluator: approvalCheck
+    condition:
+      approvalType: TRANSACTION_BOUNDARY
+    failure:
+      message: Facade 트랜잭션 경계 승인이 필요합니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+    requiredApproverRole: APPLICATION_ARCHITECT
+  - id: DES-DATA-OWNER
+    name: 데이터 소유권 승인
+    type: HUMAN
+    severity: CRITICAL
+    evaluator: approvalCheck
+    condition:
+      approvalType: DATA_OWNERSHIP
+    failure:
+      message: 데이터 소유권 승인이 필요합니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+    requiredApproverRole: DATA_ARCHITECT
+  - id: DES-SECURITY
+    name: 보안·개인정보 설계 승인
+    type: HUMAN
+    severity: CRITICAL
+    evaluator: approvalCheck
+    condition:
+      approvalType: SECURITY_DESIGN
+    failure:
+      message: 보안 설계 승인이 필요합니다.
+      issueType: QUALITY
+    exceptionAllowed: false
+    requiredApproverRole: SECURITY_ARCHITECT
+  - id: DES-TRACE-SCORE
+    name: 설계 추적성
+    type: SCORED
+    severity: HIGH
+    evaluator: traceMetric
+    condition:
+      metric: designTraceRate
+      operator: GTE
+      value: 95
+    failure:
+      message: 요구사항–설계 추적률이 낮습니다.
+      issueType: QUALITY
+    exceptionAllowed: true
+    weight: 25
+    requiredApproverRole: APPLICATION_ARCHITECT

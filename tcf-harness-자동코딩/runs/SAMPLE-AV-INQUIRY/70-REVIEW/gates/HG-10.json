@@ -1,0 +1,21 @@
+{
+  "gateResultId": "GTR-HG-10-SAMPLE-AV-0001",
+  "runId": "SAMPLE-AV-INQUIRY",
+  "stageId": "S10-BASELINE",
+  "gateId": "HG-10",
+  "gateVersion": "1.0.0",
+  "decision": "PASS",
+  "qualityScore": 100,
+  "hardFailureCount": 0,
+  "requiredFailureCount": 0,
+  "evaluatedAt": "2026-08-06T00:23:00+09:00",
+  "summary": "Git commit 61eebdf 고정, ruleSet/prompt 버전·인벤토리 등록 완료.",
+  "ruleResults": [
+    { "ruleId": "BASE-GIT-SHA", "status": "PASS" },
+    { "ruleId": "BASE-RULE-VERSION", "status": "PASS" },
+    { "ruleId": "BASE-PROMPT-VERSION", "status": "PASS" },
+    { "ruleId": "BASE-INVENTORY-HASH", "status": "PASS" }
+  ],
+  "approvalIds": [],
+  "exceptionIds": []
+}

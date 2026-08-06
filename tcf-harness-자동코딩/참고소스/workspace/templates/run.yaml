@@ -1,0 +1,29 @@
+apiVersion: harness.nsight/v1
+kind: HarnessRun
+metadata:
+  runId: RUN-20260805-0001
+  projectId: NSIGHT-TCF
+  createdAt: '2026-08-05T23:38:00+09:00'
+  createdBy: architecture-user
+spec:
+  workflow:
+    id: WF-ONLINE-INQUIRY
+    version: 1.0.0
+  baseline:
+    repository: nsight-tcf-framework
+    branch: develop
+    commitSha: 0123456789abcdef0123456789abcdef01234567
+  scope:
+    businessCode: AV
+    domain: AssetValuation
+    targetModules:
+      - av-service
+  policies:
+    autoRetry: true
+    maxParallelTasks: 3
+    networkPolicy: DENY_BY_DEFAULT
+    promotionMode: GATE_CONTROLLED
+status:
+  phase: REGISTERED
+  currentStageId: S00-INPUT
+  version: 1
