@@ -2,6 +2,7 @@ package nhnis.mk.co.a.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,13 +14,14 @@ import nhnis.mk.co.a.dto.mkpca5530ListResponseDto;
 import nhnis.mk.co.a.service.mkpca5530Service;
 
 /**
- * mkpca5530 ???? ?? Controller.
+ * mkpca5530 ?? ?? Controller.
  *
- * <p>PDMK ??: DefaultFilter ? ServicePreventionInterceptor ? BizPrePostAspect ? Controller ? Service.
- * ?? Body? {@code {"dto":{...}}} ??({@link RequestBody}).
+ * <p>????? Controller ??? ?? ? ????, Service? ?? TX? ????.
+ * ?? ??: DefaultFilter ? ServicePreventionInterceptor ? BizPrePostAspect ? Controller ? Service.
  */
 @RestController
 @RequestMapping("/api/mk/co/a/5530")
+@Transactional(readOnly = true)
 public class mkpca5530Controller {
 
     private static final String PROGRAM_ID = "mkpca5530";
@@ -33,9 +35,9 @@ public class mkpca5530Controller {
 
     @PostMapping("/list")
     public mkpca5530ListResponseDto mkpca5530S0(@RequestBody mkpca5530DtoIn in) {
-        PdmkTxLog.controllerStart(log, PROGRAM_ID);
+        log.info(PdmkTxLog.controllerStart(PROGRAM_ID));
         mkpca5530ListResponseDto out = service.mkpca5530S0(in);
-        PdmkTxLog.controllerEnd(log, PROGRAM_ID, "mkpca5530S0", out);
+        log.info(PdmkTxLog.controllerEnd(PROGRAM_ID, "mkpca5530S0", out));
         return out;
     }
 }

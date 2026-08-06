@@ -14,18 +14,32 @@ cd ..\pdmk-ui
 .\RUN.bat
 ```
 
-Cursor Run/Debug: F5 → **PdmkUiApplication** (초록 CodeLens/`jdt.ls-java-project` 사용 금지).  
-클래스패스 갱신: `.\gradlew.bat writeIdeLaunch`
-
 브라우저: http://localhost:8090
 
-## 요청 형식
+## 전문 형식
 
-pdmk-fw `RequestBody` resolver 기준:
+요청/응답 모두 `hdr_nhnis` + `dto` 구조입니다.
 
 ```json
-{ "dto": { "basDt": "20260801", "pageNo": 1, "pageSize": 20 } }
+{
+  "hdr_nhnis": {
+    "sys_comm": {
+      "std_gbl_id": "c3d65cb1a54a43838688b76afe82521e",
+      "tr_trm_ipadr": "127.0.0.1",
+      "tr_brc": "10001",
+      "optr_eno": "E0000001",
+      "ttl_ug_ync": 0
+    }
+  },
+  "dto": {
+    "basDt": "20260801",
+    "pageNo": 1,
+    "pageSize": 20
+  }
+}
 ```
+
+응답 예: `dto.records` / `dto.totalCount` 와 함께 `hdr_nhnis.sys_comm.std_gbl_id` 가 돌아옵니다.
 
 ## 등록 거래
 

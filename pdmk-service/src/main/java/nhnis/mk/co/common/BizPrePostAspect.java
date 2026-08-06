@@ -1,4 +1,4 @@
-package nhnis.fw.commons.aspect;
+package nhnis.mk.co.common;
 
 import java.lang.reflect.Method;
 
@@ -18,8 +18,8 @@ import nhnis.fw.commons.log.PdmkTxLog;
 /**
  * PDMK 업무 공통 선/후처리 Aspect.
  *
- * <p>운영 로그 카테고리는 {@code nhnis.mk.co.common.BizPrePostAspect} 로 남겨
- * BIZ 어펜더·운영 로그와 동일하게 보이게 한다.
+ * <p>패키지·클래스명을 운영 로그와 동일하게 {@code nhnis.mk.co.common.BizPrePostAspect} 로 둔다.
+ * {@code log.info} 는 이 클래스에서 직접 호출해 {@code %C.%M} 위치가 맞도록 한다.
  */
 @Aspect
 @Component
@@ -27,43 +27,42 @@ import nhnis.fw.commons.log.PdmkTxLog;
 @ConditionalOnProperty(name = "nhnis.fw.commons.legacy-web.enabled", havingValue = "true", matchIfMissing = true)
 public class BizPrePostAspect {
 
-    /** 운영 로그 클래스명과 동일한 로거 카테고리 */
-    private static final Logger log = LoggerFactory.getLogger("nhnis.mk.co.common.BizPrePostAspect");
+    private static final Logger log = LoggerFactory.getLogger(BizPrePostAspect.class);
 
-    @Pointcut("execution(* nhnis..co..controller..*(..))")
-    public void coControllers() {
+    @Pointcut("execution(* nhnis.mk.co..controller..*(..))")
+    public void mkCoControllers() {
         // pointcut
     }
 
-    @Before("coControllers()")
+    @Before("mkCoControllers()")
     public void before(JoinPoint joinPoint) {
-        PdmkTxLog.bizPreProcess(log);
+        log.info(PdmkTxLog.bizPreProcess());
         logArgumentsBefore(joinPoint.getArgs());
     }
 
-    @After("coControllers()")
+    @After("mkCoControllers()")
     public void after(JoinPoint joinPoint) {
-        PdmkTxLog.bizPostProcess(log);
+        log.info(PdmkTxLog.bizPostProcess());
         logArgumentsAfter(joinPoint.getArgs());
     }
 
     private void logArgumentsBefore(Object[] args) {
         if (args == null || args.length == 0) {
-            PdmkTxLog.bizArgumentBefore(log, null);
+            log.info(PdmkTxLog.bizArgumentBefore(null));
             return;
         }
         for (Object arg : args) {
-            PdmkTxLog.bizArgumentBefore(log, extractBrc(arg));
+            log.info(PdmkTxLog.bizArgumentBefore(extractBrc(arg)));
         }
     }
 
     private void logArgumentsAfter(Object[] args) {
         if (args == null || args.length == 0) {
-            PdmkTxLog.bizArgumentAfter(log, null);
+            log.info(PdmkTxLog.bizArgumentAfter(null));
             return;
         }
         for (Object arg : args) {
-            PdmkTxLog.bizArgumentAfter(log, extractBrc(arg));
+            log.info(PdmkTxLog.bizArgumentAfter(extractBrc(arg)));
         }
     }
 

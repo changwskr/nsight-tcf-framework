@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * @param method        HTTP 메서드
  * @param path          pdmk-service 엔드포인트 경로
  * @param description   화면 설명
- * @param sampleRequest 샘플 요청 전문 ({@code {"dto":{...}}})
+ * @param sampleRequest 샘플 요청 전문 ({@code {"hdr_nhnis":{...},"dto":{...}}})
  */
 public record TransactionInfo(
         String id,

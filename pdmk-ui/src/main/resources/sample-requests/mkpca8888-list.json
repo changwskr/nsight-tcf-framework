@@ -1,4 +1,29 @@
 {
+  "hdr_nhnis": {
+    "sys_comm": {
+      "std_gbl_id": "c3d65cb1a54a43838688b76afe82521e",
+      "rms_svc_c": null,
+      "orgtr_gbl_id": null,
+      "trz_gbl_id": null,
+      "sync_dsc": null,
+      "async_attr_c": null,
+      "tr_sysid": null,
+      "ttl_ug_ync": 0,
+      "std_tgrm_rqr_rsp_dsc": null,
+      "std_tgrm_lclc": null,
+      "tr_trm_ipadr": "127.0.0.1",
+      "tr_dtm": null,
+      "tr_brc": "10001",
+      "naac_dsc": null,
+      "trmn_naac_dsc": null,
+      "trmno": null,
+      "trm_kdc": null,
+      "scid": null,
+      "optr_eno": "E0000001",
+      "tr_optrnm": null,
+      "optr_pzcc": null
+    }
+  },
   "dto": {
     "salzTipKdc": "001",
     "pageNo": 1,

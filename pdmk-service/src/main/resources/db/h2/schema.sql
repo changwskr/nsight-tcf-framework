@@ -1,8 +1,24 @@
 -- 로컬 개발 PC용 H2 스키마.
 -- 사내 폐쇄망에서는 Oracle의 실제 테이블을 사용하므로 spring.sql.init 설정과 함께 비활성화한다.
 
+DROP TABLE IF EXISTS TB_FW_IMAGE_LOG;
 DROP TABLE IF EXISTS TB_MK_CO_A_5530;
 DROP TABLE IF EXISTS TB_CR_AH_SALES_TIP_RACT;
+
+-- 시스템 전문 헤더 이미지로그 (ImageLogHandler / ImageLogDTO)
+CREATE TABLE TB_FW_IMAGE_LOG (
+    GUID           VARCHAR(64)   NOT NULL,  -- 거래고유ID (std_gbl_id)
+    SERVICE_ID     VARCHAR(50),             -- 서비스ID (rms_svc_c)
+    SCREEN_ID      VARCHAR(50),             -- 화면ID (scid)
+    OPTR_ENO       VARCHAR(20),             -- 사용자ID (optr_eno)
+    CLIENT_IP      VARCHAR(50),             -- 클라이언트IP (tr_trm_ipadr)
+    REQUEST_TIME   VARCHAR(17),             -- 요청시간
+    RESPONSE_TIME  VARCHAR(17),             -- 응답시간
+    EXCEPTION_TYPE VARCHAR(200),            -- 예외타입
+    EXCEPTION_CODE VARCHAR(50),             -- 예외코드
+    EXCEPTION_MSG  VARCHAR(1000),           -- 예외메시지
+    CONSTRAINT TB_FW_IMAGE_LOG_PK PRIMARY KEY (GUID)
+);
 
 CREATE TABLE TB_CR_AH_SALES_TIP_RACT (
     TRT_BRC      VARCHAR(5)    NOT NULL,   -- 취급점 코드

@@ -144,11 +144,6 @@
             <AppenderRef ref="FRAMEWORK_LOG_FILE"/>
         </Logger>
 
-        <Logger name="nhnis.fw.commons.aspect" level="info" additivity="false">
-            <AppenderRef ref="BIZ"/>
-            <AppenderRef ref="SERVICE_LOG_FILE"/>
-        </Logger>
-
         <Logger name="nhnis.fw.commons.interceptor" level="info" additivity="false">
             <AppenderRef ref="CORE"/>
             <AppenderRef ref="FRAMEWORK_LOG_FILE"/>

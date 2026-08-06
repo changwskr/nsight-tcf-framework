@@ -8,7 +8,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -111,20 +110,14 @@ class mkpca8888ServiceTest {
     }
 
     @Test
-    void writeMethodsHaveFourSecondTransactions() throws Exception {
-        assertWriteTransaction("mkpca8888I0");
-        assertWriteTransaction("mkpca8888U0");
-        assertWriteTransaction("mkpca8888D0");
+    void serviceJoinsControllerTransactionWithMandatory() {
         Transactional classTransaction = mkpca8888Service.class.getAnnotation(Transactional.class);
-        assertThat(classTransaction.readOnly()).isTrue();
-    }
-
-    private void assertWriteTransaction(String methodName) throws Exception {
-        Method method = mkpca8888Service.class.getMethod(methodName, mkpca8888DtoIn.class);
-        Transactional transaction = method.getAnnotation(Transactional.class);
-        assertThat(transaction).isNotNull();
-        assertThat(transaction.timeout()).isEqualTo(4);
-        assertThat(transaction.readOnly()).isFalse();
+        assertThat(classTransaction).isNotNull();
+        assertThat(classTransaction.propagation()).isEqualTo(
+                org.springframework.transaction.annotation.Propagation.MANDATORY);
+        assertThat(mkpca8888Service.class.getMethods())
+                .filteredOn(method -> method.getName().matches("mkpca8888[IUD]0"))
+                .allSatisfy(method -> assertThat(method.getAnnotation(Transactional.class)).isNull());
     }
 
     private mkpca8888DtoIn completeInput() {

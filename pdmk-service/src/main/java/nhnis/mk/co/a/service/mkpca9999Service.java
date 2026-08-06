@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import nhnis.fw.commons.log.PdmkTxLog;
@@ -14,9 +15,9 @@ import nhnis.mk.co.a.dto.mkpca9999DtoIn;
 import nhnis.mk.co.a.dto.mkpca9999DtoOut;
 import nhnis.mk.co.a.dto.mkpca9999ListResponseDto;
 
-/** ??? ?? ?? ??? (PDMK). */
+/** ??? ?? ???. Controller?? ? TX? ????(MANDATORY). */
 @Service
-@Transactional(readOnly = true)
+@Transactional(propagation = Propagation.MANDATORY)
 public class mkpca9999Service {
 
     private static final Logger log = LoggerFactory.getLogger(mkpca9999Service.class);
@@ -29,7 +30,7 @@ public class mkpca9999Service {
     }
 
     public mkpca9999ListResponseDto mkpca9999S0(mkpca9999DtoIn in) {
-        PdmkTxLog.serviceStart(log, "mkpca9999S0");
+        log.info(PdmkTxLog.serviceStart("mkpca9999S0"));
         mkpca9999DtoIn param = new mkpca9999DtoIn();
         param.setSalzTipKdc(in == null ? null : trimToNull(in.getSalzTipKdc()));
 
@@ -52,12 +53,12 @@ public class mkpca9999Service {
         response.setPageSize(pageSize);
         response.setTotalCount(totalCount);
         response.setTotalPages((int) ((totalCount + pageSize - 1) / pageSize));
-        PdmkTxLog.serviceEnd(log, "mkpca9999S0", totalCount);
+        log.info(PdmkTxLog.serviceEnd("mkpca9999S0", totalCount));
         return response;
     }
 
     public mkpca9999DtoOut mkpca9999S1(mkpca9999DtoIn in) {
-        PdmkTxLog.serviceStart(log, "mkpca9999S1");
+        log.info(PdmkTxLog.serviceStart("mkpca9999S1"));
         if (in == null) {
             throw new BizException(CODE_REQUIRED, "?? Body");
         }
@@ -71,7 +72,7 @@ public class mkpca9999Service {
         if (row == null) {
             throw new BizException("FW0003", "mkpca9999S0_S1", "?? ?? ??");
         }
-        PdmkTxLog.serviceEnd(log, "mkpca9999S1", 1);
+        log.info(PdmkTxLog.serviceEnd("mkpca9999S1", 1));
         return row;
     }
 

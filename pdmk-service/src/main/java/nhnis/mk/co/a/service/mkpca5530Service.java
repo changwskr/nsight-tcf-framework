@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import nhnis.fw.commons.log.PdmkTxLog;
@@ -20,7 +21,7 @@ import nhnis.mk.co.a.dto.mkpca5530ListResponseDto;
  * {@code ???????? mkpca5530S0 Service End! - Total: n}
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional(propagation = Propagation.MANDATORY)
 public class mkpca5530Service {
 
     private static final Logger log = LoggerFactory.getLogger(mkpca5530Service.class);
@@ -32,7 +33,7 @@ public class mkpca5530Service {
     }
 
     public mkpca5530ListResponseDto mkpca5530S0(mkpca5530DtoIn in) {
-        PdmkTxLog.serviceStart(log, "mkpca5530S0");
+        log.info(PdmkTxLog.serviceStart("mkpca5530S0"));
 
         mkpca5530DtoIn param = new mkpca5530DtoIn();
         param.setTrtBrc(in == null ? null : trimToNull(in.getTrtBrc()));
@@ -55,7 +56,7 @@ public class mkpca5530Service {
         response.setTotalCount(totalCount);
         response.setTotalPages((int) ((totalCount + pageSize - 1) / pageSize));
 
-        PdmkTxLog.serviceEnd(log, "mkpca5530S0", totalCount);
+        log.info(PdmkTxLog.serviceEnd("mkpca5530S0", totalCount));
         return response;
     }
 

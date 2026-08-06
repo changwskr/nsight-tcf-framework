@@ -20,7 +20,7 @@ import nhnis.mk.ui.support.TransactionInfo;
 /**
  * pdmk-service가 제공하는 거래 목록.
  *
- * <p>요청 Body는 {@code {"dto":{...}}} 형식이다 (pdmk-fw {@code RequestBody} resolver).
+ * <p>요청 Body는 {@code {"hdr_nhnis":{"sys_comm":{...}},"dto":{...}}} 형식이다.
  */
 @Service
 public class TransactionCatalog {

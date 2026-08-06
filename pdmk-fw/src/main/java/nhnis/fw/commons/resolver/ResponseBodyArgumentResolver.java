@@ -79,8 +79,8 @@ public class ResponseBodyArgumentResolver implements ResponseBodyAdvice<Object> 
 
             /* Response Header */
             if (ServiceContextHolder.getInstance() != null) {
-                ObjectNode headerNode = objectMapper.valueToTree(ServiceContextHolder.getInstance().getHeader());
-                headerNode.remove(DTO_LOGICAL_NAME);
+                JsonNode headerNode = objectMapper.valueToTree(ServiceContextHolder.getInstance().getHeader());
+                removeUnwantedFields(headerNode);
                 responseBody.set(HEADER, headerNode);
             }
 

@@ -4,11 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Method;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import nhnis.mk.co.a.dto.mkpca8888DtoIn;
 import nhnis.mk.co.a.dto.mkpca8888ListResponseDto;
@@ -41,5 +44,33 @@ class mkpca8888ControllerTest {
         controller.mkpca8888I0(in);
 
         verify(service).mkpca8888I0(in);
+    }
+
+    @Test
+    void writeMethodsStartFourSecondTransactions() throws Exception {
+        assertWriteTransaction("mkpca8888I0");
+        assertWriteTransaction("mkpca8888U0");
+        assertWriteTransaction("mkpca8888D0");
+    }
+
+    @Test
+    void listAndDetailAreReadOnlyTransactions() throws Exception {
+        assertReadOnlyTransaction("mkpca8888S0");
+        assertReadOnlyTransaction("mkpca8888S1");
+    }
+
+    private void assertWriteTransaction(String methodName) throws Exception {
+        Method method = mkpca8888Controller.class.getMethod(methodName, mkpca8888DtoIn.class);
+        Transactional transaction = method.getAnnotation(Transactional.class);
+        assertThat(transaction).isNotNull();
+        assertThat(transaction.timeout()).isEqualTo(4);
+        assertThat(transaction.readOnly()).isFalse();
+    }
+
+    private void assertReadOnlyTransaction(String methodName) throws Exception {
+        Method method = mkpca8888Controller.class.getMethod(methodName, mkpca8888DtoIn.class);
+        Transactional transaction = method.getAnnotation(Transactional.class);
+        assertThat(transaction).isNotNull();
+        assertThat(transaction.readOnly()).isTrue();
     }
 }

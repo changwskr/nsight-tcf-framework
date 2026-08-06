@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import nhnis.fw.commons.log.PdmkTxLog;
@@ -14,9 +15,9 @@ import nhnis.mk.co.a.dto.mkpca8888DtoIn;
 import nhnis.mk.co.a.dto.mkpca8888DtoOut;
 import nhnis.mk.co.a.dto.mkpca8888ListResponseDto;
 
-/** ??? ?? CRUD ??? (PDMK). */
+/** ??? CRUD ???. Controller?? ? TX? ????(MANDATORY). */
 @Service
-@Transactional(readOnly = true)
+@Transactional(propagation = Propagation.MANDATORY)
 public class mkpca8888Service {
 
     private static final Logger log = LoggerFactory.getLogger(mkpca8888Service.class);
@@ -31,7 +32,7 @@ public class mkpca8888Service {
     }
 
     public mkpca8888ListResponseDto mkpca8888S0(mkpca8888DtoIn in) {
-        PdmkTxLog.serviceStart(log, "mkpca8888S0");
+        log.info(PdmkTxLog.serviceStart("mkpca8888S0"));
         mkpca8888DtoIn param = new mkpca8888DtoIn();
         param.setSalzTipKdc(in == null ? null : trimToNull(in.getSalzTipKdc()));
         int pageNo = in == null || in.getPageNo() == null || in.getPageNo() <= 0 ? 1 : in.getPageNo();
@@ -49,47 +50,44 @@ public class mkpca8888Service {
         response.setPageSize(pageSize);
         response.setTotalCount(totalCount);
         response.setTotalPages((int) ((totalCount + pageSize - 1) / pageSize));
-        PdmkTxLog.serviceEnd(log, "mkpca8888S0", totalCount);
+        log.info(PdmkTxLog.serviceEnd("mkpca8888S0", totalCount));
         return response;
     }
 
     public mkpca8888DtoOut mkpca8888S1(mkpca8888DtoIn in) {
-        PdmkTxLog.serviceStart(log, "mkpca8888S1");
+        log.info(PdmkTxLog.serviceStart("mkpca8888S1"));
         mkpca8888DtoOut result = dao.mkpca8888S0_S1(normalizedKey(in));
         if (result == null) {
             throw new BizException(CODE_NOT_FOUND);
         }
-        PdmkTxLog.serviceEnd(log, "mkpca8888S1", 1);
+        log.info(PdmkTxLog.serviceEnd("mkpca8888S1", 1));
         return result;
     }
 
-    @Transactional(timeout = 4)
     public void mkpca8888I0(mkpca8888DtoIn in) {
-        PdmkTxLog.serviceStart(log, "mkpca8888I0");
+        log.info(PdmkTxLog.serviceStart("mkpca8888I0"));
         mkpca8888DtoIn param = normalizedWriteInput(in);
         if (dao.mkpca8888S0_S1(param) != null) {
             throw new BizException(CODE_DUPLICATE);
         }
         dao.mkpca8888I0_I0(param);
-        PdmkTxLog.serviceEnd(log, "mkpca8888I0", 1);
+        log.info(PdmkTxLog.serviceEnd("mkpca8888I0", 1));
     }
 
-    @Transactional(timeout = 4)
     public void mkpca8888U0(mkpca8888DtoIn in) {
-        PdmkTxLog.serviceStart(log, "mkpca8888U0");
+        log.info(PdmkTxLog.serviceStart("mkpca8888U0"));
         if (dao.mkpca8888U0_U0(normalizedWriteInput(in)) == 0) {
             throw new BizException(CODE_NOT_FOUND);
         }
-        PdmkTxLog.serviceEnd(log, "mkpca8888U0", 1);
+        log.info(PdmkTxLog.serviceEnd("mkpca8888U0", 1));
     }
 
-    @Transactional(timeout = 4)
     public void mkpca8888D0(mkpca8888DtoIn in) {
-        PdmkTxLog.serviceStart(log, "mkpca8888D0");
+        log.info(PdmkTxLog.serviceStart("mkpca8888D0"));
         if (dao.mkpca8888D0_D0(normalizedKey(in)) == 0) {
             throw new BizException(CODE_NOT_FOUND);
         }
-        PdmkTxLog.serviceEnd(log, "mkpca8888D0", 1);
+        log.info(PdmkTxLog.serviceEnd("mkpca8888D0", 1));
     }
 
     private mkpca8888DtoIn normalizedWriteInput(mkpca8888DtoIn in) {

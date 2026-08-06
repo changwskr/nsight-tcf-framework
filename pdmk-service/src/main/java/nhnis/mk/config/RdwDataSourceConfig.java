@@ -58,6 +58,7 @@ public class RdwDataSourceConfig {
     }
 
     @Bean
+    @Primary
     public PlatformTransactionManager rdwTransactionManager(DataSource rdwDataSource) {
         return new DataSourceTransactionManager(rdwDataSource);
     }

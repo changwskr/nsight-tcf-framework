@@ -37,6 +37,7 @@
       </div>
       <div class="actions">
         <button class="btn-secondary" id="reloadSampleBtn" type="button">샘플 불러오기</button>
+        <button class="btn-secondary" id="refreshGuidBtn" type="button">GUID 재채번</button>
         <button class="btn-primary" id="sendBtn" type="button">거래 요청</button>
       </div>
     </section>
@@ -62,11 +63,11 @@
 
     <section class="grid">
       <article class="panel">
-        <div class="panel-head"><h2>요청 JSON</h2></div>
+        <div class="panel-head"><h2>요청 전문 (hdr_nhnis + dto)</h2></div>
         <textarea id="requestBody" spellcheck="false"></textarea>
       </article>
       <article class="panel">
-        <div class="panel-head"><h2>응답 JSON</h2></div>
+        <div class="panel-head"><h2>응답 전문 (hdr_nhnis + dto)</h2></div>
         <div class="response-meta" id="responseMeta">
           <span class="empty">아직 요청하지 않았습니다.</span>
         </div>
