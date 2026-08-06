@@ -3,6 +3,7 @@ package nhnis.fw.tcf.stf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,7 @@ import nhnis.fw.tcf.web.TcfTraceFilter;
  * 다만 클라이언트가 전문 Header에 guid를 실어 보냈다면 그쪽을 정본으로 삼고 MDC를 덮어쓴다.
  */
 @Component
+@ConditionalOnProperty(name = "nhnis.fw.tcf.enabled", havingValue = "true")
 public class STF {
 
     private static final Logger log = LoggerFactory.getLogger(STF.class);

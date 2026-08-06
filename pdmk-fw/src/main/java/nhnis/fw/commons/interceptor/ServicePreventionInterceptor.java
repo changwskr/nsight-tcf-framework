@@ -22,12 +22,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import nhnis.fw.commons.context.ServiceContextHolder;
 import nhnis.fw.commons.dto.header.hdr_nhnis;
+import nhnis.fw.commons.log.PdmkTxLog;
 
 /**
  * 시스템 선/후처리 Interceptor.
  *
- * <p>PDMK 운영 로그 클래스명: {@code ServicePreventionInterceptor}
- * (preHandle → SystemPreprocessor Start!, postHandle → SystemPostProcessor)
+ * <p>PDMK 운영 로그: {@link PdmkTxLog#systemPreProcessorStart} /
+ * {@link PdmkTxLog#systemGuid} / {@link PdmkTxLog#systemPostProcessor}
  */
 @Component
 public class ServicePreventionInterceptor implements HandlerInterceptor {
@@ -39,7 +40,7 @@ public class ServicePreventionInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("SystemPreprocessor Start!");
+            PdmkTxLog.systemPreProcessorStart(LOGGER);
         }
 
         String contentType = request.getContentType();
@@ -48,8 +49,7 @@ public class ServicePreventionInterceptor implements HandlerInterceptor {
         }
 
         if (ServiceContextHolder.getInstance() == null) {
-            // TCF 전용 요청 등 ServiceContext 미설정 시에도 체인을 막지 않는다.
-            LOGGER.warn("Service Context is null...!! (continue)");
+            PdmkTxLog.systemContextNull(LOGGER);
             return true;
         }
 
@@ -57,7 +57,7 @@ public class ServicePreventionInterceptor implements HandlerInterceptor {
         if (header != null && header.getSys_comm() != null) {
             String guid = header.getSys_comm().getStd_gbl_id();
             if (guid != null) {
-                LOGGER.info("GUID: {}", guid);
+                PdmkTxLog.systemGuid(LOGGER, guid);
             }
         }
         return true;
@@ -67,7 +67,7 @@ public class ServicePreventionInterceptor implements HandlerInterceptor {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
             ModelAndView modelAndView) throws Exception {
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("SystemPostProcessor");
+            PdmkTxLog.systemPostProcessor(LOGGER);
         }
 
         String contentType = request.getContentType();
@@ -81,7 +81,7 @@ public class ServicePreventionInterceptor implements HandlerInterceptor {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
             Exception ex) throws Exception {
         if (ex != null) {
-            LOGGER.error("SystemErrorProcessor");
+            PdmkTxLog.systemErrorProcessor(LOGGER);
             ServiceContextHolder.removeInstance();
             throw ex;
         }

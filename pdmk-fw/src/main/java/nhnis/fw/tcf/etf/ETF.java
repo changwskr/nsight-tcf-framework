@@ -3,6 +3,7 @@ package nhnis.fw.tcf.etf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import nhnis.fw.exception.BizException;
@@ -23,6 +24,7 @@ import nhnis.fw.tcf.dto.StandardResponseDto;
  * {@code GlobalExceptionHandler}와 인증 EntryPoint도 이 빈을 주입받아 쓴다.
  */
 @Component
+@ConditionalOnProperty(name = "nhnis.fw.tcf.enabled", havingValue = "true")
 public class ETF {
 
     private static final Logger log = LoggerFactory.getLogger(ETF.class);

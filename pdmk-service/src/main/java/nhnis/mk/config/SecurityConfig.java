@@ -2,43 +2,37 @@ package nhnis.mk.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import nhnis.fw.tcf.web.JwtAuthenticationFilter;
-import nhnis.fw.tcf.web.JwtProperties;
-import nhnis.fw.tcf.web.TcfAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 /**
- * 무상태 보안 설정.
+ * PDMK 무상태 보안 설정.
  *
- * <p>JWT 필터를 Bean으로 만들지 않고 여기서 직접 생성한다. Spring Boot는 Filter 타입 Bean을
- * 서블릿 컨테이너에도 자동 등록해서 Security 체인과 함께 두 번 실행되기 때문이다.
+ * <p>TCF {@code JwtAuthenticationFilter} / {@code TcfAuthenticationEntryPoint} 는 쓰지 않는다.
+ * JWT 검증은 pdmk-fw {@code DefaultFilter} + {@code JwtProvider}(비-local) 경로를 사용한다.
  */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http,
-            JwtProperties jwtProperties,
-            TcfAuthenticationEntryPoint authenticationEntryPoint) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(handling -> handling.authenticationEntryPoint(authenticationEntryPoint))
+                .exceptionHandling(handling -> handling
+                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/mk/co/a/8888/**").authenticated()
-                        .anyRequest().permitAll())
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProperties, authenticationEntryPoint),
-                        UsernamePasswordAuthenticationFilter.class);
+                        .anyRequest().permitAll());
         return http.build();
     }
 }

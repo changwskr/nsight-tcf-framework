@@ -1,4 +1,4 @@
-package nhnis.mp.ui.application.service;
+package nhnis.mk.ui.application.service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,13 +15,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.annotation.PostConstruct;
-import nhnis.mp.ui.support.TransactionInfo;
+import nhnis.mk.ui.support.TransactionInfo;
 
 /**
- * pdmp-service가 제공하는 거래 목록.
+ * pdmk-service가 제공하는 거래 목록.
  *
- * <p>
- * 샘플 전문은 classpath의 sample-requests/*.json에서 읽는다.
+ * <p>요청 Body는 {@code {"dto":{...}}} 형식이다 (pdmk-fw {@code RequestBody} resolver).
  */
 @Service
 public class TransactionCatalog {
@@ -36,22 +35,49 @@ public class TransactionCatalog {
     @PostConstruct
     void load() {
         register(new TransactionInfo(
-                "mpcoa9999S0_S0",
-                "영업팁 실적 목록 조회",
-                "mpcoa9999",
+                "mkpca5530S0",
+                "안내항목 목록 조회",
+                "mkpca5530",
                 "POST",
-                "/api/mp/co/a/9999/list",
-                "TB_CR_AH_SALES_TIP_RACT 목록 조회. salzTipKdc를 비우면 전체를 조회한다.",
-                readSample("mpcoa9999-list.json")));
+                "/api/mk/co/a/5530/list",
+                "TB_MK_CO_A_5530 목록 조회. 로컬 H2 시드 3건 → Total: 3.",
+                readSample("mkpca5530-list.json")));
 
         register(new TransactionInfo(
-                "mpcoa9999S0_S1",
-                "영업팁 실적 단건 조회",
-                "mpcoa9999",
+                "mkpca9999S0",
+                "영업팁 실적 목록 조회",
+                "mkpca9999",
                 "POST",
-                "/api/mp/co/a/9999/detail",
+                "/api/mk/co/a/9999/list",
+                "TB_CR_AH_SALES_TIP_RACT 목록 조회. salzTipKdc를 비우면 전체를 조회한다.",
+                readSample("mkpca9999-list.json")));
+
+        register(new TransactionInfo(
+                "mkpca9999S1",
+                "영업팁 실적 단건 조회",
+                "mkpca9999",
+                "POST",
+                "/api/mk/co/a/9999/detail",
                 "PK(취급점·취급자·영업팁종류·기준일자) 4개로 단건 조회. 누락 시 FW0001을 반환한다.",
-                readSample("mpcoa9999-detail.json")));
+                readSample("mkpca9999-detail.json")));
+
+        register(new TransactionInfo(
+                "mkpca8888S0",
+                "영업팁 실적 목록 조회 (CRUD)",
+                "mkpca8888",
+                "POST",
+                "/api/mk/co/a/8888/list",
+                "CRUD 프로그램 목록 조회. JWT enabled=true 이면 인증 필요.",
+                readSample("mkpca8888-list.json")));
+
+        register(new TransactionInfo(
+                "mkpca8888S1",
+                "영업팁 실적 단건 조회 (CRUD)",
+                "mkpca8888",
+                "POST",
+                "/api/mk/co/a/8888/detail",
+                "CRUD 프로그램 단건 조회.",
+                readSample("mkpca8888-detail.json")));
     }
 
     public List<TransactionInfo> findAll() {

@@ -7,17 +7,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import nhnis.fw.commons.log.PdmkTxLog;
 import nhnis.mk.co.a.dao.mkpca5530Dao;
 import nhnis.mk.co.a.dto.mkpca5530DtoIn;
 import nhnis.mk.co.a.dto.mkpca5530DtoOut;
 import nhnis.mk.co.a.dto.mkpca5530ListResponseDto;
-import nhnis.mk.co.common.MkCoTxLog;
 
 /**
- * mkpca5530 안내항목 목록 조회 서비스.
+ * mkpca5530 ???? ?? ?? ???.
  *
- * <p>운영 로그: {@code ▶▶▶▶▶▶▶ mkpca5530S0 Service Start!} /
- * {@code ◀◀◀◀◀◀◀ mkpca5530S0 Service End! - Total: n}
+ * <p>?? ??: {@code ???????? mkpca5530S0 Service Start!} /
+ * {@code ???????? mkpca5530S0 Service End! - Total: n}
  */
 @Service
 @Transactional(readOnly = true)
@@ -32,7 +32,7 @@ public class mkpca5530Service {
     }
 
     public mkpca5530ListResponseDto mkpca5530S0(mkpca5530DtoIn in) {
-        MkCoTxLog.serviceStart(log, "mkpca5530S0");
+        PdmkTxLog.serviceStart(log, "mkpca5530S0");
 
         mkpca5530DtoIn param = new mkpca5530DtoIn();
         param.setTrtBrc(in == null ? null : trimToNull(in.getTrtBrc()));
@@ -55,7 +55,7 @@ public class mkpca5530Service {
         response.setTotalCount(totalCount);
         response.setTotalPages((int) ((totalCount + pageSize - 1) / pageSize));
 
-        MkCoTxLog.serviceEnd(log, "mkpca5530S0", totalCount);
+        PdmkTxLog.serviceEnd(log, "mkpca5530S0", totalCount);
         return response;
     }
 

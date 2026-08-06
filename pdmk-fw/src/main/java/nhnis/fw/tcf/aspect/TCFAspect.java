@@ -3,6 +3,7 @@ package nhnis.fw.tcf.aspect;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import nhnis.fw.exception.BizException;
@@ -28,6 +29,7 @@ import nhnis.fw.tcf.stf.STF;
  */
 @Aspect
 @Component
+@ConditionalOnProperty(name = "nhnis.fw.tcf.enabled", havingValue = "true")
 public class TCFAspect {
 
     private final STF stf;

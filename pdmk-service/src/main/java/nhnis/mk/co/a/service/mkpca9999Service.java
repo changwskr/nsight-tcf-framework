@@ -7,13 +7,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import nhnis.fw.commons.log.PdmkTxLog;
 import nhnis.fw.exception.BizException;
 import nhnis.mk.co.a.dao.mkpca9999Dao;
 import nhnis.mk.co.a.dto.mkpca9999DtoIn;
 import nhnis.mk.co.a.dto.mkpca9999DtoOut;
 import nhnis.mk.co.a.dto.mkpca9999ListResponseDto;
-import nhnis.mk.co.common.MkCoTxLog;
 
+/** ??? ?? ?? ??? (PDMK). */
 @Service
 @Transactional(readOnly = true)
 public class mkpca9999Service {
@@ -28,7 +29,7 @@ public class mkpca9999Service {
     }
 
     public mkpca9999ListResponseDto mkpca9999S0(mkpca9999DtoIn in) {
-        MkCoTxLog.serviceStart(log, "mkpca9999S0");
+        PdmkTxLog.serviceStart(log, "mkpca9999S0");
         mkpca9999DtoIn param = new mkpca9999DtoIn();
         param.setSalzTipKdc(in == null ? null : trimToNull(in.getSalzTipKdc()));
 
@@ -51,26 +52,26 @@ public class mkpca9999Service {
         response.setPageSize(pageSize);
         response.setTotalCount(totalCount);
         response.setTotalPages((int) ((totalCount + pageSize - 1) / pageSize));
-        MkCoTxLog.serviceEnd(log, "mkpca9999S0", totalCount);
+        PdmkTxLog.serviceEnd(log, "mkpca9999S0", totalCount);
         return response;
     }
 
     public mkpca9999DtoOut mkpca9999S1(mkpca9999DtoIn in) {
-        MkCoTxLog.serviceStart(log, "mkpca9999S1");
+        PdmkTxLog.serviceStart(log, "mkpca9999S1");
         if (in == null) {
-            throw new BizException(CODE_REQUIRED, "요청 Body");
+            throw new BizException(CODE_REQUIRED, "?? Body");
         }
         mkpca9999DtoIn param = new mkpca9999DtoIn();
-        param.setTrtBrc(require(in.getTrtBrc(), "취급점코드"));
-        param.setTrtmnEno(require(in.getTrtmnEno(), "취급자사번"));
-        param.setSalzTipKdc(require(in.getSalzTipKdc(), "영업팁종류코드"));
-        param.setBasDt(require(in.getBasDt(), "기준일자"));
+        param.setTrtBrc(require(in.getTrtBrc(), "?????"));
+        param.setTrtmnEno(require(in.getTrtmnEno(), "?????"));
+        param.setSalzTipKdc(require(in.getSalzTipKdc(), "???????"));
+        param.setBasDt(require(in.getBasDt(), "????"));
 
         mkpca9999DtoOut row = dao.mkpca9999S0_S1(param);
         if (row == null) {
-            throw new BizException("FW0003", "mkpca9999S0_S1", "조회 결과 없음");
+            throw new BizException("FW0003", "mkpca9999S0_S1", "?? ?? ??");
         }
-        MkCoTxLog.serviceEnd(log, "mkpca9999S1", 1);
+        PdmkTxLog.serviceEnd(log, "mkpca9999S1", 1);
         return row;
     }
 

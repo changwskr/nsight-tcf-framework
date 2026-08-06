@@ -67,31 +67,31 @@
 
     <Appenders>
         <Console name="CORE">
-            <PatternLayout pattern="${CORE_LOG_PATTERN}" disableAnsi="false"/>
+            <PatternLayout pattern="${CORE_LOG_PATTERN}" charset="UTF-8" disableAnsi="false"/>
         </Console>
         <Console name="IO">
-            <PatternLayout pattern="${IO_LOG_PATTERN}" disableAnsi="false"/>
+            <PatternLayout pattern="${IO_LOG_PATTERN}" charset="UTF-8" disableAnsi="false"/>
         </Console>
         <Console name="IF">
-            <PatternLayout pattern="${IF_LOG_PATTERN}" disableAnsi="false"/>
+            <PatternLayout pattern="${IF_LOG_PATTERN}" charset="UTF-8" disableAnsi="false"/>
         </Console>
         <Console name="BIZ">
-            <PatternLayout pattern="${BIZ_LOG_PATTERN}" disableAnsi="false"/>
+            <PatternLayout pattern="${BIZ_LOG_PATTERN}" charset="UTF-8" disableAnsi="false"/>
         </Console>
         <Console name="SQL">
-            <PatternLayout pattern="${SQL_LOG_PATTERN}" disableAnsi="false"/>
+            <PatternLayout pattern="${SQL_LOG_PATTERN}" charset="UTF-8" disableAnsi="false"/>
         </Console>
         <Console name="ERR">
-            <PatternLayout pattern="${ERR_LOG_PATTERN}" disableAnsi="false"/>
+            <PatternLayout pattern="${ERR_LOG_PATTERN}" charset="UTF-8" disableAnsi="false"/>
         </Console>
         <Console name="MONITOR">
-            <PatternLayout pattern="${MONITOR_LOG_PATTERN}" disableAnsi="false"/>
+            <PatternLayout pattern="${MONITOR_LOG_PATTERN}" charset="UTF-8" disableAnsi="false"/>
         </Console>
 
         <RollingFile name="FRAMEWORK_LOG_FILE"
                      fileName="${FRAMEWORK_LOG_PATH}/pk_framework.log"
                      filePattern="${FRAMEWORK_LOG_PATH}/pk_framework_%d{yyyy-MM-dd}.log.gz">
-            <PatternLayout pattern="${CORE_LOG_PATTERN}"/>
+            <PatternLayout pattern="${CORE_LOG_PATTERN}" charset="UTF-8"/>
             <Policies>
                 <!-- 하루 1회 롤링 -->
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
@@ -108,7 +108,7 @@
         <RollingFile name="SERVICE_LOG_FILE"
                      fileName="${SERVICE_LOG_PATH}/pk_service.log"
                      filePattern="${SERVICE_LOG_PATH}/pk_service_%d{yyyy-MM-dd}.log.gz">
-            <PatternLayout pattern="${BIZ_LOG_PATTERN}"/>
+            <PatternLayout pattern="${BIZ_LOG_PATTERN}" charset="UTF-8"/>
             <Policies>
                 <!-- 하루 1회 롤링 -->
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
@@ -144,6 +144,21 @@
             <AppenderRef ref="FRAMEWORK_LOG_FILE"/>
         </Logger>
 
+        <Logger name="nhnis.fw.commons.aspect" level="info" additivity="false">
+            <AppenderRef ref="BIZ"/>
+            <AppenderRef ref="SERVICE_LOG_FILE"/>
+        </Logger>
+
+        <Logger name="nhnis.fw.commons.interceptor" level="info" additivity="false">
+            <AppenderRef ref="CORE"/>
+            <AppenderRef ref="FRAMEWORK_LOG_FILE"/>
+        </Logger>
+
+        <Logger name="nhnis.fw.commons.filter" level="info" additivity="false">
+            <AppenderRef ref="CORE"/>
+            <AppenderRef ref="FRAMEWORK_LOG_FILE"/>
+        </Logger>
+
         <Logger name="nhnis.mk" level="info" additivity="false">
             <AppenderRef ref="BIZ"/>
             <AppenderRef ref="SERVICE_LOG_FILE"/>
@@ -155,6 +170,11 @@
         </Logger>
 
         <Logger name="nhnis.mk.co.common" level="info" additivity="false">
+            <AppenderRef ref="BIZ"/>
+            <AppenderRef ref="SERVICE_LOG_FILE"/>
+        </Logger>
+
+        <Logger name="nhnis.mk.co.common.BizPrePostAspect" level="info" additivity="false">
             <AppenderRef ref="BIZ"/>
             <AppenderRef ref="SERVICE_LOG_FILE"/>
         </Logger>

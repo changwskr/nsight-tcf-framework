@@ -3,6 +3,7 @@ package nhnis.fw.commons.filter;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.ThreadContext;
@@ -33,12 +34,18 @@ import nhnis.fw.commons.dto.header.hdr_nhnis;
 import nhnis.fw.commons.dto.header.sys_comm;
 import nhnis.fw.commons.jwt.JwtProvider;
 
+/**
+ * PDMK 공통 요청 필터. ServiceContext / GUID / JWT(비-local)를 준비한다.
+ *
+ * <p>{@code nhnis.fw.commons.filter.enabled=true} 일 때 활성.
+ * local 프로파일에서는 {@code hdr_nhnis} 없이 {@code {"dto":...}} 만 와도 합성 Header로 통과시킨다.
+ */
 @Slf4j
 @Component
 @ConditionalOnProperty(name = "nhnis.fw.commons.filter.enabled", havingValue = "true")
 public class DefaultFilter implements Filter {
 
-    private final ClientHttpConnector connector;
+    private final ClientHttpConnector connector; // reserved for APIGW/OCR relay hooks
 
     private static final String GUID = "guid";
     private static final String IP = "ip";
@@ -76,7 +83,6 @@ public class DefaultFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        // ThreadContext 세팅
         String uri = request.getRequestURI();
         String serviceId = uri.contains("/")
                 ? uri.substring(uri.lastIndexOf("/") + 1)
@@ -115,8 +121,7 @@ public class DefaultFilter implements Filter {
                 CachedBodyHttpServletRequest wrapper =
                         new CachedBodyHttpServletRequest(request);
 
-                /* SSO Check */
-                if (!active.toLowerCase().equals("local")) {
+                if (!"local".equalsIgnoreCase(active)) {
                     String authorization =
                             request.getHeader(HttpHeaders.AUTHORIZATION);
                     if (authorization == null
@@ -167,7 +172,7 @@ public class DefaultFilter implements Filter {
                         false
                 );
 
-                Map<String, Object> rootMap = null;
+                Map<String, Object> rootMap;
                 try {
                     rootMap = mapper.readValue(
                             requestBody,
@@ -186,36 +191,37 @@ public class DefaultFilter implements Filter {
                     return;
                 }
 
+                @SuppressWarnings("unchecked")
                 Map<String, Object> headerMap =
                         (Map<String, Object>) rootMap.get(HEADER);
 
+                hdr_nhnis header;
                 if (headerMap == null) {
-                    response.sendError(
-                            HttpServletResponse.SC_BAD_REQUEST,
-                            "공통 Header 정보가 없습니다."
+                    if (!"local".equalsIgnoreCase(active)) {
+                        response.sendError(
+                                HttpServletResponse.SC_BAD_REQUEST,
+                                "공통 Header 정보가 없습니다."
+                        );
+                        return;
+                    }
+                    header = syntheticLocalHeader();
+                } else {
+                    header = convertMapToDto(
+                            mapper,
+                            headerMap,
+                            hdr_nhnis.class
                     );
                 }
 
-                hdr_nhnis header = convertMapToDto(
-                        mapper,
-                        headerMap,
-                        hdr_nhnis.class
-                );
-
                 String guid = header.getSys_comm().getStd_gbl_id();
 
-                ThreadContext.put(
-                        GUID,
-                        header.getSys_comm().getStd_gbl_id()
-                );
-                ThreadContext.put(
-                        IP,
-                        header.getSys_comm().getTr_trm_ipadr()
-                );
-                ThreadContext.put(
-                        USER_ID,
-                        header.getSys_comm().getOptr_eno()
-                );
+                ThreadContext.put(GUID, guid);
+                if (header.getSys_comm().getTr_trm_ipadr() != null) {
+                    ThreadContext.put(IP, header.getSys_comm().getTr_trm_ipadr());
+                }
+                if (header.getSys_comm().getOptr_eno() != null) {
+                    ThreadContext.put(USER_ID, header.getSys_comm().getOptr_eno());
+                }
 
                 ServiceContext serviceContext = new ServiceContext(
                         applicationName,
@@ -228,7 +234,6 @@ public class DefaultFilter implements Filter {
                 );
                 ServiceContextHolder.setInstance(serviceContext);
 
-                // 서블릿 호출
                 filterChain.doFilter(wrapper, servletResponse);
             }
         } catch (Exception e) {
@@ -250,6 +255,15 @@ public class DefaultFilter implements Filter {
                 ThreadContext.clearAll();
             }
         }
+    }
+
+    private hdr_nhnis syntheticLocalHeader() {
+        String guid = UUID.randomUUID().toString().replace("-", "");
+        sys_comm sysComm = new sys_comm();
+        sysComm.setStd_gbl_id(guid);
+        hdr_nhnis header = new hdr_nhnis();
+        header.setSys_comm(sysComm);
+        return header;
     }
 
     private <T> T convertMapToDto(

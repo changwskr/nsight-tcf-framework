@@ -83,4 +83,15 @@ public class mkpca9999DtoOut {
     public void setInpCn(String inpCn) {
         this.inpCn = inpCn;
     }
+
+    @Override
+    public String toString() {
+        return "TRT_BRC : " + trtBrc
+                + "TRTMN_ENO : " + trtmnEno
+                + "SALZ_TIP_KDC : " + salzTipKdc
+                + "BAS_DT : " + basDt
+                + "PRTO_CN : " + prtoCn
+                + "INQ_CN : " + inqCn
+                + "INP_CN : " + inpCn;
+    }
 }

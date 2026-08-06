@@ -6,16 +6,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import nhnis.fw.commons.log.PdmkTxLog;
 import nhnis.fw.commons.resolver.RequestBody;
 import nhnis.mk.co.a.dto.mkpca9999DtoIn;
 import nhnis.mk.co.a.dto.mkpca9999DtoOut;
 import nhnis.mk.co.a.dto.mkpca9999ListResponseDto;
 import nhnis.mk.co.a.service.mkpca9999Service;
-import nhnis.mk.co.common.MkCoTxLog;
 
-/**
- * 영업팁 실적 조회 Controller (PDMK 트랜잭션 로그 형식).
- */
+/** ??? ?? ?? Controller (PDMK ???? ?? ??). */
 @RestController
 @RequestMapping("/api/mk/co/a/9999")
 public class mkpca9999Controller {
@@ -31,17 +29,17 @@ public class mkpca9999Controller {
 
     @PostMapping("/list")
     public mkpca9999ListResponseDto mkpca9999S0(@RequestBody mkpca9999DtoIn in) {
-        MkCoTxLog.controllerStart(log, PROGRAM_ID);
+        PdmkTxLog.controllerStart(log, PROGRAM_ID);
         mkpca9999ListResponseDto out = service.mkpca9999S0(in);
-        MkCoTxLog.controllerEnd(log, PROGRAM_ID, "mkpca9999S0", out);
+        PdmkTxLog.controllerEnd(log, PROGRAM_ID, "mkpca9999S0", out);
         return out;
     }
 
     @PostMapping("/detail")
     public mkpca9999DtoOut mkpca9999S1(@RequestBody mkpca9999DtoIn in) {
-        MkCoTxLog.controllerStart(log, PROGRAM_ID);
+        PdmkTxLog.controllerStart(log, PROGRAM_ID);
         mkpca9999DtoOut out = service.mkpca9999S1(in);
-        MkCoTxLog.controllerEnd(log, PROGRAM_ID, "mkpca9999S1", out);
+        PdmkTxLog.controllerEnd(log, PROGRAM_ID, "mkpca9999S1", out);
         return out;
     }
 }

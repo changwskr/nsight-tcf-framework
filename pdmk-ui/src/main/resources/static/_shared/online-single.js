@@ -1,7 +1,6 @@
 /*
- * tcf-ui/_shared/online-single.js 를 pdmp-service 전문 테스트용으로 옮긴 것.
- * tcf-ui는 업무코드별 /{bc}/online 단일 창구로 보내지만, pdmp-service는 거래마다
- * 엔드포인트가 다르므로 업무코드 대신 거래 ID를 고른다.
+ * pdmk-service 전문 테스트용 단일 거래 화면 스크립트.
+ * 요청 Body는 {"dto":{...}} 형식(pdmk-fw RequestBody resolver).
  */
 
 let transactions = [];
@@ -20,12 +19,18 @@ function defaultTransactionId() {
   return document.documentElement.dataset.defaultTransactionId || '';
 }
 
+function programFilter() {
+  return document.documentElement.dataset.programId || '';
+}
+
 async function init() {
   const [txRes, configRes] = await Promise.all([
     fetch('/api/transactions'),
     fetch('/api/config')
   ]);
-  transactions = await txRes.json();
+  const all = await txRes.json();
+  const programId = programFilter();
+  transactions = programId ? all.filter(tx => tx.programId === programId) : all;
   config = await configRes.json();
 
   targetBaseUrlEl.value = config.targetBaseUrl || 'http://localhost:8080';
@@ -58,25 +63,24 @@ async function selectTransaction(id) {
   await refreshTargetUrl();
 }
 
+function dtoOf(sampleRequest) {
+  return sampleRequest && sampleRequest.dto && typeof sampleRequest.dto === 'object'
+      ? sampleRequest.dto
+      : {};
+}
+
 function updatePagingFields(sampleRequest) {
   if (!pageFieldsEl || !pageNoEl || !pageSizeEl) {
     return;
   }
 
-  const body = sampleRequest && sampleRequest.body ? sampleRequest.body : {};
-  const hasPaging = body.hasOwnProperty('pageNo') || body.hasOwnProperty('pageSize');
+  const dto = dtoOf(sampleRequest);
+  const hasPaging = Object.prototype.hasOwnProperty.call(dto, 'pageNo')
+      || Object.prototype.hasOwnProperty.call(dto, 'pageSize');
   pageFieldsEl.style.display = hasPaging ? 'grid' : 'none';
 
-  if (body.pageNo != null) {
-    pageNoEl.value = body.pageNo;
-  } else {
-    pageNoEl.value = '1';
-  }
-  if (body.pageSize != null) {
-    pageSizeEl.value = body.pageSize;
-  } else {
-    pageSizeEl.value = '20';
-  }
+  pageNoEl.value = dto.pageNo != null ? dto.pageNo : '1';
+  pageSizeEl.value = dto.pageSize != null ? dto.pageSize : '20';
 }
 
 function mergePagingIntoPayload(payload) {
@@ -84,18 +88,18 @@ function mergePagingIntoPayload(payload) {
     return payload;
   }
 
-  if (!payload.body || typeof payload.body !== 'object') {
-    payload.body = {};
+  if (!payload.dto || typeof payload.dto !== 'object') {
+    payload.dto = {};
   }
 
   const pageNo = parseInt(pageNoEl.value, 10);
   if (!Number.isNaN(pageNo)) {
-    payload.body.pageNo = pageNo;
+    payload.dto.pageNo = pageNo;
   }
 
   const pageSize = parseInt(pageSizeEl.value, 10);
   if (!Number.isNaN(pageSize)) {
-    payload.body.pageSize = pageSize;
+    payload.dto.pageSize = pageSize;
   }
 
   return payload;
@@ -108,18 +112,12 @@ async function refreshTargetUrl() {
     res.ok ? (await res.json()).targetUrl : 'URL 계산 실패';
 }
 
-// 표준 전문은 실패도 HTTP 200으로 내려온다. 성공 여부는 result.resultCode로 판별한다.
-function transactionResult(parsed) {
-  return parsed && parsed.result ? parsed.result : null;
-}
-
 function describeError(parsed, httpStatus) {
-  const result = transactionResult(parsed);
-  if (result && result.errorCode) {
-    return `${result.errorCode} · ${result.errorMessage}`;
-  }
   if (parsed && parsed.error) {
     return parsed.hint ? `${parsed.error} · ${parsed.hint}` : parsed.error;
+  }
+  if (parsed && parsed.message) {
+    return parsed.message;
   }
   return `HTTP ${httpStatus} 응답`;
 }
@@ -156,13 +154,9 @@ async function sendRequest() {
     responseBodyEl.value = result.responseBody || '';
   }
 
-  const txResult = transactionResult(parsed);
-  const ok = httpOk && !(txResult && txResult.errorCode);
-  const resultCode = txResult ? txResult.resultCode : null;
-
+  const ok = httpOk && !(parsed && parsed.error);
   responseMetaEl.innerHTML = `
     <span class="badge ${ok ? 'ok' : 'fail'}">HTTP ${result.httpStatus}</span>
-    ${resultCode ? `<span class="badge ${ok ? 'ok' : 'fail'}">${resultCode}</span>` : ''}
     <span>${result.elapsedMs} ms</span>
     <span>${result.targetUrl}</span>
     ${ok ? '' : `<span class="badge fail">${describeError(parsed, result.httpStatus)}</span>`}

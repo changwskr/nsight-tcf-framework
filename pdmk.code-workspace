@@ -1,0 +1,23 @@
+{
+  "folders": [
+    {
+      "name": "pdmk-service",
+      "path": "pdmk-service"
+    },
+    {
+      "name": "pdmk-fw",
+      "path": "pdmk-fw"
+    },
+    {
+      "name": "pdmk-ui",
+      "path": "pdmk-ui"
+    }
+  ],
+  "settings": {
+    "java.import.gradle.enabled": true,
+    "java.import.gradle.wrapper.enabled": true,
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.jdt.ls.java.home": "C:\\Users\\chang.JWS\\.jdks\\temurin-21.0.4",
+    "java.debug.settings.enableRunDebugCodeLens": false
+  }
+}

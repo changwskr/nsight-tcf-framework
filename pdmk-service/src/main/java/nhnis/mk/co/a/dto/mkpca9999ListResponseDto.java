@@ -55,10 +55,6 @@ public class mkpca9999ListResponseDto {
 
     @Override
     public String toString() {
-        return "mkpca9999ListResponseDto{totalCount=" + totalCount
-                + ", pageNo=" + pageNo
-                + ", pageSize=" + pageSize
-                + ", records=" + records
-                + '}';
+        return String.valueOf(records);
     }
 }

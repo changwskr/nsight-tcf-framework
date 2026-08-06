@@ -26,6 +26,9 @@ if errorlevel 1 goto :no_project
 
 if not exist "gradlew.bat" goto :no_wrapper
 
+chcp 65001 >nul
+set "JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8"
+
 echo ------------------------------------------------------------
 echo  PROJECT : "%CD%"
 echo  URL     : http://localhost:8080

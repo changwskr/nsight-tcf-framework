@@ -24,10 +24,6 @@ public class mkpca8888ListResponseDto {
 
     @Override
     public String toString() {
-        return "mkpca8888ListResponseDto{totalCount=" + totalCount
-                + ", pageNo=" + pageNo
-                + ", pageSize=" + pageSize
-                + ", records=" + records
-                + '}';
+        return String.valueOf(records);
     }
 }

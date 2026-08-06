@@ -1,5 +1,6 @@
 package nhnis.fw.tcf.stf;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -10,6 +11,7 @@ import nhnis.fw.tcf.dto.StandardHeaderDto;
  * 표준 Header 필수값 검증.
  */
 @Component
+@ConditionalOnProperty(name = "nhnis.fw.tcf.enabled", havingValue = "true")
 public class StandardHeaderValidator {
 
     /** exceptionCode.yml FW0001 - "{0} 오류가 발생하였습니다." */

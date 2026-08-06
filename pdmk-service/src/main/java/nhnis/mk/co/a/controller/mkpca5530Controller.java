@@ -6,17 +6,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import nhnis.fw.commons.log.PdmkTxLog;
 import nhnis.fw.commons.resolver.RequestBody;
 import nhnis.mk.co.a.dto.mkpca5530DtoIn;
 import nhnis.mk.co.a.dto.mkpca5530ListResponseDto;
 import nhnis.mk.co.a.service.mkpca5530Service;
-import nhnis.mk.co.common.MkCoTxLog;
 
 /**
- * mkpca5530 안내항목 조회 Controller.
+ * mkpca5530 ???? ?? Controller.
  *
- * <p>PDMK 경로: ServicePreventionInterceptor → BizPrePostAspect → Controller → Service.
- * 요청 Body는 {@code {"dto":{...}}} 형식({@link RequestBody}).
+ * <p>PDMK ??: DefaultFilter ? ServicePreventionInterceptor ? BizPrePostAspect ? Controller ? Service.
+ * ?? Body? {@code {"dto":{...}}} ??({@link RequestBody}).
  */
 @RestController
 @RequestMapping("/api/mk/co/a/5530")
@@ -33,9 +33,9 @@ public class mkpca5530Controller {
 
     @PostMapping("/list")
     public mkpca5530ListResponseDto mkpca5530S0(@RequestBody mkpca5530DtoIn in) {
-        MkCoTxLog.controllerStart(log, PROGRAM_ID);
+        PdmkTxLog.controllerStart(log, PROGRAM_ID);
         mkpca5530ListResponseDto out = service.mkpca5530S0(in);
-        MkCoTxLog.controllerEnd(log, PROGRAM_ID, "mkpca5530S0", out);
+        PdmkTxLog.controllerEnd(log, PROGRAM_ID, "mkpca5530S0", out);
         return out;
     }
 }

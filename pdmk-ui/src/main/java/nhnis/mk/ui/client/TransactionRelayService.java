@@ -1,4 +1,4 @@
-package nhnis.mp.ui.client;
+package nhnis.mk.ui.client;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -10,25 +10,25 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
 
-import nhnis.mp.ui.application.service.TransactionCatalog;
-import nhnis.mp.ui.config.PdmpUiProperties;
-import nhnis.mp.ui.support.RelayResult;
-import nhnis.mp.ui.support.TransactionInfo;
+import nhnis.mk.ui.application.service.TransactionCatalog;
+import nhnis.mk.ui.config.PdmkUiProperties;
+import nhnis.mk.ui.support.RelayResult;
+import nhnis.mk.ui.support.TransactionInfo;
 
 /**
- * 화면이 보낸 전문을 pdmp-service로 중계한다.
+ * 화면이 보낸 전문을 pdmk-service로 중계한다.
  *
- * <p>브라우저가 pdmp-service를 직접 호출하면 교차 출처가 되어 CORS 설정에 묶이므로,
- * tcf-ui와 동일하게 UI 서버가 대신 호출하고 상태·소요시간을 함께 돌려준다.
+ * <p>브라우저가 pdmk-service를 직접 호출하면 교차 출처가 되어 CORS 설정에 묶이므로,
+ * UI 서버가 대신 호출하고 상태·소요시간을 함께 돌려준다.
  */
 @Service
 public class TransactionRelayService {
 
     private final TransactionCatalog catalog;
-    private final PdmpUiProperties properties;
+    private final PdmkUiProperties properties;
     private final RestClient restClient;
 
-    public TransactionRelayService(TransactionCatalog catalog, PdmpUiProperties properties) {
+    public TransactionRelayService(TransactionCatalog catalog, PdmkUiProperties properties) {
         this.catalog = catalog;
         this.properties = properties;
         this.restClient = RestClient.builder()
@@ -66,7 +66,7 @@ public class TransactionRelayService {
 
     private String connectionErrorJson(String targetUrl, String message) {
         return """
-                {"error":"%s","targetUrl":"%s","hint":"pdmp-service가 기동 중인지, 대상 URL이 맞는지 확인하세요."}"""
+                {"error":"%s","targetUrl":"%s","hint":"pdmk-service가 기동 중인지, 대상 URL이 맞는지 확인하세요."}"""
                 .formatted(escapeJson(message), escapeJson(targetUrl));
     }
 

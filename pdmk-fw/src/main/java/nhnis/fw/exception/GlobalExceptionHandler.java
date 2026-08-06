@@ -1,6 +1,7 @@
 package nhnis.fw.exception;
 
 import org.slf4j.MDC;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -17,8 +18,11 @@ import nhnis.fw.tcf.etf.ETF;
  *
  * <p>
  * HTTP 상태는 성공·실패 모두 200이며 판별은 {@code result.resultCode}로 한다. TCF 표준 계약이다.
+ *
+ * <p>PDMK commons 경로({@code nhnis.fw.tcf.enabled=false})에서는 등록하지 않는다.
  */
 @RestControllerAdvice
+@ConditionalOnProperty(name = "nhnis.fw.tcf.enabled", havingValue = "true")
 public class GlobalExceptionHandler {
 
     private final ETF etf;

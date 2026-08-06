@@ -1,4 +1,4 @@
-package nhnis.mp.ui.entry.web;
+package nhnis.mk.ui.entry.web;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,22 +12,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import nhnis.mp.ui.application.service.TransactionCatalog;
-import nhnis.mp.ui.client.TransactionRelayService;
-import nhnis.mp.ui.config.PdmpUiProperties;
-import nhnis.mp.ui.support.RelayResult;
-import nhnis.mp.ui.support.TransactionInfo;
+import nhnis.mk.ui.application.service.TransactionCatalog;
+import nhnis.mk.ui.client.TransactionRelayService;
+import nhnis.mk.ui.config.PdmkUiProperties;
+import nhnis.mk.ui.support.RelayResult;
+import nhnis.mk.ui.support.TransactionInfo;
 
 @RestController
 @RequestMapping("/api")
-public class PdmpUiApiController {
+public class PdmkUiApiController {
 
     private final TransactionCatalog catalog;
     private final TransactionRelayService relayService;
-    private final PdmpUiProperties properties;
+    private final PdmkUiProperties properties;
 
-    public PdmpUiApiController(TransactionCatalog catalog, TransactionRelayService relayService,
-                               PdmpUiProperties properties) {
+    public PdmkUiApiController(TransactionCatalog catalog, TransactionRelayService relayService,
+            PdmkUiProperties properties) {
         this.catalog = catalog;
         this.relayService = relayService;
         this.properties = properties;
@@ -53,14 +53,14 @@ public class PdmpUiApiController {
 
     @GetMapping("/transactions/{id}/target-url")
     public Map<String, String> targetUrl(@PathVariable("id") String id,
-                                         @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+            @RequestParam(value = "baseUrl", required = false) String baseUrl) {
         return Map.of("targetUrl", relayService.resolveTargetUrl(id, baseUrl));
     }
 
     @PostMapping("/relay/{id}")
     public RelayResult relay(@PathVariable("id") String id,
-                             @RequestBody(required = false) String requestBody,
-                             @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+            @RequestBody(required = false) String requestBody,
+            @RequestParam(value = "baseUrl", required = false) String baseUrl) {
         return relayService.relay(id, requestBody, baseUrl);
     }
 }

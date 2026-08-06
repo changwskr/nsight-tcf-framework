@@ -6,14 +6,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import nhnis.fw.commons.log.PdmkTxLog;
 import nhnis.fw.commons.resolver.RequestBody;
 import nhnis.mk.co.a.dto.mkpca8888DtoIn;
 import nhnis.mk.co.a.dto.mkpca8888DtoOut;
 import nhnis.mk.co.a.dto.mkpca8888ListResponseDto;
 import nhnis.mk.co.a.service.mkpca8888Service;
-import nhnis.mk.co.common.MkCoTxLog;
 
-/** 영업팁 실적 CRUD Controller (PDMK 트랜잭션 로그 형식). */
+/** ??? ?? CRUD Controller (PDMK ???? ?? ??). */
 @RestController
 @RequestMapping("/api/mk/co/a/8888")
 public class mkpca8888Controller {
@@ -29,38 +29,38 @@ public class mkpca8888Controller {
 
     @PostMapping("/list")
     public mkpca8888ListResponseDto mkpca8888S0(@RequestBody mkpca8888DtoIn in) {
-        MkCoTxLog.controllerStart(log, PROGRAM_ID);
+        PdmkTxLog.controllerStart(log, PROGRAM_ID);
         mkpca8888ListResponseDto out = service.mkpca8888S0(in);
-        MkCoTxLog.controllerEnd(log, PROGRAM_ID, "mkpca8888S0", out);
+        PdmkTxLog.controllerEnd(log, PROGRAM_ID, "mkpca8888S0", out);
         return out;
     }
 
     @PostMapping("/detail")
     public mkpca8888DtoOut mkpca8888S1(@RequestBody mkpca8888DtoIn in) {
-        MkCoTxLog.controllerStart(log, PROGRAM_ID);
+        PdmkTxLog.controllerStart(log, PROGRAM_ID);
         mkpca8888DtoOut out = service.mkpca8888S1(in);
-        MkCoTxLog.controllerEnd(log, PROGRAM_ID, "mkpca8888S1", out);
+        PdmkTxLog.controllerEnd(log, PROGRAM_ID, "mkpca8888S1", out);
         return out;
     }
 
     @PostMapping("/create")
     public void mkpca8888I0(@RequestBody mkpca8888DtoIn in) {
-        MkCoTxLog.controllerStart(log, PROGRAM_ID);
+        PdmkTxLog.controllerStart(log, PROGRAM_ID);
         service.mkpca8888I0(in);
-        MkCoTxLog.controllerEnd(log, PROGRAM_ID, "mkpca8888I0", null);
+        PdmkTxLog.controllerEnd(log, PROGRAM_ID, "mkpca8888I0", null);
     }
 
     @PostMapping("/update")
     public void mkpca8888U0(@RequestBody mkpca8888DtoIn in) {
-        MkCoTxLog.controllerStart(log, PROGRAM_ID);
+        PdmkTxLog.controllerStart(log, PROGRAM_ID);
         service.mkpca8888U0(in);
-        MkCoTxLog.controllerEnd(log, PROGRAM_ID, "mkpca8888U0", null);
+        PdmkTxLog.controllerEnd(log, PROGRAM_ID, "mkpca8888U0", null);
     }
 
     @PostMapping("/delete")
     public void mkpca8888D0(@RequestBody mkpca8888DtoIn in) {
-        MkCoTxLog.controllerStart(log, PROGRAM_ID);
+        PdmkTxLog.controllerStart(log, PROGRAM_ID);
         service.mkpca8888D0(in);
-        MkCoTxLog.controllerEnd(log, PROGRAM_ID, "mkpca8888D0", null);
+        PdmkTxLog.controllerEnd(log, PROGRAM_ID, "mkpca8888D0", null);
     }
 }

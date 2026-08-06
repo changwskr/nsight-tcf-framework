@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'war'
+    id 'eclipse'
     id 'org.springframework.boot' version '3.5.14'
     id 'io.spring.dependency-management' version '1.1.7'
 }
@@ -83,6 +84,68 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
+tasks.named('processResources', ProcessResources).configure {
+    filteringCharset = 'UTF-8'
+}
+
+tasks.named('bootRun').configure {
+    jvmArgs = [
+            '-Dfile.encoding=UTF-8',
+            '-Dsun.jnu.encoding=UTF-8',
+            '-Dstdout.encoding=UTF-8',
+            '-Dstderr.encoding=UTF-8',
+            '-Dconsole.encoding=UTF-8'
+    ]
+}
+
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
+    jvmArgs '-Dfile.encoding=UTF-8', '-Dsun.jnu.encoding=UTF-8'
+}
+
+/* Cursor Run/Debug: Gradle 클래스패스를 launch.json에 고정 (jdt.ls-java-project 우회) */
+tasks.register('writeIdeLaunch') {
+    dependsOn classes, ':pdmk-fw:jar'
+    doLast {
+        def outDir = file("${rootProject.projectDir}/../.vscode")
+        outDir.mkdirs()
+        def launchFile = new File(outDir, 'launch.json')
+
+        def entries = sourceSets.main.runtimeClasspath.files.collect {
+            it.absolutePath.replace('\\', '/')
+        }
+
+        def serviceConfig = [
+                type     : 'java',
+                name     : 'PdmkApplication',
+                request  : 'launch',
+                mainClass: 'nhnis.mk.PdmkApplication',
+                cwd      : '${workspaceFolder}/pdmk-service',
+                vmArgs   : '-Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8',
+                classPaths: entries,
+                env      : [
+                        JAVA_HOME: 'C:\\Users\\chang.JWS\\.jdks\\temurin-21.0.4'
+                ]
+        ]
+
+        def root = [version: '0.2.0', configurations: []]
+        if (launchFile.exists()) {
+            root = new groovy.json.JsonSlurper().parse(launchFile) as Map
+            if (root.configurations == null) {
+                root.configurations = []
+            }
+        }
+        def configs = (root.configurations as List).findAll { it.name != 'PdmkApplication' }
+        configs.add(serviceConfig)
+        // PdmkUiApplication 이 있으면 앞에, service 는 뒤에 유지
+        def ui = configs.find { it.name == 'PdmkUiApplication' }
+        if (ui != null) {
+            configs = configs.findAll { it.name != 'PdmkUiApplication' }
+            configs.add(0, ui)
+        }
+        root.configurations = configs
+
+        launchFile.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(root))
+        println "Wrote ${launchFile} (PdmkApplication, ${entries.size()} classpath entries)"
+    }
 }

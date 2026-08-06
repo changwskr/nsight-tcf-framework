@@ -2,7 +2,7 @@
 setlocal
 
 rem ============================================================
-rem  pdmp-ui JAR build script
+rem  pdmk-ui JAR build script
 rem
 rem  Usage:
 rem    build.bat                                 clean build (default)

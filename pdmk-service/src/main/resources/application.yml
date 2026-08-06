@@ -36,16 +36,15 @@ spring:
       schema-locations: classpath:db/h2/schema.sql
       data-locations: classpath:db/h2/data.sql
 
-# TCF 프레임워크 설정
-nsight:
-  tcf:
-    slow-transaction-ms: 3000
-
-# PDMK 공통 웹(ServicePreventionInterceptor) — 운영 트랜잭션 로그와 동일 경로
+# PDMK 공통 FW (pdmk-fw commons) — TCF 경로 비활성
 nhnis:
   fw:
+    tcf:
+      enabled: false
     commons:
       legacy-web:
+        enabled: true
+      filter:
         enabled: true
 
 ---
@@ -55,7 +54,7 @@ spring:
       on-profile: local
 
 jwt:
-  # 조회 전용 단계라 검증을 꺼 둔다. 토큰 발급이 붙으면 true로 올린다.
+  # local은 DefaultFilter에서 토큰 검증을 생략한다.
   enabled: false
   # 로컬 개발용 기본값(32자+). 운영은 PDMK_JWT_SECRET 환경변수로 덮어쓴다.
   secret: "${PDMK_JWT_SECRET:pdmk-local-dev-secret-key-change-me-32b}"

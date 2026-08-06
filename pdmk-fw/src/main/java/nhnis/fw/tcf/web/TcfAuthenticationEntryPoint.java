@@ -3,6 +3,7 @@ package nhnis.fw.tcf.web;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -23,6 +24,7 @@ import nhnis.fw.tcf.etf.ETF;
  * 게이트웨이 같은 앞단 인프라가 상태 코드로 판단할 수 있어야 하기 때문이다.
  */
 @Component
+@ConditionalOnProperty(name = "nhnis.fw.tcf.enabled", havingValue = "true")
 public class TcfAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     /** exceptionCode.yml FW0401 */

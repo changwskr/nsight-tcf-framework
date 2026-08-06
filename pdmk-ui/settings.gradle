@@ -20,4 +20,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'pdmp-ui'
+rootProject.name = 'pdmk-ui'

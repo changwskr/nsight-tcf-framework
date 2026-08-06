@@ -25,4 +25,15 @@ public class mkpca8888DtoOut {
     public void setInqCn(String inqCn) { this.inqCn = inqCn; }
     public String getInpCn() { return inpCn; }
     public void setInpCn(String inpCn) { this.inpCn = inpCn; }
+
+    @Override
+    public String toString() {
+        return "TRT_BRC : " + trtBrc
+                + "TRTMN_ENO : " + trtmnEno
+                + "SALZ_TIP_KDC : " + salzTipKdc
+                + "BAS_DT : " + basDt
+                + "PRTO_CN : " + prtoCn
+                + "INQ_CN : " + inqCn
+                + "INP_CN : " + inpCn;
+    }
 }

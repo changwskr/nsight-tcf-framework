@@ -1,4 +1,4 @@
-package nhnis.mp.ui.support;
+package nhnis.mk.ui.support;
 
 /**
  * 전문 릴레이 결과.
