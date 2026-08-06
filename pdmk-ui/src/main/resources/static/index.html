@@ -10,19 +10,30 @@
   <div class="wrap">
     <header>
       <h1>PDMK UI</h1>
-      <p>pdmk-service 전문 테스트 화면입니다. 프로그램별로 거래를 골라 요청 전문을 보내고 응답을 확인합니다.</p>
+      <p>pdmk-service 전문 테스트와 이미지로그 관리 화면입니다.</p>
       <div class="nav-links">
+        <a class="nav-link" href="/imagelog/index.html">이미지로그 관리 →</a>
         <span class="nav-link" id="targetInfo">대상 확인 중...</span>
       </div>
     </header>
 
     <section class="hub-grid" id="programGrid">
-      <div class="empty">거래 목록을 불러오는 중...</div>
+      <article class="hub-card">
+        <h2>이미지로그 관리</h2>
+        <p>TB_FW_IMAGE_LOG 조건 검색·목록·상세. 전문 JSON 편집 없이 관리합니다.</p>
+        <div class="links">
+          <a href="/imagelog/index.html">이미지로그 관리 화면 열기</a>
+        </div>
+      </article>
+      <div class="empty" id="txLoading">거래 목록을 불러오는 중...</div>
     </section>
   </div>
 
   <script>
     function renderProgramCard(programId, items) {
+      if (programId === 'mkcoa8888') {
+        return '';
+      }
       const links = items
         .map(tx => `<a href="/${programId}/index.html">${tx.id} · ${tx.name}</a>`)
         .join('');
@@ -53,8 +64,15 @@
         grouped.get(tx.programId).push(tx);
       });
 
-      document.getElementById('programGrid').innerHTML =
-        [...grouped].map(([programId, items]) => renderProgramCard(programId, items)).join('');
+      const cards = [...grouped]
+        .map(([programId, items]) => renderProgramCard(programId, items))
+        .filter(Boolean)
+        .join('');
+
+      const loading = document.getElementById('txLoading');
+      if (loading) {
+        loading.outerHTML = cards;
+      }
     }
 
     init().catch(error => alert('거래 목록 로드 실패: ' + error.message));

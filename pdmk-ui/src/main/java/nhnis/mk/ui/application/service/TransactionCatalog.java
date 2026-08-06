@@ -35,6 +35,33 @@ public class TransactionCatalog {
     @PostConstruct
     void load() {
         register(new TransactionInfo(
+                "mkcoa8888S0",
+                "이미지로그 목록 조회",
+                "mkcoa8888",
+                "POST",
+                "/mkcoa8888S0",
+                "TB_FW_IMAGE_LOG 조회(페이징). 관리 화면(/imagelog)에서 사용한다.",
+                readSample("mkcoa8888-list.json")));
+
+        register(new TransactionInfo(
+                "mkcoa8888D0",
+                "이미지로그 삭제",
+                "mkcoa8888",
+                "POST",
+                "/mkcoa8888D0",
+                "TB_FW_IMAGE_LOG 삭제. dto.guidList 로 다건 삭제한다.",
+                readSample("mkcoa8888-delete.json")));
+
+        register(new TransactionInfo(
+                "mkcoa9999S0",
+                "영업팁 실적 목록 조회",
+                "mkcoa9999",
+                "POST",
+                "/mkcoa9999S0",
+                "TB_CR_AH_SALES_TIP_RACT 목록 조회. dto.salzTipKdc 를 비우면 전체를 조회한다.",
+                readSample("mkcoa9999-list.json")));
+
+        register(new TransactionInfo(
                 "mkpca5530S0",
                 "안내항목 목록 조회",
                 "mkpca5530",
@@ -45,7 +72,7 @@ public class TransactionCatalog {
 
         register(new TransactionInfo(
                 "mkpca9999S0",
-                "영업팁 실적 목록 조회",
+                "영업팁 실적 목록 조회 (legacy)",
                 "mkpca9999",
                 "POST",
                 "/api/mk/co/a/9999/list",
@@ -54,30 +81,12 @@ public class TransactionCatalog {
 
         register(new TransactionInfo(
                 "mkpca9999S1",
-                "영업팁 실적 단건 조회",
+                "영업팁 실적 단건 조회 (legacy)",
                 "mkpca9999",
                 "POST",
                 "/api/mk/co/a/9999/detail",
                 "PK(취급점·취급자·영업팁종류·기준일자) 4개로 단건 조회. 누락 시 FW0001을 반환한다.",
                 readSample("mkpca9999-detail.json")));
-
-        register(new TransactionInfo(
-                "mkpca8888S0",
-                "영업팁 실적 목록 조회 (CRUD)",
-                "mkpca8888",
-                "POST",
-                "/api/mk/co/a/8888/list",
-                "CRUD 프로그램 목록 조회. JWT enabled=true 이면 인증 필요.",
-                readSample("mkpca8888-list.json")));
-
-        register(new TransactionInfo(
-                "mkpca8888S1",
-                "영업팁 실적 단건 조회 (CRUD)",
-                "mkpca8888",
-                "POST",
-                "/api/mk/co/a/8888/detail",
-                "CRUD 프로그램 단건 조회.",
-                readSample("mkpca8888-detail.json")));
     }
 
     public List<TransactionInfo> findAll() {

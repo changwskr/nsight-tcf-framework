@@ -44,22 +44,36 @@ public class TransactionRelayService {
 
     public RelayResult relay(String transactionId, String requestBody, String baseUrl) {
         String targetUrl = resolveTargetUrl(transactionId, baseUrl);
+        return post(transactionId, targetUrl, requestBody);
+    }
+
+    /** 카탈로그에 없는 고정 경로(이미지로그 등)를 중계한다. */
+    public RelayResult relayPath(String path, String requestBody, String baseUrl) {
+        String normalized = path == null ? "/" : path.trim();
+        if (!normalized.startsWith("/")) {
+            normalized = "/" + normalized;
+        }
+        String targetUrl = trimTrailingSlash(baseUrl) + normalized;
+        return post("path:" + normalized, targetUrl, requestBody);
+    }
+
+    private RelayResult post(String id, String targetUrl, String requestBody) {
         long started = System.currentTimeMillis();
         try {
             return restClient.post()
                     .uri(URI.create(targetUrl))
                     .body(requestBody == null ? "{}" : requestBody)
                     .exchange((request, response) -> new RelayResult(
-                            transactionId,
+                            id,
                             targetUrl,
                             response.getStatusCode().value(),
                             System.currentTimeMillis() - started,
                             StreamUtils.copyToString(response.getBody(), StandardCharsets.UTF_8)));
         } catch (RestClientResponseException e) {
-            return new RelayResult(transactionId, targetUrl, e.getStatusCode().value(),
+            return new RelayResult(id, targetUrl, e.getStatusCode().value(),
                     System.currentTimeMillis() - started, e.getResponseBodyAsString());
         } catch (Exception e) {
-            return new RelayResult(transactionId, targetUrl, 502,
+            return new RelayResult(id, targetUrl, 502,
                     System.currentTimeMillis() - started, connectionErrorJson(targetUrl, e.getMessage()));
         }
     }

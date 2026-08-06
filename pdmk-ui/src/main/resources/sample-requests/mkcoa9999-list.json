@@ -2,7 +2,7 @@
   "hdr_nhnis": {
     "sys_comm": {
       "std_gbl_id": "c3d65cb1a54a43838688b76afe82521e",
-      "rms_svc_c": "mkpca8888S1",
+      "rms_svc_c": "mkcoa9999S0",
       "orgtr_gbl_id": null,
       "trz_gbl_id": null,
       "sync_dsc": "S",
@@ -18,16 +18,13 @@
       "trmn_naac_dsc": null,
       "trmno": "LOCAL01",
       "trm_kdc": "01",
-      "scid": "mkpca8888",
+      "scid": "mkcoa9999",
       "optr_eno": "E0000001",
       "tr_optrnm": "LOCAL_TESTER",
       "optr_pzcc": null
     }
   },
   "dto": {
-    "trtBrc": "10001",
-    "trtmnEno": "E0000001",
-    "salzTipKdc": "001",
-    "basDt": "20260801"
+    "salzTipKdc": "001"
   }
 }

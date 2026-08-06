@@ -8,6 +8,9 @@
  ***************************************************************************/
 package nhnis.fw.commons.interceptor;
 
+import java.util.UUID;
+
+import org.apache.logging.log4j.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -20,8 +23,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import nhnis.fw.commons.context.ServiceContext;
 import nhnis.fw.commons.context.ServiceContextHolder;
 import nhnis.fw.commons.dto.header.hdr_nhnis;
+import nhnis.fw.commons.dto.header.sys_comm;
 import nhnis.fw.commons.imagelog.ImageLogHandler;
 import nhnis.fw.commons.log.PdmkTxLog;
 
@@ -32,12 +37,14 @@ import nhnis.fw.commons.log.PdmkTxLog;
  * {@code [ServicePreventionInterceptor.postHandle]} 위치가 유지된다.
  *
  * <p>전문 헤더 이미지로그는 {@link ImageLogHandler} 로 DB에 남긴다.
+ * GUID({@code std_gbl_id})가 없으면 선처리에서 강제 채번한다.
  */
 @Component
 public class ServicePreventionInterceptor implements HandlerInterceptor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ServicePreventionInterceptor.class);
     private static final String MULTI_PART = "multipart";
+    private static final String GUID = "guid";
 
     private final ImageLogHandler imageLogHandler;
 
@@ -57,22 +64,104 @@ public class ServicePreventionInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        if (ServiceContextHolder.getInstance() == null) {
+        ServiceContext ctx = ServiceContextHolder.getInstance();
+        if (ctx == null) {
             LOGGER.warn(PdmkTxLog.systemContextNull());
             return true;
         }
 
-        hdr_nhnis header = ServiceContextHolder.getInstance().getHeader();
-        if (header != null && header.getSys_comm() != null) {
-            String guid = header.getSys_comm().getStd_gbl_id();
-            if (guid != null) {
-                LOGGER.info(PdmkTxLog.systemGuid(guid));
-            }
-        }
+        hdr_nhnis header = ensureHeader(ctx);
+        String guid = ensureGuid(ctx, header);
+        enrichHeaderFromRequest(request, header);
+        LOGGER.info(PdmkTxLog.systemGuid(guid));
 
         // Pre ImageLog — 시스템 전문 헤더
         imageLogHandler.preImagelog(header, null);
         return true;
+    }
+
+    /**
+     * 이미지로그에 남을 서비스/화면/사용자/IP 가 비어 있으면 요청에서 채운다.
+     * (local 합성 헤더·부분 헤더 요청 대응)
+     */
+    private void enrichHeaderFromRequest(HttpServletRequest request, hdr_nhnis header) {
+        sys_comm sys = header.getSys_comm();
+        String pathService = extractServiceId(request);
+
+        if (isBlank(sys.getRms_svc_c()) && !isBlank(pathService)) {
+            sys.setRms_svc_c(pathService);
+        }
+        if (isBlank(sys.getScid())) {
+            String svc = sys.getRms_svc_c();
+            if (!isBlank(svc)) {
+                sys.setScid(svc.replaceFirst("[SD]\\d+$", ""));
+            }
+        }
+        if (isBlank(sys.getTr_trm_ipadr())) {
+            String forwarded = request.getHeader("X-Forwarded-For");
+            if (!isBlank(forwarded)) {
+                int comma = forwarded.indexOf(',');
+                sys.setTr_trm_ipadr((comma > 0 ? forwarded.substring(0, comma) : forwarded).trim());
+            } else if (!isBlank(request.getRemoteAddr())) {
+                sys.setTr_trm_ipadr(request.getRemoteAddr());
+            }
+        }
+        if (isBlank(sys.getOptr_eno())) {
+            Object mdcUser = ThreadContext.get("userId");
+            if (mdcUser != null && !String.valueOf(mdcUser).isBlank()) {
+                sys.setOptr_eno(String.valueOf(mdcUser));
+            } else {
+                sys.setOptr_eno("LOCAL");
+            }
+        }
+    }
+
+    private static String extractServiceId(HttpServletRequest request) {
+        if (request == null) {
+            return null;
+        }
+        String uri = request.getRequestURI();
+        if (uri == null || uri.isBlank()) {
+            return null;
+        }
+        int slash = uri.lastIndexOf('/');
+        return slash >= 0 ? uri.substring(slash + 1) : uri;
+    }
+
+    private static boolean isBlank(String value) {
+        return value == null || value.isBlank();
+    }
+
+    /** 헤더/sys_comm 이 없으면 생성한다. */
+    private hdr_nhnis ensureHeader(ServiceContext ctx) {
+        hdr_nhnis header = ctx.getHeader();
+        if (header == null) {
+            header = new hdr_nhnis();
+            ctx.setHeader(header);
+        }
+        if (header.getSys_comm() == null) {
+            header.setSys_comm(new sys_comm());
+        }
+        return header;
+    }
+
+    /**
+     * GUID가 없거나 공백이면 강제 채번해 헤더·컨텍스트·MDC에 반영한다.
+     */
+    private String ensureGuid(ServiceContext ctx, hdr_nhnis header) {
+        sys_comm sys = header.getSys_comm();
+        String guid = sys.getStd_gbl_id();
+        if (guid == null || guid.isBlank()) {
+            guid = UUID.randomUUID().toString().replace("-", "");
+            sys.setStd_gbl_id(guid);
+            ctx.setGuid(guid);
+            ThreadContext.put(GUID, guid);
+            LOGGER.info("[ServicePreventionInterceptor] GUID generated in SystemPreProcessor: {}", guid);
+        } else {
+            ctx.setGuid(guid);
+            ThreadContext.put(GUID, guid);
+        }
+        return guid;
     }
 
     @Override

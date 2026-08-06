@@ -63,4 +63,16 @@ public class PdmkUiApiController {
             @RequestParam(value = "baseUrl", required = false) String baseUrl) {
         return relayService.relay(id, requestBody, baseUrl);
     }
+
+    @PostMapping("/imagelog/list")
+    public RelayResult imageLogList(@RequestBody(required = false) String requestBody,
+            @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+        return relayService.relay("mkcoa8888S0", requestBody, baseUrl);
+    }
+
+    @PostMapping("/imagelog/delete")
+    public RelayResult imageLogDelete(@RequestBody(required = false) String requestBody,
+            @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+        return relayService.relay("mkcoa8888D0", requestBody, baseUrl);
+    }
 }

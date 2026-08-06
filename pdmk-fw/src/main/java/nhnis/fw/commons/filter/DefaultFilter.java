@@ -204,13 +204,14 @@ public class DefaultFilter implements Filter {
                         );
                         return;
                     }
-                    header = syntheticLocalHeader();
+                    header = syntheticLocalHeader(wrapper, serviceId);
                 } else {
                     header = convertMapToDto(
                             mapper,
                             headerMap,
                             hdr_nhnis.class
                     );
+                    enrichMissingSysComm(header, wrapper, serviceId);
                 }
 
                 String guid = header.getSys_comm().getStd_gbl_id();
@@ -221,6 +222,9 @@ public class DefaultFilter implements Filter {
                 }
                 if (header.getSys_comm().getOptr_eno() != null) {
                     ThreadContext.put(USER_ID, header.getSys_comm().getOptr_eno());
+                }
+                if (header.getSys_comm().getRms_svc_c() != null) {
+                    ThreadContext.put(SERVICE_ID, header.getSys_comm().getRms_svc_c());
                 }
 
                 ServiceContext serviceContext = new ServiceContext(
@@ -257,13 +261,68 @@ public class DefaultFilter implements Filter {
         }
     }
 
-    private hdr_nhnis syntheticLocalHeader() {
+    private hdr_nhnis syntheticLocalHeader(HttpServletRequest request, String serviceId) {
         String guid = UUID.randomUUID().toString().replace("-", "");
         sys_comm sysComm = new sys_comm();
         sysComm.setStd_gbl_id(guid);
+        fillSysCommFromRequest(sysComm, request, serviceId);
         hdr_nhnis header = new hdr_nhnis();
         header.setSys_comm(sysComm);
         return header;
+    }
+
+    /** 헤더는 있으나 이미지로그 핵심 필드가 비어 있으면 요청 정보로 보강한다. */
+    private void enrichMissingSysComm(hdr_nhnis header, HttpServletRequest request, String serviceId) {
+        if (header == null) {
+            return;
+        }
+        if (header.getSys_comm() == null) {
+            header.setSys_comm(new sys_comm());
+        }
+        fillSysCommFromRequest(header.getSys_comm(), request, serviceId);
+    }
+
+    private void fillSysCommFromRequest(sys_comm sys, HttpServletRequest request, String serviceId) {
+        if (isBlank(sys.getRms_svc_c()) && !isBlank(serviceId)) {
+            sys.setRms_svc_c(serviceId);
+        }
+        if (isBlank(sys.getScid())) {
+            sys.setScid(deriveScreenId(sys.getRms_svc_c()));
+        }
+        if (isBlank(sys.getTr_trm_ipadr())) {
+            sys.setTr_trm_ipadr(resolveClientIp(request));
+        }
+        if (isBlank(sys.getOptr_eno())) {
+            sys.setOptr_eno("LOCAL");
+        }
+        if (isBlank(sys.getTr_sysid())) {
+            sys.setTr_sysid(applicationName);
+        }
+    }
+
+    private static String deriveScreenId(String serviceId) {
+        if (isBlank(serviceId)) {
+            return null;
+        }
+        // mkcoa8888S0 / mkpca5530S1 → mkcoa8888 / mkpca5530
+        return serviceId.replaceFirst("[SD]\\d+$", "");
+    }
+
+    private static String resolveClientIp(HttpServletRequest request) {
+        if (request == null) {
+            return "127.0.0.1";
+        }
+        String forwarded = request.getHeader("X-Forwarded-For");
+        if (!isBlank(forwarded)) {
+            int comma = forwarded.indexOf(',');
+            return (comma > 0 ? forwarded.substring(0, comma) : forwarded).trim();
+        }
+        String remote = request.getRemoteAddr();
+        return isBlank(remote) ? "127.0.0.1" : remote;
+    }
+
+    private static boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 
     private <T> T convertMapToDto(

@@ -33,4 +33,13 @@ public class ServiceContext {
         this.httpServletResponse = httpServletResponse;
         this.header = header;
     }
+
+    /** 시스템 선처리에서 GUID 강제 채번 시 컨텍스트를 맞춘다. */
+    public void setGuid(String guid) {
+        this.guid = guid;
+    }
+
+    public void setHeader(hdr_nhnis header) {
+        this.header = header;
+    }
 }

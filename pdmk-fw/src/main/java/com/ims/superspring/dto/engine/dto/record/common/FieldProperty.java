@@ -9,6 +9,8 @@ public final class FieldProperty {
 
     public static final int TYPE_OBJECT_STRING = 1;
     public static final int TYPE_OBJECT_INT = 2;
+    public static final int TYPE_PRIMITIVE_INT = 3;
+    public static final int TYPE_ABSTRACT_INCLUDE = 4;
 
     private final String physicalName;
     private final String logicalName;
@@ -16,6 +18,8 @@ public final class FieldProperty {
     private final int decimal;
     private final boolean nullable;
     private final boolean encrypt;
+    private final String arrayProperty;
+    private final String reference;
 
     private FieldProperty(Builder builder) {
         this.physicalName = builder.physicalName;
@@ -24,6 +28,8 @@ public final class FieldProperty {
         this.decimal = builder.decimal;
         this.nullable = builder.nullable;
         this.encrypt = builder.encrypt;
+        this.arrayProperty = builder.arrayProperty;
+        this.reference = builder.reference;
     }
 
     public static Builder builder() {
@@ -54,6 +60,14 @@ public final class FieldProperty {
         return encrypt;
     }
 
+    public String getArrayProperty() {
+        return arrayProperty;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
     public static final class Builder {
         private String physicalName;
         private String logicalName;
@@ -61,6 +75,8 @@ public final class FieldProperty {
         private int decimal = -1;
         private boolean nullable = true;
         private boolean encrypt = false;
+        private String arrayProperty;
+        private String reference;
 
         public Builder setPhysicalName(String physicalName) {
             this.physicalName = physicalName;
@@ -89,6 +105,21 @@ public final class FieldProperty {
 
         public Builder setIsEncrypt(boolean encrypt) {
             this.encrypt = encrypt;
+            return this;
+        }
+
+        public Builder setArrayProperty(String arrayProperty) {
+            this.arrayProperty = arrayProperty;
+            return this;
+        }
+
+        /** 생성 코드 호환용 alias. */
+        public Builder setArray(String arrayProperty) {
+            return setArrayProperty(arrayProperty);
+        }
+
+        public Builder setReference(String reference) {
+            this.reference = reference;
             return this;
         }
 

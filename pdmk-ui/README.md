@@ -25,6 +25,8 @@ cd ..\pdmk-ui
   "hdr_nhnis": {
     "sys_comm": {
       "std_gbl_id": "c3d65cb1a54a43838688b76afe82521e",
+      "rms_svc_c": "mkpca5530S0",
+      "scid": "mkpca5530",
       "tr_trm_ipadr": "127.0.0.1",
       "tr_brc": "10001",
       "optr_eno": "E0000001",
@@ -32,19 +34,16 @@ cd ..\pdmk-ui
     }
   },
   "dto": {
-    "basDt": "20260801",
-    "pageNo": 1,
-    "pageSize": 20
+    "BRC": "10001"
   }
 }
 ```
-
-응답 예: `dto.records` / `dto.totalCount` 와 함께 `hdr_nhnis.sys_comm.std_gbl_id` 가 돌아옵니다.
 
 ## 등록 거래
 
 | 프로그램 | API |
 |---|---|
-| `mkpca5530` | `POST /api/mk/co/a/5530/list` |
-| `mkpca9999` | `POST /api/mk/co/a/9999/list`, `/detail` |
-| `mkpca8888` | `POST /api/mk/co/a/8888/list`, `/detail` |
+| **이미지로그 관리** | `/imagelog` (필터·테이블·페이징·삭제 UI, `POST /mkcoa8888S0` 조회 · `POST /mkcoa8888D0` 삭제 중계) |
+| `mkcoa9999` | `POST /mkcoa9999S0` (영업팁 실적 목록) |
+| `mkpca5530` | `POST /api/mk/co/a/5530/list` (안내항목 목록) |
+| `mkpca9999` | `POST /api/mk/co/a/9999/list`, `/detail` (legacy) |

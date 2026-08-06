@@ -192,6 +192,12 @@ button {
   color: #0f172a;
 }
 
+.btn-danger {
+  background: rgba(248, 113, 113, 0.18);
+  color: #fecaca;
+  border: 1px solid rgba(248, 113, 113, 0.45);
+}
+
 .btn-secondary {
   background: var(--panel-2);
   color: var(--text);
@@ -277,3 +283,140 @@ button {
 }
 
 .hub-card a:hover { text-decoration: underline; }
+
+.wrap-wide { max-width: 1440px; }
+
+.field-check .check-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+}
+
+.field-half { min-width: 0; }
+
+.table-panel { margin-top: 0; }
+
+.table-wrap {
+  overflow: auto;
+  max-height: 62vh;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.data-table th {
+  position: sticky;
+  top: 0;
+  background: #1e293b;
+  color: var(--muted);
+  font-weight: 700;
+  z-index: 1;
+}
+
+.data-table tbody tr.clickable {
+  cursor: pointer;
+}
+
+.data-table tbody tr.clickable:hover {
+  background: rgba(56, 189, 248, 0.08);
+}
+
+.mono {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.84rem;
+}
+
+.mono.wrap {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.modal[hidden] { display: none; }
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.72);
+}
+
+.modal-card {
+  position: relative;
+  width: min(720px, 100%);
+  max-height: 80vh;
+  overflow: auto;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+.modal-body {
+  padding: 16px 18px 20px;
+}
+
+.detail-grid {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.detail-grid dt {
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin-bottom: 4px;
+}
+
+.detail-grid dd {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.col-check {
+  width: 42px;
+  text-align: center;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-top: 1px solid var(--border);
+}
+
+.pager button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

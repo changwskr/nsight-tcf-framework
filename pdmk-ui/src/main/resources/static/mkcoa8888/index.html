@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="ko" data-program-id="mkpca8888" data-default-transaction-id="mkpca8888S0">
+<html lang="ko" data-program-id="mkcoa8888" data-default-transaction-id="mkcoa8888S0">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDMK 전문 테스트 (mkpca8888)</title>
+  <title>PDMK 이미지로그 조회 (mkcoa8888)</title>
   <link rel="stylesheet" href="/_shared/online.css">
 </head>
 <body>
   <div class="wrap">
     <header>
-      <h1>PDMK 전문 테스트 (mkpca8888)</h1>
-      <p>거래를 고르고 JSON 전문을 pdmk-service로 전송합니다. JWT enabled=true 이면 인증이 필요할 수 있습니다.</p>
+      <h1>PDMK 이미지로그 조회 (mkcoa8888)</h1>
+      <p>TB_FW_IMAGE_LOG 를 조회합니다. GUID·서비스ID·화면ID·사용자·예외여부 조건으로 필터링할 수 있습니다.</p>
       <div class="nav-links">
         <a class="nav-link" href="/index.html">← 거래 목록</a>
       </div>
@@ -25,20 +25,10 @@
         <label for="transactionId">거래</label>
         <select id="transactionId"></select>
       </div>
-      <div id="pageFields" class="field-grid">
-        <div class="field field-half">
-          <label for="pageNo">페이지 번호</label>
-          <input id="pageNo" type="number" min="1" value="1">
-        </div>
-        <div class="field field-half">
-          <label for="pageSize">페이지 크기</label>
-          <input id="pageSize" type="number" min="1" value="20">
-        </div>
-      </div>
       <div class="actions">
         <button class="btn-secondary" id="reloadSampleBtn" type="button">샘플 불러오기</button>
         <button class="btn-secondary" id="refreshGuidBtn" type="button">GUID 재채번</button>
-        <button class="btn-primary" id="sendBtn" type="button">거래 요청</button>
+        <button class="btn-primary" id="sendBtn" type="button">이미지로그 조회</button>
       </div>
     </section>
 

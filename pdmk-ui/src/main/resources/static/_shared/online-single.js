@@ -201,6 +201,15 @@ function dtoSummary(parsed) {
   if (Array.isArray(dto.records)) {
     return `records: ${dto.records.length}`;
   }
+  if (Array.isArray(dto.mkcoa8888S0DTOSub0)) {
+    return `Total: ${dto.size != null ? dto.size : dto.mkcoa8888S0DTOSub0.length}`;
+  }
+  if (Array.isArray(dto.mkcoa9999S0DTOSub0)) {
+    return `Total: ${dto.size != null ? dto.size : dto.mkcoa9999S0DTOSub0.length}`;
+  }
+  if (dto.size != null) {
+    return `Total: ${dto.size}`;
+  }
   return '';
 }
 

@@ -15,11 +15,12 @@ ServicePreventionInterceptor (pdmk-fw)
 
 | 프로그램 | API | 설명 |
 |---|---|---|
-| `mkpca5530` | `POST /api/mk/co/a/5530/list` | 운영 로그 대응 안내항목 목록 (`mkpca5530S0`) |
-| `mkpca9999` | `POST /api/mk/co/a/9999/list` | 영업팁 실적 조회 |
-| `mkpca8888` | `POST /api/mk/co/a/8888/**` | 영업팁 실적 CRUD (JWT) |
+| `mkcoa8888` | `POST /mkcoa8888S0` | 이미지로그(TB_FW_IMAGE_LOG) 목록 |
+| `mkcoa9999` | `POST /mkcoa9999S0` | 영업팁 실적 목록 |
+| `mkpca5530` | `POST /api/mk/co/a/5530/list` | 안내항목 목록 |
+| `mkpca9999` | `POST /api/mk/co/a/9999/list`, `/detail` | 영업팁 실적 조회 (legacy) |
 
-`mkpca5530` 요청 Body 예: `{"dto":{"basDt":"20260801"}}` (로컬 H2 시드 3건 → `Total: 3`).
+`mkcoa8888` 요청 Body 예: `{"hdr_nhnis":{...},"dto":{"serviceId":"mkpca5530S0","exceptionOnly":false}}`.
 
 ## 패키지 구성
 
