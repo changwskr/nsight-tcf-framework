@@ -119,11 +119,23 @@ public class mkcoa9999S0DTOSub0MsgJson extends JsonMessage
             writer.nullValue();
         }
         writer.name("prtoCn");
-        writer.value(_mkcoa9999S0DTOSub0.getPrtoCn());
+        if (_mkcoa9999S0DTOSub0.getPrtoCn() != null) {
+            writer.value(_mkcoa9999S0DTOSub0.getPrtoCn());
+        } else {
+            writer.nullValue();
+        }
         writer.name("inqCn");
-        writer.value(_mkcoa9999S0DTOSub0.getInqCn());
+        if (_mkcoa9999S0DTOSub0.getInqCn() != null) {
+            writer.value(_mkcoa9999S0DTOSub0.getInqCn());
+        } else {
+            writer.nullValue();
+        }
         writer.name("inpCn");
-        writer.value(_mkcoa9999S0DTOSub0.getInpCn());
+        if (_mkcoa9999S0DTOSub0.getInpCn() != null) {
+            writer.value(_mkcoa9999S0DTOSub0.getInpCn());
+        } else {
+            writer.nullValue();
+        }
     }
 
     public String removeNullChar(String charString) {
@@ -340,7 +352,7 @@ public class mkcoa9999S0DTOSub0MsgJson extends JsonMessage
         case "prtoCn":
         {
             if(reader.peek() != JsonToken.NULL) {
-                dto.setPrtoCn(reader.nextInt());
+                dto.setPrtoCn(reader.nextString());
             } else {
                 reader.nextNull();
             }
@@ -349,7 +361,7 @@ public class mkcoa9999S0DTOSub0MsgJson extends JsonMessage
         case "inqCn":
         {
             if(reader.peek() != JsonToken.NULL) {
-                dto.setInqCn(reader.nextInt());
+                dto.setInqCn(reader.nextString());
             } else {
                 reader.nextNull();
             }
@@ -358,7 +370,7 @@ public class mkcoa9999S0DTOSub0MsgJson extends JsonMessage
         case "inpCn":
         {
             if(reader.peek() != JsonToken.NULL) {
-                dto.setInpCn(reader.nextInt());
+                dto.setInpCn(reader.nextString());
             } else {
                 reader.nextNull();
             }

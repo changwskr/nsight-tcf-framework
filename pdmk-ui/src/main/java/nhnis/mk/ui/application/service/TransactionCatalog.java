@@ -53,6 +53,15 @@ public class TransactionCatalog {
                 readSample("mkcoa8888-delete.json")));
 
         register(new TransactionInfo(
+                "mkcoa5530S0",
+                "안내항목 목록 조회",
+                "mkcoa5530",
+                "POST",
+                "/mkcoa5530S0",
+                "TB_MK_CO_A_5530 목록 조회(페이징).",
+                readSample("mkcoa5530-list.json")));
+
+        register(new TransactionInfo(
                 "mkcoa9999S0",
                 "영업팁 실적 목록 조회",
                 "mkcoa9999",
@@ -60,33 +69,6 @@ public class TransactionCatalog {
                 "/mkcoa9999S0",
                 "TB_CR_AH_SALES_TIP_RACT 목록 조회. dto.salzTipKdc 를 비우면 전체를 조회한다.",
                 readSample("mkcoa9999-list.json")));
-
-        register(new TransactionInfo(
-                "mkpca5530S0",
-                "안내항목 목록 조회",
-                "mkpca5530",
-                "POST",
-                "/api/mk/co/a/5530/list",
-                "TB_MK_CO_A_5530 목록 조회. 로컬 H2 시드 3건 → Total: 3.",
-                readSample("mkpca5530-list.json")));
-
-        register(new TransactionInfo(
-                "mkpca9999S0",
-                "영업팁 실적 목록 조회 (legacy)",
-                "mkpca9999",
-                "POST",
-                "/api/mk/co/a/9999/list",
-                "TB_CR_AH_SALES_TIP_RACT 목록 조회. salzTipKdc를 비우면 전체를 조회한다.",
-                readSample("mkpca9999-list.json")));
-
-        register(new TransactionInfo(
-                "mkpca9999S1",
-                "영업팁 실적 단건 조회 (legacy)",
-                "mkpca9999",
-                "POST",
-                "/api/mk/co/a/9999/detail",
-                "PK(취급점·취급자·영업팁종류·기준일자) 4개로 단건 조회. 누락 시 FW0001을 반환한다.",
-                readSample("mkpca9999-detail.json")));
     }
 
     public List<TransactionInfo> findAll() {

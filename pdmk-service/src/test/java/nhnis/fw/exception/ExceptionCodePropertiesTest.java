@@ -15,7 +15,7 @@ class ExceptionCodePropertiesTest {
     private ExceptionCodeProperties properties;
 
     @Test
-    void containsmkpca8888BusinessMessages() {
+    void containsBusinessMessages() {
         assertThat(properties.message("MP0404"))
                 .isEqualTo("요청한 영업팁 실적을 찾을 수 없습니다.");
         assertThat(properties.message("MP0409"))

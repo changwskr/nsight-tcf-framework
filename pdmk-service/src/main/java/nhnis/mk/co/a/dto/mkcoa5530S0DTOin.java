@@ -8,19 +8,16 @@ import com.ims.superspring.dto.DataObject;
 import com.ims.superspring.dto.engine.dto.record.common.FieldProperty;
 
 /**
- * 영업팁 실적 목록 Sub DTO (mkcoa9999S0).
+ * 마케팅희망고객 조회 입력 (mkcoa5530S0).
  */
-public class mkcoa9999S0DTOSub0 extends DataObject {
+public class mkcoa5530S0DTOin extends DataObject {
 
     private static final long serialVersionUID = 1L;
 
     private String trtBrc;
-    private String trtmnEno;
-    private String salzTipKdc;
     private String basDt;
-    private String prtoCn;
-    private String inqCn;
-    private String inpCn;
+    private Integer pageNo;
+    private Integer pageSize;
 
     public String getTrtBrc() {
         return trtBrc;
@@ -28,22 +25,6 @@ public class mkcoa9999S0DTOSub0 extends DataObject {
 
     public void setTrtBrc(String trtBrc) {
         this.trtBrc = trtBrc;
-    }
-
-    public String getTrtmnEno() {
-        return trtmnEno;
-    }
-
-    public void setTrtmnEno(String trtmnEno) {
-        this.trtmnEno = trtmnEno;
-    }
-
-    public String getSalzTipKdc() {
-        return salzTipKdc;
-    }
-
-    public void setSalzTipKdc(String salzTipKdc) {
-        this.salzTipKdc = salzTipKdc;
     }
 
     public String getBasDt() {
@@ -54,33 +35,25 @@ public class mkcoa9999S0DTOSub0 extends DataObject {
         this.basDt = basDt;
     }
 
-    public String getPrtoCn() {
-        return prtoCn;
+    public Integer getPageNo() {
+        return pageNo;
     }
 
-    public void setPrtoCn(String prtoCn) {
-        this.prtoCn = prtoCn;
+    public void setPageNo(Integer pageNo) {
+        this.pageNo = pageNo;
     }
 
-    public String getInqCn() {
-        return inqCn;
+    public Integer getPageSize() {
+        return pageSize;
     }
 
-    public void setInqCn(String inqCn) {
-        this.inqCn = inqCn;
-    }
-
-    public String getInpCn() {
-        return inpCn;
-    }
-
-    public void setInpCn(String inpCn) {
-        this.inpCn = inpCn;
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 
     @Override
     public Object clone() {
-        mkcoa9999S0DTOSub0 copy = new mkcoa9999S0DTOSub0();
+        mkcoa5530S0DTOin copy = new mkcoa5530S0DTOin();
         copy.clone(this);
         return copy;
     }
@@ -89,22 +62,17 @@ public class mkcoa9999S0DTOSub0 extends DataObject {
         if (this == src) {
             return;
         }
-        mkcoa9999S0DTOSub0 in = (mkcoa9999S0DTOSub0) src;
+        mkcoa5530S0DTOin in = (mkcoa5530S0DTOin) src;
         this.trtBrc = in.trtBrc;
-        this.trtmnEno = in.trtmnEno;
-        this.salzTipKdc = in.salzTipKdc;
         this.basDt = in.basDt;
-        this.prtoCn = in.prtoCn;
-        this.inqCn = in.inqCn;
-        this.inpCn = in.inpCn;
+        this.pageNo = in.pageNo;
+        this.pageSize = in.pageSize;
     }
 
     @Override
     public String toString() {
-        return "trtBrc : " + trtBrc
-                + " trtmnEno : " + trtmnEno
-                + " salzTipKdc : " + salzTipKdc
-                + " basDt : " + basDt;
+        return "trtBrc : " + trtBrc + " basDt : " + basDt
+                + " pageNo : " + pageNo + " pageSize : " + pageSize;
     }
 
     private static final Map<String, FieldProperty> fieldPropertyMap;
@@ -112,12 +80,15 @@ public class mkcoa9999S0DTOSub0 extends DataObject {
     static {
         fieldPropertyMap = new LinkedHashMap<>();
         putString("trtBrc");
-        putString("trtmnEno");
-        putString("salzTipKdc");
         putString("basDt");
-        putString("prtoCn");
-        putString("inqCn");
-        putString("inpCn");
+        fieldPropertyMap.put("pageNo", FieldProperty.builder()
+                .setPhysicalName("pageNo").setLogicalName("pageNo")
+                .setType(FieldProperty.TYPE_OBJECT_INT).setDecimal(-1)
+                .setIsNullable(true).setIsEncrypt(false).build());
+        fieldPropertyMap.put("pageSize", FieldProperty.builder()
+                .setPhysicalName("pageSize").setLogicalName("pageSize")
+                .setType(FieldProperty.TYPE_OBJECT_INT).setDecimal(-1)
+                .setIsNullable(true).setIsEncrypt(false).build());
     }
 
     private static void putString(String name) {
