@@ -3,7 +3,7 @@
 `pdmk-service`에서 공통/프레임워크 계층을 분리한 **라이브러리 프로젝트**입니다.
 (`pdmp-fw`를 복사한 뒤 PDMK 환경에 맞게 식별자를 정리했습니다.)
 
-통합 스택 아키텍처: [`pdmk-service/docs/통합 아키텍처 정의서.md`](../pdmk-service/docs/통합%20아키텍처%20정의서.md) (`pdmk-fw` · `pdmk-service` · `pdmk-ui`).
+아키텍처 **정본**: [`pdmk-service/docs/PDMK_아키텍처_정의서.md`](../pdmk-service/docs/PDMK_아키텍처_정의서.md) (v2.0).
 
 ## 포함 범위
 

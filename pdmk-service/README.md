@@ -2,7 +2,7 @@
 
 PDMK 업무 샘플 애플리케이션입니다. **공통 FW는 [`pdmk-fw`](../pdmk-fw/README.md)에 의존**합니다.
 
-아키텍처는 [`docs/통합 아키텍처 정의서.md`](docs/통합%20아키텍처%20정의서.md) (`pdmk-fw` · `pdmk-service` · `pdmk-ui`), 네이밍은 [`docs/네이밍원칙.md`](docs/네이밍원칙.md) (요약) · [`docs/MK-NAMING_CONVENTION.md`](docs/MK-NAMING_CONVENTION.md) (상세) 를 따른다.
+아키텍처 **정본**은 [`docs/PDMK_아키텍처_정의서.md`](docs/PDMK_아키텍처_정의서.md) (v2.0). 입문은 [`docs/아키텍처 정의서.md`](docs/아키텍처%20정의서.md), 문서 목록은 [`docs/README.md`](docs/README.md), 네이밍은 [`docs/네이밍원칙.md`](docs/네이밍원칙.md) · [`docs/MK-NAMING_CONVENTION.md`](docs/MK-NAMING_CONVENTION.md).
 
 ```text
 ServicePreventionInterceptor (pdmk-fw)
