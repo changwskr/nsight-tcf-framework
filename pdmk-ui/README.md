@@ -2,6 +2,8 @@
 
 `pdmk-service` 전문 테스트용 로컬 UI입니다. 네이밍은 `pdmk-service/docs/MK-NAMING_CONVENTION.md` 를 따른다.
 
+통합 스택 아키텍처: [`pdmk-service/docs/통합 아키텍처 정의서.md`](../pdmk-service/docs/통합%20아키텍처%20정의서.md) (`pdmk-fw` · `pdmk-service` · `pdmk-ui`).
+
 ## 실행
 
 ```powershell
