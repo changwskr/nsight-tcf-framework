@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import jakarta.annotation.PostConstruct;
+import nhnis.fw.commons.context.ServiceContext;
+import nhnis.fw.commons.context.ServiceContextHolder;
 import nhnis.fw.commons.dto.header.hdr_nhnis;
 import nhnis.fw.commons.dto.header.sys_comm;
 import nhnis.fw.commons.dto.imagelog.ImageLogDTO;
@@ -25,8 +28,8 @@ import nhnis.fw.commons.util.DateUtil;
 /**
  * 이미지로그(시스템 전문 헤더) 핸들러.
  *
- * <p>시스템 선처리에서 INSERT, 후처리에서 응답시각 UPDATE, 예외 시 예외정보 UPDATE.
- * DB 실패는 업무 거래에 영향을 주지 않도록 삼킨다.
+ * <p>시스템 선처리에서 INSERT(요청전문 포함), 후처리에서 응답시각·응답전문 UPDATE,
+ * 예외 시 예외정보 UPDATE. DB 실패는 업무 거래에 영향을 주지 않도록 삼킨다.
  */
 @Component
 public class ImageLogHandler {
@@ -34,17 +37,21 @@ public class ImageLogHandler {
     private static final Logger log = LoggerFactory.getLogger(ImageLogHandler.class);
 
     private static final int MAX_EXCEPTION_MSG = 1000;
+    private static final int MAX_WIRE_MSG = 20000;
 
     private static final String INSERT_SQL = """
             INSERT INTO TB_FW_IMAGE_LOG (
                 GUID, SERVICE_ID, SCREEN_ID, OPTR_ENO, CLIENT_IP,
-                REQUEST_TIME, RESPONSE_TIME, EXCEPTION_TYPE, EXCEPTION_CODE, EXCEPTION_MSG
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                REQUEST_TIME, RESPONSE_TIME, EXCEPTION_TYPE, EXCEPTION_CODE, EXCEPTION_MSG,
+                REQUEST_MSG, RESPONSE_MSG
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
 
     private static final String UPDATE_RESPONSE_SQL = """
             UPDATE TB_FW_IMAGE_LOG
-               SET RESPONSE_TIME = ?
+               SET RESPONSE_TIME = ?,
+                   RESPONSE_MSG = ?,
+                   REQUEST_MSG = COALESCE(REQUEST_MSG, ?)
              WHERE GUID = ?
             """;
 
@@ -53,7 +60,8 @@ public class ImageLogHandler {
                SET RESPONSE_TIME = ?,
                    EXCEPTION_TYPE = ?,
                    EXCEPTION_CODE = ?,
-                   EXCEPTION_MSG = ?
+                   EXCEPTION_MSG = ?,
+                   RESPONSE_MSG = ?
              WHERE GUID = ?
             """;
 
@@ -64,7 +72,62 @@ public class ImageLogHandler {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    /** 시스템 선처리: 전문 헤더 기준 이미지로그 INSERT. */
+    /**
+     * 기존 테이블에 전문 컬럼이 없을 때만 추가한다.
+     * (이미 있으면 ALTER 를 생략해 Duplicate column ERROR 로그를 내지 않는다)
+     */
+    @PostConstruct
+    public void ensureWireMsgColumns() {
+        ensureColumn("REQUEST_MSG", "CLOB");
+        ensureColumn("RESPONSE_MSG", "CLOB");
+    }
+
+    private void ensureColumn(String columnName, String type) {
+        if (columnExists(columnName)) {
+            return;
+        }
+        try {
+            jdbcTemplate.execute("ALTER TABLE TB_FW_IMAGE_LOG ADD " + columnName + " " + type);
+            log.info("[ImageLog] added column TB_FW_IMAGE_LOG.{}", columnName);
+        } catch (Exception e) {
+            log.debug("[ImageLog] ensure column {} skipped: {}", columnName, e.getMessage());
+        }
+    }
+
+    private boolean columnExists(String columnName) {
+        try {
+            Integer count = jdbcTemplate.queryForObject(
+                    """
+                            SELECT COUNT(*)
+                              FROM INFORMATION_SCHEMA.COLUMNS
+                             WHERE UPPER(TABLE_NAME) = 'TB_FW_IMAGE_LOG'
+                               AND UPPER(COLUMN_NAME) = ?
+                            """,
+                    Integer.class,
+                    columnName.toUpperCase());
+            if (count != null && count > 0) {
+                return true;
+            }
+        } catch (Exception ignored) {
+            // H2 외 DB 는 USER_TAB_COLUMNS 로 재시도
+        }
+        try {
+            Integer count = jdbcTemplate.queryForObject(
+                    """
+                            SELECT COUNT(*)
+                              FROM USER_TAB_COLUMNS
+                             WHERE TABLE_NAME = 'TB_FW_IMAGE_LOG'
+                               AND COLUMN_NAME = ?
+                            """,
+                    Integer.class,
+                    columnName.toUpperCase());
+            return count != null && count > 0;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /** 시스템 선처리: 전문 헤더·요청 전문 기준 이미지로그 INSERT. */
     public void preImagelog(hdr_nhnis header, Object inputDto) {
         ImageLogDTO dto = toDto(header);
         if (dto.getGuid() == null || dto.getGuid().isBlank()) {
@@ -74,18 +137,32 @@ public class ImageLogHandler {
         if (dto.getRequestTime() == null || dto.getRequestTime().isBlank()) {
             dto.setRequestTime(DateUtil.getCurrentTime());
         }
+        dto.setRequestMsg(resolveWireMsg(inputDto, true));
+        if (dto.getRequestMsg() == null || dto.getRequestMsg().isBlank()) {
+            log.warn("[ImageLog] requestMsg empty guid={}", dto.getGuid());
+        }
         persist(dto, null);
     }
 
-    /** 시스템 후처리: 응답시각 UPDATE. */
+    /** 시스템 후처리: 응답시각·응답 전문 UPDATE. */
     public void postImagelog(hdr_nhnis header, Object inputDto) {
         ImageLogDTO dto = toDto(header);
         if (dto.getGuid() == null || dto.getGuid().isBlank()) {
             return;
         }
         dto.setResponseTime(DateUtil.getCurrentTime());
+        dto.setResponseMsg(resolveWireMsg(inputDto, false));
+        dto.setRequestMsg(currentRequestMsg());
+        if (dto.getResponseMsg() == null || dto.getResponseMsg().isBlank()) {
+            log.warn("[ImageLog] responseMsg empty guid={}", dto.getGuid());
+        }
         try {
-            int updated = jdbcTemplate.update(UPDATE_RESPONSE_SQL, dto.getResponseTime(), dto.getGuid());
+            int updated = jdbcTemplate.update(
+                    UPDATE_RESPONSE_SQL,
+                    dto.getResponseTime(),
+                    dto.getResponseMsg(),
+                    dto.getRequestMsg(),
+                    dto.getGuid());
             if (updated == 0) {
                 log.warn("[ImageLog] postImagelog: no row for guid={}", dto.getGuid());
             } else if (log.isDebugEnabled()) {
@@ -103,6 +180,8 @@ public class ImageLogHandler {
             return;
         }
         dto.setResponseTime(DateUtil.getCurrentTime());
+        dto.setResponseMsg(resolveWireMsg(inputDto, false));
+        dto.setRequestMsg(currentRequestMsg());
         fillException(dto, t);
         persist(dto, t);
     }
@@ -116,6 +195,7 @@ public class ImageLogHandler {
                         dto.getExceptionType(),
                         dto.getExceptionCode(),
                         dto.getExceptionMsg(),
+                        dto.getResponseMsg(),
                         dto.getGuid());
                 if (updated == 0) {
                     jdbcTemplate.update(
@@ -129,7 +209,9 @@ public class ImageLogHandler {
                             dto.getResponseTime(),
                             dto.getExceptionType(),
                             dto.getExceptionCode(),
-                            dto.getExceptionMsg());
+                            dto.getExceptionMsg(),
+                            dto.getRequestMsg(),
+                            dto.getResponseMsg());
                 }
                 return;
             }
@@ -145,7 +227,9 @@ public class ImageLogHandler {
                     dto.getResponseTime(),
                     dto.getExceptionType(),
                     dto.getExceptionCode(),
-                    dto.getExceptionMsg());
+                    dto.getExceptionMsg(),
+                    dto.getRequestMsg(),
+                    dto.getResponseMsg());
             if (log.isDebugEnabled()) {
                 log.debug("[ImageLog] inserted guid={} serviceId={}", dto.getGuid(), dto.getServiceId());
             }
@@ -182,17 +266,41 @@ public class ImageLogHandler {
             if (msg == null || msg.isBlank()) {
                 msg = nbe.getMessage();
             }
-            dto.setExceptionMsg(truncate(msg));
+            dto.setExceptionMsg(truncate(msg, MAX_EXCEPTION_MSG));
         } else {
             dto.setExceptionCode(null);
-            dto.setExceptionMsg(truncate(t.getMessage()));
+            dto.setExceptionMsg(truncate(t.getMessage(), MAX_EXCEPTION_MSG));
         }
     }
 
-    private static String truncate(String value) {
+    private static String resolveWireMsg(Object inputDto, boolean request) {
+        if (inputDto instanceof String s && !s.isBlank()) {
+            return truncate(s, MAX_WIRE_MSG);
+        }
+        return request ? currentRequestMsg() : currentResponseMsg();
+    }
+
+    private static String currentRequestMsg() {
+        ServiceContext ctx = ServiceContextHolder.getInstance();
+        if (ctx == null) {
+            return null;
+        }
+        String body = ctx.getRequestBody();
+        if (body != null && !body.isBlank()) {
+            return truncate(body, MAX_WIRE_MSG);
+        }
+        return null;
+    }
+
+    private static String currentResponseMsg() {
+        ServiceContext ctx = ServiceContextHolder.getInstance();
+        return ctx == null ? null : truncate(ctx.getResponseBody(), MAX_WIRE_MSG);
+    }
+
+    private static String truncate(String value, int max) {
         if (value == null) {
             return null;
         }
-        return value.length() <= MAX_EXCEPTION_MSG ? value : value.substring(0, MAX_EXCEPTION_MSG);
+        return value.length() <= max ? value : value.substring(0, max);
     }
 }

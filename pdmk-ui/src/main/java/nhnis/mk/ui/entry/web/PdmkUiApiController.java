@@ -67,12 +67,80 @@ public class PdmkUiApiController {
     @PostMapping("/imagelog/list")
     public RelayResult imageLogList(@RequestBody(required = false) String requestBody,
             @RequestParam(value = "baseUrl", required = false) String baseUrl) {
-        return relayService.relay("mkcoa8888S0", requestBody, baseUrl);
+        return relayService.relayPath("/mkcoa7777S0", requestBody, baseUrl);
     }
 
     @PostMapping("/imagelog/delete")
     public RelayResult imageLogDelete(@RequestBody(required = false) String requestBody,
             @RequestParam(value = "baseUrl", required = false) String baseUrl) {
-        return relayService.relay("mkcoa8888D0", requestBody, baseUrl);
+        return relayService.relayPath("/mkcoa7777D0", requestBody, baseUrl);
+    }
+
+    /** pdmk-service 이미지로그 (mkcoa8888) */
+    @PostMapping("/imagelog-svc/list")
+    public RelayResult imageLogSvcList(@RequestBody(required = false) String requestBody,
+            @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+        return relayService.relayPath("/mkcoa8888S0", requestBody, baseUrl);
+    }
+
+    @PostMapping("/imagelog-svc/delete")
+    public RelayResult imageLogSvcDelete(@RequestBody(required = false) String requestBody,
+            @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+        return relayService.relayPath("/mkcoa8888D0", requestBody, baseUrl);
+    }
+
+    /** pdmk-om 거래통제 Service Catalog / 평가 (mkcoa6666) */
+    @PostMapping("/txcontrol/list")
+    public RelayResult txControlList(@RequestBody(required = false) String requestBody,
+            @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+        return relayService.relayPath("/mkcoa6666S0", requestBody, baseUrl);
+    }
+
+    @PostMapping("/txcontrol/insert")
+    public RelayResult txControlInsert(@RequestBody(required = false) String requestBody,
+            @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+        return relayService.relayPath("/mkcoa6666I0", requestBody, baseUrl);
+    }
+
+    @PostMapping("/txcontrol/update")
+    public RelayResult txControlUpdate(@RequestBody(required = false) String requestBody,
+            @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+        return relayService.relayPath("/mkcoa6666U0", requestBody, baseUrl);
+    }
+
+    @PostMapping("/txcontrol/delete")
+    public RelayResult txControlDelete(@RequestBody(required = false) String requestBody,
+            @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+        return relayService.relayPath("/mkcoa6666D0", requestBody, baseUrl);
+    }
+
+    @PostMapping("/txcontrol/evaluate")
+    public RelayResult txControlEvaluate(@RequestBody(required = false) String requestBody,
+            @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+        return relayService.relayPath("/mkcoa6666E0", requestBody, baseUrl);
+    }
+
+    @PostMapping("/txcontrol/summary")
+    public RelayResult txControlSummary(@RequestBody(required = false) String requestBody,
+            @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+        return relayService.relayPath("/mkcoa6666S2", requestBody, baseUrl);
+    }
+
+    @PostMapping("/txcontrol/status")
+    public RelayResult txControlStatus(@RequestBody(required = false) String requestBody,
+            @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+        return relayService.relayPath("/mkcoa6666U1", requestBody, baseUrl);
+    }
+
+    @PostMapping("/txcontrol/detail")
+    public RelayResult txControlDetail(@RequestBody(required = false) String requestBody,
+            @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+        return relayService.relayPath("/mkcoa6666S1", requestBody, baseUrl);
+    }
+
+    @PostMapping("/txcontrol/results")
+    public RelayResult txControlResults(@RequestBody(required = false) String requestBody,
+            @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+        return relayService.relayPath("/mkcoa6666S3", requestBody, baseUrl);
     }
 }

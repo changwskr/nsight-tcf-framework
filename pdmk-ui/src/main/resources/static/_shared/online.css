@@ -421,7 +421,9 @@ button {
   cursor: not-allowed;
 }
 
-.error-modal .modal-card {
+.error-modal .modal-card,
+.error-modal .error-modal-card {
+  width: min(960px, 100%);
   border-color: rgba(248, 113, 113, 0.45);
 }
 
@@ -435,6 +437,63 @@ button {
   line-height: 1.55;
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+.error-log-block {
+  margin-top: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(2, 6, 23, 0.35);
+  overflow: hidden;
+}
+
+.error-log-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.error-log {
+  margin: 0;
+  padding: 12px;
+  max-height: 42vh;
+  overflow: auto;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--text);
+}
+
+.wire-block {
+  margin-top: 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(2, 6, 23, 0.28);
+}
+
+.wire-block h3 {
+  margin: 0;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.86rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.wire-block .error-log {
+  max-height: 28vh;
+}
+
+.btn-tiny {
+  padding: 4px 10px;
+  font-size: 0.78rem;
 }
 
 .modal-actions {

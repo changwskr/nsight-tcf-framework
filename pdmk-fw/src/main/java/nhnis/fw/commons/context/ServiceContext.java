@@ -23,6 +23,8 @@ public class ServiceContext {
     private Map<String, Object> userContext = new HashMap<>();
     /** 브라우저/클라이언트에서 수신한 온라인 요청 전문 원문. */
     private String requestBody;
+    /** 시스템 후처리에서 조립한 응답 전문 원문. */
+    private String responseBody;
 
     public ServiceContext(String applicationName, String guid, String active, HttpHeaders requestHeaders,
             HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
@@ -47,5 +49,9 @@ public class ServiceContext {
 
     public void setRequestBody(String requestBody) {
         this.requestBody = requestBody;
+    }
+
+    public void setResponseBody(String responseBody) {
+        this.responseBody = responseBody;
     }
 }

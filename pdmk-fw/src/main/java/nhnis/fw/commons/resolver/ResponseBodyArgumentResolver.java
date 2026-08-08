@@ -139,6 +139,14 @@ public class ResponseBodyArgumentResolver implements ResponseBodyAdvice<Object> 
             log.info(PdmkMessagePrinter.asIsWireJson(responseBody));
             log.info(PdmkTxLog.systemPostEnd());
         }
+        if (ServiceContextHolder.getInstance() != null) {
+            try {
+                ServiceContextHolder.getInstance().setResponseBody(
+                        objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(responseBody));
+            } catch (Exception e) {
+                ServiceContextHolder.getInstance().setResponseBody(responseBody.toString());
+            }
+        }
         return responseBody;
     }
 

@@ -24,6 +24,8 @@ public class mkcoa8888S0DTOSub0 extends DataObject {
     private String exceptionType;
     private String exceptionCode;
     private String exceptionMsg;
+    private String requestMsg;
+    private String responseMsg;
 
     public String getGuid() {
         return guid;
@@ -105,6 +107,22 @@ public class mkcoa8888S0DTOSub0 extends DataObject {
         this.exceptionMsg = exceptionMsg;
     }
 
+    public String getRequestMsg() {
+        return requestMsg;
+    }
+
+    public void setRequestMsg(String requestMsg) {
+        this.requestMsg = requestMsg;
+    }
+
+    public String getResponseMsg() {
+        return responseMsg;
+    }
+
+    public void setResponseMsg(String responseMsg) {
+        this.responseMsg = responseMsg;
+    }
+
     @Override
     public Object clone() {
         mkcoa8888S0DTOSub0 copy = new mkcoa8888S0DTOSub0();
@@ -127,6 +145,8 @@ public class mkcoa8888S0DTOSub0 extends DataObject {
         this.exceptionType = in.exceptionType;
         this.exceptionCode = in.exceptionCode;
         this.exceptionMsg = in.exceptionMsg;
+        this.requestMsg = in.requestMsg;
+        this.responseMsg = in.responseMsg;
     }
 
     @Override
@@ -153,6 +173,8 @@ public class mkcoa8888S0DTOSub0 extends DataObject {
         putString("exceptionType");
         putString("exceptionCode");
         putString("exceptionMsg");
+        putString("requestMsg");
+        putString("responseMsg");
     }
 
     private static void putString(String name) {

@@ -10,19 +10,40 @@
   <div class="wrap">
     <header>
       <h1>PDMK UI</h1>
-      <p>pdmk-service 전문 테스트와 이미지로그 관리 화면입니다.</p>
+      <p>pdmk-service / pdmk-om 전문 테스트와 이미지로그 관리 화면입니다.</p>
       <div class="nav-links">
-        <a class="nav-link" href="/imagelog/index.html">이미지로그 관리 →</a>
+        <a class="nav-link" href="/txcontrol/policy.html">서비스별 통제(탭) →</a>
+        <a class="nav-link" href="/txcontrol/index.html">Catalog →</a>
+        <a class="nav-link" href="/mkcoa8888/index.html">mkcoa8888 →</a>
+        <a class="nav-link" href="/mkcoa7777/index.html">mkcoa7777 →</a>
         <span class="nav-link" id="targetInfo">대상 확인 중...</span>
       </div>
     </header>
 
     <section class="hub-grid" id="programGrid">
       <article class="hub-card">
-        <h2>이미지로그 관리</h2>
-        <p>TB_FW_IMAGE_LOG 조건 검색·목록·상세. 전문 JSON 편집 없이 관리합니다.</p>
+        <h2>mkcoa6666 <span class="group-tag">pdmk-om</span></h2>
+        <p>서비스별 온라인 거래통제 (지점·단말·IP·시간·사용자·강제통제). 대상 http://localhost:8081</p>
         <div class="links">
-          <a href="/imagelog/index.html">이미지로그 관리 화면 열기</a>
+          <a href="/txcontrol/policy.html">서비스별 통제 화면 (02 설계)</a>
+          <a href="/txcontrol/index.html">Catalog 관리</a>
+          <a href="/mkcoa6666/index.html">전문 테스트</a>
+        </div>
+      </article>
+      <article class="hub-card">
+        <h2>mkcoa8888 <span class="group-tag">pdmk-service</span></h2>
+        <p>Service 이미지로그. 기본 대상 http://localhost:8080 · withinSeconds·예외 조건 지원.</p>
+        <div class="links">
+          <a href="/mkcoa8888/index.html">전문 테스트 (S0/D0)</a>
+          <a href="/imagelog-svc/index.html">관리 화면 (조건검색 UI)</a>
+        </div>
+      </article>
+      <article class="hub-card">
+        <h2>mkcoa7777 <span class="group-tag">pdmk-om</span></h2>
+        <p>OM 이미지로그. 기본 대상 http://localhost:8081 · withinSeconds·예외 조건 지원.</p>
+        <div class="links">
+          <a href="/mkcoa7777/index.html">전문 테스트 (S0/D0)</a>
+          <a href="/imagelog/index.html">관리 화면 (조건검색 UI)</a>
         </div>
       </article>
       <div class="empty" id="txLoading">거래 목록을 불러오는 중...</div>
@@ -32,7 +53,7 @@
   <script src="/_shared/error-popup.js"></script>
   <script>
     function renderProgramCard(programId, items) {
-      if (programId === 'mkcoa8888') {
+      if (programId === 'mkcoa8888' || programId === 'mkcoa7777' || programId === 'mkcoa6666') {
         return '';
       }
       const links = items
@@ -55,7 +76,7 @@
       const transactions = await txRes.json();
       const config = await configRes.json();
 
-      document.getElementById('targetInfo').textContent = `대상 pdmk-service: ${config.targetBaseUrl}`;
+      document.getElementById('targetInfo').textContent = `기본 대상: ${config.targetBaseUrl}`;
 
       const grouped = new Map();
       transactions.forEach(tx => {

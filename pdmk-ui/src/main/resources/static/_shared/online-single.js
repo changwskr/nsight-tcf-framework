@@ -95,7 +95,9 @@ async function init() {
   transactions = programId ? all.filter(tx => tx.programId === programId) : all;
   config = await configRes.json();
 
-  targetBaseUrlEl.value = config.targetBaseUrl || 'http://localhost:8080';
+  targetBaseUrlEl.value = document.documentElement.dataset.defaultBaseUrl
+      || config.targetBaseUrl
+      || 'http://localhost:8080';
   renderTransactionOptions();
 
   const id = defaultTransactionId();
@@ -201,6 +203,9 @@ function dtoSummary(parsed) {
   if (Array.isArray(dto.records)) {
     return `records: ${dto.records.length}`;
   }
+  if (Array.isArray(dto.mkcoa7777S0DTOSub0)) {
+    return `Total: ${dto.size != null ? dto.size : dto.mkcoa7777S0DTOSub0.length}`;
+  }
   if (Array.isArray(dto.mkcoa8888S0DTOSub0)) {
     return `Total: ${dto.size != null ? dto.size : dto.mkcoa8888S0DTOSub0.length}`;
   }
@@ -279,7 +284,11 @@ async function sendRequest() {
   `;
 
   if (!ok) {
-    PdmkErrorPopup.showFromResponse(parsed, result.httpStatus, describeError(parsed, result.httpStatus));
+    PdmkErrorPopup.showFromResponse(
+        parsed,
+        result.httpStatus,
+        describeError(parsed, result.httpStatus),
+        result.responseBody);
   }
 }
 

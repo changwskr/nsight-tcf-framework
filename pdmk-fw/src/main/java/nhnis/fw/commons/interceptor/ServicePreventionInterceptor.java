@@ -97,10 +97,11 @@ public class ServicePreventionInterceptor implements HandlerInterceptor {
         LOGGER.info(PdmkTxLog.systemGuid(guid));
 
         // 요청 온라인 전문 — 시스템 선처리 구간에서 반드시 출력 (종료 전)
-        logRequestMessage(ctx, request);
+        String requestRaw = resolveRequestBodyRaw(ctx, request);
+        logRequestMessage(requestRaw);
 
-        // Pre ImageLog — 시스템 전문 헤더
-        imageLogHandler.preImagelog(header, null);
+        // Pre ImageLog — 시스템 전문 헤더 + 요청 전문
+        imageLogHandler.preImagelog(header, requestRaw);
 
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info(PdmkTxLog.systemPreEnd());
@@ -109,9 +110,8 @@ public class ServicePreventionInterceptor implements HandlerInterceptor {
     }
 
     /** 클라이언트 요청 온라인 전문을 CORE 로그에 남긴다. */
-    private void logRequestMessage(ServiceContext ctx, HttpServletRequest request) {
+    private void logRequestMessage(String raw) {
         try {
-            String raw = resolveRequestBodyRaw(ctx, request);
             LOGGER.info(PdmkTxLog.onlineRequestAsIs());
             LOGGER.info("[요청전문] {}", raw);
         } catch (Exception e) {
@@ -269,11 +269,12 @@ public class ServicePreventionInterceptor implements HandlerInterceptor {
                 throw ex;
             }
 
-            // 정상 응답: RESPONSE_TIME 갱신 (응답 작성 이후)
+            // 정상 응답: RESPONSE_TIME·응답전문 갱신 (응답 작성 이후)
             String contentType = request.getContentType();
             if (contentType == null || !contentType.startsWith(MULTI_PART)) {
-                if (ServiceContextHolder.getInstance() != null) {
-                    imageLogHandler.postImagelog(ServiceContextHolder.getInstance().getHeader(), null);
+                ServiceContext ctx = ServiceContextHolder.getInstance();
+                if (ctx != null) {
+                    imageLogHandler.postImagelog(ctx.getHeader(), ctx.getResponseBody());
                 }
             }
             HandlerInterceptor.super.afterCompletion(request, response, handler, ex);

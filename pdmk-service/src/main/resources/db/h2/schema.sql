@@ -17,6 +17,8 @@ CREATE TABLE TB_FW_IMAGE_LOG (
     EXCEPTION_TYPE VARCHAR(200),            -- 예외타입
     EXCEPTION_CODE VARCHAR(50),             -- 예외코드
     EXCEPTION_MSG  VARCHAR(1000),           -- 예외메시지
+    REQUEST_MSG    CLOB,                    -- 요청 전문 원문
+    RESPONSE_MSG   CLOB,                    -- 응답 전문 원문
     CONSTRAINT TB_FW_IMAGE_LOG_PK PRIMARY KEY (GUID)
 );
 

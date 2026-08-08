@@ -154,6 +154,26 @@ public class ImageLogDTO extends DataObject {
         }
     }
 
+    private String requestMsg = null;
+
+    public String getRequestMsg() {
+        return requestMsg;
+    }
+
+    public void setRequestMsg(String requestMsg) {
+        this.requestMsg = requestMsg;
+    }
+
+    private String responseMsg = null;
+
+    public String getResponseMsg() {
+        return responseMsg;
+    }
+
+    public void setResponseMsg(String responseMsg) {
+        this.responseMsg = responseMsg;
+    }
+
     public Object clone() {
         ImageLogDTO copyObj = new ImageLogDTO();
         copyObj.clone(this);
@@ -175,6 +195,8 @@ public class ImageLogDTO extends DataObject {
         this.setExceptionType(__imageLogDTO.getExceptionType());
         this.setExceptionCode(__imageLogDTO.getExceptionCode());
         this.setExceptionMsg(__imageLogDTO.getExceptionMsg());
+        this.setRequestMsg(__imageLogDTO.getRequestMsg());
+        this.setResponseMsg(__imageLogDTO.getResponseMsg());
     }
 
     public String toString() {
@@ -190,6 +212,8 @@ public class ImageLogDTO extends DataObject {
         buffer.append("exceptionType : ").append(exceptionType).append("\n");
         buffer.append("exceptionCode : ").append(exceptionCode).append("\n");
         buffer.append("exceptionMsg : ").append(exceptionMsg).append("\n");
+        buffer.append("requestMsg : ").append(requestMsg).append("\n");
+        buffer.append("responseMsg : ").append(responseMsg).append("\n");
         return buffer.toString();
     }
 
@@ -272,6 +296,22 @@ public class ImageLogDTO extends DataObject {
         fieldPropertyMap.put("exceptionMsg", FieldProperty.builder()
                 .setPhysicalName("exceptionMsg")
                 .setLogicalName("예외메시지")
+                .setType(FieldProperty.TYPE_OBJECT_STRING)
+                .setDecimal(-1)
+                .setIsNullable(true)
+                .setIsEncrypt(false)
+                .build());
+        fieldPropertyMap.put("requestMsg", FieldProperty.builder()
+                .setPhysicalName("requestMsg")
+                .setLogicalName("요청전문")
+                .setType(FieldProperty.TYPE_OBJECT_STRING)
+                .setDecimal(-1)
+                .setIsNullable(true)
+                .setIsEncrypt(false)
+                .build());
+        fieldPropertyMap.put("responseMsg", FieldProperty.builder()
+                .setPhysicalName("responseMsg")
+                .setLogicalName("응답전문")
                 .setType(FieldProperty.TYPE_OBJECT_STRING)
                 .setDecimal(-1)
                 .setIsNullable(true)

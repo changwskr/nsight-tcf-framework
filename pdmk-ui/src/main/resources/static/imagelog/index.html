@@ -1,27 +1,80 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko"
+      data-program-id="mkcoa7777"
+      data-default-base-url="http://localhost:8081"
+      data-list-api="/api/imagelog/list"
+      data-delete-api="/api/imagelog/delete"
+      data-target-label="pdmk-om">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDMK 이미지로그 관리</title>
+  <title>PDMK-OM 이미지로그 관리 (mkcoa7777)</title>
   <link rel="stylesheet" href="/_shared/online.css">
+  <style>
+    .time-window {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .time-chip {
+      border: 1px solid var(--border, #334155);
+      background: transparent;
+      color: inherit;
+      border-radius: 6px;
+      padding: 0.35rem 0.7rem;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.85rem;
+    }
+    .time-chip:hover { border-color: var(--accent, #38bdf8); }
+    .time-chip.active {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent, #38bdf8);
+      color: var(--accent, #38bdf8);
+    }
+    .time-window-hint {
+      width: 100%;
+      font-size: 0.8rem;
+      opacity: 0.75;
+      margin: 0;
+    }
+  </style>
 </head>
 <body>
   <div class="wrap wrap-wide">
     <header>
-      <h1>이미지로그 관리</h1>
-      <p>TB_FW_IMAGE_LOG 조회·삭제 화면입니다. 조건 검색, 페이징, 선택 삭제를 지원합니다.</p>
+      <h1>OM 이미지로그 관리 (mkcoa7777)</h1>
+      <p>pdmk-om TB_FW_IMAGE_LOG. 현재시각 기준 N초 전 구간으로 문제 거래를 추적합니다.</p>
       <div class="nav-links">
         <a class="nav-link" href="/index.html">← 거래 목록</a>
+        <a class="nav-link" href="/imagelog-svc/index.html">service(8888) 관리 →</a>
+        <a class="nav-link" href="/mkcoa7777/index.html">전문 테스트 →</a>
         <span class="nav-link" id="targetInfo">대상 확인 중...</span>
       </div>
     </header>
 
     <section class="toolbar">
       <div class="field field-wide">
-        <label for="targetBaseUrl">pdmk-service URL</label>
-        <input id="targetBaseUrl" type="text" value="http://localhost:8080">
+        <label for="targetBaseUrl">대상 URL (pdmk-om)</label>
+        <input id="targetBaseUrl" type="text" value="http://localhost:8081">
       </div>
+
+      <div class="field field-wide">
+        <label>최근 구간 (현재시각 기준)</label>
+        <div class="time-window" id="withinSecondsGroup" role="group" aria-label="최근 초 단위 조회">
+          <button type="button" class="time-chip" data-seconds="">전체</button>
+          <button type="button" class="time-chip" data-seconds="5">5초 전</button>
+          <button type="button" class="time-chip" data-seconds="10">10초 전</button>
+          <button type="button" class="time-chip" data-seconds="15">15초 전</button>
+          <button type="button" class="time-chip" data-seconds="30">30초 전</button>
+          <button type="button" class="time-chip" data-seconds="60">1분 전</button>
+          <button type="button" class="time-chip" data-seconds="300">5분 전</button>
+        </div>
+        <p class="time-window-hint" id="withinHint">시간창 미적용 · 전체 기간</p>
+        <input id="withinSeconds" type="hidden" value="">
+      </div>
+
       <div class="field">
         <label for="guid">GUID</label>
         <input id="guid" type="text" placeholder="std_gbl_id 정확 일치">
@@ -39,10 +92,10 @@
         <input id="optrEno" type="text" placeholder="예: E0000001">
       </div>
       <div class="field field-check">
-        <label for="exceptionOnly">예외만</label>
+        <label for="exceptionOnly">문제건만</label>
         <label class="check-line">
           <input id="exceptionOnly" type="checkbox">
-          <span>EXCEPTION_TYPE 있는 건만</span>
+          <span>예외(EXCEPTION) 있는 건만</span>
         </label>
       </div>
       <div class="field">
@@ -57,7 +110,7 @@
     </section>
 
     <section class="response-meta" id="resultMeta">
-      <span class="empty">조건을 입력한 뒤 조회하세요.</span>
+      <span class="empty">최근 구간을 고르고 조회하세요. 문제 추적은 「예외만」과 함께 쓰면 됩니다.</span>
     </section>
 
     <section class="panel table-panel">
@@ -77,11 +130,12 @@
               <th>IP</th>
               <th>요청시각</th>
               <th>응답시각</th>
+              <th>소요</th>
               <th>상태</th>
             </tr>
           </thead>
           <tbody id="resultBody">
-            <tr><td colspan="9" class="empty">데이터 없음</td></tr>
+            <tr><td colspan="10" class="empty">데이터 없음</td></tr>
           </tbody>
         </table>
       </div>
@@ -95,7 +149,7 @@
 
   <div class="modal" id="detailModal" hidden>
     <div class="modal-backdrop" data-close="true"></div>
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+    <div class="modal-card error-modal-card" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
       <div class="panel-head">
         <h2 id="detailTitle">이미지로그 상세</h2>
         <button class="btn-secondary" type="button" data-close="true">닫기</button>
@@ -104,7 +158,7 @@
     </div>
   </div>
 
-  <script src="/_shared/error-popup.js"></script>
-  <script src="/imagelog/imagelog.js"></script>
+  <script src="/_shared/error-popup.js?v=20260808e"></script>
+  <script src="/imagelog/imagelog.js?v=20260808e"></script>
 </body>
 </html>

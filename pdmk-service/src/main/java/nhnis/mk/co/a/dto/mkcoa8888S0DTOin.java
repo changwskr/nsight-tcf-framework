@@ -19,6 +19,8 @@ public class mkcoa8888S0DTOin extends DataObject {
     private String screenId;
     private String optrEno;
     private Boolean exceptionOnly;
+    /** 현재시각 기준 N초 이내 요청만 (문제 거래 추적). null/0이면 미적용 */
+    private Integer withinSeconds;
     private Integer pageNo;
     private Integer pageSize;
 
@@ -62,6 +64,14 @@ public class mkcoa8888S0DTOin extends DataObject {
         this.exceptionOnly = exceptionOnly;
     }
 
+    public Integer getWithinSeconds() {
+        return withinSeconds;
+    }
+
+    public void setWithinSeconds(Integer withinSeconds) {
+        this.withinSeconds = withinSeconds;
+    }
+
     public Integer getPageNo() {
         return pageNo;
     }
@@ -95,6 +105,7 @@ public class mkcoa8888S0DTOin extends DataObject {
         this.screenId = in.screenId;
         this.optrEno = in.optrEno;
         this.exceptionOnly = in.exceptionOnly;
+        this.withinSeconds = in.withinSeconds;
         this.pageNo = in.pageNo;
         this.pageSize = in.pageSize;
     }
@@ -106,6 +117,7 @@ public class mkcoa8888S0DTOin extends DataObject {
                 + "screenId : " + screenId + "\n"
                 + "optrEno : " + optrEno + "\n"
                 + "exceptionOnly : " + exceptionOnly + "\n"
+                + "withinSeconds : " + withinSeconds + "\n"
                 + "pageNo : " + pageNo + "\n"
                 + "pageSize : " + pageSize + "\n";
     }
@@ -132,6 +144,10 @@ public class mkcoa8888S0DTOin extends DataObject {
                 .setIsNullable(true).setIsEncrypt(false).build());
         fieldPropertyMap.put("exceptionOnly", FieldProperty.builder()
                 .setPhysicalName("exceptionOnly").setLogicalName("exceptionOnly")
+                .setType(FieldProperty.TYPE_OBJECT_INT).setDecimal(-1)
+                .setIsNullable(true).setIsEncrypt(false).build());
+        fieldPropertyMap.put("withinSeconds", FieldProperty.builder()
+                .setPhysicalName("withinSeconds").setLogicalName("withinSeconds")
                 .setType(FieldProperty.TYPE_OBJECT_INT).setDecimal(-1)
                 .setIsNullable(true).setIsEncrypt(false).build());
         fieldPropertyMap.put("pageNo", FieldProperty.builder()

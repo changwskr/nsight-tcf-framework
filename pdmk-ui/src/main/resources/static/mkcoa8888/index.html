@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html lang="ko" data-program-id="mkcoa8888" data-default-transaction-id="mkcoa8888S0">
+<html lang="ko"
+      data-program-id="mkcoa8888"
+      data-default-transaction-id="mkcoa8888S0"
+      data-default-base-url="http://localhost:8080">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDMK 이미지로그 조회 (mkcoa8888)</title>
+  <title>PDMK-Service 이미지로그 (mkcoa8888)</title>
   <link rel="stylesheet" href="/_shared/online.css">
 </head>
 <body>
   <div class="wrap">
     <header>
-      <h1>PDMK 이미지로그 조회 (mkcoa8888)</h1>
-      <p>TB_FW_IMAGE_LOG 를 조회합니다. GUID·서비스ID·화면ID·사용자·예외여부 조건으로 필터링할 수 있습니다.</p>
+      <h1>PDMK-Service 이미지로그 (mkcoa8888)</h1>
+      <p>pdmk-service 의 TB_FW_IMAGE_LOG 조회/삭제 전문 테스트입니다. withinSeconds·예외여부 조건을 넣을 수 있습니다.</p>
       <div class="nav-links">
         <a class="nav-link" href="/index.html">← 거래 목록</a>
+        <a class="nav-link" href="/imagelog-svc/index.html">관리 화면 →</a>
       </div>
     </header>
 
@@ -28,7 +32,7 @@
       <div class="actions">
         <button class="btn-secondary" id="reloadSampleBtn" type="button">샘플 불러오기</button>
         <button class="btn-secondary" id="refreshGuidBtn" type="button">GUID 재채번</button>
-        <button class="btn-primary" id="sendBtn" type="button">이미지로그 조회</button>
+        <button class="btn-primary" id="sendBtn" type="button">전문 전송</button>
       </div>
     </section>
 

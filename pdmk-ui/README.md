@@ -46,6 +46,8 @@ cd ..\pdmk-ui
 
 | 프로그램 | API |
 |---|---|
-| **이미지로그 관리** | `/imagelog` (`POST /mkcoa8888S0` 조회 · `POST /mkcoa8888D0` 삭제) |
+| **`mkcoa6666`** | pdmk-om 거래통제 — `/txcontrol` (Catalog·E0·집계·중지/재개) · 전문 `/mkcoa6666` |
+| **`mkcoa8888`** | pdmk-service `POST /mkcoa8888S0` · `D0` — 전문 `/mkcoa8888` · 관리 `/imagelog-svc` |
+| **`mkcoa7777`** | pdmk-om `POST /mkcoa7777S0` · `D0` — 전문 `/mkcoa7777` · 관리 `/imagelog` |
 | `mkcoa5530` | `POST /mkcoa5530S0` (안내항목 목록) |
 | `mkcoa9999` | `POST /mkcoa9999S0` (영업팁 실적 목록) |
