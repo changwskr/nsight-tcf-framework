@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -34,11 +37,16 @@ import nhnis.fw.commons.dto.NH_NIS_ERR_DTO;
 import nhnis.fw.commons.dto.NH_NIS_ERR_DTOMsgJson;
 import nhnis.fw.commons.exception.NhBaseException;
 import nhnis.fw.commons.exception.NhBaseException.TYPE;
+import nhnis.fw.commons.log.PdmkMessagePrinter;
+import nhnis.fw.commons.log.PdmkTxFlowLog;
+import nhnis.fw.commons.log.PdmkTxLog;
 import nhnis.fw.commons.message.MessageCache;
 
 @ControllerAdvice
 @ConditionalOnProperty(name = "nhnis.fw.commons.legacy-web.enabled", havingValue = "true")
 public class ResponseBodyArgumentResolver implements ResponseBodyAdvice<Object> {
+
+    private static final Logger log = LoggerFactory.getLogger(ResponseBodyArgumentResolver.class);
 
     private final WebConfiguration webConfiguration;
 
@@ -71,9 +79,28 @@ public class ResponseBodyArgumentResolver implements ResponseBodyAdvice<Object> 
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
             Class<? extends HttpMessageConverter<?>> converterType, ServerHttpRequest request,
             ServerHttpResponse response) {
+        PdmkTxFlowLog.enter(log, ResponseBodyArgumentResolver.class, "beforeBodyWrite");
+        try {
+            return beforeBodyWriteInternal(body, returnType, selectedContentType, converterType, request, response);
+        } finally {
+            PdmkTxFlowLog.leave(log, ResponseBodyArgumentResolver.class, "beforeBodyWrite");
+        }
+    }
+
+    private Object beforeBodyWriteInternal(Object body, MethodParameter returnType, MediaType selectedContentType,
+            Class<? extends HttpMessageConverter<?>> converterType, ServerHttpRequest request,
+            ServerHttpResponse response) {
+        if (log.isInfoEnabled()) {
+            log.info(PdmkTxLog.systemPostStart());
+        }
+
         ObjectNode responseBody = objectMapper.createObjectNode();
         try {
-            if (request.getHeaders().getContentType().toString().startsWith(MULTI_PART)) {
+            if (request.getHeaders().getContentType() != null
+                    && request.getHeaders().getContentType().toString().startsWith(MULTI_PART)) {
+                if (log.isInfoEnabled()) {
+                    log.info(PdmkTxLog.systemPostEnd());
+                }
                 return body;
             }
 
@@ -103,6 +130,14 @@ public class ResponseBodyArgumentResolver implements ResponseBodyAdvice<Object> 
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        // 시스템 후처리: 응답 전문 원문 → 종료
+        // CORE 패턴이 메시지 내 \\n 을 치환하므로 배너/본문은 각각 별도 로그로 남긴다.
+        if (log.isInfoEnabled()) {
+            log.info(PdmkTxLog.onlineResponseAsIs());
+            log.info(PdmkMessagePrinter.asIsWireJson(responseBody));
+            log.info(PdmkTxLog.systemPostEnd());
         }
         return responseBody;
     }

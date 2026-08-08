@@ -8,6 +8,7 @@
  ***************************************************************************/
 package nhnis.fw.commons.interceptor;
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import org.apache.logging.log4j.ThreadContext;
@@ -27,7 +28,10 @@ import nhnis.fw.commons.context.ServiceContext;
 import nhnis.fw.commons.context.ServiceContextHolder;
 import nhnis.fw.commons.dto.header.hdr_nhnis;
 import nhnis.fw.commons.dto.header.sys_comm;
+import nhnis.fw.commons.filter.CachedBodyHttpServletRequest;
 import nhnis.fw.commons.imagelog.ImageLogHandler;
+import nhnis.fw.commons.log.PdmkMessagePrinter;
+import nhnis.fw.commons.log.PdmkTxFlowLog;
 import nhnis.fw.commons.log.PdmkTxLog;
 
 /**
@@ -55,18 +59,35 @@ public class ServicePreventionInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
+        PdmkTxFlowLog.enter(LOGGER, ServicePreventionInterceptor.class, "preHandle");
+        try {
+            return preHandleInternal(request, response, handler);
+        } finally {
+            PdmkTxFlowLog.leave(LOGGER, ServicePreventionInterceptor.class, "preHandle");
+        }
+    }
+
+    private boolean preHandleInternal(HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws Exception {
+        // 거래 구분 라인피드 + 시스템 선처리 시작
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(PdmkTxLog.systemPreProcessorStart());
+            LOGGER.info(PdmkTxLog.txGap() + PdmkTxLog.systemPreStart());
         }
 
         String contentType = request.getContentType();
         if (contentType != null && contentType.startsWith(MULTI_PART)) {
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info(PdmkTxLog.systemPreEnd());
+            }
             return true;
         }
 
         ServiceContext ctx = ServiceContextHolder.getInstance();
         if (ctx == null) {
             LOGGER.warn(PdmkTxLog.systemContextNull());
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info(PdmkTxLog.systemPreEnd());
+            }
             return true;
         }
 
@@ -75,9 +96,60 @@ public class ServicePreventionInterceptor implements HandlerInterceptor {
         enrichHeaderFromRequest(request, header);
         LOGGER.info(PdmkTxLog.systemGuid(guid));
 
+        // 요청 온라인 전문 — 시스템 선처리 구간에서 반드시 출력 (종료 전)
+        logRequestMessage(ctx, request);
+
         // Pre ImageLog — 시스템 전문 헤더
         imageLogHandler.preImagelog(header, null);
+
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(PdmkTxLog.systemPreEnd());
+        }
         return true;
+    }
+
+    /** 클라이언트 요청 온라인 전문을 CORE 로그에 남긴다. */
+    private void logRequestMessage(ServiceContext ctx, HttpServletRequest request) {
+        try {
+            String raw = resolveRequestBodyRaw(ctx, request);
+            LOGGER.info(PdmkTxLog.onlineRequestAsIs());
+            LOGGER.info("[요청전문] {}", raw);
+        } catch (Exception e) {
+            LOGGER.warn("[요청전문] 출력 실패: {}", e.toString());
+        }
+    }
+
+    /** Filter/CachedBody/request attribute 에서 요청 전문 원문을 찾는다. */
+    private static String resolveRequestBodyRaw(ServiceContext ctx, HttpServletRequest request) {
+        String raw = ctx != null ? ctx.getRequestBody() : null;
+
+        if ((raw == null || raw.isBlank()) && request != null) {
+            Object attr = request.getAttribute(nhnis.fw.commons.filter.DefaultFilter.REQUEST_BODY_ATTR);
+            if (attr instanceof String s && !s.isBlank()) {
+                raw = s;
+            }
+        }
+
+        if (raw == null || raw.isBlank()) {
+            HttpServletRequest current = request;
+            while (current != null) {
+                if (current instanceof CachedBodyHttpServletRequest cached) {
+                    raw = new String(cached.getCachedBody(), StandardCharsets.UTF_8);
+                    break;
+                }
+                if (current instanceof jakarta.servlet.http.HttpServletRequestWrapper wrapper) {
+                    jakarta.servlet.ServletRequest inner = wrapper.getRequest();
+                    current = inner instanceof HttpServletRequest http ? http : null;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        if (raw == null || raw.isBlank()) {
+            return "(empty-request-body)";
+        }
+        return PdmkMessagePrinter.asIs(raw);
     }
 
     /**
@@ -167,34 +239,47 @@ public class ServicePreventionInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
             ModelAndView modelAndView) throws Exception {
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(PdmkTxLog.systemPostProcessor());
+        PdmkTxFlowLog.enter(LOGGER, ServicePreventionInterceptor.class, "postHandle");
+        try {
+            // 시스템 후처리 시작/종료·응답 전문은 ResponseBodyAdvice 에서 출력한다.
+            // (@ResponseBody 는 postHandle 보다 먼저 응답을 쓰므로 순서를 맞추기 위함)
+            HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
+        } finally {
+            PdmkTxFlowLog.leave(LOGGER, ServicePreventionInterceptor.class, "postHandle");
         }
-
-        String contentType = request.getContentType();
-        if (contentType != null && contentType.startsWith(MULTI_PART)) {
-            // 파일 업로드
-        } else if (ServiceContextHolder.getInstance() != null) {
-            // Post ImageLog
-            imageLogHandler.postImagelog(ServiceContextHolder.getInstance().getHeader(), null);
-        }
-        HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
             Exception ex) throws Exception {
-        if (ex != null) {
-            LOGGER.error(PdmkTxLog.systemErrorProcessor());
-            hdr_nhnis header = ServiceContextHolder.getInstance() != null
-                    ? ServiceContextHolder.getInstance().getHeader()
-                    : null;
-            // Exception ImageLog
-            imageLogHandler.exceptionImagelog(header, null, ex);
-            ServiceContextHolder.removeInstance();
-            throw ex;
+        PdmkTxFlowLog.enter(LOGGER, ServicePreventionInterceptor.class, "afterCompletion");
+        try {
+            if (ex != null) {
+                LOGGER.error(PdmkTxLog.systemErrorProcessor());
+                if (LOGGER.isInfoEnabled()) {
+                    LOGGER.info(PdmkTxLog.systemPostStart());
+                    LOGGER.info(PdmkTxLog.systemPostEnd());
+                }
+                hdr_nhnis header = ServiceContextHolder.getInstance() != null
+                        ? ServiceContextHolder.getInstance().getHeader()
+                        : null;
+                // Exception ImageLog
+                imageLogHandler.exceptionImagelog(header, null, ex);
+                ServiceContextHolder.removeInstance();
+                throw ex;
+            }
+
+            // 정상 응답: RESPONSE_TIME 갱신 (응답 작성 이후)
+            String contentType = request.getContentType();
+            if (contentType == null || !contentType.startsWith(MULTI_PART)) {
+                if (ServiceContextHolder.getInstance() != null) {
+                    imageLogHandler.postImagelog(ServiceContextHolder.getInstance().getHeader(), null);
+                }
+            }
+            HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+        } finally {
+            PdmkTxFlowLog.leave(LOGGER, ServicePreventionInterceptor.class, "afterCompletion");
         }
-        HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
     }
 
     public <T> T convertMapToDto(Object input, Class<T> type) {

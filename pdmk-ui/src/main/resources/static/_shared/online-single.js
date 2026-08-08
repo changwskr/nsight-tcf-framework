@@ -218,7 +218,7 @@ function refreshGuidInEditor() {
   try {
     payload = JSON.parse(requestBodyEl.value);
   } catch (error) {
-    alert('요청 JSON 형식이 올바르지 않습니다.\n' + error.message);
+    PdmkErrorPopup.showSimple('요청 JSON 형식이 올바르지 않습니다.\n' + error.message, '입력 오류');
     return;
   }
   payload = ensureHdrNhnis(payload, true);
@@ -230,7 +230,7 @@ async function sendRequest() {
   try {
     payload = JSON.parse(requestBodyEl.value);
   } catch (error) {
-    alert('요청 JSON 형식이 올바르지 않습니다.\n' + error.message);
+    PdmkErrorPopup.showSimple('요청 JSON 형식이 올바르지 않습니다.\n' + error.message, '입력 오류');
     return;
   }
 
@@ -241,13 +241,21 @@ async function sendRequest() {
   responseMetaEl.innerHTML = '<span class="empty">요청 중...</span>';
   responseBodyEl.value = '';
 
-  const query = new URLSearchParams({ baseUrl: targetBaseUrlEl.value.trim() });
-  const response = await fetch(`/api/relay/${transactionIdEl.value}?${query}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-  const result = await response.json();
+  let result;
+  try {
+    const query = new URLSearchParams({ baseUrl: targetBaseUrlEl.value.trim() });
+    const response = await fetch(`/api/relay/${transactionIdEl.value}?${query}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    result = await response.json();
+  } catch (error) {
+    responseMetaEl.innerHTML = '<span class="badge fail">중계 실패</span>';
+    PdmkErrorPopup.showSimple(error.message || String(error), '중계 오류');
+    return;
+  }
+
   const httpOk = result.httpStatus >= 200 && result.httpStatus < 300;
 
   let parsed = null;
@@ -258,7 +266,8 @@ async function sendRequest() {
     responseBodyEl.value = result.responseBody || '';
   }
 
-  const ok = httpOk && !(parsed && parsed.error);
+  const serviceError = PdmkErrorPopup.errorPayload(parsed);
+  const ok = httpOk && !(parsed && parsed.error) && !serviceError;
   const summary = dtoSummary(parsed);
   responseMetaEl.innerHTML = `
     <span class="badge ${ok ? 'ok' : 'fail'}">HTTP ${result.httpStatus}</span>
@@ -268,6 +277,10 @@ async function sendRequest() {
     <span>${result.targetUrl}</span>
     ${ok ? '' : `<span class="badge fail">${describeError(parsed, result.httpStatus)}</span>`}
   `;
+
+  if (!ok) {
+    PdmkErrorPopup.showFromResponse(parsed, result.httpStatus, describeError(parsed, result.httpStatus));
+  }
 }
 
 targetBaseUrlEl.addEventListener('change', refreshTargetUrl);
@@ -279,4 +292,4 @@ if (refreshGuidBtn) {
 }
 document.getElementById('sendBtn').addEventListener('click', sendRequest);
 
-init().catch(error => alert('화면 초기화 실패: ' + error.message));
+init().catch(error => PdmkErrorPopup.showSimple('화면 초기화 실패: ' + error.message));

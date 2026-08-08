@@ -29,6 +29,7 @@
     </section>
   </div>
 
+  <script src="/_shared/error-popup.js"></script>
   <script>
     function renderProgramCard(programId, items) {
       if (programId === 'mkcoa8888') {
@@ -75,7 +76,7 @@
       }
     }
 
-    init().catch(error => alert('거래 목록 로드 실패: ' + error.message));
+    init().catch(error => PdmkErrorPopup.showSimple('거래 목록 로드 실패: ' + error.message));
   </script>
 </body>
 </html>

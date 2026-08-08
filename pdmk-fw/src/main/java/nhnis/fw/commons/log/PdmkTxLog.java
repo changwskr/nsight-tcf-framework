@@ -4,27 +4,35 @@ package nhnis.fw.commons.log;
  * PDMK 운영 트랜잭션 로그 메시지 포맷.
  *
  * <p>실제 {@code log.info} 호출은 호출부(Interceptor/Aspect/Controller/Service)에서 해야
- * Log4j {@code %C.%M} 이 운영과 같이 {@code ServicePreventionInterceptor.postHandle} 등으로 남는다.
- * 이 클래스는 메시지 문자열만 만든다.
+ * Log4j {@code %C.%M} 위치가 맞는다. 이 클래스는 메시지 문자열만 만든다.
  *
  * <pre>
- * [ServicePreventionInterceptor] SystemPreProcessor Start!
- * [ServicePreventionInterceptor] GUID: ...
- * ▶▶▶▶▶▶ mpco 업무 공통 선처리 ▶▶▶▶▶▶
- * [bizPrePostAspect().before()] Argument: BRC : null
- * ▷▷▷▷▷▷▷▷ mkpca5530 Controller Start!
- * ▶▶▶▶▶▶▶▶ mkpca5530S0 Service Start!
- * ▶▶▶▶▶▶▶▶ mkpca5530S0 Service End! - Total: 3
- * ▷▷▷▷▷▷▷▷ mkpca5530 Controller End!mkpca5530S0DTOsub0 : [...]
- * ▶▶▶▶▶▶ mpco 업무 공통 후처리 ▶▶▶▶▶▶
- * [bizPrePostAspect().after()] Argument: BRC : null
- * [ServicePreventionInterceptor] SystemPostProcessor
+ * (라인피드 5개)
+ * [시스템 선처리] 시작 ===============================================
+ * [시스템 선처리] GUID: ...
+ * [온라인전문][요청][원문] ===============================================
+ * [요청전문] { 클라이언트 요청 전문 원문 }
+ * [시스템 선처리] 종료 ===============================================
+ *
+ * [업무 선처리] 시작 ===============================================
+ * (진행 로그)
+ * [업무 선처리] 종료 ===============================================
+ *
+ * [업무처리] 시작 ===============================================
+ * → Controller / Service / DAO
+ * [업무처리] 종료 ===============================================
+ *
+ * [업무 후처리] 시작 ===============================================
+ * (결과 DTO)
+ * [업무 후처리] 종료 ===============================================
+ *
+ * [시스템 후처리] 시작 ===============================================
+ * [온라인전문][응답][원문] ===============================================
+ * { 클라이언트 응답 전문 원문 }
+ * [시스템 후처리] 종료 ===============================================
  * </pre>
  */
 public final class PdmkTxLog {
-
-    /** Aspect 선/후처리 (6) */
-    public static final String ASPECT = "▶▶▶▶▶▶";
 
     /** Controller Start/End (8) */
     public static final String CONTROLLER = "▷▷▷▷▷▷▷▷";
@@ -32,45 +40,97 @@ public final class PdmkTxLog {
     /** Service Start/End (8) */
     public static final String SERVICE = "▶▶▶▶▶▶▶▶";
 
-    private static final String INTERCEPTOR = "ServicePreventionInterceptor";
+    /** 구간 구분선 (통일) */
+    private static final String LINE = "===============================================";
 
     private PdmkTxLog() {
     }
 
-    public static String systemPreProcessorStart() {
-        return "[" + INTERCEPTOR + "] SystemPreProcessor Start!";
+    /** 거래 구분용 라인피드 5개. */
+    public static String txGap() {
+        return "\n\n\n\n\n";
+    }
+
+    private static String section(String name, String phase) {
+        return "[" + name + "] " + phase + " " + LINE;
+    }
+
+    public static String systemPreStart() {
+        return section("시스템 선처리", "시작");
+    }
+
+    public static String systemPreEnd() {
+        return section("시스템 선처리", "종료");
+    }
+
+    public static String systemPostStart() {
+        return section("시스템 후처리", "시작");
+    }
+
+    public static String systemPostEnd() {
+        return section("시스템 후처리", "종료");
     }
 
     public static String systemGuid(String guid) {
-        return "[" + INTERCEPTOR + "] GUID: " + guid;
-    }
-
-    public static String systemPostProcessor() {
-        return "[" + INTERCEPTOR + "] SystemPostProcessor";
+        return "[시스템 선처리] GUID: " + guid;
     }
 
     public static String systemErrorProcessor() {
-        return "[" + INTERCEPTOR + "] SystemErrorProcessor";
+        return "[시스템 후처리] 오류 " + LINE;
     }
 
     public static String systemContextNull() {
-        return "[" + INTERCEPTOR + "] Service Context is null...!! (continue)";
+        return "[시스템 선처리] Service Context is null...!! (continue)";
     }
 
-    public static String bizPreProcess() {
-        return ASPECT + " mpco 업무 공통 선처리 " + ASPECT;
+    public static String systemRequestMessage() {
+        return "[시스템 선처리] 클라이언트 온라인 전문";
     }
 
-    public static String bizPostProcess() {
-        return ASPECT + " mpco 업무 공통 후처리 " + ASPECT;
+    public static String systemResponseMessage() {
+        return "[시스템 후처리] 응답 전문";
     }
 
-    public static String bizArgumentBefore(Object brc) {
-        return "[bizPrePostAspect().before()] Argument: BRC : " + brc;
+    /** 시스템 선처리 이후 — 클라이언트 요청 온라인 전문 원문. */
+    public static String onlineRequestAsIs() {
+        return "[온라인전문][요청][원문] " + LINE;
     }
 
-    public static String bizArgumentAfter(Object brc) {
-        return "[bizPrePostAspect().after()] Argument: BRC : " + brc;
+    /** 시스템 후처리 이후 — 클라이언트로 내려가는 응답 온라인 전문 원문. */
+    public static String onlineResponseAsIs() {
+        return "[온라인전문][응답][원문] " + LINE;
+    }
+
+    public static String bizPreStart() {
+        return section("업무 선처리", "시작");
+    }
+
+    public static String bizPreEnd() {
+        return section("업무 선처리", "종료");
+    }
+
+    public static String bizPreProgress(String message) {
+        return "[업무 선처리] " + message;
+    }
+
+    public static String bizProcessStart() {
+        return section("업무처리", "시작");
+    }
+
+    public static String bizProcessEnd() {
+        return section("업무처리", "종료");
+    }
+
+    public static String bizPostStart() {
+        return section("업무 후처리", "시작");
+    }
+
+    public static String bizPostEnd() {
+        return section("업무 후처리", "종료");
+    }
+
+    public static String bizResponseMessage() {
+        return "[업무 후처리] 결과 DTO";
     }
 
     public static String controllerStart(String programId) {

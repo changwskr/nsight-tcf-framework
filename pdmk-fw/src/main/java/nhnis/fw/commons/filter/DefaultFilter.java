@@ -33,6 +33,7 @@ import nhnis.fw.commons.context.ServiceContextHolder;
 import nhnis.fw.commons.dto.header.hdr_nhnis;
 import nhnis.fw.commons.dto.header.sys_comm;
 import nhnis.fw.commons.jwt.JwtProvider;
+import nhnis.fw.commons.log.PdmkTxFlowLog;
 
 /**
  * PDMK 공통 요청 필터. ServiceContext / GUID / JWT(비-local)를 준비한다.
@@ -53,6 +54,8 @@ public class DefaultFilter implements Filter {
     private static final String SERVICE_ID = "serviceId";
     private static final String HEADER = "hdr_nhnis";
     private static final String MULTI_PART = "multipart/";
+    /** Interceptor에서 요청 전문을 읽기 위한 request attribute 키. */
+    public static final String REQUEST_BODY_ATTR = "PDMK_REQUEST_BODY";
 
     @Value("${spring.profiles.active:local}")
     private String active;
@@ -76,6 +79,19 @@ public class DefaultFilter implements Filter {
 
     @Override
     public void doFilter(
+            ServletRequest servletRequest,
+            ServletResponse servletResponse,
+            FilterChain filterChain
+    ) throws IOException, ServletException {
+        PdmkTxFlowLog.enter(log, DefaultFilter.class, "doFilter");
+        try {
+            doFilterInternal(servletRequest, servletResponse, filterChain);
+        } finally {
+            PdmkTxFlowLog.leave(log, DefaultFilter.class, "doFilter");
+        }
+    }
+
+    private void doFilterInternal(
             ServletRequest servletRequest,
             ServletResponse servletResponse,
             FilterChain filterChain
@@ -232,11 +248,13 @@ public class DefaultFilter implements Filter {
                         guid,
                         active,
                         requestHeaders,
-                        request,
+                        wrapper,
                         response,
                         header
                 );
+                serviceContext.setRequestBody(requestBody);
                 ServiceContextHolder.setInstance(serviceContext);
+                wrapper.setAttribute(REQUEST_BODY_ATTR, requestBody);
 
                 filterChain.doFilter(wrapper, servletResponse);
             }

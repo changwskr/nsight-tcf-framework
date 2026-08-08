@@ -192,12 +192,20 @@ async function search() {
   resultBodyEl.innerHTML = '<tr><td colspan="9" class="empty">조회 중...</td></tr>';
 
   const query = new URLSearchParams({ baseUrl: targetBaseUrlEl.value.trim() });
-  const response = await fetch(`/api/imagelog/list?${query}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(buildListBody())
-  });
-  const result = await response.json();
+  let result;
+  try {
+    const response = await fetch(`/api/imagelog/list?${query}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(buildListBody())
+    });
+    result = await response.json();
+  } catch (error) {
+    resultMetaEl.innerHTML = '<span class="badge fail">중계 실패</span>';
+    resultBodyEl.innerHTML = '<tr><td colspan="9" class="empty">조회 실패</td></tr>';
+    PdmkErrorPopup.showSimple(error.message || String(error), '중계 오류');
+    return;
+  }
   const httpOk = result.httpStatus >= 200 && result.httpStatus < 300;
 
   let parsed = null;
@@ -209,7 +217,8 @@ async function search() {
 
   const dto = extractDto(parsed) || {};
   const rows = extractRows(parsed);
-  const ok = httpOk && !(parsed && parsed.error);
+  const serviceError = PdmkErrorPopup.errorPayload(parsed);
+  const ok = httpOk && !(parsed && parsed.error) && !serviceError;
   renderRows(rows, {
     pageNo: dto.pageNo,
     pageSize: dto.pageSize,
@@ -224,12 +233,16 @@ async function search() {
     <span>${escapeHtml(result.targetUrl)}</span>
     ${ok ? '' : `<span class="badge fail">${escapeHtml((parsed && (parsed.error || parsed.message)) || '조회 실패')}</span>`}
   `;
+
+  if (!ok) {
+    PdmkErrorPopup.showFromResponse(parsed, result.httpStatus, '이미지로그 조회에 실패했습니다.');
+  }
 }
 
 async function deleteSelected() {
   const guids = selectedGuids();
   if (!guids.length) {
-    alert('삭제할 항목을 선택하세요.');
+    PdmkErrorPopup.showSimple('삭제할 항목을 선택하세요.', '확인');
     return;
   }
   if (!confirm(`${guids.length}건을 삭제할까요?`)) {
@@ -237,26 +250,33 @@ async function deleteSelected() {
   }
 
   const query = new URLSearchParams({ baseUrl: targetBaseUrlEl.value.trim() });
-  const response = await fetch(`/api/imagelog/delete?${query}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      hdr_nhnis: {
-        sys_comm: {
-          std_gbl_id: crypto.randomUUID().replaceAll('-', ''),
-          rms_svc_c: 'mkcoa8888D0',
-          scid: 'mkcoa8888',
-          optr_eno: 'LOCAL',
-          tr_trm_ipadr: '127.0.0.1',
-          tr_sysid: 'PDMK-UI',
-          sync_dsc: 'S',
-          std_tgrm_rqr_rsp_dsc: 'Q'
-        }
-      },
-      dto: { guidList: guids, GUID_LIST: guids }
-    })
-  });
-  const result = await response.json();
+  let result;
+  try {
+    const response = await fetch(`/api/imagelog/delete?${query}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        hdr_nhnis: {
+          sys_comm: {
+            std_gbl_id: crypto.randomUUID().replaceAll('-', ''),
+            rms_svc_c: 'mkcoa8888D0',
+            scid: 'mkcoa8888',
+            optr_eno: 'LOCAL',
+            tr_trm_ipadr: '127.0.0.1',
+            tr_sysid: 'PDMK-UI',
+            sync_dsc: 'S',
+            std_tgrm_rqr_rsp_dsc: 'Q'
+          }
+        },
+        dto: { guidList: guids, GUID_LIST: guids }
+      })
+    });
+    result = await response.json();
+  } catch (error) {
+    PdmkErrorPopup.showSimple(error.message || String(error), '중계 오류');
+    return;
+  }
+
   const httpOk = result.httpStatus >= 200 && result.httpStatus < 300;
 
   let parsed = null;
@@ -266,9 +286,15 @@ async function deleteSelected() {
     parsed = null;
   }
   const dto = extractDto(parsed) || {};
-  const ok = httpOk && !(parsed && parsed.error) && (dto.RSLT_CD == null || dto.RSLT_CD === '0000');
+  const serviceError = PdmkErrorPopup.errorPayload(parsed);
+  const ok = httpOk && !(parsed && parsed.error) && !serviceError
+      && (dto.RSLT_CD == null || dto.RSLT_CD === '0000');
   if (!ok) {
-    alert('삭제 실패: ' + ((parsed && (parsed.error || parsed.message)) || dto.RSLT_MSG || 'unknown'));
+    if (!PdmkErrorPopup.showFromResponse(parsed, result.httpStatus, dto.RSLT_MSG || '삭제에 실패했습니다.')) {
+      PdmkErrorPopup.showSimple(
+          (parsed && (parsed.error || parsed.message)) || dto.RSLT_MSG || 'unknown',
+          '삭제 실패');
+    }
     return;
   }
 
@@ -298,11 +324,11 @@ async function init() {
 
   document.getElementById('searchBtn').addEventListener('click', () => {
     pageNo = 1;
-    search().catch((error) => alert('조회 실패: ' + error.message));
+    search().catch((error) => PdmkErrorPopup.showSimple('조회 실패: ' + error.message));
   });
   document.getElementById('resetBtn').addEventListener('click', resetFilters);
   document.getElementById('deleteBtn').addEventListener('click', () => {
-    deleteSelected().catch((error) => alert('삭제 실패: ' + error.message));
+    deleteSelected().catch((error) => PdmkErrorPopup.showSimple('삭제 실패: ' + error.message));
   });
 
   prevPageBtn.addEventListener('click', () => {
@@ -310,14 +336,14 @@ async function init() {
       return;
     }
     pageNo -= 1;
-    search().catch((error) => alert('조회 실패: ' + error.message));
+    search().catch((error) => PdmkErrorPopup.showSimple('조회 실패: ' + error.message));
   });
   nextPageBtn.addEventListener('click', () => {
     if (pageNo >= totalPages) {
       return;
     }
     pageNo += 1;
-    search().catch((error) => alert('조회 실패: ' + error.message));
+    search().catch((error) => PdmkErrorPopup.showSimple('조회 실패: ' + error.message));
   });
 
   checkAllEl.addEventListener('change', () => {
@@ -354,4 +380,4 @@ async function init() {
   });
 }
 
-init().catch((error) => alert('화면 초기화 실패: ' + error.message));
+init().catch((error) => PdmkErrorPopup.showSimple('화면 초기화 실패: ' + error.message));

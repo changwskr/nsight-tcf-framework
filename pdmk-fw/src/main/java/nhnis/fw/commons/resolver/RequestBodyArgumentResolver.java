@@ -2,6 +2,8 @@ package nhnis.fw.commons.resolver;
 
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -17,10 +19,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import nhnis.fw.commons.log.PdmkTxFlowLog;
 
 @Component
 @RequiredArgsConstructor
 public class RequestBodyArgumentResolver implements HandlerMethodArgumentResolver {
+
+    private static final Logger log = LoggerFactory.getLogger(RequestBodyArgumentResolver.class);
 
     private final ObjectMapper objectMapper;
     private static final String MULTI_PART = "multipart/";
@@ -43,26 +48,31 @@ public class RequestBodyArgumentResolver implements HandlerMethodArgumentResolve
             NativeWebRequest webRequest,
             WebDataBinderFactory binderFactory
     ) throws Exception {
-        objectMapper.configure(
-                DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-                false
-        );
-        objectMapper.configure(
-                DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT,
-                true
-        );
+        PdmkTxFlowLog.enter(log, RequestBodyArgumentResolver.class, "resolveArgument");
+        try {
+            objectMapper.configure(
+                    DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+                    false
+            );
+            objectMapper.configure(
+                    DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT,
+                    true
+            );
 
-        HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
-        String requestBody = request.getReader().lines().collect(Collectors.joining());
+            HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
+            String requestBody = request.getReader().lines().collect(Collectors.joining());
 
-        JsonNode root = objectMapper.readTree(requestBody);
-        JsonNode bodyNode = root == null ? null : root.get("dto");
-        if (bodyNode == null || bodyNode.isNull()) {
-            bodyNode = objectMapper.createObjectNode();
+            JsonNode root = objectMapper.readTree(requestBody);
+            JsonNode bodyNode = root == null ? null : root.get("dto");
+            if (bodyNode == null || bodyNode.isNull()) {
+                bodyNode = objectMapper.createObjectNode();
+            }
+
+            Class<?> dtoClass = parameter.getParameterType();
+
+            return objectMapper.treeToValue(bodyNode, dtoClass);
+        } finally {
+            PdmkTxFlowLog.leave(log, RequestBodyArgumentResolver.class, "resolveArgument");
         }
-
-        Class<?> dtoClass = parameter.getParameterType();
-
-        return objectMapper.treeToValue(bodyNode, dtoClass);
     }
 }

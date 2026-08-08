@@ -21,6 +21,8 @@ public class ServiceContext {
     private HttpServletResponse httpServletResponse;
     private hdr_nhnis header;
     private Map<String, Object> userContext = new HashMap<>();
+    /** 브라우저/클라이언트에서 수신한 온라인 요청 전문 원문. */
+    private String requestBody;
 
     public ServiceContext(String applicationName, String guid, String active, HttpHeaders requestHeaders,
             HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
@@ -41,5 +43,9 @@ public class ServiceContext {
 
     public void setHeader(hdr_nhnis header) {
         this.header = header;
+    }
+
+    public void setRequestBody(String requestBody) {
+        this.requestBody = requestBody;
     }
 }
