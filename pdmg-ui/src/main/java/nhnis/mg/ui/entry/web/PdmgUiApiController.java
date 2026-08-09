@@ -75,4 +75,28 @@ public class PdmgUiApiController {
             @RequestParam(value = "baseUrl", required = false) String baseUrl) {
         return relayService.relay("mgcoa8888D0", requestBody, baseUrl);
     }
+
+    @PostMapping("/txparam/list")
+    public RelayResult txParamList(@RequestBody(required = false) String requestBody,
+            @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+        return relayService.relay("mgcoa9000S0", requestBody, baseUrl);
+    }
+
+    @PostMapping("/txparam/create")
+    public RelayResult txParamCreate(@RequestBody(required = false) String requestBody,
+            @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+        return relayService.relay("mgcoa9000C0", requestBody, baseUrl);
+    }
+
+    @PostMapping("/txparam/update")
+    public RelayResult txParamUpdate(@RequestBody(required = false) String requestBody,
+            @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+        return relayService.relay("mgcoa9000U0", requestBody, baseUrl);
+    }
+
+    @PostMapping("/txparam/delete")
+    public RelayResult txParamDelete(@RequestBody(required = false) String requestBody,
+            @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+        return relayService.relay("mgcoa9000D0", requestBody, baseUrl);
+    }
 }

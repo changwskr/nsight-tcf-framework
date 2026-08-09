@@ -24,6 +24,7 @@
     "optrEno": null,
     "exceptionOnly": false,
     "withinSeconds": 300,
+    "minElapsedSeconds": null,
     "pageNo": 1,
     "pageSize": 20
   }

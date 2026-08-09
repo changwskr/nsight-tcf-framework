@@ -1,6 +1,6 @@
 ---
 name: MG-NAMING_CONVENTION
-description: 농협 상호금융 PDMG 프로젝트 소스 코드 명명 규칙. nhnis.mg 6계층 패키지, Handler/Facade/Controller/Service/DAO/DTO, MyBatis Mapper/SQL ID, 변수·주석 규칙을 정의한다.
+description: 농협 상호금융 PDMG 명명 규칙. 애플리케이션 컴포넌트 타입↔패키지↔네이밍 매핑, Handler/Facade/Controller/Service/DAO/DTO, MyBatis SQL ID 규칙을 정의한다.
 ---
 
 # PDMG Naming Convention Guide
@@ -8,6 +8,7 @@ description: 농협 상호금융 PDMG 프로젝트 소스 코드 명명 규칙. 
 ## 1. 목적
 
 이 문서는 **현재 `pdmg-service` 소스**(`src/main/java/nhnis/mg`)를 기준으로 한 명명 규칙이다.  
+핵심은 **§4 애플리케이션 컴포넌트 ↔ 패키지 ↔ 네이밍** 이다. 컴포넌트 타입이 정해지면 패키지와 이름이 따라온다.  
 새 프로그램은 임의 변형보다 본 규칙과 기준 샘플을 따른다.
 
 기준 프로그램 샘플: **mgcoa8888**  
@@ -23,10 +24,10 @@ description: 농협 상호금융 PDMG 프로젝트 소스 코드 명명 규칙. 
 ```text
 DefaultFilter / ServicePreventionInterceptor (pdmg-fw)
   → OnlineTransactionController (pdmg-fw)
-    → TcfFacade → TransactionHandler (nhnis.mg.entry.handler)
-      → Facade (@Transactional, nhnis.mg.entry.facade)
-        → [BizPrePostAspect] Service (nhnis.mg.application.service)
-          → DAO (nhnis.mg.persistence.dao)
+    → TcfFacade → TransactionHandler (nhnis.mg.co.a.entry.handler)
+      → Facade (@Transactional, nhnis.mg.co.a.application.facade)
+        → [BizPrePostAspect] Service (nhnis.mg.co.a.application.service)
+          → DAO (nhnis.mg.co.a.persistence.dao)
             → Mapper XML (rdw.mg.co.a/*.xml)
 ```
 
@@ -34,8 +35,8 @@ DefaultFilter / ServicePreventionInterceptor (pdmg-fw)
 
 ```text
 ServicePreventionInterceptor (pdmg-fw)
-  → Controller (nhnis.mg.entry.controller)
-    → Service (nhnis.mg.application.service)
+  → Controller (nhnis.mg.co.a.application.controller)
+    → Service (nhnis.mg.co.a.application.service)
       → DAO → Mapper XML
 ```
 
@@ -43,13 +44,12 @@ ServicePreventionInterceptor (pdmg-fw)
 
 ## 2. 애플리케이션 분류 체계
 
-서비스 ID·클래스명·Mapper **리소스 폴더**에 쓰인다.  
-Java 패키지 경로에는 업무/세부업무 세그먼트를 넣지 않는다.
+서비스 ID·클래스명·**Java 패키지**·Mapper 리소스 폴더에 쓰인다.
 
 ### 2.1 대구분
 
 - 애플리케이션 그룹 코드: `MG`
-- Boot / 루트 패키지: `nhnis.mg`
+- Boot / 루트 패키지: `nhnis.mg` (`PdmgApplication`, `ServletInitializer`만 둠)
 - 메인 클래스: `nhnis.mg.PdmgApplication`
 
 ### 2.2 업무구분
@@ -68,7 +68,19 @@ Java 패키지 경로에는 업무/세부업무 세그먼트를 넣지 않는다
 | A | 상담 |
 | B | 고객 |
 
-현재 샘플은 모두 `CO` + `A` → 서비스 ID 접두 `mgcoa`.
+현재 샘플은 모두 `CO` + `A` → 서비스 ID 접두 `mgcoa`, Java 패키지 `nhnis.mg.co.a.*`, Mapper `rdw.mg.co.a/`.
+
+### 2.4 패키지·리소스에 쓰는 표기
+
+업무구분·세부업무구분은 **소문자**로 패키지/폴더 세그먼트에 넣는다.
+
+| 구분 | 표기 | 예시 |
+| ---- | ---- | ---- |
+| Java 업무 루트 | `nhnis.mg.[업무].[세부]` | `nhnis.mg.co.a` |
+| Mapper 리소스 | `rdw.[대구분].[업무].[세부]/` | `rdw.mg.co.a/` |
+| 서비스 ID 접두 | `[대구분][업무][세부]` | `mgcoa` |
+
+다른 업무(예: IC + B)를 추가하면 `nhnis.mg.ic.b.*` / `rdw.mg.ic.b/` 아래에 동일 6계층을 둔다.
 
 ---
 
@@ -126,52 +138,152 @@ mgcoa8888S0
 | `mgcoa8888` | `POST /mgcoa8888S0`, `POST /mgcoa8888D0` | 이미지로그 조회/삭제 |
 | `mgcoa5530` | `POST /mgcoa5530S0` | 마케팅희망고객 목록 |
 | `mgcoa9999` | `POST /mgcoa9999S0` | 영업팁 실적 목록 |
+| `mgcoa9000` | `POST /mgcoa9000S0`, `C0`, `U0`, `D0` | 거래 파라미터 CRUD |
 
 ---
 
-## 4. Java 패키지 구조 (6계층)
+## 4. 애플리케이션 컴포넌트 ↔ 패키지 ↔ 네이밍
 
-루트는 `nhnis.mg` 이다. 그 아래를 **계층(layer)** 으로 나눈다.
+PDMG 업무 코드는 **컴포넌트 타입(역할)** 을 먼저 정하고, 그 역할을 **패키지 위치**와 **타입/메서드 이름**에 그대로 투영한다.  
+즉 “이 클래스가 어떤 컴포넌트인가?”가 정해지면 패키지와 이름이 자동으로 결정된다.
+
+### 4.1 설계 의도
+
+| 질문 | 답 |
+| ---- | -- |
+| 왜 패키지를 나누는가? | 의존 방향·트랜잭션·진입 경로를 컴파일/리뷰 시점에 강제하기 위함 |
+| 왜 이름이 `mgcoa8888*` 형태인가? | 서비스 ID·화면/프로그램 식별번호와 1:1로 맞추기 위함 |
+| 왜 Handler와 Facade를 나누는가? | TCF 라우팅(entry)과 업무 TX 경계(application)를 분리하기 위함 |
+| 왜 DTO를 `application` 밖으로 뺐는가? | 입출력 계약은 계층 공통 자산이므로 service와 동급 계층으로 둔다 |
+
+### 4.2 컴포넌트 타입 정의
+
+| 컴포넌트 타입 | 한 줄 정의 | 속한 계층 |
+| ------------ | ---------- | -------- |
+| Boot | Spring Boot 진입 | `nhnis.mg` (업무축 밖) |
+| Handler | TCF ON serviceId 라우팅 | `entry` |
+| Aspect | 업무 요청 횡단 선·후처리 / TX-FLOW | `entry` |
+| Controller | TCF OFF HTTP 진입 | `application` |
+| Facade | DTO 변환 + `@Transactional` + Service 호출 | `application` |
+| Service | 업무 절차·DAO 호출 | `application` |
+| DTO | 입출력 데이터 계약 | `dto` |
+| DAO | MyBatis 영속 계약 | `persistence` |
+| Client | 외부 WAS/API 호출 | `client` |
+| Config | Spring Bean·DS·보안 조립 | `config` |
+| Support | 업무 공통 유틸 | `support` |
+| Mapper XML | SQL 리소스 (Java 패키지 밖) | `rdw.mg.[업무].[세부]/` |
+
+### 4.3 마스터 매핑 (타입 → 패키지 → 네이밍)
+
+현재 샘플 업무축 = **`co.a`** (`CO`+`A`).
+
+| 컴포넌트 | 패키지 | 타입/파일 네이밍 | 메서드·기타 네이밍 | 샘플 |
+| -------- | ------ | ---------------- | ------------------ | ---- |
+| Boot | `nhnis.mg` | `PdmgApplication` | `main` | `PdmgApplication.java` |
+| Handler | `nhnis.mg.co.a.entry.handler` | `mgcoa[식별4]Handler` | `serviceIds()`, `handle` | `mgcoa8888Handler` |
+| Aspect | `nhnis.mg.co.a.entry.aspect` | 역할 PascalCase | pointcut = 대상 FQCN | `BizPrePostAspect` |
+| Controller | `nhnis.mg.co.a.application.controller` | `mgcoa[식별4]Controller` | `@PostMapping("/서비스ID")` | `mgcoa8888Controller` |
+| Facade | `nhnis.mg.co.a.application.facade` | `mgcoa[식별4]Facade` | 메서드명 = **서비스 ID** | `mgcoa8888Facade.mgcoa8888S0` |
+| Service | `nhnis.mg.co.a.application.service` | `mgcoa[식별4]Service` | 메서드명 = **서비스 ID** | `mgcoa8888Service.mgcoa8888S0` |
+| DTO | `nhnis.mg.co.a.dto` | `mgcoa[식별4][S\|C\|U\|D…]DTOin/out/Sub` | 필드 camelCase | `mgcoa8888S0DTOin` |
+| DAO | `nhnis.mg.co.a.persistence.dao` | `mgcoa[식별4]DAO` | 메서드명 = **SQL ID** | `mgcoa8888S0_S0` |
+| Client | `nhnis.mg.co.a.client` | `*Client` | 연동 API명 | (현재 package-info만) |
+| Config | `nhnis.mg.co.a.config` | `*Config` / `*Properties` | Bean camelCase | `RdwDataSourceConfig` |
+| Support | `nhnis.mg.co.a.support` | 유틸 PascalCase | static 유틸 | (현재 package-info만) |
+| Mapper XML | `resources/rdw.mg.co.a/` | `mgcoa[식별4]-ORA.xml` | `namespace` = DAO FQCN | `mgcoa8888-ORA.xml` |
+
+식별번호 단위 통합 규칙:
+
+```text
+서비스 ID들: mgcoa8888S0, mgcoa8888D0
+  → Handler / Facade / Controller / Service / DAO 는 모두 mgcoa8888*
+  → DTO / SQL ID / URL 만 서비스 ID(구분자 포함)를 쓴다
+```
+
+### 4.4 패키지 경로 규칙
+
+```text
+nhnis.mg.[업무구분].[세부업무구분].[계층].[세부패키지]
+```
+
+| 세그먼트 | 필수 | 예시 | 설명 |
+| -------- | ---- | ---- | ---- |
+| `nhnis.mg` | 필수 | `nhnis.mg` | 애플리케이션 루트. Boot만 직접 둠 |
+| 업무구분 | 필수 | `co` | §2.2 소문자 |
+| 세부업무구분 | 필수 | `a` | §2.3 소문자 |
+| 계층 | 필수 | `entry` | `entry` / `application` / `dto` / `persistence` / `client` / `config` / `support` |
+| 세부패키지 | 선택 | `handler` | 계층 안 컴포넌트 타입 |
+
+실제 트리:
 
 ```text
 src/main/java/nhnis/mg
 ├── PdmgApplication.java
 ├── ServletInitializer.java
-├── entry/
-│   ├── aspect/              # BizPrePostAspect
-│   ├── handler/             # mgcoa*Handler (TCF ON)
-│   ├── facade/              # mgcoa*Facade (TCF ON, @Transactional)
-│   └── controller/          # mgcoa*Controller (TCF OFF 호환)
-├── application/
-│   ├── service/             # mgcoa*Service
-│   └── dto/                 # mgcoa*DTOin/out/Sub(/MsgJson)
-├── persistence/
-│   └── dao/                 # mgcoa*DAO (@RDWMapper)
-├── client/                  # 외부 연동 (현재 package-info만)
-├── config/                  # Security, MyBatis, CORS, WebMvc …
-└── support/                 # MappingUtil 등 유틸
+└── co/a/                          # 업무=CO, 세부=A
+    ├── entry/
+    │   ├── aspect/                # Aspect
+    │   └── handler/               # Handler (TCF ON)
+    ├── application/
+    │   ├── controller/            # Controller (TCF OFF)
+    │   ├── facade/                # Facade (@Transactional)
+    │   └── service/               # Service
+    ├── dto/                       # DTO
+    ├── persistence/
+    │   └── dao/                   # DAO
+    ├── client/                    # Client
+    ├── config/                    # Config / Properties
+    └── support/                   # Support
 ```
 
-| 계층 | 패키지 | 역할 | 현재 소스 예 |
-| ---- | ------ | ---- | ------------ |
-| entry | `nhnis.mg.entry.handler` | serviceId → Facade 라우팅 | `mgcoa8888Handler` |
-| entry | `nhnis.mg.entry.facade` | DTO 변환·트랜잭션·Service 호출 | `mgcoa8888Facade` |
-| entry | `nhnis.mg.entry.controller` | HTTP 진입 (TCF OFF) | `mgcoa8888Controller` |
-| entry | `nhnis.mg.entry.aspect` | 업무 선/후처리 Aspect | `BizPrePostAspect` |
-| application | `nhnis.mg.application.service` | 업무 절차 | `mgcoa8888Service` |
-| application | `nhnis.mg.application.dto` | 입출력 DTO | `mgcoa8888S0DTOin` |
-| persistence | `nhnis.mg.persistence.dao` | MyBatis DAO | `mgcoa8888DAO` |
-| client | `nhnis.mg.client` | 외부 WAS/API 호출 | `package-info.java` |
-| config | `nhnis.mg.config` | Spring 설정 | `RdwDataSourceConfig`, `SecurityConfig` |
-| support | `nhnis.mg.support` | 유틸 | `MappingUtil` |
+### 4.5 이름이 패키지에서 어떻게 유도되는가
 
-원칙:
+서비스 ID `mgcoa8888S0` 를 예로 들면:
 
-- Java 패키지에 `co.a` 같은 업무 세그먼트를 **넣지 않는다**.
-- 업무/세부업무는 **서비스 ID·클래스명·`rdw.mg.co.a` 리소스 경로**에 둔다.
-- REST 스타일(`/api/.../list`, `DtoIn`/`Dao`)은 사용하지 않는다.
-- `serviceId`는 `mgcoa8888S0` 형태를 쓴다. `MG.Xxx.yyy` 점(.) 구분 체계는 사용하지 않는다.
+```text
+mg | co | a | 8888 | S | 0
+ │    │   │    │     │   └─ 순번
+ │    │   │    │     └───── 구분자 (조회)
+ │    │   │    └─────────── 식별번호 → 클래스 접두 mgcoa8888*
+ │    │   └──────────────── 세부 → 패키지 .a. , 리소스 rdw.mg.co.a/
+ │    └──────────────────── 업무 → 패키지 .co.
+ └───────────────────────── 대구분 → nhnis.mg , rdw.mg
+```
+
+| 유도 결과 | 값 |
+| --------- | -- |
+| Java 업무 루트 | `nhnis.mg.co.a` |
+| Mapper 폴더 | `rdw.mg.co.a/` |
+| 프로그램 접두 | `mgcoa8888` |
+| Handler/Facade/Service/DAO/Controller | `mgcoa8888Handler` … |
+| DTO / URL / SQL | `mgcoa8888S0…` / `POST /mgcoa8888S0` / `mgcoa8888S0_S0` |
+
+### 4.6 의존 방향 (패키지로 강제)
+
+```text
+entry.handler ──────────────► application.facade
+application.controller ─────► application.service   (TCF OFF 호환)
+application.facade ─────────► application.service
+application.service ────────► persistence.dao , dto
+persistence.dao ────────────► (MyBatis XML rdw.mg.co.a)
+entry.aspect ───────────────► (pointcut) application.service …
+```
+
+금지 의존:
+
+- `entry.handler` → `application.service` / `persistence` 직접 호출
+- `application.service` → `entry.*` / `application.controller`
+- `dto` → `service` / `dao` 주입
+- `persistence.dao` → 업무 판단·HTTP 조립
+
+### 4.7 계층별 원칙 요약
+
+- 업무 코드는 `nhnis.mg` 바로 아래가 아니라 `nhnis.mg.[업무].[세부]` 아래에 둔다.
+- Java 패키지 업무축과 Mapper `rdw.mg.[업무].[세부]/` 를 동일하게 맞춘다.
+- Aspect pointcut·`@MapperScan` 도 동일 축 FQCN을 쓴다.
 - TCF ON 신규 거래는 **Handler + Facade** 를 추가한다. Controller는 TCF OFF 호환용이다.
+- REST 스타일(`/api/.../list`, `DtoIn`/`Dao`)·`MG.Xxx.yyy` 점 구분 서비스 ID는 쓰지 않는다.
+- `common` / `misc` / `util` 같은 모호한 패키지명은 쓰지 않는다 (`support`는 유틸 전용).
 
 ---
 
@@ -183,7 +295,7 @@ Handler는 **serviceId 라우팅만** 담당하고, 업무·트랜잭션·DTO �
 ### 5.1 파일명 / 패키지
 
 ```text
-패키지 : nhnis.mg.entry.handler
+패키지 : nhnis.mg.co.a.entry.handler
 파일명 : [대구분][업무구분][세부업무구분][식별번호4자리]Handler.java
 ```
 
@@ -240,7 +352,7 @@ public Object handle(Object dtoBody, TransactionContext context) throws Exceptio
 
 ---
 
-## 6. Facade (`entry.facade`)
+## 6. Facade (`application.facade`)
 
 Handler와 Service 사이의 **업무 진입 경계**.  
 입력 `Object`(또는 Map) → typed DTO 변환, Spring 트랜잭션, Service 호출을 담당한다.
@@ -248,7 +360,7 @@ Handler와 Service 사이의 **업무 진입 경계**.
 ### 6.1 파일명 / 패키지
 
 ```text
-패키지 : nhnis.mg.entry.facade
+패키지 : nhnis.mg.co.a.application.facade
 파일명 : [대구분][업무구분][세부업무구분][식별번호4자리]Facade.java
 ```
 
@@ -303,7 +415,7 @@ public mgcoa8888S0DTOout mgcoa8888S0(Object dtoBody) throws Exception {
 
 ---
 
-## 7. Controller (`entry.controller`)
+## 7. Controller (`application.controller`)
 
 TCF OFF(`nhnis.fw.tcf.enabled=false`) 또는 호환용 HTTP 진입점.  
 TCF ON에서는 보통 `@ConditionalOnProperty(..., havingValue = "false", matchIfMissing = true)` 로 비활성한다.  
@@ -312,7 +424,7 @@ TCF ON에서는 보통 `@ConditionalOnProperty(..., havingValue = "false", match
 ### 7.1 파일명 / 패키지
 
 ```text
-패키지 : nhnis.mg.entry.controller
+패키지 : nhnis.mg.co.a.application.controller
 파일명 : [대구분][업무구분][세부업무구분][식별번호4자리]Controller.java
 ```
 
@@ -356,7 +468,7 @@ local 프로파일에서는 `{"dto":{...}}` 만으로도 가능하다.
 ### 8.1 파일명 / 패키지
 
 ```text
-패키지 : nhnis.mg.application.service
+패키지 : nhnis.mg.co.a.application.service
 파일명 : [대구분][업무구분][세부업무구분][식별번호4자리]Service.java
 ```
 
@@ -373,7 +485,7 @@ public class mgcoa8888Service {
 ```
 
 - 메서드명 = 서비스 ID
-- DAO·DTO는 각각 `persistence.dao`, `application.dto` 를 import
+- DAO·DTO는 각각 `persistence.dao`, `dto` 를 import
 - `@Transactional`은 Service가 아니라 **Facade**에 둔다 (TCF ON)
 
 ---
@@ -383,7 +495,7 @@ public class mgcoa8888Service {
 ### 9.1 파일명 / 패키지
 
 ```text
-패키지 : nhnis.mg.persistence.dao
+패키지 : nhnis.mg.co.a.persistence.dao
 파일명 : [대구분][업무구분][세부업무구분][식별번호4자리]DAO.java
 ```
 
@@ -391,11 +503,11 @@ public class mgcoa8888Service {
 
 ### 9.2 규칙
 
-- `@RDWMapper` (`nhnis.mg.config.RDWMapper`) 사용
+- `@RDWMapper` (`nhnis.mg.co.a.config.RDWMapper`) 사용
 - **DAO 메서드명 = MyBatis SQL ID** (반드시 동일)
 - 입력: `Map<String, Object>`
 - 출력: `List<Map<String, Object>>` 또는 `int`
-- `@MapperScan(basePackages = "nhnis.mg.persistence.dao")`
+- `@MapperScan(basePackages = "nhnis.mg.co.a.persistence.dao")`
 
 ### 9.3 메서드명 / SQL ID
 
@@ -417,7 +529,7 @@ DML 구분: `S` 조회 / `C` 등록 / `U` 수정 / `D` 삭제 / `A` 혼합
 
 ---
 
-## 10. DTO (`application.dto`)
+## 10. DTO (`dto`)
 
 ### 10.1 파일명
 
@@ -428,7 +540,7 @@ DML 구분: `S` 조회 / `C` 등록 / `U` 수정 / `D` 삭제 / `A` 혼합
 [서비스ID]DTO*MsgJson.java   (필요 시)
 ```
 
-패키지: `nhnis.mg.application.dto`
+패키지: `nhnis.mg.co.a.dto`
 
 예:
 
@@ -462,15 +574,15 @@ GRID/목록 행용. 메인 out DTO가 Sub 목록을 보유한다.
 
 ## 11. entry.aspect / config / support / client
 
-### 11.1 entry.aspect (`nhnis.mg.entry.aspect`)
+### 11.1 entry.aspect (`nhnis.mg.co.a.entry.aspect`)
 
 | 클래스 | 역할 |
 | ------ | ---- |
-| `BizPrePostAspect` | Service 선/후처리 로그. pointcut: `nhnis.mg.application.service..*` |
+| `BizPrePostAspect` | Service 선/후처리 로그. pointcut: `nhnis.mg.co.a.application.service..*` |
 
 Facade `@Transactional` 안쪽에서 Service 호출 전후에 적용되도록 **application.service** 를 대상으로 한다.
 
-### 11.2 config (`nhnis.mg.config`)
+### 11.2 config (`nhnis.mg.co.a.config`)
 
 | 클래스 | 역할 |
 | ------ | ---- |
@@ -480,13 +592,12 @@ Facade `@Transactional` 안쪽에서 Service 호출 전후에 적용되도록 **
 | `SecurityConfig` | 무상태 보안 |
 | `WebMvcConfig` / `CorsProperties` | MVC·CORS |
 
-### 11.3 support (`nhnis.mg.support`)
+### 11.3 support (`nhnis.mg.co.a.support`)
 
-| 클래스 | 역할 |
-| ------ | ---- |
-| `MappingUtil` | Map ↔ 객체 매핑 유틸 |
+업무 공통 유틸용. 현재 샘플 클래스 없음 → `package-info.java`만 존재.  
+유틸 추가 시 이 패키지에 둔다.
 
-### 11.4 client (`nhnis.mg.client`)
+### 11.4 client (`nhnis.mg.co.a.client`)
 
 외부 시스템 호출용. 현재 샘플 연동 없음 → `package-info.java`만 존재.  
 연동 추가 시 이 패키지에 클라이언트를 둔다.
@@ -498,10 +609,11 @@ Facade `@Transactional` 안쪽에서 Service 호출 전후에 적용되도록 **
 ### 12.1 위치
 
 리소스 폴더는 **서비스 ID의 대구분·업무·세부업무**를 점(`.`)으로 연결한다.  
-Java DAO 패키지와 물리 폴더 경로는 **일치하지 않아도 된다**.
+Java 업무 루트(`nhnis.mg.[업무].[세부]`)와 Mapper 폴더의 업무 축을 **동일하게** 맞춘다.
 
 ```text
-src/main/resources/rdw.[대구분].[업무구분].[세부업무구분]/
+Java  : nhnis.mg.[업무].[세부].persistence.dao
+XML   : src/main/resources/rdw.[대구분].[업무].[세부]/
 ```
 
 현재 샘플:
@@ -511,6 +623,7 @@ src/main/resources/rdw.mg.co.a/
   mgcoa8888-ORA.xml
   mgcoa5530-ORA.xml
   mgcoa9999-ORA.xml
+  mgcoa9000-ORA.xml
 ```
 
 스캔 패턴: `classpath*:rdw.*/*.xml`
@@ -532,7 +645,7 @@ src/main/resources/rdw.mg.co.a/
 Java DAO FQCN과 일치:
 
 ```xml
-<mapper namespace="nhnis.mg.persistence.dao.mgcoa8888DAO">
+<mapper namespace="nhnis.mg.co.a.persistence.dao.mgcoa8888DAO">
 ```
 
 ### 12.4 parameterType / resultType
@@ -579,28 +692,29 @@ SQL 본문에 SQL ID 주석 포함 (`/* mgcoa8888S0_S0 */`).
 
 1. 대구분 / 업무구분 / 세부업무구분 / 기능(S·C·U·D·A·R) / 식별번호 결정  
 2. 서비스 ID 생성 → 예: `mgcoa8888S0`  
-3. 파일 생성 (TCF ON 기본):
+3. 업무 패키지 루트 확인 → 예: `nhnis.mg.co.a` / `rdw.mg.co.a`  
+4. 파일 생성 (TCF ON 기본):
 
 ```text
-entry/handler/mgcoa8888Handler.java
-entry/facade/mgcoa8888Facade.java
-application/service/mgcoa8888Service.java
-application/dto/mgcoa8888S0DTOin.java
-application/dto/mgcoa8888S0DTOout.java
-application/dto/mgcoa8888S0DTOSub0.java   (목록 시)
-persistence/dao/mgcoa8888DAO.java
+co/a/entry/handler/mgcoa8888Handler.java
+co/a/application/facade/mgcoa8888Facade.java
+co/a/application/service/mgcoa8888Service.java
+co/a/dto/mgcoa8888S0DTOin.java
+co/a/dto/mgcoa8888S0DTOout.java
+co/a/dto/mgcoa8888S0DTOSub0.java   (목록 시)
+co/a/persistence/dao/mgcoa8888DAO.java
 resources/rdw.mg.co.a/mgcoa8888-ORA.xml
 ```
 
-TCF OFF 호환이 필요하면 `entry/controller/mgcoa8888Controller.java` 도 추가한다.
+TCF OFF 호환이 필요하면 `co/a/application/controller/mgcoa8888Controller.java` 도 추가한다.
 
-4. 검증:
+5. 검증:
 
-- 계층 패키지 (`entry.handler` / `entry.facade` / `application` / `persistence` …)
+- 패키지 FQCN이 `nhnis.mg.[업무].[세부].[계층]...` 인가
 - Handler `serviceIds()` · Facade/Service 메서드명 = 서비스 ID
 - DAO 메서드명 = SQL ID
-- Mapper `namespace` = `nhnis.mg.persistence.dao.*DAO`
-- 리소스 경로 `rdw.mg.co.a/` (업무 세그먼트 기준)
+- Mapper `namespace` = `nhnis.mg.co.a.persistence.dao.*DAO`
+- 리소스 경로 `rdw.mg.co.a/` (Java 업무 축과 동일)
 - `@Transactional` 은 Facade, BizPrePost 는 Service
 
 ---
@@ -609,24 +723,26 @@ TCF OFF 호환이 필요하면 `entry/controller/mgcoa8888Controller.java` 도 �
 
 | 점검항목 | 기준 |
 | -------- | ---- |
-| 패키지 | `nhnis.mg` + 6계층 |
+| 패키지 | 컴포넌트 타입 → §4 매핑표의 패키지 (`entry.handler` / `application.facade` …) |
+| Boot | `PdmgApplication` / `ServletInitializer` 만 `nhnis.mg` |
 | 서비스 ID | `mg` + 업무 + 세부 + 식별번호 + 구분자 + 순번 |
+| 네이밍 유도 | 서비스 ID → 패키지 축(`co.a`) + 프로그램 접두(`mgcoa8888`) + 컴포넌트 접미사 |
 | Handler | `entry.handler`, 식별번호 단위, `TransactionHandler`, serviceId 라우팅만 |
-| Facade | `entry.facade`, 식별번호 단위, `@Transactional`, 메서드명 = 서비스 ID |
-| Controller | `entry.controller` (TCF OFF 호환), 클래스 `@RequestMapping` 금지 |
+| Facade | `application.facade`, 식별번호 단위, `@Transactional`, 메서드명 = 서비스 ID |
+| Controller | `application.controller` (TCF OFF 호환), 클래스 `@RequestMapping` 금지 |
 | Service | `application.service`, 메서드명 = 서비스 ID, TX는 Facade |
-| DTO | `application.dto`, `DataObject`, `DTOin`/`DTOout`/`DTOSub` |
+| DTO | `dto`, `DataObject`, `DTOin`/`DTOout`/`DTOSub` |
 | DAO | `persistence.dao`, `@RDWMapper`, 메서드명 = SQL ID |
-| Mapper XML | `rdw.mg.co.a/[식별]-ORA.xml`, namespace = persistence DAO |
+| Mapper XML | `rdw.mg.[업무].[세부]/[식별]-ORA.xml`, namespace = persistence DAO |
 | URL | `POST /[서비스ID]` (TCF: FW `OnlineTransactionController`) |
 | Aspect | `entry.aspect.BizPrePostAspect` → `application.service` |
-| client | 외부 연동 시에만 추가 |
+| client / support | 필요 시에만 추가 |
 | REST/`MG.Xxx.yyy` | 사용하지 않음 |
 
 ---
 
 ## 참고
 
-- 본 문서는 `src/main/java/nhnis/mg` 실제 구조에 맞춰 작성한다.
+- 본 문서는 `src/main/java/nhnis/mg` 실제 구조(`co/a` 업무 축 포함)에 맞춰 작성한다.
 - 공통 FW 클래스명 `PdmgTxLog`, 모듈명 `pdmg-fw` 는 FW 공유 식별자로 유지한다.
 - meta `.dto` 파일은 현재 사용하지 않는다.

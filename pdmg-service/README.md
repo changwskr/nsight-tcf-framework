@@ -27,6 +27,7 @@ DefaultFilter / ServicePreventionInterceptor (pdmg-fw)
 | `mgcoa8888` | `POST /mgcoa8888S0`, `POST /mgcoa8888D0` | 이미지로그 조회/삭제 |
 | `mgcoa5530` | `POST /mgcoa5530S0` | 마케팅희망고객(안내항목) 목록 |
 | `mgcoa9999` | `POST /mgcoa9999S0` | 영업팁 실적 목록 |
+| `mgcoa9000` | `POST /mgcoa9000S0/C0/U0/D0` | 거래 파라미터 조회/등록/수정/삭제 |
 
 요청 Body 예: `{"hdr_nhnis":{...},"dto":{...}}` 또는 local에서 `{"dto":{...}}`.
 
@@ -34,12 +35,13 @@ DefaultFilter / ServicePreventionInterceptor (pdmg-fw)
 
 | 패키지 / 모듈 | 설명 |
 |---|---|
-| `nhnis.mg.entry` | 진입 (`handler`, `facade`, `aspect`; TCF OFF 시 `controller`) |
-| `nhnis.mg.application` | 업무 처리 (`service`, `dto`) |
-| `nhnis.mg.persistence` | MyBatis DAO |
-| `nhnis.mg.config` | Security / MyBatis / CORS 등 |
-| `nhnis.mg.client` | 외부 연동 클라이언트 (필요 시) |
-| `nhnis.mg.support` | 유틸 (`MappingUtil`) |
+| `nhnis.mg.co.a.entry` | 진입 (`handler`, `aspect`) |
+| `nhnis.mg.co.a.application` | 업무 처리 (`controller`, `facade`, `service`) |
+| `nhnis.mg.co.a.dto` | 입출력 DTO |
+| `nhnis.mg.co.a.persistence` | MyBatis DAO |
+| `nhnis.mg.co.a.config` | Security / MyBatis / CORS 등 |
+| `nhnis.mg.co.a.client` | 외부 연동 클라이언트 (필요 시) |
+| `nhnis.mg.co.a.support` | 유틸 (필요 시) |
 | `pdmg-fw` (`nhnis.fw.*`) | `ServicePreventionInterceptor`, commons |
 
 ## 빌드
