@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 
 import nhnis.fw.commons.context.ServiceContext;
 import nhnis.fw.commons.context.ServiceContextHolder;
-import nhnis.fw.commons.log.PdmkMessagePrinter;
-import nhnis.fw.commons.log.PdmkTxLog;
+import nhnis.fw.commons.log.PdmgMessagePrinter;
+import nhnis.fw.commons.log.PdmgTxLog;
 
 /**
  * PDMG 업무 공통 선/후처리 Aspect.
@@ -33,28 +33,35 @@ public class BizPrePostAspect {
 
     private static final Logger log = LoggerFactory.getLogger(BizPrePostAspect.class);
 
-    @Pointcut("execution(* nhnis.mg.entry.controller..*(..))")
-    public void mgCoControllers() {
+    /**
+     * 업무 경계.
+     * <ul>
+     *   <li>TCF ON: Facade ({@code nhnis.mg.entry.facade})</li>
+     *   <li>TCF OFF: 거래별 Controller</li>
+     * </ul>
+     */
+    @Pointcut("execution(* nhnis.mg.entry.controller..*(..)) || execution(* nhnis.mg.entry.facade..*(..))")
+    public void mgBizBoundary() {
         // pointcut
     }
 
-    @Before("mgCoControllers()")
+    @Before("mgBizBoundary()")
     public void before(JoinPoint joinPoint) {
-        log.info(PdmkTxLog.bizPreStart());
+        log.info(PdmgTxLog.bizPreStart());
         logBizPreProgress(joinPoint);
-        log.info(PdmkTxLog.bizPreEnd());
-        log.info(PdmkTxLog.bizProcessStart());
+        log.info(PdmgTxLog.bizPreEnd());
+        log.info(PdmgTxLog.bizProcessStart());
     }
 
-    @AfterReturning(pointcut = "mgCoControllers()", returning = "result")
+    @AfterReturning(pointcut = "mgBizBoundary()", returning = "result")
     public void after(JoinPoint joinPoint, Object result) {
-        log.info(PdmkTxLog.bizProcessEnd());
-        log.info(PdmkTxLog.bizPostStart());
+        log.info(PdmgTxLog.bizProcessEnd());
+        log.info(PdmgTxLog.bizPostStart());
         if (log.isInfoEnabled()) {
-            log.info(PdmkTxLog.bizResponseMessage());
-            log.info(PdmkMessagePrinter.businessDto(result));
+            log.info(PdmgTxLog.bizResponseMessage());
+            log.info(PdmgMessagePrinter.businessDto(result));
         }
-        log.info(PdmkTxLog.bizPostEnd());
+        log.info(PdmgTxLog.bizPostEnd());
     }
 
     /** 업무 선처리 구간 진행 로그 (GUID / 서비스 / 메서드 / BRC). */
@@ -69,10 +76,10 @@ public class BizPrePostAspect {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         String method = signature.getDeclaringType().getSimpleName() + "." + signature.getName();
 
-        log.info(PdmkTxLog.bizPreProgress("GUID: " + guid));
-        log.info(PdmkTxLog.bizPreProgress("서비스: " + serviceId));
-        log.info(PdmkTxLog.bizPreProgress("호출: " + method));
-        log.info(PdmkTxLog.bizPreProgress("BRC: " + extractBrc(joinPoint.getArgs())));
+        log.info(PdmgTxLog.bizPreProgress("GUID: " + guid));
+        log.info(PdmgTxLog.bizPreProgress("서비스: " + serviceId));
+        log.info(PdmgTxLog.bizPreProgress("호출: " + method));
+        log.info(PdmgTxLog.bizPreProgress("BRC: " + extractBrc(joinPoint.getArgs())));
     }
 
     private Object extractBrc(Object[] args) {

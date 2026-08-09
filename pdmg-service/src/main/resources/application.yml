@@ -36,11 +36,11 @@ spring:
       schema-locations: classpath:db/h2/schema.sql
       data-locations: classpath:db/h2/data.sql
 
-# PDMG 공통 FW (pdmk-fw commons) — TCF 경로 비활성
+# PDMG 공통 FW — TCF 단일 Controller + 기존 Filter/시스템·업무 선후처리 유지
 nhnis:
   fw:
     tcf:
-      enabled: false
+      enabled: true
     commons:
       legacy-web:
         enabled: true

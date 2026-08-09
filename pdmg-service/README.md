@@ -1,11 +1,11 @@
 # PDMG Service (`pdmg-service`)
 
-PDMG 업무 샘플 애플리케이션입니다. **공통 FW는 [`pdmk-fw`](../pdmk-fw/README.md)에 의존**합니다.
+PDMG 업무 샘플 애플리케이션입니다. **공통 FW는 [`pdmg-fw`](../pdmg-fw/README.md)에 의존**합니다.
 
 네이밍은 [`docs/MG-NAMING_CONVENTION.md`](docs/MG-NAMING_CONVENTION.md) 를 따른다.
 
 ```text
-ServicePreventionInterceptor (pdmk-fw)
+ServicePreventionInterceptor (pdmg-fw)
   → BizPrePostAspect (nhnis.mg.entry.aspect)
     → Controller (nhnis.mg.entry.controller.*)
       → Service (nhnis.mg.application.service.*)
@@ -32,7 +32,7 @@ ServicePreventionInterceptor (pdmk-fw)
 | `nhnis.mg.config` | Security / MyBatis / CORS 등 |
 | `nhnis.mg.client` | 외부 연동 클라이언트 (필요 시) |
 | `nhnis.mg.support` | 유틸 (`MappingUtil`) |
-| `pdmk-fw` (`nhnis.fw.*`) | `ServicePreventionInterceptor`, commons |
+| `pdmg-fw` (`nhnis.fw.*`) | `ServicePreventionInterceptor`, commons |
 
 ## 빌드
 
@@ -42,4 +42,4 @@ cd pdmg-service
 .\gradlew.bat bootWar
 ```
 
-`settings.gradle`이 형제 프로젝트 `../pdmk-fw`를 `include` 합니다.
+`settings.gradle`이 형제 프로젝트 `../pdmg-fw`를 `include` 합니다.

@@ -1,4 +1,4 @@
-﻿---
+---
 name: MG-NAMING_CONVENTION
 description: 농협 상호금융 PDMG 프로젝트 소스 코드 명명 규칙. nhnis.mg 6계층 패키지, Controller/Service/DAO/DTO, MyBatis Mapper/SQL ID, 변수·주석 규칙을 정의한다.
 ---
@@ -15,12 +15,12 @@ description: 농협 상호금융 PDMG 프로젝트 소스 코드 명명 규칙. 
 - 삭제 `POST /mgcoa8888D0`  
 - 동일 식별번호 통합 Controller: `mgcoa8888Controller`
 
-공통 FW: [`pdmk-fw`](../../pdmk-fw/README.md) (legacy-web, `DefaultFilter`, `RequestBody` resolver)
+공통 FW: [`pdmg-fw`](../../pdmg-fw/README.md) (legacy-web, `DefaultFilter`, `RequestBody` resolver)
 
 호출 흐름:
 
 ```text
-ServicePreventionInterceptor (pdmk-fw)
+ServicePreventionInterceptor (pdmg-fw)
   → BizPrePostAspect (nhnis.mg.entry.aspect)
     → Controller (nhnis.mg.entry.controller)
       → Service (nhnis.mg.application.service)
@@ -473,5 +473,5 @@ resources/rdw.mg.co.a/mgcoa8888-ORA.xml
 ## 참고
 
 - 본 문서는 `src/main/java/nhnis/mg` 실제 구조에 맞춰 작성한다.
-- 공통 FW 클래스명 `PdmkTxLog`, 모듈명 `pdmk-fw` 는 FW 공유 식별자로 유지한다.
+- 공통 FW 클래스명 `PdmgTxLog`, 모듈명 `pdmg-fw` 는 FW 공유 식별자로 유지한다.
 - meta `.dto` 파일은 현재 사용하지 않는다.

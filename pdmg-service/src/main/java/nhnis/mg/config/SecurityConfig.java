@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
  * PDMG 무상태 보안 설정.
  *
  * <p>TCF {@code JwtAuthenticationFilter} / {@code TcfAuthenticationEntryPoint} 는 쓰지 않는다.
- * JWT 검증은 pdmk-fw {@code DefaultFilter} + {@code JwtProvider}(비-local) 경로를 사용한다.
+ * JWT 검증은 pdmg-fw {@code DefaultFilter} + {@code JwtProvider}(비-local) 경로를 사용한다.
  * local 프로파일에서는 샘플 거래 URL을 공개한다.
  */
 @Configuration

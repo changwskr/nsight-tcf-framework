@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import nhnis.mk.co.a.dao.mkcoa5530DAO;
 import nhnis.mk.co.a.dto.mkcoa5530S0DTOSub0;
@@ -30,6 +31,10 @@ public class mkcoa5530Service {
     /**
      * 마케팅희망고객 목록 조회 (페이징).
      */
+    @Transactional(
+            transactionManager = "rdwTransactionManager",
+            readOnly = true
+    )
     public mkcoa5530S0DTOout mkcoa5530S0(mkcoa5530S0DTOin input) throws Exception {
         log.info("▶▶▶▶▶▶▶▶ mkcoa5530S0 Service Start!");
 

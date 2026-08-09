@@ -1,6 +1,7 @@
 package nhnis.mg.entry.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,10 +14,14 @@ import nhnis.mg.application.service.mgcoa5530Service;
 /**
  * 마케팅희망고객 조회 Controller.
  *
+ * <p>{@code nhnis.fw.tcf.enabled=true} 이면 단일 {@code OnlineTransactionController} 경로를 쓰고
+ * 이 Controller 는 등록하지 않는다.
+ *
  * @since 2026.08.07
  */
 @Slf4j
 @RestController
+@ConditionalOnProperty(name = "nhnis.fw.tcf.enabled", havingValue = "false", matchIfMissing = true)
 public class mgcoa5530Controller {
 
     @Autowired

@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import nhnis.mk.co.a.dao.mkcoa8888DAO;
 import nhnis.mk.co.a.dto.mkcoa8888D0DTOin;
@@ -39,6 +40,10 @@ public class mkcoa8888Service {
      * 이미지로그 목록 조회 (페이징).
      * withinSeconds 가 있으면 현재시각 기준 N초 이내 REQUEST_TIME 만 조회한다.
      */
+    @Transactional(
+            transactionManager = "rdwTransactionManager",
+            readOnly = true
+    )
     public mkcoa8888S0DTOout mkcoa8888S0(mkcoa8888S0DTOin input) throws Exception {
         log.info("▶▶▶▶▶▶▶▶ mkcoa8888S0 Service Start!");
 
@@ -104,6 +109,10 @@ public class mkcoa8888Service {
     /**
      * 이미지로그 삭제.
      */
+    @Transactional(
+            transactionManager = "rdwTransactionManager",
+            rollbackFor = Exception.class
+    )
     public mkcoa8888D0DTOout mkcoa8888D0(mkcoa8888D0DTOin input) throws Exception {
         log.info("▶▶▶▶▶▶▶▶ mkcoa8888D0 Service Start!");
 
