@@ -1,6 +1,11 @@
 package nhnis.fw.tcf.timeout;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.util.StringUtils;
 
 import jakarta.annotation.PostConstruct;
 
@@ -12,6 +17,7 @@ import jakarta.annotation.PostConstruct;
  * nhnis.fw.timeout.milliseconds=5000
  * nhnis.fw.timeout.pool-size=20
  * nhnis.fw.timeout.queue-capacity=100
+ * nhnis.fw.timeout.overrides.mgcoa5530S0=10000
  * </pre>
  */
 @ConfigurationProperties(prefix = "nhnis.fw.timeout")
@@ -25,6 +31,9 @@ public class OnlineTimeoutProperties {
 
     private int queueCapacity = 100;
 
+    /** serviceId → timeout(ms). 미등록 시 {@link #milliseconds} 사용. */
+    private Map<String, Long> overrides = new LinkedHashMap<>();
+
     @PostConstruct
     void validate() {
         if (milliseconds < 1) {
@@ -36,6 +45,31 @@ public class OnlineTimeoutProperties {
         if (queueCapacity < 0) {
             throw new IllegalStateException("nhnis.fw.timeout.queue-capacity must be >= 0");
         }
+        if (overrides != null) {
+            for (Map.Entry<String, Long> entry : overrides.entrySet()) {
+                if (!StringUtils.hasText(entry.getKey())) {
+                    throw new IllegalStateException("nhnis.fw.timeout.overrides key must not be blank");
+                }
+                Long value = entry.getValue();
+                if (value == null || value < 1L) {
+                    throw new IllegalStateException(
+                            "nhnis.fw.timeout.overrides." + entry.getKey() + " must be >= 1");
+                }
+            }
+        }
+    }
+
+    /**
+     * serviceId 별 override가 있으면 그 값, 없으면 기본 {@link #milliseconds}.
+     */
+    public long resolveMilliseconds(String serviceId) {
+        if (StringUtils.hasText(serviceId) && overrides != null) {
+            Long override = overrides.get(serviceId.trim());
+            if (override != null && override >= 1L) {
+                return override;
+            }
+        }
+        return milliseconds;
     }
 
     public boolean isEnabled() {
@@ -68,5 +102,13 @@ public class OnlineTimeoutProperties {
 
     public void setQueueCapacity(int queueCapacity) {
         this.queueCapacity = queueCapacity;
+    }
+
+    public Map<String, Long> getOverrides() {
+        return overrides == null ? Collections.emptyMap() : overrides;
+    }
+
+    public void setOverrides(Map<String, Long> overrides) {
+        this.overrides = overrides == null ? new LinkedHashMap<>() : new LinkedHashMap<>(overrides);
     }
 }

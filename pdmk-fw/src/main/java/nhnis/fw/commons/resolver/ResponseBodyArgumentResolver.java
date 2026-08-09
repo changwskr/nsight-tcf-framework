@@ -60,6 +60,8 @@ public class ResponseBodyArgumentResolver implements ResponseBodyAdvice<Object> 
     private static final String PREFIX = "nhnis.exception.";
     private static final String HEADER = "hdr_nhnis";
     private static final String DTO = "dto";
+    /** 오류 전문 키. 업무 응답 {@code dto} 와 분리한다. */
+    private static final String RESULT = "result";
     private static final String DTO_LOGICAL_NAME = "dtoLogicalName";
     private static final String FIELD_PROPERTY_MAP = "fieldPropertyMap";
     private static final String SYS_COMM = "sys_comm";
@@ -111,14 +113,14 @@ public class ResponseBodyArgumentResolver implements ResponseBodyAdvice<Object> 
                 responseBody.set(HEADER, headerNode);
             }
 
-            /* Response Body */
+            /* Response Body: 성공=dto(업무), 실패=result(오류) */
             if (body instanceof NH_NIS_ERR_DTO) {
                 NH_NIS_ERR_DTOMsgJson json = new NH_NIS_ERR_DTOMsgJson();
                 try {
                     byte[] errorJson = json.marshal((NH_NIS_ERR_DTO) body);
-                    responseBody.set(DTO, objectMapper.readTree(errorJson));
+                    responseBody.set(RESULT, objectMapper.readTree(errorJson));
                 } catch (MarshalException | IOException e) {
-                    responseBody.set(DTO, objectMapper.valueToTree(body));
+                    responseBody.set(RESULT, objectMapper.valueToTree(body));
                 }
             } else {
                 JsonNode bodyNode = objectMapper.valueToTree(body);

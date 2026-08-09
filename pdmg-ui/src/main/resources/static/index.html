@@ -28,6 +28,7 @@
           <a class="pdmg-menu-link" href="#view=mgcoa5530" data-shell-view="mgcoa5530" data-shell-src="/mgcoa5530/index.html">mgcoa5530 · 마케팅희망고객</a>
           <a class="pdmg-menu-link" href="#view=mgcoa8888" data-shell-view="mgcoa8888" data-shell-src="/mgcoa8888/index.html">mgcoa8888 · 이미지로그</a>
           <a class="pdmg-menu-link" href="#view=mgcoa9000" data-shell-view="mgcoa9000" data-shell-src="/mgcoa9000/index.html">mgcoa9000 · 거래 파라미터</a>
+          <a class="pdmg-menu-link" href="#view=mgcoa9001" data-shell-view="mgcoa9001" data-shell-src="/mgcoa9001/index.html">mgcoa9001 · 거래통제</a>
           <a class="pdmg-menu-link" href="#view=mgcoa9999" data-shell-view="mgcoa9999" data-shell-src="/mgcoa9999/index.html">mgcoa9999 · 영업팁 실적</a>
         </div>
 
@@ -91,6 +92,13 @@
               </div>
             </article>
             <article class="hub-card hub-card--featured">
+              <h2>mgcoa9001 <span class="group-tag">거래통제</span></h2>
+              <p>TB_MG_TX_CONTROL CRUD. serviceId별 허용·사용·가능시간·시스템/지점 통제 기준정보.</p>
+              <div class="links links--stack">
+                <a href="#view=mgcoa9001" data-shell-view="mgcoa9001" data-shell-src="/mgcoa9001/index.html">전문 테스트 (S0/C0/U0/D0)</a>
+              </div>
+            </article>
+            <article class="hub-card hub-card--featured">
               <h2>mgcoa8888 <span class="group-tag">이미지로그</span></h2>
               <p>TB_FW_IMAGE_LOG 조회/삭제. withinSeconds·minElapsedSeconds·예외 조건 지원.</p>
               <div class="links links--stack">
@@ -121,13 +129,14 @@
     </div>
   </div>
 
+  <script src="/_shared/error-codes.js"></script>
   <script src="/_shared/error-popup.js"></script>
   <script>
     function uiUrl(path) {
       return typeof window.nsightUiUrl === 'function' ? window.nsightUiUrl(path) : path;
     }
 
-    const STATIC_PROGRAM_IDS = new Set(['mgcoa9000', 'mgcoa8888', 'mgcoa5530', 'mgcoa9999']);
+    const STATIC_PROGRAM_IDS = new Set(['mgcoa9000', 'mgcoa9001', 'mgcoa8888', 'mgcoa5530', 'mgcoa9999']);
     const homeTopbar = document.getElementById('homeTopbar');
     const dashboardPanel = document.getElementById('dashboardPanel');
     const contentFrame = document.getElementById('contentFrame');
@@ -136,6 +145,7 @@
       mgcoa5530: '/mgcoa5530/index.html',
       mgcoa8888: '/mgcoa8888/index.html',
       mgcoa9000: '/mgcoa9000/index.html',
+      mgcoa9001: '/mgcoa9001/index.html',
       mgcoa9999: '/mgcoa9999/index.html',
       imagelog: '/imagelog/index.html',
       txparam: '/txparam/index.html'

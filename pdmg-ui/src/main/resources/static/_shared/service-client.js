@@ -45,11 +45,13 @@
       httpStatus = response.status;
       responseBody = await response.text();
     } catch (error) {
-      const message = error && error.name === 'AbortError'
+      const aborted = !!(error && error.name === 'AbortError');
+      const message = aborted
           ? `요청 시간 초과 (${ms} ms)`
           : (error && error.message) || String(error);
-      httpStatus = error && error.name === 'AbortError' ? 504 : 502;
+      httpStatus = aborted ? 504 : 502;
       responseBody = JSON.stringify({
+        stdErrCode: aborted ? 'UI_TIMEOUT' : 'UI_NETWORK',
         error: message,
         targetUrl,
         hint: 'pdmg-service가 기동 중인지, CORS·대상 URL이 맞는지 확인하세요.'

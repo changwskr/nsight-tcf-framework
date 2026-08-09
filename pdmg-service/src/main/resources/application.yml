@@ -42,16 +42,21 @@ spring:
       schema-locations: classpath:db/h2/schema.sql
       data-locations: classpath:db/h2/data.sql
 
-# PDMG 공통 FW — TCF 단일 Controller + 기존 Filter/시스템·업무 선후처리 유지
+# PDMG 공통 FW — Filter/시스템 선후처리 유지
+# tcf.enabled=true  → OnlineTransactionController (Handler → Facade → Service)
+# tcf.enabled=false → 업무 application.controller.* 활성 (Controller → Service)
 nhnis:
   fw:
     tcf:
       enabled: true
-    # 온라인 거래 공통 타임아웃 (TcfFacade → OnlineTimeoutExecutor)
+    # 온라인 거래 공통 타임아웃 (TCF ON 시 TcfFacade → OnlineTimeoutExecutor)
     # enabled=false 이면 기존 동기 경로(SyncOnlineTimeoutExecutor)
     timeout:
       enabled: true
       milliseconds: 5000
+      # serviceId별 제한시간(ms). 미등록 거래는 milliseconds 사용
+      overrides:
+        mgcoa5530S0: 10000
       pool-size: 20
       queue-capacity: 100
     commons:

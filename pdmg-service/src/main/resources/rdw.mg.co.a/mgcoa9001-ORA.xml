@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nhnis.mg.co.a.persistence.dao.mgcoa9001DAO">
+
+    <sql id="mgcoa9001Where">
+        WHERE 1 = 1
+        <if test="keyword != null and keyword != ''">
+           AND (
+                UPPER(T1.SERVICE_ID) LIKE '%' || UPPER(#{keyword}) || '%'
+             OR UPPER(NVL(T1.ALLOW_SYS_IDS, '')) LIKE '%' || UPPER(#{keyword}) || '%'
+             OR UPPER(NVL(T1.ALLOW_BRCS, '')) LIKE '%' || UPPER(#{keyword}) || '%'
+           )
+        </if>
+        <if test="serviceId != null and serviceId != ''">
+           AND T1.SERVICE_ID = #{serviceId}
+        </if>
+        <if test="useYn != null and useYn != ''">
+           AND T1.USE_YN = #{useYn}
+        </if>
+        <if test="allowYn != null and allowYn != ''">
+           AND T1.ALLOW_YN = #{allowYn}
+        </if>
+    </sql>
+
+    <select id="mgcoa9001S0_S0" resultType="java.util.HashMap"
+            parameterType="java.util.HashMap">
+        SELECT * FROM (
+          SELECT a.*, ROWNUM rnum
+            FROM (
+               SELECT /* mgcoa9001S0_S0 */
+                      T1.SERVICE_ID      AS SERVICE_ID
+                    , T1.ALLOW_YN        AS ALLOW_YN
+                    , T1.USE_YN          AS USE_YN
+                    , T1.ALLOW_START_TM  AS ALLOW_START_TM
+                    , T1.ALLOW_END_TM    AS ALLOW_END_TM
+                    , T1.ALLOW_SYS_IDS   AS ALLOW_SYS_IDS
+                    , T1.ALLOW_BRCS      AS ALLOW_BRCS
+                    , T1.REG_USER_ID     AS REG_USER_ID
+                    , T1.REG_DTM         AS REG_DTM
+                    , T1.CHG_USER_ID     AS CHG_USER_ID
+                    , T1.CHG_DTM         AS CHG_DTM
+                 FROM TB_MG_TX_CONTROL T1
+               <include refid="mgcoa9001Where"/>
+                ORDER BY T1.SERVICE_ID ASC
+            ) a
+           WHERE ROWNUM &lt;= #{offset} + #{pageSize}
+        )
+        WHERE rnum > #{offset}
+    </select>
+
+    <select id="mgcoa9001S0_S0_count" resultType="int"
+            parameterType="java.util.HashMap">
+        SELECT /* mgcoa9001S0_S0_count */ COUNT(*)
+          FROM TB_MG_TX_CONTROL T1
+        <include refid="mgcoa9001Where"/>
+    </select>
+
+    <select id="mgcoa9001S0_S0_exists" resultType="int"
+            parameterType="java.util.HashMap">
+        SELECT /* mgcoa9001S0_S0_exists */ COUNT(*)
+          FROM TB_MG_TX_CONTROL T1
+         WHERE T1.SERVICE_ID = #{serviceId}
+    </select>
+
+    <insert id="mgcoa9001C0_C0" parameterType="java.util.HashMap">
+        INSERT /* mgcoa9001C0_C0 */ INTO TB_MG_TX_CONTROL (
+            SERVICE_ID, ALLOW_YN, USE_YN, ALLOW_START_TM, ALLOW_END_TM,
+            ALLOW_SYS_IDS, ALLOW_BRCS, REG_USER_ID, REG_DTM
+        ) VALUES (
+            #{serviceId}, #{allowYn}, #{useYn}, #{allowStartTm}, #{allowEndTm},
+            #{allowSysIds}, #{allowBrcs}, #{regUserId}, #{regDtm}
+        )
+    </insert>
+
+    <update id="mgcoa9001U0_U0" parameterType="java.util.HashMap">
+        UPDATE /* mgcoa9001U0_U0 */ TB_MG_TX_CONTROL
+           SET ALLOW_YN       = #{allowYn}
+             , USE_YN         = #{useYn}
+             , ALLOW_START_TM = #{allowStartTm}
+             , ALLOW_END_TM   = #{allowEndTm}
+             , ALLOW_SYS_IDS  = #{allowSysIds}
+             , ALLOW_BRCS     = #{allowBrcs}
+             , CHG_USER_ID    = #{chgUserId}
+             , CHG_DTM        = #{chgDtm}
+         WHERE SERVICE_ID = #{serviceId}
+    </update>
+
+    <delete id="mgcoa9001D0_D0" parameterType="java.util.HashMap">
+        DELETE /* mgcoa9001D0_D0 */ FROM TB_MG_TX_CONTROL
+         WHERE SERVICE_ID IN
+        <foreach collection="serviceIdList" item="serviceId" open="(" separator="," close=")">
+            #{serviceId}
+        </foreach>
+    </delete>
+
+</mapper>

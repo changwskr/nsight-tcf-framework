@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import nhnis.mg.co.a.dto.mgcoa9000C0DTOin;
 import nhnis.mg.co.a.dto.mgcoa9000C0DTOout;
@@ -34,6 +35,7 @@ public class mgcoa9000Service {
     @Autowired
     private mgcoa9000DAO mgcoa9000DAO;
 
+    @Transactional(transactionManager = "rdwTransactionManager", readOnly = true)
     public mgcoa9000S0DTOout mgcoa9000S0(mgcoa9000S0DTOin input) throws Exception {
         log.info("▶▶▶▶▶▶▶▶ mgcoa9000S0 Service Start!");
 
@@ -87,6 +89,7 @@ public class mgcoa9000Service {
         return output;
     }
 
+    @Transactional(transactionManager = "rdwTransactionManager", rollbackFor = Exception.class)
     public mgcoa9000C0DTOout mgcoa9000C0(mgcoa9000C0DTOin input) throws Exception {
         log.info("▶▶▶▶▶▶▶▶ mgcoa9000C0 Service Start!");
         mgcoa9000C0DTOout output = new mgcoa9000C0DTOout();
@@ -126,6 +129,7 @@ public class mgcoa9000Service {
         return output;
     }
 
+    @Transactional(transactionManager = "rdwTransactionManager", rollbackFor = Exception.class)
     public mgcoa9000U0DTOout mgcoa9000U0(mgcoa9000U0DTOin input) throws Exception {
         log.info("▶▶▶▶▶▶▶▶ mgcoa9000U0 Service Start!");
         mgcoa9000U0DTOout output = new mgcoa9000U0DTOout();
@@ -165,6 +169,7 @@ public class mgcoa9000Service {
         return output;
     }
 
+    @Transactional(transactionManager = "rdwTransactionManager", rollbackFor = Exception.class)
     public mgcoa9000D0DTOout mgcoa9000D0(mgcoa9000D0DTOin input) throws Exception {
         log.info("▶▶▶▶▶▶▶▶ mgcoa9000D0 Service Start!");
         mgcoa9000D0DTOout output = new mgcoa9000D0DTOout();

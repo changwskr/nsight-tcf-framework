@@ -17,14 +17,21 @@ import nhnis.fw.tcf.timeout.OnlineTimeoutException;
 /**
  * TCF 단일 Controller 경로 예외 처리.
  *
- * <p>응답 포맷은 PDMG commons({@code NH_NIS_ERR_DTO})를 유지한다.
- * STF/ETF 표준 전문은 사용하지 않는다.
+ * <p>오류 본문은 commons {@code NH_NIS_ERR_DTO} 이며,
+ * {@code ResponseBodyArgumentResolver}가 응답 전문의 {@code result} 키로 조립한다.
+ * 업무 데이터용 {@code dto}와 분리한다. STF/ETF 표준 전문은 사용하지 않는다.
  */
 @RestControllerAdvice
 @ConditionalOnProperty(name = "nhnis.fw.tcf.enabled", havingValue = "true")
 public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    private final ExceptionCodeProperties exceptionCodes;
+
+    public GlobalExceptionHandler(ExceptionCodeProperties exceptionCodes) {
+        this.exceptionCodes = exceptionCodes;
+    }
 
     @ExceptionHandler(ServiceHandlerNotFound.class)
     public ResponseEntity<NH_NIS_ERR_DTO> handleServiceHandlerNotFound(ServiceHandlerNotFound e) {
@@ -35,7 +42,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BizException.class)
     public ResponseEntity<NH_NIS_ERR_DTO> handleBizException(BizException e) {
         log.warn("[GlobalExceptionHandler] biz exception: code={}", e.getCode());
-        return error(e.getCode(), e.getMessage(), TYPE.BIZ, HttpStatus.INTERNAL_SERVER_ERROR, null);
+        String message = exceptionCodes.message(e.getCode(), e.getArgs());
+        return error(e.getCode(), message, TYPE.BIZ, HttpStatus.INTERNAL_SERVER_ERROR, null);
     }
 
     @ExceptionHandler(OnlineTimeoutException.class)

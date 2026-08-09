@@ -1,7 +1,7 @@
 ﻿/**
  * pdmg-ui 공통 에러 팝업.
- * 서비스 오류 DTO · 중계 오류 · HTTP 오류를 모달로 보여주며,
- * stackTrace 및 응답 전문(전체 로그)을 그대로 표시한다.
+ * 서비스 오류는 응답 전문의 result 를 사용한다 (dto 는 업무 전용).
+ * 코드별 안내 메시지 + 요약/힌트 중심 표시, 기술 로그는 접어서 제공.
  */
 (function (global) {
   const MODAL_ID = 'pdmgErrorModal';
@@ -28,20 +28,29 @@
     modal.innerHTML = `
       <div class="modal-backdrop" data-close="true"></div>
       <div class="modal-card error-modal-card" role="alertdialog" aria-modal="true" aria-labelledby="pdmgErrorTitle">
-        <div class="panel-head">
-          <h2 id="pdmgErrorTitle">오류</h2>
-          <button class="btn-secondary" type="button" data-close="true">닫기</button>
+        <div class="error-modal-head">
+          <div class="error-modal-head__main">
+            <span class="error-severity" id="pdmgErrorSeverity">오류</span>
+            <h2 id="pdmgErrorTitle">오류</h2>
+            <p class="error-code-line" id="pdmgErrorCodeLine" hidden></p>
+          </div>
+          <button class="btn-secondary" type="button" data-close="true" aria-label="닫기">닫기</button>
         </div>
         <div class="modal-body">
-          <p class="error-message" id="pdmgErrorMessage"></p>
-          <dl class="detail-grid" id="pdmgErrorDetails" hidden></dl>
-          <div class="error-log-block" id="pdmgErrorLogBlock" hidden>
-            <div class="error-log-head">
-              <span id="pdmgErrorLogLabel">전체 로그</span>
-              <button class="btn-secondary btn-tiny" type="button" id="pdmgErrorLogCopy">복사</button>
+          <p class="error-summary" id="pdmgErrorMessage"></p>
+          <p class="error-hint" id="pdmgErrorHint" hidden></p>
+          <dl class="error-detail-grid" id="pdmgErrorDetails" hidden></dl>
+          <details class="error-tech" id="pdmgErrorTech" hidden>
+            <summary>기술 정보 / 전체 로그</summary>
+            <div class="error-tech-body">
+              <p class="error-server-msg" id="pdmgErrorServerMsg" hidden></p>
+              <div class="error-log-head">
+                <span id="pdmgErrorLogLabel">전체 로그</span>
+                <button class="btn-secondary btn-tiny" type="button" id="pdmgErrorLogCopy">복사</button>
+              </div>
+              <pre class="error-log mono" id="pdmgErrorLog"></pre>
             </div>
-            <pre class="error-log mono" id="pdmgErrorLog"></pre>
-          </div>
+          </details>
         </div>
         <div class="modal-actions">
           <button class="btn-primary" type="button" data-close="true">확인</button>
@@ -111,17 +120,51 @@
     }
   }
 
-  /**
-   * 팝업에 표시할 전체 로그 텍스트를 만든다.
-   * 메시지 · 상세 · stackTrace · 원본 응답을 빠짐없이 이어 붙인다.
-   */
+  /** addMsgContents 의 key=value,key=value 형태를 상세 행으로 변환 */
+  function parseKvDetails(raw) {
+    if (raw == null || String(raw).trim() === '') {
+      return [];
+    }
+    const text = String(raw).trim();
+    if (!text.includes('=')) {
+      return [['추가정보', text]];
+    }
+    const labelMap = {
+      serviceId: '서비스 ID',
+      guid: 'GUID',
+      timeoutMs: '제한시간(ms)',
+      elapsedMs: '경과(ms)',
+      active: '활성 스레드',
+      poolSize: '풀 크기',
+      queueSize: '대기 큐'
+    };
+    return text.split(',').map((part) => {
+      const idx = part.indexOf('=');
+      if (idx < 0) {
+        return null;
+      }
+      const key = part.slice(0, idx).trim();
+      const value = part.slice(idx + 1).trim();
+      if (!key) {
+        return null;
+      }
+      return [labelMap[key] || key, value];
+    }).filter(Boolean);
+  }
+
   function buildFullLog(opts) {
     const lines = [];
     const title = opts.title || '오류';
     const message = opts.message || '';
     lines.push(`[${title}]`);
+    if (opts.code) {
+      lines.push(`code: ${opts.code}`);
+    }
     if (message) {
       lines.push(message);
+    }
+    if (opts.hint) {
+      lines.push(`hint: ${opts.hint}`);
     }
 
     const details = (opts.details || []).filter(([, value]) => value != null && String(value).trim() !== '');
@@ -149,10 +192,41 @@
     return lines.join('\n').trim();
   }
 
+  function severityLabel(severity) {
+    if (severity === 'warning') {
+      return '주의';
+    }
+    if (severity === 'info') {
+      return '안내';
+    }
+    return '오류';
+  }
+
+  function resolveFromOptions(opts) {
+    const codes = global.PdmgErrorCodes;
+    if (codes && typeof codes.resolveDisplay === 'function') {
+      return codes.resolveDisplay(opts.code, opts.httpStatus, opts.serverMessage || opts.message);
+    }
+    return {
+      code: opts.code || null,
+      title: opts.title || '오류',
+      summary: opts.message || '알 수 없는 오류가 발생했습니다.',
+      catalogSummary: opts.message || '',
+      hint: opts.hint || '',
+      severity: opts.severity || 'error',
+      serverMessage: opts.serverMessage || opts.message || ''
+    };
+  }
+
   /**
    * @param {{
    *   title?: string,
    *   message?: string,
+   *   code?: string,
+   *   httpStatus?: number|null,
+   *   hint?: string,
+   *   severity?: string,
+   *   serverMessage?: string,
    *   details?: Array<[string, string|number|null|undefined]>,
    *   stackTrace?: string[]|string|null,
    *   rawLog?: string|object|null,
@@ -162,15 +236,47 @@
   function show(options) {
     const opts = options || {};
     const modal = ensureModal();
-    const titleEl = modal.querySelector('#pdmgErrorTitle');
-    const messageEl = modal.querySelector('#pdmgErrorMessage');
-    const detailsEl = modal.querySelector('#pdmgErrorDetails');
-    const logBlock = modal.querySelector('#pdmgErrorLogBlock');
-    const logEl = modal.querySelector('#pdmgErrorLog');
-    const logLabel = modal.querySelector('#pdmgErrorLogLabel');
+    const resolved = resolveFromOptions(opts);
 
-    titleEl.textContent = opts.title || '오류';
-    messageEl.textContent = opts.message || '알 수 없는 오류가 발생했습니다.';
+    const severityEl = modal.querySelector('#pdmgErrorSeverity');
+    const titleEl = modal.querySelector('#pdmgErrorTitle');
+    const codeLine = modal.querySelector('#pdmgErrorCodeLine');
+    const messageEl = modal.querySelector('#pdmgErrorMessage');
+    const hintEl = modal.querySelector('#pdmgErrorHint');
+    const detailsEl = modal.querySelector('#pdmgErrorDetails');
+    const techEl = modal.querySelector('#pdmgErrorTech');
+    const serverMsgEl = modal.querySelector('#pdmgErrorServerMsg');
+    const logLabel = modal.querySelector('#pdmgErrorLogLabel');
+    const logEl = modal.querySelector('#pdmgErrorLog');
+
+    const severity = opts.severity || resolved.severity || 'error';
+    modal.dataset.severity = severity;
+    severityEl.textContent = severityLabel(severity);
+    titleEl.textContent = opts.title || resolved.title || '오류';
+
+    const code = opts.code || resolved.code;
+    if (code) {
+      codeLine.hidden = false;
+      codeLine.innerHTML = `오류코드 <code>${escapeHtml(code)}</code>`
+          + (opts.httpStatus != null ? ` · HTTP <code>${escapeHtml(opts.httpStatus)}</code>` : '');
+    } else if (opts.httpStatus != null) {
+      codeLine.hidden = false;
+      codeLine.innerHTML = `HTTP <code>${escapeHtml(opts.httpStatus)}</code>`;
+    } else {
+      codeLine.hidden = true;
+      codeLine.textContent = '';
+    }
+
+    messageEl.textContent = opts.message || resolved.summary || '알 수 없는 오류가 발생했습니다.';
+
+    const hint = opts.hint != null ? opts.hint : resolved.hint;
+    if (hint && String(hint).trim()) {
+      hintEl.hidden = false;
+      hintEl.textContent = hint;
+    } else {
+      hintEl.hidden = true;
+      hintEl.textContent = '';
+    }
 
     const details = (opts.details || []).filter(([, value]) => value != null && String(value).trim() !== '');
     if (!details.length) {
@@ -179,20 +285,43 @@
     } else {
       detailsEl.hidden = false;
       detailsEl.innerHTML = details.map(([label, value]) => `
-        <div>
+        <div class="error-detail-item">
           <dt>${escapeHtml(label)}</dt>
           <dd class="mono wrap">${escapeHtml(value)}</dd>
         </div>
       `).join('');
     }
 
-    const fullLog = buildFullLog(opts);
-    if (fullLog) {
-      logBlock.hidden = false;
+    const fullLog = buildFullLog({
+      title: titleEl.textContent,
+      code,
+      message: messageEl.textContent,
+      hint: hintEl.hidden ? '' : hintEl.textContent,
+      details,
+      stackTrace: opts.stackTrace,
+      rawLog: opts.rawLog
+    });
+
+    const serverMessage = opts.serverMessage || resolved.serverMessage || '';
+    const showServerMsg = serverMessage
+        && serverMessage !== messageEl.textContent
+        && !/\{[0-9]+\}/.test(serverMessage);
+
+    if (fullLog || showServerMsg) {
+      techEl.hidden = false;
+      techEl.open = false;
+      if (showServerMsg) {
+        serverMsgEl.hidden = false;
+        serverMsgEl.textContent = '서버 메시지: ' + serverMessage;
+      } else {
+        serverMsgEl.hidden = true;
+        serverMsgEl.textContent = '';
+      }
       logLabel.textContent = opts.logLabel || '전체 로그';
       logEl.textContent = fullLog;
     } else {
-      logBlock.hidden = true;
+      techEl.hidden = true;
+      techEl.open = false;
       logEl.textContent = '';
     }
 
@@ -201,24 +330,31 @@
 
   function showSimple(message, title) {
     const text = String(message == null ? '' : message);
+    const looksTimeout = /시간 초과|timeout/i.test(text);
+    const looksNetwork = /Failed to fetch|NetworkError|CORS|연결/i.test(text);
     show({
-      title: title || '오류',
+      title: title || undefined,
       message: text,
+      code: looksTimeout ? 'UI_TIMEOUT' : (looksNetwork ? 'UI_NETWORK' : null),
+      serverMessage: text,
       rawLog: text
     });
   }
 
-  /** 응답 JSON에서 업무/시스템 오류 본문을 꺼낸다. */
+  function isErrorObject(node) {
+    return !!(node && typeof node === 'object'
+        && (node.stdErrMsgCntn || node.stdErrCode || node.errType || node.stackTrace));
+  }
+
+  /** 응답 JSON에서 오류 본문(result)을 꺼낸다. dto 는 업무용이므로 사용하지 않는다. */
   function errorPayload(parsed) {
     if (!parsed || typeof parsed !== 'object') {
       return null;
     }
-    if (parsed.dto && typeof parsed.dto === 'object'
-        && (parsed.dto.stdErrMsgCntn || parsed.dto.stdErrCode || parsed.dto.errType
-            || parsed.dto.stackTrace)) {
-      return parsed.dto;
+    if (isErrorObject(parsed.result)) {
+      return parsed.result;
     }
-    if (parsed.stdErrMsgCntn || parsed.stdErrCode || parsed.errType || parsed.stackTrace) {
+    if (isErrorObject(parsed)) {
       return parsed;
     }
     return null;
@@ -226,15 +362,12 @@
 
   /**
    * 중계/서비스 응답을 해석해 오류면 팝업을 띄운다.
-   * @param {object|null} parsed 파싱된 응답
-   * @param {number|null} httpStatus HTTP 상태
-   * @param {string} [fallbackMessage]
-   * @param {string|object|null} [rawBody] 파싱 실패 시에도 보여줄 원문
    * @returns {boolean} 오류 팝업을 띄웠으면 true
    */
   function showFromResponse(parsed, httpStatus, fallbackMessage, rawBody) {
     const err = errorPayload(parsed);
     const relayError = parsed && (parsed.error || parsed.message);
+    const relayCode = parsed && parsed.stdErrCode;
     const failed = (httpStatus != null && (httpStatus < 200 || httpStatus >= 300))
         || !!err
         || !!relayError;
@@ -246,23 +379,32 @@
     const fullRaw = parsed != null ? parsed : (rawBody != null ? rawBody : null);
 
     if (err) {
-      const message = err.stdErrMsgCntn
+      const serverMessage = err.stdErrMsgCntn
           || err.addMsgContents
           || err.message
           || fallbackMessage
-          || '서비스 오류가 발생했습니다.';
+          || '';
+      const code = err.stdErrCode || relayCode || null;
+      const kvDetails = parseKvDetails(err.addMsgContents);
+      const display = global.PdmgErrorCodes
+          ? global.PdmgErrorCodes.resolveDisplay(code, httpStatus, serverMessage)
+          : null;
+
       show({
-        title: err.stdErrCode ? `오류 (${err.stdErrCode})` : (err.errType ? `오류 (${err.errType})` : '서비스 오류'),
-        message,
+        title: display ? display.title : undefined,
+        message: display ? display.summary : (serverMessage || '서비스 오류가 발생했습니다.'),
+        code,
+        httpStatus,
+        hint: display ? display.hint : '',
+        severity: display ? display.severity : 'error',
+        serverMessage,
         details: [
-          ['오류코드', err.stdErrCode],
           ['오류유형', err.errType],
-          ['추가메시지', err.addMsgContents],
+          ...kvDetails,
           ['클래스', err.errClassName],
           ['메서드', err.errMethodName],
           ['파일', err.errFileName],
-          ['라인', err.errLineNo],
-          ['HTTP', httpStatus]
+          ['라인', err.errLineNo]
         ],
         stackTrace: err.stackTrace,
         rawLog: fullRaw,
@@ -271,17 +413,35 @@
       return true;
     }
 
-    const message = relayError
+    const serverMessage = relayError
         || fallbackMessage
         || (httpStatus != null ? `HTTP ${httpStatus} 응답` : '요청 처리 중 오류가 발생했습니다.');
+    const code = relayCode
+        || (/시간 초과|timeout/i.test(String(serverMessage)) ? 'UI_TIMEOUT'
+            : (/Failed to fetch|NetworkError|CORS/i.test(String(serverMessage)) ? 'UI_NETWORK' : null));
+    const display = global.PdmgErrorCodes
+        ? global.PdmgErrorCodes.resolveDisplay(code, httpStatus, serverMessage)
+        : null;
+    const hintParts = [];
+    if (display && display.hint) {
+      hintParts.push(display.hint);
+    }
+    if (parsed && parsed.hint) {
+      hintParts.push(parsed.hint);
+    }
+
     show({
-      title: '요청 오류',
-      message: parsed && parsed.hint ? `${message}\n${parsed.hint}` : message,
+      title: display ? display.title : '요청 오류',
+      message: display ? display.summary : serverMessage,
+      code,
+      httpStatus,
+      hint: hintParts.join(' '),
+      severity: display ? display.severity : 'error',
+      serverMessage,
       details: [
-        ['HTTP', httpStatus],
         ['대상 URL', parsed && parsed.targetUrl]
       ],
-      rawLog: fullRaw != null ? fullRaw : message,
+      rawLog: fullRaw != null ? fullRaw : serverMessage,
       logLabel: '전체 로그'
     });
     return true;

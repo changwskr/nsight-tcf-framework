@@ -3,9 +3,11 @@ package nhnis.fw.tcf.timeout;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.logging.log4j.ThreadContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +46,35 @@ class DefaultOnlineTimeoutExecutorTest {
 
     @AfterEach
     void tearDown() {
+        ThreadContext.clearAll();
         taskExecutor.shutdown();
+    }
+
+    @Test
+    void usesServiceIdOverrideTimeout() throws Exception {
+        properties.setMilliseconds(200);
+        properties.setOverrides(Map.of("mgcoa5530S0", 600L));
+        ThreadContext.put("serviceId", "mgcoa5530S0");
+
+        String result = executor.execute(() -> {
+            Thread.sleep(350);
+            return "ok-override";
+        });
+        assertThat(result).isEqualTo("ok-override");
+        assertThat(transactionManager.commitCount.get()).isEqualTo(1);
+    }
+
+    @Test
+    void defaultTimeoutWhenServiceIdHasNoOverride() {
+        properties.setMilliseconds(200);
+        properties.setOverrides(Map.of("mgcoa5530S0", 600L));
+        ThreadContext.put("serviceId", "mgcoa8888S0");
+
+        assertThatThrownBy(() -> executor.execute(() -> {
+            Thread.sleep(350);
+            return "late";
+        })).isInstanceOf(OnlineTimeoutException.class)
+                .satisfies(ex -> assertThat(((OnlineTimeoutException) ex).getTimeoutMs()).isEqualTo(200L));
     }
 
     @Test

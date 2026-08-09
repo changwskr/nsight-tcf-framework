@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import nhnis.mg.co.a.persistence.dao.mgcoa5530DAO;
 import nhnis.mg.co.a.dto.mgcoa5530S0DTOSub0;
@@ -30,8 +31,32 @@ public class mgcoa5530Service {
     /**
      * 마케팅희망고객 목록 조회 (페이징).
      */
+    @Transactional(transactionManager = "rdwTransactionManager", readOnly = true)
     public mgcoa5530S0DTOout mgcoa5530S0(mgcoa5530S0DTOin input) throws Exception {
         log.info("▶▶▶▶▶▶▶▶ mgcoa5530S0 Service Start!");
+
+        /*
+         * 7초간의 sleep을 추가한다.
+         */
+        try {
+            Thread.sleep(1000);
+            System.out.println("1");
+            Thread.sleep(1000);
+            System.out.println("3");
+            Thread.sleep(1000);
+            System.out.println("4");
+            Thread.sleep(1000);
+            Thread.sleep(1000);
+            Thread.sleep(1000);
+            System.out.println("5");
+            Thread.sleep(1000);
+            Thread.sleep(1000);
+            System.out.println("6");
+
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.warn("mgcoa5530S0 Service sleep interrupted", e);
+        }
 
         Map<String, Object> param = new HashMap<>();
         if (input != null) {
@@ -40,9 +65,11 @@ public class mgcoa5530Service {
         }
 
         int pageNo = input == null || input.getPageNo() == null || input.getPageNo() <= 0
-                ? 1 : input.getPageNo();
+                ? 1
+                : input.getPageNo();
         int pageSize = input == null || input.getPageSize() == null || input.getPageSize() <= 0
-                ? 20 : input.getPageSize();
+                ? 20
+                : input.getPageSize();
         if (pageSize > 100) {
             pageSize = 100;
         }
@@ -93,7 +120,7 @@ public class mgcoa5530Service {
             for (Map.Entry<String, Object> entry : row.entrySet()) {
                 if (entry.getKey() != null
                         && (entry.getKey().equalsIgnoreCase(upperKey)
-                        || entry.getKey().equalsIgnoreCase(camelKey))
+                                || entry.getKey().equalsIgnoreCase(camelKey))
                         && entry.getValue() != null) {
                     value = entry.getValue();
                     break;

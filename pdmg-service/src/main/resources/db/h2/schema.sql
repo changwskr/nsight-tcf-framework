@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS TB_FW_IMAGE_LOG;
 DROP TABLE IF EXISTS TB_MK_CO_A_5530;
 DROP TABLE IF EXISTS TB_CR_AH_SALES_TIP_RACT;
 DROP TABLE IF EXISTS TB_MG_TX_PARAM;
+DROP TABLE IF EXISTS TB_MG_TX_CONTROL;
 
 -- 시스템 전문 헤더 이미지로그 (ImageLogHandler / ImageLogDTO)
 CREATE TABLE TB_FW_IMAGE_LOG (
@@ -54,4 +55,20 @@ CREATE TABLE TB_MG_TX_PARAM (
     CHG_USER_ID  VARCHAR(50),              -- 변경 사용자 ID
     CHG_DTM      VARCHAR(17),              -- 변경 일시
     CONSTRAINT TB_MG_TX_PARAM_PK PRIMARY KEY (TX_ID)
+);
+
+-- mgcoa9001 거래통제 (serviceId별)
+CREATE TABLE TB_MG_TX_CONTROL (
+    SERVICE_ID      VARCHAR(50)   NOT NULL,  -- rms_svc_c
+    ALLOW_YN        VARCHAR(1)    NOT NULL,  -- Y=ALLOW / N=DENY
+    USE_YN          VARCHAR(1)    NOT NULL,  -- Y=사용 / N=중지
+    ALLOW_START_TM  VARCHAR(6),              -- HHmmss
+    ALLOW_END_TM    VARCHAR(6),              -- HHmmss
+    ALLOW_SYS_IDS   VARCHAR(500),            -- tr_sysid CSV (빈값=제한없음)
+    ALLOW_BRCS      VARCHAR(500),            -- tr_brc CSV (빈값=제한없음)
+    REG_USER_ID     VARCHAR(50),
+    REG_DTM         VARCHAR(17),
+    CHG_USER_ID     VARCHAR(50),
+    CHG_DTM         VARCHAR(17),
+    CONSTRAINT TB_MG_TX_CONTROL_PK PRIMARY KEY (SERVICE_ID)
 );

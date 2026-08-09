@@ -105,6 +105,42 @@ public class TransactionCatalog {
                 "/mgcoa9000D0",
                 "TB_MG_TX_PARAM 삭제. dto.txIdList 로 다건 삭제한다.",
                 readSample("mgcoa9000-delete.json")));
+
+        register(new TransactionInfo(
+                "mgcoa9001S0",
+                "거래통제 목록 조회",
+                "mgcoa9001",
+                "POST",
+                "/mgcoa9001S0",
+                "TB_MG_TX_CONTROL 조회(페이징). keyword·serviceId·useYn·allowYn 조건.",
+                readSample("mgcoa9001-list.json")));
+
+        register(new TransactionInfo(
+                "mgcoa9001C0",
+                "거래통제 등록",
+                "mgcoa9001",
+                "POST",
+                "/mgcoa9001C0",
+                "TB_MG_TX_CONTROL 등록. serviceId·allowYn·useYn 필수. 실패는 BizException(result).",
+                readSample("mgcoa9001-create.json")));
+
+        register(new TransactionInfo(
+                "mgcoa9001U0",
+                "거래통제 수정",
+                "mgcoa9001",
+                "POST",
+                "/mgcoa9001U0",
+                "TB_MG_TX_CONTROL 수정. serviceId 기준 허용·사용·시간·시스템/지점.",
+                readSample("mgcoa9001-update.json")));
+
+        register(new TransactionInfo(
+                "mgcoa9001D0",
+                "거래통제 삭제",
+                "mgcoa9001",
+                "POST",
+                "/mgcoa9001D0",
+                "TB_MG_TX_CONTROL 물리 삭제. dto.serviceIdList 로 다건 삭제.",
+                readSample("mgcoa9001-delete.json")));
     }
 
     public List<TransactionInfo> findAll() {

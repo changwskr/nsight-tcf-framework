@@ -423,28 +423,167 @@ button {
 
 .error-modal .modal-card,
 .error-modal .error-modal-card {
-  width: min(960px, 100%);
-  border-color: rgba(248, 113, 113, 0.45);
+  width: min(560px, 100%);
+  max-height: 86vh;
+  border-color: rgba(248, 113, 113, 0.4);
+  overflow: auto;
+}
+
+.error-modal[data-severity="warning"] .error-modal-card {
+  border-color: rgba(251, 191, 36, 0.45);
+}
+
+.error-modal[data-severity="info"] .error-modal-card {
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.error-modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 18px 0;
+}
+
+.error-modal-head__main {
+  min-width: 0;
+}
+
+.error-severity {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: var(--fail);
+}
+
+.error-modal[data-severity="warning"] .error-severity {
+  background: #d97706;
+}
+
+.error-modal[data-severity="info"] .error-severity {
+  background: #0284c7;
 }
 
 .error-modal #pdmkErrorTitle {
-  color: var(--fail);
+  margin: 0;
+  font-size: 1.22rem;
+  line-height: 1.35;
+  color: var(--text);
 }
 
-.error-modal .error-message {
-  margin: 0 0 14px;
+.error-code-line {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.error-code-line code {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid var(--border);
+  color: #fde68a;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.8rem;
+}
+
+.error-summary {
+  margin: 0 0 10px;
   font-size: 1.02rem;
   line-height: 1.55;
   white-space: pre-wrap;
   word-break: break-word;
+  color: var(--text);
 }
 
-.error-log-block {
-  margin-top: 16px;
+.error-hint {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  background: rgba(14, 165, 233, 0.08);
+  color: #bae6fd;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.error-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin: 0 0 14px;
+}
+
+.error-detail-item {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(2, 6, 23, 0.28);
+}
+
+.error-detail-item dt {
+  margin: 0 0 4px;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.error-detail-item dd {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.45;
+  font-size: 0.88rem;
+}
+
+.error-tech {
+  margin-top: 4px;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: rgba(2, 6, 23, 0.35);
   overflow: hidden;
+}
+
+.error-tech > summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 11px 12px;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 600;
+  user-select: none;
+}
+
+.error-tech > summary::-webkit-details-marker { display: none; }
+
+.error-tech > summary::before {
+  content: "▸ ";
+  color: var(--accent);
+}
+
+.error-tech[open] > summary::before {
+  content: "▾ ";
+}
+
+.error-tech-body {
+  border-top: 1px solid var(--border);
+  padding: 0 0 8px;
+}
+
+.error-server-msg {
+  margin: 0;
+  padding: 10px 12px;
+  color: #fecaca;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-bottom: 1px solid var(--border);
 }
 
 .error-log-head {
@@ -453,21 +592,23 @@ button {
   justify-content: space-between;
   gap: 12px;
   padding: 10px 12px;
-  border-bottom: 1px solid var(--border);
   color: var(--muted);
   font-size: 0.82rem;
 }
 
 .error-log {
-  margin: 0;
+  margin: 0 12px 12px;
   padding: 12px;
-  max-height: 42vh;
+  max-height: 28vh;
   overflow: auto;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   line-height: 1.45;
   white-space: pre-wrap;
   word-break: break-word;
   color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(2, 6, 23, 0.45);
 }
 
 .wire-block {
@@ -489,6 +630,10 @@ button {
 
 .wire-block .error-log {
   max-height: 28vh;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .btn-tiny {

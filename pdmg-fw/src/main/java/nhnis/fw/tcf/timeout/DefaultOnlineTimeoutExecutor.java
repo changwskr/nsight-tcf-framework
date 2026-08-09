@@ -18,6 +18,9 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * Worker Pool + TransactionTemplate + Future.get(timeout) 기반 온라인 타임아웃 실행기.
+ *
+ * <p>제한시간은 {@link OnlineTimeoutProperties#resolveMilliseconds(String)} 로
+ * serviceId별 override를 반영한다.
  */
 public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
 
@@ -39,22 +42,26 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
     @Override
     public <T> T execute(Callable<T> action) throws Exception {
         OnlineTimeoutWorkerContext workerContext = OnlineTimeoutWorkerContext.capture();
+        long timeoutMs = properties.resolveMilliseconds(workerContext.getServiceId());
         long startedAtNanos = System.nanoTime();
-        long deadlineNanos = startedAtNanos + TimeUnit.MILLISECONDS.toNanos(properties.getMilliseconds());
+        long deadlineNanos = startedAtNanos + TimeUnit.MILLISECONDS.toNanos(timeoutMs);
 
         Future<T> future;
         try {
             future = taskExecutor.getThreadPoolExecutor().submit(
-                    () -> runInWorker(workerContext, deadlineNanos, action));
+                    () -> runInWorker(workerContext, timeoutMs, deadlineNanos, action));
         } catch (RejectedExecutionException ex) {
             throw overload(workerContext);
         }
 
         try {
-            T result = future.get(properties.getMilliseconds(), TimeUnit.MILLISECONDS);
+            T result = future.get(timeoutMs, TimeUnit.MILLISECONDS);
             if (log.isDebugEnabled()) {
-                log.debug("[ONLINE-TIMEOUT] completed guid={} serviceId={} elapsedMs={}",
-                        workerContext.getGuid(), workerContext.getServiceId(), elapsedMs(startedAtNanos));
+                log.debug("[ONLINE-TIMEOUT] completed guid={} serviceId={} timeoutMs={} elapsedMs={}",
+                        workerContext.getGuid(),
+                        workerContext.getServiceId(),
+                        timeoutMs,
+                        elapsedMs(startedAtNanos));
             }
             return result;
         } catch (TimeoutException ex) {
@@ -63,11 +70,11 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
             log.warn("[ONLINE-TIMEOUT] guid={} serviceId={} timeoutMs={} elapsedMs={} cancelRequested={}",
                     workerContext.getGuid(),
                     workerContext.getServiceId(),
-                    properties.getMilliseconds(),
+                    timeoutMs,
                     elapsed,
                     cancelled);
             throw new OnlineTimeoutException(
-                    properties.getMilliseconds(),
+                    timeoutMs,
                     elapsed,
                     workerContext.getServiceId(),
                     workerContext.getGuid());
@@ -75,7 +82,7 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
             future.cancel(true);
             Thread.currentThread().interrupt();
             throw new OnlineTimeoutException(
-                    properties.getMilliseconds(),
+                    timeoutMs,
                     elapsedMs(startedAtNanos),
                     workerContext.getServiceId(),
                     workerContext.getGuid());
@@ -86,7 +93,7 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
         }
     }
 
-    private <T> T runInWorker(OnlineTimeoutWorkerContext workerContext, long deadlineNanos,
+    private <T> T runInWorker(OnlineTimeoutWorkerContext workerContext, long timeoutMs, long deadlineNanos,
             Callable<T> action) {
         workerContext.install();
         try {
@@ -95,13 +102,16 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
                     T result = action.call();
                     if (isDeadlineExceeded(deadlineNanos) || Thread.currentThread().isInterrupted()) {
                         status.setRollbackOnly();
-                        long elapsed = elapsedFromDeadline(deadlineNanos);
+                        long elapsed = elapsedFromDeadline(deadlineNanos, timeoutMs);
                         if (log.isDebugEnabled()) {
-                            log.debug("[ONLINE-TIMEOUT] worker deadline exceeded guid={} serviceId={} elapsedMs~={}",
-                                    workerContext.getGuid(), workerContext.getServiceId(), elapsed);
+                            log.debug("[ONLINE-TIMEOUT] worker deadline exceeded guid={} serviceId={} timeoutMs={} elapsedMs~={}",
+                                    workerContext.getGuid(),
+                                    workerContext.getServiceId(),
+                                    timeoutMs,
+                                    elapsed);
                         }
                         throw new OnlineTimeoutException(
-                                properties.getMilliseconds(),
+                                timeoutMs,
                                 elapsed,
                                 workerContext.getServiceId(),
                                 workerContext.getGuid());
@@ -151,9 +161,9 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
         return TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startedAtNanos);
     }
 
-    private long elapsedFromDeadline(long deadlineNanos) {
-        long over = System.nanoTime() - (deadlineNanos - TimeUnit.MILLISECONDS.toNanos(properties.getMilliseconds()));
-        return Math.max(properties.getMilliseconds(), TimeUnit.NANOSECONDS.toMillis(over));
+    private static long elapsedFromDeadline(long deadlineNanos, long timeoutMs) {
+        long over = System.nanoTime() - (deadlineNanos - TimeUnit.MILLISECONDS.toNanos(timeoutMs));
+        return Math.max(timeoutMs, TimeUnit.NANOSECONDS.toMillis(over));
     }
 
     private static Exception unwrap(Throwable cause) throws Exception {

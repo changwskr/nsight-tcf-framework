@@ -260,16 +260,16 @@ public class ServicePreventionInterceptor implements HandlerInterceptor {
                     LOGGER.info(PdmgTxLog.systemPostStart());
                     LOGGER.info(PdmgTxLog.systemPostEnd());
                 }
-                hdr_nhnis header = ServiceContextHolder.getInstance() != null
-                        ? ServiceContextHolder.getInstance().getHeader()
-                        : null;
-                // Exception ImageLog
-                imageLogHandler.exceptionImagelog(header, null, ex);
+                ServiceContext ctx = ServiceContextHolder.getInstance();
+                hdr_nhnis header = ctx != null ? ctx.getHeader() : null;
+                String responseBody = ctx != null ? ctx.getResponseBody() : null;
+                // Exception ImageLog — 동일 TB_FW_IMAGE_LOG
+                imageLogHandler.exceptionImagelog(header, responseBody, ex);
                 ServiceContextHolder.removeInstance();
                 throw ex;
             }
 
-            // 정상 응답: RESPONSE_TIME·응답전문 갱신 (응답 작성 이후)
+            // 응답 후처리: 성공/오류(result) 모두 동일 이미지로그 테이블에 기록
             String contentType = request.getContentType();
             if (contentType == null || !contentType.startsWith(MULTI_PART)) {
                 ServiceContext ctx = ServiceContextHolder.getInstance();

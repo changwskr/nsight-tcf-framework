@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.annotation.PostConstruct;
 import nhnis.fw.commons.context.ServiceContext;
 import nhnis.fw.commons.context.ServiceContextHolder;
@@ -24,12 +27,14 @@ import nhnis.fw.commons.dto.header.sys_comm;
 import nhnis.fw.commons.dto.imagelog.ImageLogDTO;
 import nhnis.fw.commons.exception.NhBaseException;
 import nhnis.fw.commons.util.DateUtil;
+import nhnis.fw.exception.BizException;
 
 /**
  * 이미지로그(시스템 전문 헤더) 핸들러.
  *
  * <p>시스템 선처리에서 INSERT(요청전문 포함), 후처리에서 응답시각·응답전문 UPDATE,
- * 예외 시 예외정보 UPDATE. DB 실패는 업무 거래에 영향을 주지 않도록 삼킨다.
+ * 예외/오류 응답({@code result.stdErrCode})도 동일 테이블에 EXCEPTION_* 와 함께 남긴다.
+ * DB 실패는 업무 거래에 영향을 주지 않도록 삼킨다.
  */
 @Component
 public class ImageLogHandler {
@@ -61,11 +66,13 @@ public class ImageLogHandler {
                    EXCEPTION_TYPE = ?,
                    EXCEPTION_CODE = ?,
                    EXCEPTION_MSG = ?,
-                   RESPONSE_MSG = ?
+                   RESPONSE_MSG = ?,
+                   REQUEST_MSG = COALESCE(REQUEST_MSG, ?)
              WHERE GUID = ?
             """;
 
     private final JdbcTemplate jdbcTemplate;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     public ImageLogHandler(DataSource dataSource) {
@@ -134,9 +141,8 @@ public class ImageLogHandler {
             log.warn("[ImageLog] skip preImagelog: guid is empty");
             return;
         }
-        if (dto.getRequestTime() == null || dto.getRequestTime().isBlank()) {
-            dto.setRequestTime(DateUtil.getCurrentTime());
-        }
+        // 이미지로그 요청시각 = 서버 수신 시각 (헤더 tr_dtm 은 업무일시이므로 사용하지 않음)
+        dto.setRequestTime(DateUtil.getCurrentTime());
         dto.setRequestMsg(resolveWireMsg(inputDto, true));
         if (dto.getRequestMsg() == null || dto.getRequestMsg().isBlank()) {
             log.warn("[ImageLog] requestMsg empty guid={}", dto.getGuid());
@@ -144,7 +150,7 @@ public class ImageLogHandler {
         persist(dto, null);
     }
 
-    /** 시스템 후처리: 응답시각·응답 전문 UPDATE. */
+    /** 시스템 후처리: 응답시각·응답 전문 UPDATE. 오류 result 도 동일 테이블에 남긴다. */
     public void postImagelog(hdr_nhnis header, Object inputDto) {
         ImageLogDTO dto = toDto(header);
         if (dto.getGuid() == null || dto.getGuid().isBlank()) {
@@ -155,6 +161,10 @@ public class ImageLogHandler {
         dto.setRequestMsg(currentRequestMsg());
         if (dto.getResponseMsg() == null || dto.getResponseMsg().isBlank()) {
             log.warn("[ImageLog] responseMsg empty guid={}", dto.getGuid());
+        }
+        if (fillExceptionFromResult(dto, dto.getResponseMsg())) {
+            persist(dto, new RuntimeException("result-error"));
+            return;
         }
         try {
             int updated = jdbcTemplate.update(
@@ -183,7 +193,8 @@ public class ImageLogHandler {
         dto.setResponseMsg(resolveWireMsg(inputDto, false));
         dto.setRequestMsg(currentRequestMsg());
         fillException(dto, t);
-        persist(dto, t);
+        fillExceptionFromResult(dto, dto.getResponseMsg());
+        persist(dto, t != null ? t : new RuntimeException("result-error"));
     }
 
     private void persist(ImageLogDTO dto, Throwable t) {
@@ -196,6 +207,7 @@ public class ImageLogHandler {
                         dto.getExceptionCode(),
                         dto.getExceptionMsg(),
                         dto.getResponseMsg(),
+                        dto.getRequestMsg(),
                         dto.getGuid());
                 if (updated == 0) {
                     jdbcTemplate.update(
@@ -249,9 +261,7 @@ public class ImageLogHandler {
         dto.setScreenId(sys.getScid());
         dto.setOptrEno(sys.getOptr_eno());
         dto.setClientIp(sys.getTr_trm_ipadr());
-        if (sys.getTr_dtm() != null && !sys.getTr_dtm().isBlank()) {
-            dto.setRequestTime(sys.getTr_dtm());
-        }
+        // REQUEST_TIME 은 preImagelog 에서 서버 시각으로 설정한다 (tr_dtm ≠ 수신시각)
         return dto;
     }
 
@@ -267,9 +277,45 @@ public class ImageLogHandler {
                 msg = nbe.getMessage();
             }
             dto.setExceptionMsg(truncate(msg, MAX_EXCEPTION_MSG));
+        } else if (t instanceof BizException be) {
+            dto.setExceptionCode(be.getCode());
+            dto.setExceptionMsg(truncate(be.getMessage(), MAX_EXCEPTION_MSG));
         } else {
             dto.setExceptionCode(null);
             dto.setExceptionMsg(truncate(t.getMessage(), MAX_EXCEPTION_MSG));
+        }
+    }
+
+    /** 오류 응답 전문({@code result.stdErrCode})에서 예외 컬럼을 채운다. */
+    private boolean fillExceptionFromResult(ImageLogDTO dto, String responseMsg) {
+        if (responseMsg == null || responseMsg.isBlank()) {
+            return false;
+        }
+        try {
+            JsonNode root = objectMapper.readTree(responseMsg);
+            JsonNode result = root.get("result");
+            if (result == null || !result.isObject()) {
+                return false;
+            }
+            JsonNode codeNode = result.get("stdErrCode");
+            if (codeNode == null || codeNode.isNull() || codeNode.asText().isBlank()) {
+                return false;
+            }
+            dto.setExceptionCode(codeNode.asText().trim());
+            JsonNode msgNode = result.get("stdErrMsgCntn");
+            if (msgNode != null && !msgNode.isNull() && !msgNode.asText().isBlank()) {
+                dto.setExceptionMsg(truncate(msgNode.asText(), MAX_EXCEPTION_MSG));
+            }
+            JsonNode typeNode = result.get("errType");
+            if (typeNode != null && !typeNode.isNull() && !typeNode.asText().isBlank()) {
+                dto.setExceptionType(typeNode.asText().trim());
+            } else if (dto.getExceptionType() == null || dto.getExceptionType().isBlank()) {
+                dto.setExceptionType("RESULT_ERROR");
+            }
+            return true;
+        } catch (Exception e) {
+            log.debug("[ImageLog] parse result error skipped: {}", e.getMessage());
+            return false;
         }
     }
 
