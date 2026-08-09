@@ -125,6 +125,11 @@ public class TransactionCatalog {
 
     private JsonNode readSample(String fileName) {
         ClassPathResource resource = new ClassPathResource("sample-requests/" + fileName);
+        if (!resource.exists()) {
+            throw new IllegalStateException(
+                    "샘플 전문이 classpath에 없습니다: sample-requests/" + fileName
+                            + " (src/main/resources 확인 후 pdmg-ui 에서 clean processResources 또는 script\\build.bat 실행)");
+        }
         try (InputStream in = resource.getInputStream()) {
             return objectMapper.readTree(in);
         } catch (IOException e) {

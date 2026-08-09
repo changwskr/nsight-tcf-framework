@@ -21,4 +21,45 @@
     }
     return uiContext + normalized;
   };
+
+  /* 셸 iframe 안에서는 임베드 스타일 적용 */
+  if (window.self !== window.top) {
+    document.documentElement.classList.add('pdmg-embed');
+    document.addEventListener('click', (event) => {
+      const anchor = event.target.closest('a[href]');
+      if (!anchor) {
+        return;
+      }
+      const href = anchor.getAttribute('href') || '';
+      const goesHome = href === '/'
+          || href === './'
+          || /(^|\/)index\.html(#|$)/.test(href);
+      const staysInApp = /\/(mgcoa|imagelog|txparam)\//.test(href);
+      if (goesHome && !staysInApp) {
+        event.preventDefault();
+        try {
+          window.parent.location.assign(nsightUiUrl('/index.html') + '#view=dashboard');
+        } catch (_e) {
+          /* ignore */
+        }
+      }
+    }, true);
+    return;
+  }
+
+  /* 단독 진입 시 좌측 메뉴 셸로 합류 */
+  const path = location.pathname || '';
+  const viewMap = {
+    '/mgcoa5530/index.html': 'mgcoa5530',
+    '/mgcoa8888/index.html': 'mgcoa8888',
+    '/mgcoa9000/index.html': 'mgcoa9000',
+    '/mgcoa9999/index.html': 'mgcoa9999',
+    '/imagelog/index.html': 'imagelog',
+    '/txparam/index.html': 'txparam'
+  };
+  const matched = Object.keys(viewMap).find((key) => path.endsWith(key) || path.endsWith(key.replace('/index.html', '')));
+  if (matched) {
+    const home = (uiContext || '') + '/index.html#view=' + viewMap[matched];
+    location.replace(home);
+  }
 })();
