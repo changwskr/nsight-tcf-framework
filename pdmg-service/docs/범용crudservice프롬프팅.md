@@ -75,7 +75,7 @@ PK: [PK 컬럼]
 7. 요청/응답은 { hdr_nhnis, dto } 봉투. DTO는 nhnis.mg.co.a.dto 의 *DTOin/*DTOout.
 8. @TcfTransaction / StandardRequestDto / ETF 를 쓰지 마라. (PDMG 현행이 아님)
 9. 조회는 Facade에 @Transactional(rdwTransactionManager, readOnly=true), 쓰기는 rollbackFor=Exception.class.
-10. timeout은 입력값만 Facade에 두고 미정이면 임의로 설정하지 마라.
+10. 공통 온라인 timeout은 OnlineTimeoutExecutor가 담당한다. Facade timeout은 입력값이 있을 때만 두고 미정이면 임의로 설정하지 마라.
 11. 업무 오류는 BizException, 메시지는 exceptionCode.yml, 실패 응답은 NH_NIS_ERR_DTO / GlobalExceptionHandler.
 12. DAO 메서드명과 MyBatis statement id, namespace, DTO 필드와 SQL alias를 일치시켜라.
 13. 바인딩 변수 #{...}를 사용하고 PK 조건 없는 UPDATE/DELETE를 금지해라.

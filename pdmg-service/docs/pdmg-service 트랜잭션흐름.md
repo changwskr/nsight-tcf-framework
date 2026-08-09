@@ -25,18 +25,20 @@
 │  3. OnlineTransactionController  POST /{serviceId}        │
 │     · serviceId = Header rms_svc_c → path                 │
 │                                                           │
-│  4. TcfFacade → TransactionDispatcher → Handler           │
-│     · nhnis.mg.co.a.entry.handler.*Handler                │
-│                                                           │
-│  5. Business Facade  ★ DB TX 경계                         │
-│     · nhnis.mg.co.a.application.facade.*Facade            │
-│     · @Transactional(rdwTransactionManager) 시작          │
-│         │                                                 │
-│         ▼                                                 │
-│  6. BizPrePostAspect(Service) 선처리                      │
-│     · Service (application.service) → DAO (persistence)   │
-│     · BizPrePostAspect 후처리                             │
-│     · Facade 반환 시 TX commit                            │
+│  4. TcfFacade → OnlineTimeoutExecutor → Dispatcher → Handler │
+│     · nhnis.mg.co.a.entry.handler.*Handler                    │
+│     · 공통 timeout: nhnis.fw.timeout (기본 5000ms)            │
+│                                                               │
+│  5. Business Facade  ★ DB TX (Executor가 BEGIN, REQUIRED)    │
+│     · nhnis.mg.co.a.application.facade.*Facade                │
+│     · @Transactional(rdwTransactionManager) 참여              │
+│         │                                                     │
+│         ▼                                                     │
+│  6. BizPrePostAspect(Service) 선처리                          │
+│     · Service (application.service) → DAO (persistence)       │
+│     · BizPrePostAspect 후처리                                 │
+│     · Deadline 재검사 → commit / rollback                     │
+│     · timeout 시 요청 Thread: 504 FW_TIMEOUT                  │
 │                                                           │
 │  7. ResponseBodyAdvice (시스템 후처리)                    │
 │     · { hdr_nhnis, dto } 응답 봉투                        │
@@ -46,11 +48,14 @@
 ```
 
 ```text
-Filter → 시스템선처리 → OnlineController → TcfFacade → Handler(entry)
-  → Facade(application, @Transactional)
+Filter → 시스템선처리 → OnlineController → TcfFacade
+  → OnlineTimeoutExecutor(Worker+TX) → Handler(entry)
+  → Facade(application, @Transactional REQUIRED)
        → [업무선처리] → Service → DAO → [업무후처리]
   → 시스템후처리
 ```
+
+공통 타임아웃: [20.타임아웃.md](./20.타임아웃.md)
 
 ## serviceId 매핑
 
@@ -72,8 +77,9 @@ DTO: `nhnis.mg.co.a.dto` · Mapper: `rdw.mg.co.a/`
 | 계층 | `@Transactional` | 역할 |
 |------|------------------|------|
 | OnlineTransactionController | X | URL 수신 (pdmg-fw) |
-| TcfFacade / Dispatcher / Handler | X | 라우팅 (`entry.handler`) |
-| **Business Facade** | **O** | 업무 유스케이스 = TX 1건 (`application.facade`) |
+| TcfFacade / OnlineTimeoutExecutor | Executor가 **외부 TX** | 공통 SLA · Worker |
+| Dispatcher / Handler | X (TX 안) | 라우팅 (`entry.handler`) |
+| **Business Facade** | **O (REQUIRED)** | 업무 유스케이스 · 같은 TX 참여 |
 | Service | 기본 X | Facade TX 안에서 실행 (`application.service`) |
 | DAO | X | SQL만 (`persistence.dao`) |
 

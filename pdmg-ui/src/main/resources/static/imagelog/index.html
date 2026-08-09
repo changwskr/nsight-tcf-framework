@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDMG 이미지로그 관리</title>
+  <title>PDMG ?��?지로그 관�?/title>
   <script src="/_shared/ui-context.js"></script>
   <link rel="stylesheet" href="/_shared/online.css">
 </head>
@@ -11,21 +11,21 @@
   <div class="tcf-main tcf-main--wide">
     <header class="tcf-topbar">
       <div class="tcf-topbar__brand">
-        <h1>이미지로그 관리 · mgcoa8888</h1>
-        <p>TB_FW_IMAGE_LOG 조건 검색·페이징·선택 삭제. 최근 구간과 소요시간으로 느린/문제 거래를 추적합니다.</p>
+        <h1>?��?지로그 관�?· mgcoa8888</h1>
+        <p>TB_FW_IMAGE_LOG 조건 검?�·페?�징·?�택 ??��. 최근 구간�??�요?�간?�로 ?�린/문제 거래�?추적?�니??</p>
       </div>
-      <nav class="tcf-topbar__nav" aria-label="화면 이동">
-        <a class="tcf-topbar__link" href="/index.html">홈</a>
-        <a class="tcf-topbar__link" href="/mgcoa8888/index.html">전문 테스트</a>
-        <a class="tcf-topbar__link tcf-topbar__link--active" href="/imagelog/index.html">관리 화면</a>
-        <span class="badge" id="targetInfo">대상 확인 중...</span>
+      <nav class="tcf-topbar__nav" aria-label="?�면 ?�동">
+        <a class="tcf-topbar__link" href="/index.html">??/a>
+        <a class="tcf-topbar__link" href="/mgcoa8888/index.html">?�문 ?�스??/a>
+        <a class="tcf-topbar__link tcf-topbar__link--active" href="/imagelog/index.html">관�??�면</a>
+        <span class="badge" id="targetInfo">?�???�인 �?..</span>
       </nav>
     </header>
 
     <section class="tcf-section">
       <div class="tcf-section__head">
         <h2>조회 조건</h2>
-        <p>최근 구간과 소요시간 칩을 고른 뒤 조회하세요. 조회/삭제 요청마다 GUID를 신규 채번합니다.</p>
+        <p>최근 구간�??�요?�간 칩을 고른 ??조회?�세?? 조회/??�� ?�청마다 GUID�??�규 채번?�니??</p>
       </div>
 
       <section class="toolbar">
@@ -35,105 +35,105 @@
         </div>
 
         <div class="field field-wide">
-          <label>최근 구간 (현재시각 기준)</label>
-          <div class="time-window" id="withinSecondsGroup" role="group" aria-label="최근 초 단위 조회">
-            <button type="button" class="time-chip" data-seconds="">전체</button>
-            <button type="button" class="time-chip" data-seconds="5">5초 전</button>
-            <button type="button" class="time-chip" data-seconds="10">10초 전</button>
-            <button type="button" class="time-chip" data-seconds="15">15초 전</button>
-            <button type="button" class="time-chip" data-seconds="30">30초 전</button>
-            <button type="button" class="time-chip" data-seconds="60">1분 전</button>
-            <button type="button" class="time-chip" data-seconds="300">5분 전</button>
-            <button type="button" class="time-chip" data-seconds="600">10분 전</button>
+          <label>최근 구간 (?�재?�각 기�?)</label>
+          <div class="time-window" id="withinSecondsGroup" role="group" aria-label="최근 �??�위 조회">
+            <button type="button" class="time-chip" data-seconds="">?�체</button>
+            <button type="button" class="time-chip" data-seconds="5">5�???/button>
+            <button type="button" class="time-chip" data-seconds="10">10�???/button>
+            <button type="button" class="time-chip" data-seconds="15">15�???/button>
+            <button type="button" class="time-chip" data-seconds="30">30�???/button>
+            <button type="button" class="time-chip" data-seconds="60">1�???/button>
+            <button type="button" class="time-chip" data-seconds="300">5�???/button>
+            <button type="button" class="time-chip" data-seconds="600">10�???/button>
           </div>
-          <p class="time-window-hint" id="withinHint">시간창 미적용 · 전체 기간</p>
+          <p class="time-window-hint" id="withinHint">?�간�?미적??· ?�체 기간</p>
           <input id="withinSeconds" type="hidden" value="">
         </div>
 
         <div class="field field-wide">
-          <label>트랜잭션 소요 (응답 − 요청)</label>
-          <div class="time-window" id="minElapsedSecondsGroup" role="group" aria-label="소요시간 이상 조회">
-            <button type="button" class="time-chip" data-elapsed="">전체</button>
-            <button type="button" class="time-chip" data-elapsed="3">3초 이상</button>
-            <button type="button" class="time-chip" data-elapsed="5">5초 이상</button>
-            <button type="button" class="time-chip" data-elapsed="7">7초 이상</button>
-            <button type="button" class="time-chip" data-elapsed="10">10초 이상</button>
-            <button type="button" class="time-chip" data-elapsed="15">15초 이상</button>
-            <button type="button" class="time-chip" data-elapsed="30">30초 이상</button>
+          <label>?�랜??�� ?�요 (?�답 ???�청)</label>
+          <div class="time-window" id="minElapsedSecondsGroup" role="group" aria-label="?�요?�간 ?�상 조회">
+            <button type="button" class="time-chip" data-elapsed="">?�체</button>
+            <button type="button" class="time-chip" data-elapsed="3">3�??�상</button>
+            <button type="button" class="time-chip" data-elapsed="5">5�??�상</button>
+            <button type="button" class="time-chip" data-elapsed="7">7�??�상</button>
+            <button type="button" class="time-chip" data-elapsed="10">10�??�상</button>
+            <button type="button" class="time-chip" data-elapsed="15">15�??�상</button>
+            <button type="button" class="time-chip" data-elapsed="30">30�??�상</button>
           </div>
-          <p class="time-window-hint" id="elapsedHint">소요시간 조건 미적용</p>
+          <p class="time-window-hint" id="elapsedHint">?�요?�간 조건 미적??/p>
           <input id="minElapsedSeconds" type="hidden" value="">
         </div>
 
         <div class="field">
           <label for="guid">GUID</label>
-          <input id="guid" type="text" placeholder="std_gbl_id 정확 일치">
+          <input id="guid" type="text" placeholder="std_gbl_id ?�확 ?�치">
         </div>
         <div class="field">
-          <label for="serviceId">서비스 ID</label>
-          <input id="serviceId" type="text" placeholder="예: mgcoa5530S0">
+          <label for="serviceId">?�비??ID</label>
+          <input id="serviceId" type="text" placeholder="?? mgcoa5530S0">
         </div>
         <div class="field">
-          <label for="screenId">화면 ID</label>
-          <input id="screenId" type="text" placeholder="예: mgcoa5530">
+          <label for="screenId">?�면 ID</label>
+          <input id="screenId" type="text" placeholder="?? mgcoa5530">
         </div>
         <div class="field">
-          <label for="optrEno">사용자(사번)</label>
-          <input id="optrEno" type="text" placeholder="예: E0000001">
+          <label for="optrEno">?�용???�번)</label>
+          <input id="optrEno" type="text" placeholder="?? E0000001">
         </div>
         <div class="field field-check">
           <label for="exceptionOnly">문제건만</label>
           <label class="check-line">
             <input id="exceptionOnly" type="checkbox">
-            <span>예외(EXCEPTION) 있는 건만</span>
+            <span>?�외(EXCEPTION) ?�는 건만</span>
           </label>
         </div>
         <div class="field">
-          <label for="pageSize">페이지 크기</label>
+          <label for="pageSize">?�이지 ?�기</label>
           <input id="pageSize" type="number" min="1" max="100" value="20">
         </div>
         <div class="actions">
-          <button class="btn-secondary" id="resetBtn" type="button">초기화</button>
-          <button class="btn-danger" id="deleteBtn" type="button">선택 삭제</button>
+          <button class="btn-secondary" id="resetBtn" type="button">초기??/button>
+          <button class="btn-danger" id="deleteBtn" type="button">?�택 ??��</button>
           <button class="btn-primary" id="searchBtn" type="button">조회</button>
         </div>
       </section>
     </section>
 
     <section class="response-meta" id="resultMeta">
-      <span class="empty">최근 구간·소요시간을 고르고 조회하세요. 문제 추적은 「예외만」과 함께 쓰면 됩니다.</span>
+      <span class="empty">최근 구간·?�요?�간??고르�?조회?�세?? 문제 추적?� ?�예?�만?�과 ?�께 ?�면 ?�니??</span>
     </section>
 
     <section class="panel table-panel">
       <div class="panel-head">
         <h2>조회 결과</h2>
-        <span id="resultCount" class="group-tag">0건</span>
+        <span id="resultCount" class="group-tag">0�?/span>
       </div>
       <div class="table-wrap">
         <table class="data-table" id="resultTable">
           <thead>
             <tr>
-              <th class="col-check"><input id="checkAll" type="checkbox" title="전체 선택"></th>
+              <th class="col-check"><input id="checkAll" type="checkbox" title="?�체 ?�택"></th>
               <th>GUID</th>
-              <th>서비스</th>
-              <th>화면</th>
-              <th>사용자</th>
+              <th>?�비??/th>
+              <th>?�면</th>
+              <th>?�용??/th>
               <th>IP</th>
-              <th>요청시각</th>
-              <th>응답시각</th>
-              <th>소요</th>
-              <th>상태</th>
+              <th>?�청?�각</th>
+              <th>?�답?�각</th>
+              <th>?�요</th>
+              <th>?�태</th>
             </tr>
           </thead>
           <tbody id="resultBody">
-            <tr><td colspan="10" class="empty">데이터 없음</td></tr>
+            <tr><td colspan="10" class="empty">?�이???�음</td></tr>
           </tbody>
         </table>
       </div>
       <div class="pager" id="pager">
-        <button class="btn-secondary" id="prevPageBtn" type="button" disabled>이전</button>
+        <button class="btn-secondary" id="prevPageBtn" type="button" disabled>?�전</button>
         <span id="pageInfo">1 / 1</span>
-        <button class="btn-secondary" id="nextPageBtn" type="button" disabled>다음</button>
+        <button class="btn-secondary" id="nextPageBtn" type="button" disabled>?�음</button>
       </div>
     </section>
   </div>
@@ -142,14 +142,15 @@
     <div class="modal-backdrop" data-close="true"></div>
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
       <div class="panel-head">
-        <h2 id="detailTitle">이미지로그 상세</h2>
-        <button class="btn-secondary" type="button" data-close="true">닫기</button>
+        <h2 id="detailTitle">?��?지로그 ?�세</h2>
+        <button class="btn-secondary" type="button" data-close="true">?�기</button>
       </div>
       <div class="modal-body" id="detailBody"></div>
     </div>
   </div>
 
   <script src="/_shared/error-popup.js"></script>
+  <script src="/_shared/service-client.js"></script>
   <script src="/imagelog/imagelog.js"></script>
 </body>
 </html>

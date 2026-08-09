@@ -68,6 +68,15 @@ public class DefaultFilter extends OncePerRequestFilter {
         this.connector = connector;
     }
 
+    /**
+     * CORS preflight(OPTIONS)는 Body/JWT 검사가 없고 CorsFilter가 처리한다.
+     * 여기서 막으면 브라우저 직접 호출이 실패한다.
+     */
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return "OPTIONS".equalsIgnoreCase(request.getMethod());
+    }
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,

@@ -1,10 +1,20 @@
 /*
  * 거래 파라미터 관리 화면 (mgcoa9000).
- * list   : /api/txparam/list   → POST /mgcoa9000S0
- * create : /api/txparam/create → POST /mgcoa9000C0
- * update : /api/txparam/update → POST /mgcoa9000U0
- * delete : /api/txparam/delete → POST /mgcoa9000D0
+ * 브라우저 → pdmg-service 직접 호출
+ * list   : POST /mgcoa9000S0
+ * create : POST /mgcoa9000C0
+ * update : POST /mgcoa9000U0
+ * delete : POST /mgcoa9000D0
  */
+
+let serviceConfig = { timeoutMs: 10000 };
+
+const TXPARAM_PATH = {
+  list: '/mgcoa9000S0',
+  create: '/mgcoa9000C0',
+  update: '/mgcoa9000U0',
+  delete: '/mgcoa9000D0'
+};
 
 const targetBaseUrlEl = document.getElementById('targetBaseUrl');
 const keywordEl = document.getElementById('keyword');
@@ -185,13 +195,16 @@ function closeEditModal() {
 }
 
 async function relay(path, body) {
-  const query = new URLSearchParams({ baseUrl: targetBaseUrlEl.value.trim() });
-  const response = await fetch(`/api/txparam/${path}?${query}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  });
-  return response.json();
+  const servicePath = TXPARAM_PATH[path];
+  if (!servicePath) {
+    throw new Error('unknown txparam action: ' + path);
+  }
+  return PdmgServiceClient.postPath(
+      targetBaseUrlEl.value,
+      servicePath,
+      body,
+      serviceConfig.timeoutMs,
+      servicePath.replace('/', ''));
 }
 
 function parseResult(result) {
@@ -227,9 +240,9 @@ async function search() {
       }
     });
   } catch (error) {
-    resultMetaEl.innerHTML = '<span class="badge fail">중계 실패</span>';
+    resultMetaEl.innerHTML = '<span class="badge fail">호출 실패</span>';
     resultBodyEl.innerHTML = '<tr><td colspan="8" class="empty">조회 실패</td></tr>';
-    PdmgErrorPopup.showSimple(error.message || String(error), '중계 오류');
+    PdmgErrorPopup.showSimple(error.message || String(error), '호출 오류');
     return;
   }
 
@@ -345,8 +358,8 @@ async function deleteRow(row) {
 }
 
 async function init() {
-  const config = await fetch('/api/config').then((r) => r.json());
-  targetBaseUrlEl.value = config.targetBaseUrl || targetBaseUrlEl.value;
+  serviceConfig = await fetch('/api/config').then((r) => r.json());
+  targetBaseUrlEl.value = serviceConfig.targetBaseUrl || targetBaseUrlEl.value || 'http://localhost:8080';
   document.getElementById('targetInfo').textContent = targetBaseUrlEl.value;
 
   document.getElementById('searchBtn').addEventListener('click', () => {

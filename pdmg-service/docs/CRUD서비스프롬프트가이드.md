@@ -246,8 +246,8 @@ SQL별 기대 row count와 0건 처리 정책도 보고해라.
 Service 업무 로직을 구현해라. (@Transactional 은 Facade에 둔다)
 - 조회 Facade: @Transactional(rdwTransactionManager, readOnly = true)
 - 쓰기 Facade: @Transactional(rdwTransactionManager, rollbackFor = Exception.class)
-- timeout은 [확정값/미지정]을 Facade에만 적용하고 임의 값을 만들지 않는다.
-- 여러 쓰기 SQL은 하나의 Facade 트랜잭션으로 묶는다.
+- 공통 온라인 SLA는 OnlineTimeoutExecutor(nhnis.fw.timeout)가 담당한다. Facade timeout은 보조이며, [확정값/미지정]일 때만 넣고 임의 값을 만들지 않는다.
+- 여러 쓰기 SQL은 하나의 Facade(및 Executor) 트랜잭션으로 묶는다.
 - 필수값, 중복, 미존재, 동시 수정 충돌은 BizException으로 구분한다.
 - 예외를 삼키거나 실패를 정상 응답으로 바꾸지 않는다.
 
@@ -402,11 +402,12 @@ PK 모든 조건이 SQL에 포함되는지와 정상/누락/0건 테스트를 �
 ```text
 pdmg-service의 [프로그램ID] 등록을 구현해라.
 필수값은 [필드], 중복 기준은 [업무키], 중복 오류는 [코드]다.
-쓰기 Facade @Transactional(timeout=[확정값], rollbackFor=Exception.class)을 적용하고 후속 SQL 실패 시 전체 rollback되게 한다.
+쓰기 Facade @Transactional(rollbackFor=Exception.class)을 적용하고 후속 SQL 실패 시 전체 rollback되게 한다.
+(공통 온라인 timeout은 OnlineTimeoutExecutor. Facade에 timeout=[확정값]을 넣는 것은 보조·명시 요청 시에만.)
 DAO/MyBatis insert, exceptionCode.yml, serviceId와 중복/rollback 테스트를 포함해라.
 ```
 
-timeout을 정하지 않았다면 `timeout=[미지정]`으로 쓰고 애노테이션에 임의 값을 넣지 않는다.
+timeout을 정하지 않았다면 Facade 애노테이션에 임의 `timeout=` 를 넣지 않는다. 공통 SLA는 [20.타임아웃.md](./20.타임아웃.md).
 
 ### 6.4 수정
 
@@ -515,13 +516,14 @@ mgcoa8888에서는 패키지 구조, { hdr_nhnis, dto }, Handler/Facade TX, 페�
 4초 지나면 롤백되게 해줘.
 ```
 
-문제점: 어떤 Service와 동작에 적용할지, DB timeout인지 HTTP timeout인지 알 수 없다.
+문제점: 어떤 Service와 동작에 적용할지, **공통 OnlineTimeoutExecutor인지 Facade `@Transactional(timeout)`인지** 알 수 없다.
 
 ### 개선 예 3
 
 ```text
-[등록/수정/삭제] Facade 메서드의 Spring DB 트랜잭션 timeout을 4초로 지정해라.
-timeout 발생 시 쓰기 전체가 rollback되는 테스트를 추가해라.
+공통 온라인 SLA는 OnlineTimeoutExecutor(nhnis.fw.timeout)를 유지한다.
+[등록/수정/삭제]에 Facade Spring TX timeout을 추가로 둘 때만 초를 명시하고,
+발생 시 쓰기 전체 rollback 테스트를 추가해라.
 성능 경고 로그만으로 롤백시키지 마라.
 ```
 

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import nhnis.fw.tcf.core.context.TransactionContext;
 import nhnis.fw.tcf.core.dispatch.TransactionDispatcher;
+import nhnis.fw.tcf.timeout.OnlineTimeoutExecutor;
 
 /**
  * TCF Core Facade.
@@ -15,9 +16,11 @@ import nhnis.fw.tcf.core.dispatch.TransactionDispatcher;
  * 시스템 선후처리(Filter / ServicePreventionInterceptor / ResponseBodyAdvice)는
  * 그대로 유지하고, 여기서는 Controller → Handler → 업무 Facade 연결만 담당한다.
  *
+ * <p>{@link OnlineTimeoutExecutor} 가 활성이면 Dispatcher 이하를 Worker + TX 로 감싼다.
+ *
  * <pre>
- * Filter → 시스템선처리 → Controller → TcfFacade → Handler → 업무Facade
- *   → 업무선처리 → Service → DAO → 업무후처리 → 시스템후처리
+ * Filter → 시스템선처리 → Controller → TcfFacade → OnlineTimeoutExecutor
+ *   → Handler → 업무Facade → 업무선처리 → Service → DAO → 업무후처리 → 시스템후처리
  * </pre>
  */
 @Component
@@ -27,11 +30,13 @@ public class TcfFacade {
     private static final Logger log = LoggerFactory.getLogger(TcfFacade.class);
 
     private final TransactionDispatcher dispatcher;
+    private final OnlineTimeoutExecutor onlineTimeoutExecutor;
 
-    public TcfFacade(TransactionDispatcher dispatcher) {
+    public TcfFacade(TransactionDispatcher dispatcher, OnlineTimeoutExecutor onlineTimeoutExecutor) {
         log.info("========================= [TcfFacade.<init>] 시작");
         try {
             this.dispatcher = dispatcher;
+            this.onlineTimeoutExecutor = onlineTimeoutExecutor;
         } finally {
             log.info("========================= [TcfFacade.<init>] 종료");
         }
@@ -47,7 +52,8 @@ public class TcfFacade {
         try {
             log.debug("[TcfFacade] process start serviceId={}", serviceId);
             TransactionContext context = TransactionContext.fromCurrent(serviceId);
-            Object result = dispatcher.dispatch(serviceId, dtoBody, context);
+            Object result = onlineTimeoutExecutor.execute(
+                    () -> dispatcher.dispatch(serviceId, dtoBody, context));
             log.debug("[TcfFacade] process end serviceId={} elapsedMs={}", serviceId, context.elapsedMs());
             return result;
         } finally {

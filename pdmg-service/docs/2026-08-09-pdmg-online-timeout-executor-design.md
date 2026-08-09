@@ -288,7 +288,7 @@ Servlet request/response 객체를 Worker에 장기간 보관하지 않는다. �
 
 > **상태(2026-08-09 이후):** 공식 업무 패키지는 `nhnis.mg.co.a.*` 로 정리되었고,  
 > 구 `nhnis.mg.*`(중복 Bean) 전제는 **해소된 것**으로 본다.  
-> OnlineTimeoutExecutor 본체는 구현됨. 남은 과제는 설계 §12의 **통합 테스트** 등이다.
+> OnlineTimeoutExecutor 본체는 구현됨. 남은 과제는 설계 §12의 **통합 테스트**(H2 지연→미커밋, HTTP 504/503) 등이다.
 
 (원문 — 구현 당시 전제)  
 당시 `pdmg-service`에는 기존 `nhnis.mg.*`와 신규 `nhnis.mg.co.a.*` Bean이 중복되어 ApplicationContext가 시작되지 않는 문제가 있었다. TimeoutExecutor 통합 테스트 전에 공식 업무 패키지를 하나로 확정하고 중복 Bean 문제를 해결해야 했다. TimeoutExecutor 작업은 이 문제를 우회하거나 Bean overriding으로 숨기지 않는다.

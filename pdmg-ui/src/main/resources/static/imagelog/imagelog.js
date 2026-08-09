@@ -1,9 +1,11 @@
 /*
  * 이미지로그 관리 화면.
- * 필터 + 페이징 + 선택 삭제 + 상세 모달.
- * list  : /api/imagelog/list  → POST /mgcoa8888S0
- * delete: /api/imagelog/delete → POST /mgcoa8888D0
+ * 브라우저 → pdmg-service 직접 호출
+ * list  : POST /mgcoa8888S0
+ * delete: POST /mgcoa8888D0
  */
+
+let serviceConfig = { timeoutMs: 10000 };
 
 const targetBaseUrlEl = document.getElementById('targetBaseUrl');
 const guidEl = document.getElementById('guid');
@@ -317,19 +319,18 @@ async function search() {
   resultMetaEl.innerHTML = '<span class="empty">조회 중...</span>';
   resultBodyEl.innerHTML = '<tr><td colspan="10" class="empty">조회 중...</td></tr>';
 
-  const query = new URLSearchParams({ baseUrl: targetBaseUrlEl.value.trim() });
   let result;
   try {
-    const response = await fetch(`/api/imagelog/list?${query}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(buildListBody())
-    });
-    result = await response.json();
+    result = await PdmgServiceClient.postPath(
+        targetBaseUrlEl.value,
+        '/mgcoa8888S0',
+        buildListBody(),
+        serviceConfig.timeoutMs,
+        'mgcoa8888S0');
   } catch (error) {
-    resultMetaEl.innerHTML = '<span class="badge fail">중계 실패</span>';
+    resultMetaEl.innerHTML = '<span class="badge fail">호출 실패</span>';
     resultBodyEl.innerHTML = '<tr><td colspan="10" class="empty">조회 실패</td></tr>';
-    PdmgErrorPopup.showSimple(error.message || String(error), '중계 오류');
+    PdmgErrorPopup.showSimple(error.message || String(error), '호출 오류');
     return;
   }
   const httpOk = result.httpStatus >= 200 && result.httpStatus < 300;
@@ -383,31 +384,30 @@ async function deleteSelected() {
     return;
   }
 
-  const query = new URLSearchParams({ baseUrl: targetBaseUrlEl.value.trim() });
   let result;
   try {
-    const response = await fetch(`/api/imagelog/delete?${query}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        hdr_nhnis: {
-          sys_comm: {
-            std_gbl_id: newGuid(),
-            rms_svc_c: 'mgcoa8888D0',
-            scid: 'mgcoa8888',
-            optr_eno: 'LOCAL',
-            tr_trm_ipadr: '127.0.0.1',
-            tr_sysid: 'PDMG-UI',
-            sync_dsc: 'S',
-            std_tgrm_rqr_rsp_dsc: 'Q'
-          }
+    result = await PdmgServiceClient.postPath(
+        targetBaseUrlEl.value,
+        '/mgcoa8888D0',
+        {
+          hdr_nhnis: {
+            sys_comm: {
+              std_gbl_id: newGuid(),
+              rms_svc_c: 'mgcoa8888D0',
+              scid: 'mgcoa8888',
+              optr_eno: 'LOCAL',
+              tr_trm_ipadr: '127.0.0.1',
+              tr_sysid: 'PDMG-UI',
+              sync_dsc: 'S',
+              std_tgrm_rqr_rsp_dsc: 'Q'
+            }
+          },
+          dto: { guidList: guids, GUID_LIST: guids }
         },
-        dto: { guidList: guids, GUID_LIST: guids }
-      })
-    });
-    result = await response.json();
+        serviceConfig.timeoutMs,
+        'mgcoa8888D0');
   } catch (error) {
-    PdmgErrorPopup.showSimple(error.message || String(error), '중계 오류');
+    PdmgErrorPopup.showSimple(error.message || String(error), '호출 오류');
     return;
   }
   const httpOk = result.httpStatus >= 200 && result.httpStatus < 300;
@@ -457,8 +457,8 @@ function resetFilters() {
 
 async function init() {
   const configRes = await fetch('/api/config');
-  const config = await configRes.json();
-  targetBaseUrlEl.value = config.targetBaseUrl || 'http://localhost:8080';
+  serviceConfig = await configRes.json();
+  targetBaseUrlEl.value = serviceConfig.targetBaseUrl || 'http://localhost:8080';
   document.getElementById('targetInfo').textContent = `대상 pdmg-service: ${targetBaseUrlEl.value}`;
 
   setWithinSeconds('', { syncException: false });

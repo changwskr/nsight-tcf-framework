@@ -61,6 +61,7 @@ public class PdmgUiApiController {
     public RelayResult relay(@PathVariable("id") String id,
             @RequestBody(required = false) String requestBody,
             @RequestParam(value = "baseUrl", required = false) String baseUrl) {
+        // 하위 호환: 화면은 브라우저 직접 호출. 도구/구버전용 중계.
         return relayService.relay(id, requestBody, baseUrl);
     }
 

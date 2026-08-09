@@ -15,8 +15,9 @@ Filter와 공통 Controller / Aspect 중 어디에 둘지는, 그 지점에서 *
 |------|----------------|----------------|
 | Servlet Filter (`DefaultFilter`) | HTTP Body 캐시, URI, ServiceContext 시드 | 어느 Handler인지, 업무 DTO 완성본 |
 | Interceptor (`ServicePreventionInterceptor`) | GUID, 요청 전문, ImageLog 선처리 | Facade TX 안 업무 예외 세부(후처리에서 보완) |
-| OnlineTransactionController + TCF | `serviceId` → Handler 라우팅 | DB commit 자체 |
-| Business Facade `@Transactional` | 업무 TX BEGIN/COMMIT/ROLLBACK | HTTP 원문 |
+| OnlineTransactionController + TCF | `serviceId` → Handler 라우팅 · TimeoutExecutor 위임 | DB commit 자체 |
+| OnlineTimeoutExecutor | 공통 SLA · Worker 외부 TX · 504/503 | 업무 분기 |
+| Business Facade `@Transactional` | 업무 TX 참여(REQUIRED) / BEGIN(비활성 시) | HTTP 원문 |
 | BizPrePostAspect (Service) | Service 인자·반환, 업무 선후처리 | Filter에서 난 예외 |
 | `GlobalExceptionHandler` | Controller/Handler 경로 밖으로 나간 예외 | Filter 전용 인증 실패 등 |
 
@@ -25,7 +26,8 @@ Filter와 공통 Controller / Aspect 중 어디에 둘지는, 그 지점에서 *
 > **필터·시스템 선후처리는 “어떤 거래인지 몰라도 해야 하는 일”, Handler/Facade/Service는 “거래 식별 후 업무”**
 
 GUID·MDC·ImageLog 선처리는 거래 매칭 전에도 필요하므로 Filter/Interceptor에 둔다.  
-DB commit은 Facade, 업무 선후처리는 Service Pointcut에 둔다.
+DB commit은 OnlineTimeoutExecutor(또는 Facade) 경계, 업무 선후처리는 Service Pointcut에 둔다.  
+공통 타임아웃: [20.타임아웃.md](./20.타임아웃.md)
 
 ---
 
@@ -50,6 +52,7 @@ nhnis.mg.co.a/
 ```text
 nhnis.fw.tcf.web.OnlineTransactionController
 nhnis.fw.tcf.core.facade.TcfFacade
+nhnis.fw.tcf.timeout.OnlineTimeoutExecutor   ← 공통 online timeout
 nhnis.fw.commons.filter.DefaultFilter
 nhnis.fw.commons.interceptor.ServicePreventionInterceptor
 nhnis.fw.exception.GlobalExceptionHandler
@@ -71,9 +74,9 @@ HTTP POST /{serviceId}   body: { hdr_nhnis, dto }
   ├─③ OnlineTransactionController
   │     serviceId 경로 매칭
   │
-  ├─④ TcfFacade → TransactionDispatcher → Handler(entry.handler)
+  ├─④ TcfFacade → OnlineTimeoutExecutor → Dispatcher → Handler(entry.handler)
   │
-  ├─⑤ Facade(application.facade)  @Transactional(rdwTransactionManager)
+  ├─⑤ Facade(application.facade)  @Transactional(REQUIRED / rdw)
   │       → [BizPrePostAspect] Service → DAO → Mapper(rdw.mg.co.a)
   │
   ├─⑥ ResponseBodyAdvice — 시스템 후처리, { hdr_nhnis, dto } 봉투
@@ -107,7 +110,14 @@ public mgcoa8888S0DTOout mgcoa8888S0(Object dtoBody) throws Exception {
 ## 4. 실패 응답
 
 PDMG(TCF ON) 실패 응답은 **`NH_NIS_ERR_DTO`** 를 `GlobalExceptionHandler` 등이 조립한다.  
-STF/ETF 표준 전문(`result.resultCode` 등)을 쓰지 않는다. 상세: [에러처리.md](./에러처리.md)
+STF/ETF 표준 전문(`result.resultCode` 등)을 쓰지 않는다. 상세: [에러처리.md](./에러처리.md) · [11.예외처리.md](./11.예외처리.md)
+
+| 예외 | HTTP | stdErrCode |
+|------|------|------------|
+| `OnlineTimeoutException` | **504** | `FW_TIMEOUT` |
+| `OnlineOverloadException` | **503** | `FW_OVERLOADED` |
+
+→ [20.타임아웃.md](./20.타임아웃.md)
 
 | 예외 위치 | 처리 |
 |-----------|------|

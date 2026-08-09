@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDMG 전문 테스트 (mgcoa9999)</title>
+  <title>PDMG ?�문 ?�스??(mgcoa9999)</title>
   <script src="/_shared/ui-context.js"></script>
   <link rel="stylesheet" href="/_shared/online.css">
 </head>
@@ -11,15 +11,15 @@
   <div class="tcf-main">
     <header class="tcf-topbar">
       <div class="tcf-topbar__brand">
-        <h1>mgcoa9999 · 영업팁 실적</h1>
-        <p>영업팁 실적 목록을 조회합니다. dto.salzTipKdc 를 비우면 전체를 조회합니다.</p>
+        <h1>mgcoa9999 · ?�업???�적</h1>
+        <p>?�업???�적 목록??조회?�니?? dto.salzTipKdc �?비우�??�체�?조회?�니??</p>
       </div>
-      <nav class="tcf-topbar__nav" aria-label="화면 이동">
-        <a class="tcf-topbar__link" href="/index.html">홈</a>
+      <nav class="tcf-topbar__nav" aria-label="?�면 ?�동">
+        <a class="tcf-topbar__link" href="/index.html">??/a>
         <a class="tcf-topbar__link" href="/mgcoa5530/index.html">mgcoa5530</a>
         <a class="tcf-topbar__link" href="/mgcoa8888/index.html">mgcoa8888</a>
         <a class="tcf-topbar__link tcf-topbar__link--active" href="/mgcoa9999/index.html">mgcoa9999</a>
-        <a class="tcf-topbar__link" href="/imagelog/index.html">이미지로그</a>
+        <a class="tcf-topbar__link" href="/imagelog/index.html">?��?지로그</a>
       </nav>
     </header>
 
@@ -33,46 +33,47 @@
         <select id="transactionId"></select>
       </div>
       <div class="actions">
-        <button class="btn-secondary" id="reloadSampleBtn" type="button">샘플 불러오기</button>
-        <button class="btn-secondary" id="refreshGuidBtn" type="button">GUID 재채번</button>
-        <button class="btn-primary" id="sendBtn" type="button">거래 요청</button>
+        <button class="btn-secondary" id="reloadSampleBtn" type="button">?�플 불러?�기</button>
+        <button class="btn-secondary" id="refreshGuidBtn" type="button">GUID ?�채�?/button>
+        <button class="btn-primary" id="sendBtn" type="button">거래 ?�청</button>
       </div>
     </section>
 
     <section class="meta">
       <div class="meta-card">
-        <div class="label">거래명</div>
+        <div class="label">거래�?/div>
         <div class="value" id="metaName">-</div>
       </div>
       <div class="meta-card">
-        <div class="label">엔드포인트</div>
+        <div class="label">?�드?�인??/div>
         <div class="value" id="metaEndpoint">-</div>
       </div>
       <div class="meta-card">
-        <div class="label">요청 URL</div>
+        <div class="label">?�청 URL</div>
         <div class="value" id="metaTargetUrl">-</div>
       </div>
       <div class="meta-card">
-        <div class="label">설명</div>
+        <div class="label">?�명</div>
         <div class="value" id="metaDescription">-</div>
       </div>
     </section>
 
     <section class="grid">
       <article class="panel">
-        <div class="panel-head"><h2>요청 전문 (hdr_nhnis.sys_comm + dto)</h2></div>
+        <div class="panel-head"><h2>?�청 ?�문 (hdr_nhnis.sys_comm + dto)</h2></div>
         <textarea id="requestBody" spellcheck="false" placeholder='{"hdr_nhnis":{"sys_comm":{...}},"dto":{...}}'></textarea>
       </article>
       <article class="panel">
-        <div class="panel-head"><h2>응답 전문 (hdr_nhnis + dto)</h2></div>
+        <div class="panel-head"><h2>?�답 ?�문 (hdr_nhnis + dto)</h2></div>
         <div class="response-meta" id="responseMeta">
-          <span class="empty">아직 요청하지 않았습니다.</span>
+          <span class="empty">?�직 ?�청?��? ?�았?�니??</span>
         </div>
         <textarea id="responseBody" readonly spellcheck="false"></textarea>
       </article>
     </section>
   </div>
   <script src="/_shared/error-popup.js"></script>
+  <script src="/_shared/service-client.js"></script>
   <script src="/_shared/online-single.js"></script>
 </body>
 </html>

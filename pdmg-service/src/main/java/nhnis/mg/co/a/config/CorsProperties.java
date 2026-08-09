@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * {@code spring.mvc.cors.*} 수동 CORS 설정.
  *
  * <p>allowed-origins가 비어 있으면 CORS 매핑을 등록하지 않는다.
+ * pdmg-ui 직접 호출 시 {@code http://localhost:8090} 등을 넣는다.
  */
 @ConfigurationProperties("spring.mvc.cors")
 public class CorsProperties {

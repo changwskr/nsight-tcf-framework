@@ -1,5 +1,6 @@
 /*
  * pdmg-service 전문 테스트용 단일 거래 화면 스크립트.
+ * 브라우저가 pdmg-service(POST /{serviceId})를 직접 호출한다.
  * 전문 형식: { "hdr_nhnis": { "sys_comm": { ... } }, "dto": { ... } }
  */
 
@@ -176,10 +177,13 @@ function mergePagingIntoPayload(payload) {
 }
 
 async function refreshTargetUrl() {
-  const query = new URLSearchParams({ baseUrl: targetBaseUrlEl.value.trim() });
-  const res = await fetch(`/api/transactions/${transactionIdEl.value}/target-url?${query}`);
-  document.getElementById('metaTargetUrl').textContent =
-    res.ok ? (await res.json()).targetUrl : 'URL 계산 실패';
+  document.getElementById('metaTargetUrl').textContent = currentTargetUrl();
+}
+
+function currentTargetUrl() {
+  const tx = transactions.find(item => item.id === transactionIdEl.value);
+  const path = tx?.path || ('/' + transactionIdEl.value);
+  return PdmgServiceClient.joinUrl(targetBaseUrlEl.value, path);
 }
 
 function describeError(parsed, httpStatus) {
@@ -253,16 +257,14 @@ async function sendRequest() {
 
   let result;
   try {
-    const query = new URLSearchParams({ baseUrl: targetBaseUrlEl.value.trim() });
-    const response = await fetch(`/api/relay/${transactionIdEl.value}?${query}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    result = await response.json();
+    result = await PdmgServiceClient.post(
+        currentTargetUrl(),
+        payload,
+        config.timeoutMs,
+        transactionIdEl.value);
   } catch (error) {
-    responseMetaEl.innerHTML = '<span class="badge fail">중계 실패</span>';
-    PdmgErrorPopup.showSimple(error.message || String(error), '중계 오류');
+    responseMetaEl.innerHTML = '<span class="badge fail">호출 실패</span>';
+    PdmgErrorPopup.showSimple(error.message || String(error), '호출 오류');
     return;
   }
 
