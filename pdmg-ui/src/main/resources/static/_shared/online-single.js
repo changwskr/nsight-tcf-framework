@@ -57,7 +57,11 @@ function emptySysComm(guid) {
   };
 }
 
-/** 샘플/요청 전문에 hdr_nhnis 를 맞추고 GUID를 새로 채번한다. */
+/**
+ * 샘플/요청 전문에 hdr_nhnis 를 맞춘다.
+ * @param {boolean} refreshGuid true 이면 std_gbl_id 를 항상 신규 채번한다.
+ *        (textarea에 남아 있는 샘플 GUID 재사용 → ImageLog PK 중복을 막기 위함)
+ */
 function ensureHdrNhnis(payload, refreshGuid) {
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
     payload = { dto: {} };
@@ -95,7 +99,9 @@ async function init() {
   transactions = programId ? all.filter(tx => tx.programId === programId) : all;
   config = await configRes.json();
 
-  targetBaseUrlEl.value = config.targetBaseUrl || 'http://localhost:8080';
+  targetBaseUrlEl.value = document.documentElement.dataset.defaultBaseUrl
+      || config.targetBaseUrl
+      || 'http://localhost:8080';
   renderTransactionOptions();
 
   const id = defaultTransactionId();
@@ -201,6 +207,9 @@ function dtoSummary(parsed) {
   if (Array.isArray(dto.records)) {
     return `records: ${dto.records.length}`;
   }
+  if (Array.isArray(dto.mgcoa5530S0DTOSub0)) {
+    return `Total: ${dto.size != null ? dto.size : dto.mgcoa5530S0DTOSub0.length}`;
+  }
   if (Array.isArray(dto.mgcoa8888S0DTOSub0)) {
     return `Total: ${dto.size != null ? dto.size : dto.mgcoa8888S0DTOSub0.length}`;
   }
@@ -234,7 +243,8 @@ async function sendRequest() {
     return;
   }
 
-  payload = ensureHdrNhnis(payload, false);
+  // 전송마다 std_gbl_id 를 새로 채번해 ImageLog PK 중복을 막는다.
+  payload = ensureHdrNhnis(payload, true);
   payload = mergePagingIntoPayload(payload);
   requestBodyEl.value = JSON.stringify(payload, null, 2);
 

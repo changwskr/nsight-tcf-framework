@@ -12,17 +12,35 @@
       <h1>PDMG UI</h1>
       <p>pdmg-service 전문 테스트와 이미지로그 관리 화면입니다.</p>
       <div class="nav-links">
-        <a class="nav-link" href="/imagelog/index.html">이미지로그 관리 →</a>
+        <a class="nav-link" href="/mgcoa8888/index.html">mgcoa8888 →</a>
+        <a class="nav-link" href="/mgcoa5530/index.html">mgcoa5530 →</a>
+        <a class="nav-link" href="/mgcoa9999/index.html">mgcoa9999 →</a>
+        <a class="nav-link" href="/imagelog/index.html">이미지로그 →</a>
         <span class="nav-link" id="targetInfo">대상 확인 중...</span>
       </div>
     </header>
 
     <section class="hub-grid" id="programGrid">
       <article class="hub-card">
-        <h2>이미지로그 관리</h2>
-        <p>TB_FW_IMAGE_LOG 조건 검색·목록·상세. 전문 JSON 편집 없이 관리합니다.</p>
+        <h2>mgcoa8888 <span class="group-tag">pdmg-service</span></h2>
+        <p>이미지로그. 기본 대상 http://localhost:8080 · withinSeconds·예외 조건 지원. 전송마다 GUID를 신규 채번합니다.</p>
         <div class="links">
-          <a href="/imagelog/index.html">이미지로그 관리 화면 열기</a>
+          <a href="/mgcoa8888/index.html">전문 테스트 (S0/D0)</a>
+          <a href="/imagelog/index.html">관리 화면 (조건검색 UI)</a>
+        </div>
+      </article>
+      <article class="hub-card">
+        <h2>mgcoa5530 <span class="group-tag">pdmg-service</span></h2>
+        <p>마케팅희망고객 / 안내항목 목록 조회. TCF ON 시 Handler → Facade → Service 경로.</p>
+        <div class="links">
+          <a href="/mgcoa5530/index.html">전문 테스트 (S0)</a>
+        </div>
+      </article>
+      <article class="hub-card">
+        <h2>mgcoa9999 <span class="group-tag">pdmg-service</span></h2>
+        <p>영업팁 실적 목록 조회. dto.salzTipKdc 를 비우면 전체를 조회합니다.</p>
+        <div class="links">
+          <a href="/mgcoa9999/index.html">전문 테스트 (S0)</a>
         </div>
       </article>
       <div class="empty" id="txLoading">거래 목록을 불러오는 중...</div>
@@ -30,8 +48,11 @@
   </div>
 
   <script>
+    /** 상단 고정 카드로 이미 노출한 프로그램은 동적 카드에서 제외한다. */
+    const STATIC_PROGRAM_IDS = new Set(['mgcoa8888', 'mgcoa5530', 'mgcoa9999']);
+
     function renderProgramCard(programId, items) {
-      if (programId === 'mgcoa8888') {
+      if (STATIC_PROGRAM_IDS.has(programId)) {
         return '';
       }
       const links = items
@@ -71,7 +92,7 @@
 
       const loading = document.getElementById('txLoading');
       if (loading) {
-        loading.outerHTML = cards;
+        loading.outerHTML = cards || '';
       }
     }
 

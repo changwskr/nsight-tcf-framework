@@ -11,6 +11,9 @@ const serviceIdEl = document.getElementById('serviceId');
 const screenIdEl = document.getElementById('screenId');
 const optrEnoEl = document.getElementById('optrEno');
 const exceptionOnlyEl = document.getElementById('exceptionOnly');
+const withinSecondsEl = document.getElementById('withinSeconds');
+const withinHintEl = document.getElementById('withinHint');
+const withinSecondsGroup = document.getElementById('withinSecondsGroup');
 const pageSizeEl = document.getElementById('pageSize');
 const resultMetaEl = document.getElementById('resultMeta');
 const resultCountEl = document.getElementById('resultCount');
@@ -50,11 +53,61 @@ function currentPageSize() {
   return Math.min(size, 100);
 }
 
+function newGuid() {
+  if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+    return window.crypto.randomUUID().replaceAll('-', '');
+  }
+  return 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'.replace(/x/g, () =>
+    ((Math.random() * 16) | 0).toString(16));
+}
+
+function currentWithinSeconds() {
+  const raw = withinSecondsEl.value.trim();
+  if (!raw) {
+    return null;
+  }
+  const n = parseInt(raw, 10);
+  if (Number.isNaN(n) || n <= 0) {
+    return null;
+  }
+  return n;
+}
+
+function formatWithinLabel(seconds) {
+  if (seconds == null) {
+    return '시간창 미적용 · 전체 기간';
+  }
+  if (seconds < 60) {
+    return `현재시각 기준 최근 ${seconds}초 이내 REQUEST_TIME`;
+  }
+  if (seconds % 60 === 0) {
+    return `현재시각 기준 최근 ${seconds / 60}분 이내 REQUEST_TIME`;
+  }
+  return `현재시각 기준 최근 ${seconds}초 이내 REQUEST_TIME`;
+}
+
+function setWithinSeconds(seconds, { syncException } = {}) {
+  const value = seconds == null || seconds === '' ? '' : String(seconds);
+  withinSecondsEl.value = value;
+  const n = currentWithinSeconds();
+  withinHintEl.textContent = formatWithinLabel(n);
+
+  withinSecondsGroup.querySelectorAll('.time-chip').forEach((btn) => {
+    const chipSec = btn.dataset.seconds || '';
+    btn.classList.toggle('active', chipSec === value);
+  });
+
+  if (syncException && n != null) {
+    exceptionOnlyEl.checked = true;
+  }
+}
+
 function buildListBody() {
+  const withinSeconds = currentWithinSeconds();
   return {
     hdr_nhnis: {
       sys_comm: {
-        std_gbl_id: crypto.randomUUID().replaceAll('-', ''),
+        std_gbl_id: newGuid(),
         rms_svc_c: 'mgcoa8888S0',
         scid: 'mgcoa8888',
         optr_eno: 'LOCAL',
@@ -70,6 +123,7 @@ function buildListBody() {
       screenId: screenIdEl.value.trim() || null,
       optrEno: optrEnoEl.value.trim() || null,
       exceptionOnly: !!exceptionOnlyEl.checked,
+      withinSeconds: withinSeconds,
       pageNo: pageNo,
       pageSize: currentPageSize()
     }
@@ -167,7 +221,9 @@ function renderDetail(row) {
     ['응답시각', row.responseTime],
     ['예외타입', row.exceptionType],
     ['예외코드', row.exceptionCode],
-    ['예외메시지', row.exceptionMsg]
+    ['예외메시지', row.exceptionMsg],
+    ['요청전문', row.requestMsg],
+    ['응답전문', row.responseMsg]
   ];
 
   detailBodyEl.innerHTML = `
@@ -175,7 +231,7 @@ function renderDetail(row) {
       ${fields.map(([label, value]) => `
         <div>
           <dt>${escapeHtml(label)}</dt>
-          <dd class="${label.includes('메시지') || label === 'GUID' ? 'mono wrap' : 'mono'}">${escapeHtml(value)}</dd>
+          <dd class="${label.includes('메시지') || label.includes('전문') || label === 'GUID' ? 'mono wrap' : 'mono'}">${escapeHtml(value)}</dd>
         </div>
       `).join('')}
     </dl>
@@ -221,6 +277,8 @@ async function search() {
     <span class="badge ${ok ? 'ok' : 'fail'}">HTTP ${result.httpStatus}</span>
     <span>${result.elapsedMs} ms</span>
     <span>Total: ${totalCount} · page ${pageNo}/${Math.max(totalPages, 1)}</span>
+    <span>${escapeHtml(formatWithinLabel(currentWithinSeconds()))}</span>
+    ${exceptionOnlyEl.checked ? '<span class="badge fail">예외만</span>' : ''}
     <span>${escapeHtml(result.targetUrl)}</span>
     ${ok ? '' : `<span class="badge fail">${escapeHtml((parsed && (parsed.error || parsed.message)) || '조회 실패')}</span>`}
   `;
@@ -243,7 +301,7 @@ async function deleteSelected() {
     body: JSON.stringify({
       hdr_nhnis: {
         sys_comm: {
-          std_gbl_id: crypto.randomUUID().replaceAll('-', ''),
+          std_gbl_id: newGuid(),
           rms_svc_c: 'mgcoa8888D0',
           scid: 'mgcoa8888',
           optr_eno: 'LOCAL',
@@ -282,11 +340,12 @@ function resetFilters() {
   screenIdEl.value = '';
   optrEnoEl.value = '';
   exceptionOnlyEl.checked = false;
+  setWithinSeconds('', { syncException: false });
   pageSizeEl.value = '20';
   pageNo = 1;
   totalPages = 1;
   totalCount = 0;
-  resultMetaEl.innerHTML = '<span class="empty">조건을 입력한 뒤 조회하세요.</span>';
+  resultMetaEl.innerHTML = '<span class="empty">최근 구간을 고르고 조회하세요.</span>';
   renderRows([], { pageNo: 1, totalCount: 0, totalPages: 1 });
 }
 
@@ -295,6 +354,13 @@ async function init() {
   const config = await configRes.json();
   targetBaseUrlEl.value = config.targetBaseUrl || 'http://localhost:8080';
   document.getElementById('targetInfo').textContent = `대상 pdmg-service: ${targetBaseUrlEl.value}`;
+
+  setWithinSeconds('', { syncException: false });
+  withinSecondsGroup.querySelectorAll('.time-chip').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      setWithinSeconds(btn.dataset.seconds || '', { syncException: true });
+    });
+  });
 
   document.getElementById('searchBtn').addEventListener('click', () => {
     pageNo = 1;

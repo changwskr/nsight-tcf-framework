@@ -1,7 +1,10 @@
 package nhnis.mg.application.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -26,11 +29,15 @@ public class mgcoa8888Service {
 
     private static final Logger log = LoggerFactory.getLogger(mgcoa8888Service.class);
 
+    /** withinSeconds 상한 (24시간) */
+    private static final int MAX_WITHIN_SECONDS = 86400;
+
     @Autowired
     private mgcoa8888DAO mgcoa8888DAO;
 
     /**
      * 이미지로그 목록 조회 (페이징).
+     * withinSeconds 가 있으면 현재시각 기준 N초 이내 REQUEST_TIME 만 조회한다.
      */
     public mgcoa8888S0DTOout mgcoa8888S0(mgcoa8888S0DTOin input) throws Exception {
         log.info("▶▶▶▶▶▶▶▶ mgcoa8888S0 Service Start!");
@@ -44,6 +51,7 @@ public class mgcoa8888Service {
             if (Boolean.TRUE.equals(input.getExceptionOnly())) {
                 param.put("exceptionOnly", true);
             }
+            applyWithinSeconds(param, input.getWithinSeconds());
         }
 
         int pageNo = input == null || input.getPageNo() == null || input.getPageNo() <= 0
@@ -75,6 +83,8 @@ public class mgcoa8888Service {
                 sub.setExceptionType(asString(row, "EXCEPTION_TYPE", "exceptionType"));
                 sub.setExceptionCode(asString(row, "EXCEPTION_CODE", "exceptionCode"));
                 sub.setExceptionMsg(asString(row, "EXCEPTION_MSG", "exceptionMsg"));
+                sub.setRequestMsg(asString(row, "REQUEST_MSG", "requestMsg"));
+                sub.setResponseMsg(asString(row, "RESPONSE_MSG", "responseMsg"));
                 output.addmgcoa8888S0DTOSub0(sub);
             }
         }
@@ -84,7 +94,10 @@ public class mgcoa8888Service {
         output.setTotalCount(totalCount);
         output.setTotalPages(pageSize <= 0 ? 0 : (int) ((totalCount + pageSize - 1L) / pageSize));
 
-        log.info("▶▶▶▶▶▶▶▶ mgcoa8888S0 Service End! - Total: " + totalCount);
+        log.info("▶▶▶▶▶▶▶▶ mgcoa8888S0 Service End! - Total: " + totalCount
+                + (param.containsKey("requestTimeFrom")
+                ? " (from=" + param.get("requestTimeFrom") + ", to=" + param.get("requestTimeTo") + ")"
+                : ""));
         return output;
     }
 
@@ -128,6 +141,23 @@ public class mgcoa8888Service {
         return output;
     }
 
+    /**
+     * 현재시각(yyyyMMddHHmmss) 기준 withinSeconds 초 전 ~ 현재 구간을 SQL 조건으로 넣는다.
+     */
+    private void applyWithinSeconds(Map<String, Object> param, Integer withinSeconds) {
+        if (withinSeconds == null || withinSeconds <= 0) {
+            return;
+        }
+        int seconds = Math.min(withinSeconds, MAX_WITHIN_SECONDS);
+        long nowMs = System.currentTimeMillis();
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMddHHmmss", Locale.KOREA);
+        String to = fmt.format(new Date(nowMs));
+        String from = fmt.format(new Date(nowMs - seconds * 1000L));
+        param.put("requestTimeFrom", from);
+        param.put("requestTimeTo", to);
+        param.put("withinSeconds", seconds);
+    }
+
     private void putIfHasText(Map<String, Object> param, String key, String value) {
         if (value != null && !value.isBlank()) {
             param.put(key, value.trim());
@@ -154,6 +184,21 @@ public class mgcoa8888Service {
                 }
             }
         }
-        return value == null ? null : String.valueOf(value);
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof java.sql.Clob clob) {
+            try {
+                long len = clob.length();
+                if (len <= 0) {
+                    return "";
+                }
+                int size = (int) Math.min(len, Integer.MAX_VALUE);
+                return clob.getSubString(1, size);
+            } catch (Exception e) {
+                return String.valueOf(value);
+            }
+        }
+        return String.valueOf(value);
     }
 }

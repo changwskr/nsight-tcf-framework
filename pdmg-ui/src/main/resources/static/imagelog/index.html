@@ -5,14 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PDMG 이미지로그 관리</title>
   <link rel="stylesheet" href="/_shared/online.css">
+  <style>
+    .time-window {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .time-chip {
+      border: 1px solid var(--border, #334155);
+      background: transparent;
+      color: inherit;
+      border-radius: 6px;
+      padding: 0.35rem 0.7rem;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.85rem;
+    }
+    .time-chip:hover { border-color: var(--accent, #38bdf8); }
+    .time-chip.active {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent, #38bdf8);
+      color: var(--accent, #38bdf8);
+    }
+    .time-window-hint {
+      width: 100%;
+      font-size: 0.8rem;
+      opacity: 0.75;
+      margin: 0;
+    }
+  </style>
 </head>
 <body>
   <div class="wrap wrap-wide">
     <header>
-      <h1>이미지로그 관리</h1>
-      <p>TB_FW_IMAGE_LOG 조회·삭제 화면입니다. 조건 검색, 페이징, 선택 삭제를 지원합니다.</p>
+      <h1>이미지로그 관리 (mgcoa8888)</h1>
+      <p>pdmg-service TB_FW_IMAGE_LOG. 현재시각 기준 N초 전 구간으로 문제 거래를 추적합니다. 조회/삭제 요청마다 GUID를 신규 채번합니다.</p>
       <div class="nav-links">
         <a class="nav-link" href="/index.html">← 거래 목록</a>
+        <a class="nav-link" href="/mgcoa8888/index.html">전문 테스트 →</a>
         <span class="nav-link" id="targetInfo">대상 확인 중...</span>
       </div>
     </header>
@@ -22,6 +53,22 @@
         <label for="targetBaseUrl">pdmg-service URL</label>
         <input id="targetBaseUrl" type="text" value="http://localhost:8080">
       </div>
+
+      <div class="field field-wide">
+        <label>최근 구간 (현재시각 기준)</label>
+        <div class="time-window" id="withinSecondsGroup" role="group" aria-label="최근 초 단위 조회">
+          <button type="button" class="time-chip" data-seconds="">전체</button>
+          <button type="button" class="time-chip" data-seconds="5">5초 전</button>
+          <button type="button" class="time-chip" data-seconds="10">10초 전</button>
+          <button type="button" class="time-chip" data-seconds="15">15초 전</button>
+          <button type="button" class="time-chip" data-seconds="30">30초 전</button>
+          <button type="button" class="time-chip" data-seconds="60">1분 전</button>
+          <button type="button" class="time-chip" data-seconds="300">5분 전</button>
+        </div>
+        <p class="time-window-hint" id="withinHint">시간창 미적용 · 전체 기간</p>
+        <input id="withinSeconds" type="hidden" value="">
+      </div>
+
       <div class="field">
         <label for="guid">GUID</label>
         <input id="guid" type="text" placeholder="std_gbl_id 정확 일치">
@@ -39,10 +86,10 @@
         <input id="optrEno" type="text" placeholder="예: E0000001">
       </div>
       <div class="field field-check">
-        <label for="exceptionOnly">예외만</label>
+        <label for="exceptionOnly">문제건만</label>
         <label class="check-line">
           <input id="exceptionOnly" type="checkbox">
-          <span>EXCEPTION_TYPE 있는 건만</span>
+          <span>예외(EXCEPTION) 있는 건만</span>
         </label>
       </div>
       <div class="field">
@@ -57,7 +104,7 @@
     </section>
 
     <section class="response-meta" id="resultMeta">
-      <span class="empty">조건을 입력한 뒤 조회하세요.</span>
+      <span class="empty">최근 구간을 고르고 조회하세요. 문제 추적은 「예외만」과 함께 쓰면 됩니다.</span>
     </section>
 
     <section class="panel table-panel">

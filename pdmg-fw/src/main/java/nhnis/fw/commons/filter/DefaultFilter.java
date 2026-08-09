@@ -13,18 +13,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.reactive.ClientHttpConnector;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -40,11 +37,12 @@ import nhnis.fw.commons.log.PdmgTxFlowLog;
  *
  * <p>{@code nhnis.fw.commons.filter.enabled=true} 일 때 활성.
  * local 프로파일에서는 {@code hdr_nhnis} 없이 {@code {"dto":...}} 만 와도 합성 Header로 통과시킨다.
+ * {@link OncePerRequestFilter} 로 FORWARD/ERROR 디스패치에서 중복 실행을 막는다.
  */
 @Slf4j
 @Component
 @ConditionalOnProperty(name = "nhnis.fw.commons.filter.enabled", havingValue = "true")
-public class DefaultFilter implements Filter {
+public class DefaultFilter extends OncePerRequestFilter {
 
     private final ClientHttpConnector connector; // reserved for APIGW/OCR relay hooks
 
@@ -71,33 +69,24 @@ public class DefaultFilter implements Filter {
     }
 
     @Override
-    public void init(FilterConfig filterConfig) {
-        if (log.isDebugEnabled()) {
-            log.debug("Application DefaultFilter is loaded");
-        }
-    }
-
-    @Override
-    public void doFilter(
-            ServletRequest servletRequest,
-            ServletResponse servletResponse,
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
             FilterChain filterChain
     ) throws IOException, ServletException {
         PdmgTxFlowLog.enter(log, DefaultFilter.class, "doFilter");
         try {
-            doFilterInternal(servletRequest, servletResponse, filterChain);
+            doFilterInternal0(request, response, filterChain);
         } finally {
             PdmgTxFlowLog.leave(log, DefaultFilter.class, "doFilter");
         }
     }
 
-    private void doFilterInternal(
-            ServletRequest servletRequest,
-            ServletResponse servletResponse,
+    private void doFilterInternal0(
+            HttpServletRequest request,
+            HttpServletResponse response,
             FilterChain filterChain
     ) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         String uri = request.getRequestURI();
         String serviceId = uri.contains("/")
@@ -132,7 +121,7 @@ public class DefaultFilter implements Filter {
                         header
                 );
                 ServiceContextHolder.setInstance(serviceContext);
-                filterChain.doFilter(request, servletResponse);
+                filterChain.doFilter(request, response);
             } else {
                 CachedBodyHttpServletRequest wrapper =
                         new CachedBodyHttpServletRequest(request);
@@ -256,7 +245,7 @@ public class DefaultFilter implements Filter {
                 ServiceContextHolder.setInstance(serviceContext);
                 wrapper.setAttribute(REQUEST_BODY_ATTR, requestBody);
 
-                filterChain.doFilter(wrapper, servletResponse);
+                filterChain.doFilter(wrapper, response);
             }
         } catch (Exception e) {
             log.error(

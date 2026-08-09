@@ -14,7 +14,8 @@ import nhnis.mg.application.service.mgcoa5530Service;
 /**
  * 마케팅희망고객 조회 Facade.
  *
- * <p>Handler → Facade → Service 경계. 업무 선후처리·트랜잭션 경계는 Facade 메서드다.
+ * <p>Handler → Facade → Service 경계. {@code @Transactional} 은 Facade,
+ * 업무 선후처리({@code BizPrePostAspect})는 Service 호출 전후에 적용된다.
  */
 @Service
 public class mgcoa5530Facade {

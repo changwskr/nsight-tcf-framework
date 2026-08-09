@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -52,6 +53,23 @@ public class ImageLogHandler {
                SET RESPONSE_TIME = ?,
                    RESPONSE_MSG = ?,
                    REQUEST_MSG = COALESCE(REQUEST_MSG, ?)
+             WHERE GUID = ?
+            """;
+
+    /** 동일 GUID 재요청(샘플 재전송 등) 시 선처리 행을 덮어쓴다. */
+    private static final String UPDATE_PRE_SQL = """
+            UPDATE TB_FW_IMAGE_LOG
+               SET SERVICE_ID = ?,
+                   SCREEN_ID = ?,
+                   OPTR_ENO = ?,
+                   CLIENT_IP = ?,
+                   REQUEST_TIME = ?,
+                   REQUEST_MSG = ?,
+                   RESPONSE_TIME = NULL,
+                   RESPONSE_MSG = NULL,
+                   EXCEPTION_TYPE = NULL,
+                   EXCEPTION_CODE = NULL,
+                   EXCEPTION_MSG = NULL
              WHERE GUID = ?
             """;
 
@@ -214,22 +232,50 @@ public class ImageLogHandler {
                 return;
             }
 
-            jdbcTemplate.update(
-                    INSERT_SQL,
-                    dto.getGuid(),
+            // UPDATE 우선 → 0건이면 INSERT (동일 GUID 재전송 시 PK 위반 ERROR 로그를 피한다)
+            int updated = jdbcTemplate.update(
+                    UPDATE_PRE_SQL,
                     dto.getServiceId(),
                     dto.getScreenId(),
                     dto.getOptrEno(),
                     dto.getClientIp(),
                     dto.getRequestTime(),
-                    dto.getResponseTime(),
-                    dto.getExceptionType(),
-                    dto.getExceptionCode(),
-                    dto.getExceptionMsg(),
                     dto.getRequestMsg(),
-                    dto.getResponseMsg());
-            if (log.isDebugEnabled()) {
-                log.debug("[ImageLog] inserted guid={} serviceId={}", dto.getGuid(), dto.getServiceId());
+                    dto.getGuid());
+            if (updated > 0) {
+                log.info("[ImageLog] guid already exists, refreshed pre fields guid={}", dto.getGuid());
+                return;
+            }
+            try {
+                jdbcTemplate.update(
+                        INSERT_SQL,
+                        dto.getGuid(),
+                        dto.getServiceId(),
+                        dto.getScreenId(),
+                        dto.getOptrEno(),
+                        dto.getClientIp(),
+                        dto.getRequestTime(),
+                        dto.getResponseTime(),
+                        dto.getExceptionType(),
+                        dto.getExceptionCode(),
+                        dto.getExceptionMsg(),
+                        dto.getRequestMsg(),
+                        dto.getResponseMsg());
+                if (log.isDebugEnabled()) {
+                    log.debug("[ImageLog] inserted guid={} serviceId={}", dto.getGuid(), dto.getServiceId());
+                }
+            } catch (DuplicateKeyException dup) {
+                // 동시성으로 INSERT 경합 시 한 번 더 갱신 (log4jdbc ERROR는 남을 수 있음)
+                jdbcTemplate.update(
+                        UPDATE_PRE_SQL,
+                        dto.getServiceId(),
+                        dto.getScreenId(),
+                        dto.getOptrEno(),
+                        dto.getClientIp(),
+                        dto.getRequestTime(),
+                        dto.getRequestMsg(),
+                        dto.getGuid());
+                log.info("[ImageLog] guid already exists, refreshed pre fields guid={}", dto.getGuid());
             }
         } catch (Exception e) {
             log.error("[ImageLog] persist failed guid={}", dto.getGuid(), e);

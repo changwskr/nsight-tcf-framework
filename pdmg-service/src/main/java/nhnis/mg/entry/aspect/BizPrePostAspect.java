@@ -34,13 +34,14 @@ public class BizPrePostAspect {
     private static final Logger log = LoggerFactory.getLogger(BizPrePostAspect.class);
 
     /**
-     * 업무 경계.
-     * <ul>
-     *   <li>TCF ON: Facade ({@code nhnis.mg.entry.facade})</li>
-     *   <li>TCF OFF: 거래별 Controller</li>
-     * </ul>
+     * 업무 경계 = Service 메서드.
+     *
+     * <p>TCF ON 흐름:
+     * {@code Handler → Facade(@Transactional) → [업무 선처리] → Service → [업무 후처리]}
+     *
+     * <p>TCF OFF(레거시 Controller → Service)도 Service 경계에서 동일하게 선후처리한다.
      */
-    @Pointcut("execution(* nhnis.mg.entry.controller..*(..)) || execution(* nhnis.mg.entry.facade..*(..))")
+    @Pointcut("execution(public * nhnis.mg.application.service..*(..))")
     public void mgBizBoundary() {
         // pointcut
     }

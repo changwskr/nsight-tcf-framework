@@ -16,7 +16,7 @@ import nhnis.mg.application.service.mgcoa8888Service;
 /**
  * 이미지로그 조회/삭제 Facade.
  *
- * <p>업무 선후처리·트랜잭션 경계는 Facade 메서드다.
+ * <p>{@code @Transactional} 은 Facade, 업무 선후처리({@code BizPrePostAspect})는 Service 전후다.
  */
 @Service
 public class mgcoa8888Facade {

@@ -20,6 +20,12 @@
         <if test="exceptionOnly != null and exceptionOnly == true">
            AND T1.EXCEPTION_TYPE IS NOT NULL
         </if>
+        <if test="requestTimeFrom != null and requestTimeFrom != ''">
+           AND T1.REQUEST_TIME &gt;= #{requestTimeFrom}
+        </if>
+        <if test="requestTimeTo != null and requestTimeTo != ''">
+           AND T1.REQUEST_TIME &lt;= #{requestTimeTo}
+        </if>
     </sql>
 
     <select id="mgcoa8888S0_S0" resultType="java.util.HashMap"
@@ -38,6 +44,8 @@
                     , T1.EXCEPTION_TYPE AS EXCEPTION_TYPE
                     , T1.EXCEPTION_CODE AS EXCEPTION_CODE
                     , T1.EXCEPTION_MSG  AS EXCEPTION_MSG
+                    , T1.REQUEST_MSG    AS REQUEST_MSG
+                    , T1.RESPONSE_MSG   AS RESPONSE_MSG
                  FROM TB_FW_IMAGE_LOG T1
                <include refid="mgcoa8888Where"/>
                 ORDER BY T1.REQUEST_TIME DESC, T1.GUID DESC
