@@ -17,6 +17,12 @@ logs/
 *.trace.db
 .idea/
 .vscode/
+.classpath
+.project
+.settings/
+**/.classpath
+**/.project
+**/.settings/
 .DS_Store
 upload-data/
 data/nsight-txlog/
