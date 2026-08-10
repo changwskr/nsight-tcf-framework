@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -20,13 +21,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import nhnis.ontology.config.OntologyProperties;
+import nhnis.ontology.evidence.OntologyEvidenceMerger;
 import nhnis.ontology.facade.OntologyFacade;
+import nhnis.ontology.loader.OntologyGraphBootstrap;
 import nhnis.ontology.ontology.OntologyRegistry;
 import nhnis.ontology.prompt.PromptContextExporter;
 import nhnis.ontology.recommend.RecommendService;
 import nhnis.ontology.scan.InventorySnapshot;
 import nhnis.ontology.scan.PdmgInventoryScanner;
 import nhnis.ontology.seed.MappingSeedGenerator;
+import nhnis.ontology.store.OntologyStore;
 import nhnis.ontology.validate.OntologyValidator;
 
 @RestController
@@ -42,6 +46,9 @@ public class OntologyController {
     private final MappingSeedGenerator seedGenerator;
     private final OntologyProperties properties;
     private final ObjectMapper objectMapper;
+    private final OntologyStore store;
+    private final OntologyGraphBootstrap graphBootstrap;
+    private final OntologyEvidenceMerger evidenceMerger;
 
     public OntologyController(
             OntologyRegistry registry,
@@ -52,7 +59,10 @@ public class OntologyController {
             RecommendService recommendService,
             MappingSeedGenerator seedGenerator,
             OntologyProperties properties,
-            ObjectMapper objectMapper) {
+            ObjectMapper objectMapper,
+            OntologyStore store,
+            OntologyGraphBootstrap graphBootstrap,
+            OntologyEvidenceMerger evidenceMerger) {
         this.registry = registry;
         this.facade = facade;
         this.scanner = scanner;
@@ -62,6 +72,9 @@ public class OntologyController {
         this.seedGenerator = seedGenerator;
         this.properties = properties;
         this.objectMapper = objectMapper;
+        this.store = store;
+        this.graphBootstrap = graphBootstrap;
+        this.evidenceMerger = evidenceMerger;
     }
 
     @GetMapping("/catalog")
@@ -150,7 +163,10 @@ public class OntologyController {
             @RequestParam(defaultValue = "CO") String business,
             @RequestParam(defaultValue = "A") String function,
             @RequestParam(defaultValue = "crud") String intent,
-            @RequestParam(required = false) String like) {
+            @RequestParam(required = false) String like,
+            @RequestParam(required = false) String dbAccess,
+            @RequestParam(required = false) String paging,
+            @RequestParam(required = false) String channel) {
         Map<String, String> req = new java.util.LinkedHashMap<>();
         req.put("system", system);
         req.put("business", business);
@@ -158,6 +174,15 @@ public class OntologyController {
         req.put("intent", intent);
         if (like != null) {
             req.put("like", like);
+        }
+        if (dbAccess != null) {
+            req.put("dbAccess", dbAccess);
+        }
+        if (paging != null) {
+            req.put("paging", paging);
+        }
+        if (channel != null) {
+            req.put("channel", channel);
         }
         return recommendService.recommend(req);
     }
@@ -197,12 +222,37 @@ public class OntologyController {
 
     @PostMapping("/reload")
     public Map<String, Object> reload() throws IOException {
+        if (!properties.isAdminMutationsEnabled()) {
+            return Map.of(
+                    "status", "FORBIDDEN",
+                    "error", "Admin mutations disabled (ontology.admin-mutations-enabled=false)");
+        }
         registry.reload();
-        return registry.catalog();
+        int programs = graphBootstrap.reloadAtomic();
+        Map<String, Object> out = new LinkedHashMap<>(registry.catalog());
+        out.put("reload", Map.of(
+                "registry", "OK",
+                "graphStore", "OK",
+                "mode", "ATOMIC_SWAP",
+                "programsReloaded", programs,
+                "conceptCount", store.allConcepts().size(),
+                "relationCount", store.allRelations().size()));
+        return out;
+    }
+
+    @PostMapping("/evidence/upgrade")
+    public Map<String, Object> upgradeEvidence() {
+        if (!properties.isAdminMutationsEnabled()) {
+            return Map.of("status", "FORBIDDEN", "error", "Admin mutations disabled");
+        }
+        return evidenceMerger.upgradeFromFilesystem();
     }
 
     @PostMapping("/import/pdmg")
     public Map<String, Object> importPdmg() throws IOException {
+        if (!properties.isAdminMutationsEnabled()) {
+            return Map.of("status", "FORBIDDEN", "error", "Admin mutations disabled");
+        }
         InventorySnapshot snapshot = scanner.scan();
         Path out = scanner.writeYaml(snapshot);
         return Map.of(
@@ -216,6 +266,9 @@ public class OntologyController {
     @PostMapping("/seed/pdmg")
     public Map<String, Object> seedPdmg(
             @RequestParam(name = "overwrite", defaultValue = "false") boolean overwrite) throws IOException {
+        if (!properties.isAdminMutationsEnabled()) {
+            return Map.of("status", "FORBIDDEN", "error", "Admin mutations disabled");
+        }
         InventorySnapshot snapshot = scanner.scan();
         scanner.writeYaml(snapshot);
         MappingSeedGenerator.SeedReport report = seedGenerator.generate(snapshot, overwrite);

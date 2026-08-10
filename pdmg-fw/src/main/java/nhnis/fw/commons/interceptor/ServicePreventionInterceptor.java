@@ -14,7 +14,10 @@ import java.util.UUID;
 import org.apache.logging.log4j.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -30,12 +33,17 @@ import nhnis.fw.commons.dto.header.hdr_nhnis;
 import nhnis.fw.commons.dto.header.sys_comm;
 import nhnis.fw.commons.filter.CachedBodyHttpServletRequest;
 import nhnis.fw.commons.imagelog.ImageLogHandler;
+import nhnis.fw.commons.jwt.JwtProvider;
 import nhnis.fw.commons.log.PdmgMessagePrinter;
 import nhnis.fw.commons.log.PdmgTxFlowLog;
 import nhnis.fw.commons.log.PdmgTxLog;
 
 /**
  * 시스템 선/후처리 Interceptor.
+ *
+ * <p>선처리에서 JWT Access Token을 검증한다.
+ * {@code jwt.enabled=false} 이면 토큰 유무와 관계없이 검증을 생략한다.
+ * {@code jwt.enabled=true} 이면 Bearer Access Token 필수·검증.
  *
  * <p>{@code log.info} 는 이 클래스에서 직접 호출한다. 그래야 운영 로그의
  * {@code [ServicePreventionInterceptor.postHandle]} 위치가 유지된다.
@@ -51,9 +59,14 @@ public class ServicePreventionInterceptor implements HandlerInterceptor {
     private static final String GUID = "guid";
 
     private final ImageLogHandler imageLogHandler;
+    private final JwtProvider jwtProvider;
 
-    public ServicePreventionInterceptor(ImageLogHandler imageLogHandler) {
+    @Value("${jwt.enabled:false}")
+    private boolean jwtEnabled;
+
+    public ServicePreventionInterceptor(ImageLogHandler imageLogHandler, JwtProvider jwtProvider) {
         this.imageLogHandler = imageLogHandler;
+        this.jwtProvider = jwtProvider;
     }
 
     @Override
@@ -82,6 +95,13 @@ public class ServicePreventionInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        if (!validateJwt(request, response)) {
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info(PdmgTxLog.systemPreEnd());
+            }
+            return false;
+        }
+
         ServiceContext ctx = ServiceContextHolder.getInstance();
         if (ctx == null) {
             LOGGER.warn(PdmgTxLog.systemContextNull());
@@ -106,6 +126,54 @@ public class ServicePreventionInterceptor implements HandlerInterceptor {
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info(PdmgTxLog.systemPreEnd());
         }
+        return true;
+    }
+
+    /**
+     * 시스템 선처리 JWT 검증.
+     *
+     * <p>{@code jwt.enabled=false} 이면 즉시 통과한다.
+     *
+     * @return false 이면 401 응답 후 체인 중단
+     */
+    private boolean validateJwt(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if (!jwtEnabled) {
+            return true;
+        }
+
+        String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+        boolean hasBearer = StringUtils.hasText(authorization) && authorization.startsWith("Bearer ");
+
+        if (!hasBearer) {
+            LOGGER.warn("[ServicePreventionInterceptor] Access Token이 없습니다.");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Access Token이 없습니다.");
+            return false;
+        }
+
+        String token = authorization.substring("Bearer ".length()).trim();
+        if (!StringUtils.hasText(token)) {
+            LOGGER.warn("[ServicePreventionInterceptor] Access Token이 비어 있습니다.");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Access Token이 없습니다.");
+            return false;
+        }
+
+        if (!jwtProvider.validate(token)) {
+            LOGGER.warn("[ServicePreventionInterceptor] 유효하지 않은 Token입니다. (JWKS/서명/만료 확인)");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "유효하지 않은 Token입니다.");
+            return false;
+        }
+        if (!jwtProvider.isAccessToken(token)) {
+            LOGGER.warn("[ServicePreventionInterceptor] Access Token이 아닙니다.");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Access Token이 아닙니다.");
+            return false;
+        }
+
+        String ssoId = jwtProvider.getSsoId(token);
+        request.setAttribute("ssoId", ssoId);
+        if (StringUtils.hasText(ssoId)) {
+            ThreadContext.put("userId", ssoId);
+        }
+        LOGGER.info("[ServicePreventionInterceptor] JWT 검증 통과 ssoId={}", ssoId);
         return true;
     }
 

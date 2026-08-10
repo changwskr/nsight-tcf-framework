@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    active: local
   application:
     name: tcf-ontology-service
   servlet:
@@ -24,6 +22,12 @@ nhnis:
   ontology:
     base-path: ontology
     versions-path: ontology/versions
+    product-version: 0.1.0-RC1
+    schema-version: "1.0"
+    knowledge-snapshot: 2026.08.10.03
+    knowledge-path: docs/knowledge/exearchidoc
+    # Safe default: admin mutation APIs off unless local/dev profile enables them.
+    admin-mutations-enabled: false
     scan:
       pdmg-service: ../pdmg-service
       pdmg-ui: ../pdmg-ui
@@ -40,6 +44,10 @@ spring:
 server:
   port: 8098
 
+nhnis:
+  ontology:
+    admin-mutations-enabled: true
+
 ---
 spring:
   config:
@@ -49,6 +57,10 @@ spring:
 server:
   port: 8098
 
+nhnis:
+  ontology:
+    admin-mutations-enabled: true
+
 ---
 spring:
   config:
@@ -57,3 +69,7 @@ spring:
 
 server:
   port: 8098
+
+nhnis:
+  ontology:
+    admin-mutations-enabled: false

@@ -1,6 +1,7 @@
 package nhnis.ontology.query;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -227,6 +228,10 @@ public class OntologyQueryService {
             paths = ensureEndToEndPaths(paths, table, serviceIds);
         }
 
+        boolean pathReachesSystem = paths.stream()
+                .flatMap(List::stream)
+                .anyMatch(s -> ConceptType.SYSTEM.name().equals(String.valueOf(s.get("fromType"))));
+
         Map<String, Object> out = new LinkedHashMap<>();
         out.put("table", table.toMap());
         out.put("affectedSqlIds", new ArrayList<>(sqlIds));
@@ -241,6 +246,7 @@ public class OntologyQueryService {
         out.put("affectedBusinesses", new ArrayList<>(businesses));
         out.put("affectedSystems", new ArrayList<>(systems));
         out.put("paths", paths);
+        out.put("pathStatus", pathReachesSystem ? "COMPLETE" : (paths.isEmpty() ? "UNRESOLVED" : "PARTIAL"));
         return out;
     }
 
@@ -331,6 +337,11 @@ public class OntologyQueryService {
         return merged;
     }
 
+    /**
+     * Rebuild reverse path from real DESIGN structure edges only.
+     * Never invent relations that do not exist in OntologyStore
+     * (e.g. ServiceId -HANDLED_BY→ Table is forbidden).
+     */
     private List<List<Map<String, Object>>> synthesizeImpactPaths(OntologyConcept table, Set<String> serviceIds) {
         List<List<Map<String, Object>>> out = new ArrayList<>();
         for (String sidName : serviceIds) {
@@ -353,6 +364,7 @@ public class OntologyQueryService {
                 rev.put("predicate", step.get("predicate"));
                 rev.put("from", step.get("from"));
                 rev.put("graphType", step.get("graphType"));
+                rev.put("note", "replay-from-design-structure");
                 store.findConcept(String.valueOf(step.get("from"))).ifPresent(c -> {
                     rev.put("fromType", c.getType().name());
                     rev.put("fromName", c.getName());
@@ -360,15 +372,9 @@ public class OntologyQueryService {
                 reverse.add(rev);
             }
             prependClassificationReverse(reverse, sid);
-            Map<String, Object> head = new LinkedHashMap<>();
-            head.put("from", sid.getId());
-            head.put("fromType", ConceptType.SERVICE_ID.name());
-            head.put("fromName", sid.getName());
-            head.put("predicate", RelationType.HANDLED_BY.name());
-            head.put("to", table.getId());
-            head.put("note", "synthesized-from-design-structure");
-            reverse.add(0, head);
-            out.add(reverse);
+            if (!reverse.isEmpty()) {
+                out.add(reverse);
+            }
         }
         return out;
     }
@@ -486,11 +492,89 @@ public class OntologyQueryService {
         out.put("counts", Map.of(
                 "concepts", store.allConcepts().size(),
                 "relations", store.allRelations().size()));
+        out.put("byType", countByType());
+        return out;
+    }
+
+    /**
+     * Architecture object catalog for Workbench (all Ontology concepts).
+     */
+    public Map<String, Object> listConcepts(String typeFilter, String keyword) {
+        String type = typeFilter == null ? "" : typeFilter.trim().toUpperCase(Locale.ROOT);
+        String kw = keyword == null ? "" : keyword.trim().toLowerCase(Locale.ROOT);
+
+        List<Map<String, Object>> objects = store.allConcepts().stream()
+                .sorted(Comparator
+                        .comparing((OntologyConcept c) -> c.getType().name())
+                        .thenComparing(OntologyConcept::getName, String.CASE_INSENSITIVE_ORDER))
+                .filter(c -> type.isBlank() || type.equals("ALL") || c.getType().name().equals(type))
+                .filter(c -> {
+                    if (kw.isBlank()) {
+                        return true;
+                    }
+                    String hay = (c.getId() + " " + c.getName() + " " + c.getDescription()).toLowerCase(Locale.ROOT);
+                    return hay.contains(kw);
+                })
+                .map(this::architectureObjectSummary)
+                .collect(Collectors.toList());
+
+        Map<String, Object> out = new LinkedHashMap<>();
+        out.put("totalConcepts", store.allConcepts().size());
+        out.put("totalRelations", store.allRelations().size());
+        out.put("byType", countByType());
+        out.put("filter", Map.of(
+                "type", type.isBlank() ? "ALL" : type,
+                "keyword", keyword == null ? "" : keyword));
+        out.put("count", objects.size());
+        out.put("objects", objects);
+        out.put("note", "Architecture objects = Ontology concept graph nodes (programs/services/components/tables/runtime…)");
         return out;
     }
 
     public Map<String, Object> snapshot() {
         return store.snapshot();
+    }
+
+    private Map<String, Long> countByType() {
+        Map<String, Long> byType = new LinkedHashMap<>();
+        for (ConceptType t : ConceptType.values()) {
+            byType.put(t.name(), 0L);
+        }
+        for (OntologyConcept c : store.allConcepts()) {
+            byType.merge(c.getType().name(), 1L, Long::sum);
+        }
+        return byType;
+    }
+
+    private Map<String, Object> architectureObjectSummary(OntologyConcept c) {
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("id", c.getId());
+        m.put("type", c.getType().name());
+        m.put("name", c.getName());
+        m.put("status", c.getStatus() == null ? "ACTIVE" : c.getStatus().name());
+        m.put("description", c.getDescription());
+        if (c.attr("role") != null) {
+            m.put("role", c.attr("role"));
+        }
+        if (c.attr("pk") != null) {
+            m.put("pk", c.attr("pk"));
+        }
+        if (c.attr("op") != null) {
+            m.put("op", c.attr("op"));
+        }
+        if (c.getProvenance() != null) {
+            m.put("provenance", c.getProvenance().toMap());
+            m.put("verificationStatus",
+                    c.getProvenance().getVerificationStatus() == null
+                            ? "UNRESOLVED"
+                            : c.getProvenance().getVerificationStatus().name());
+            m.put("sourcePath", c.getProvenance().getSourcePath());
+        } else {
+            m.put("verificationStatus", "UNRESOLVED");
+        }
+        m.put("outgoingCount", store.findRelationsFrom(c.getId()).size());
+        m.put("incomingCount", store.findRelationsTo(c.getId()).size());
+        return m;
     }
 
     private void collectImpactNode(
@@ -582,6 +666,10 @@ public class OntologyQueryService {
             var next = store.findRelationsFrom(current).stream()
                     .filter(r -> r.getGraphType() == GraphType.DESIGN)
                     .filter(r -> STRUCTURE_PREDICATES.contains(r.getPredicate()))
+                    .sorted((a, b) -> {
+                        int p = a.getPredicate().name().compareTo(b.getPredicate().name());
+                        return p != 0 ? p : a.getToId().compareTo(b.getToId());
+                    })
                     .findFirst();
             if (next.isEmpty()) {
                 break;
@@ -606,7 +694,7 @@ public class OntologyQueryService {
         return out;
     }
 
-    private static void addStep(
+    private void addStep(
             List<Map<String, Object>> list,
             String from,
             RelationType predicate,
@@ -617,6 +705,13 @@ public class OntologyQueryService {
         step.put("predicate", predicate.name());
         step.put("to", to);
         step.put("toType", toType.name());
+        boolean exists = store.findRelations(from, predicate).stream().anyMatch(r -> to.equals(r.getToId()));
+        step.put("relationStatus", exists ? "PRESENT" : "INFERRED");
+        step.put("verificationStatus", "DISCOVERED");
+        step.put("origin", exists ? "ONTOLOGY_RELATION" : "SERVICEID_PARSE");
+        step.put("note", exists
+                ? "PRESENT means graph edge exists; not Source VERIFIED"
+                : "INFERRED from ServiceId parse path");
         list.add(step);
     }
 

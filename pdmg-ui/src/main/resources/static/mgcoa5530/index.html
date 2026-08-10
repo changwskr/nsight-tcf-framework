@@ -8,6 +8,20 @@
   <link rel="stylesheet" href="/_shared/online.css">
 </head>
 <body class="pdmg-page">
+<script>
+(function(){
+  if (window.self === window.top) return;
+  document.documentElement.classList.add("pdmg-embed");
+  document.addEventListener("click", function(e){
+    var a = e.target.closest('a[href*="index.html#/"]');
+    if (!a) return;
+    e.preventDefault();
+    var href = a.getAttribute("href") || "";
+    var i = href.indexOf("#");
+    if (i >= 0) window.parent.location.hash = href.slice(i);
+  });
+})();
+</script>
   <div class="tcf-main">
     <header class="tcf-topbar">
       <div class="tcf-topbar__brand">
@@ -15,11 +29,11 @@
         <p>hdr_nhnis + dto 전문을 브라우저에서 pdmg-service로 직접 전송합니다. TCF ON이면 Handler → Facade → Service 경로입니다.</p>
       </div>
       <nav class="tcf-topbar__nav" aria-label="화면 이동">
-        <a class="tcf-topbar__link" href="/index.html">홈</a>
-        <a class="tcf-topbar__link tcf-topbar__link--active" href="/mgcoa5530/index.html">mgcoa5530</a>
-        <a class="tcf-topbar__link" href="/mgcoa8888/index.html">mgcoa8888</a>
-        <a class="tcf-topbar__link" href="/mgcoa9999/index.html">mgcoa9999</a>
-        <a class="tcf-topbar__link" href="/imagelog/index.html">이미지로그</a>
+        <a class="tcf-topbar__link" href="/index.html#/home">홈</a>
+        <a class="tcf-topbar__link tcf-topbar__link--active" href="/index.html#/mgcoa5530">mgcoa5530</a>
+        <a class="tcf-topbar__link" href="/index.html#/mgcoa8888">mgcoa8888</a>
+        <a class="tcf-topbar__link" href="/index.html#/mgcoa9999">mgcoa9999</a>
+        <a class="tcf-topbar__link" href="/index.html#/imagelog">이미지로그</a>
       </nav>
     </header>
 

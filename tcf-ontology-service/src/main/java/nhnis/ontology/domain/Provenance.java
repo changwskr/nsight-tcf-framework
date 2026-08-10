@@ -67,7 +67,8 @@ public final class Provenance {
                 .sourceDocument(path)
                 .discoveredBy(discoveredBy)
                 .extractedAt(Instant.now())
-                .verificationStatus(VerificationStatus.VERIFIED)
+                // YAML discovery only — not source-verified
+                .verificationStatus(VerificationStatus.DISCOVERED)
                 .build();
     }
 
@@ -82,6 +83,20 @@ public final class Provenance {
                 .sourcePath(path)
                 .discoveredBy(discoveredBy)
                 .extractedAt(Instant.now())
+                // Guessed/derived path from FQCN is DISCOVERED until Scanner verifies
+                .verificationStatus(VerificationStatus.DISCOVERED)
+                .build();
+    }
+
+    /** Scanner가 실제 소스 파일을 확인한 경우. */
+    public static Provenance scannerVerified(String path, String discoveredBy) {
+        return builder()
+                .sourceType(SourceType.SCANNER)
+                .sourceSystem("pdmg")
+                .sourcePath(path)
+                .discoveredBy(discoveredBy)
+                .extractedAt(Instant.now())
+                .verifiedAt(Instant.now())
                 .verificationStatus(VerificationStatus.VERIFIED)
                 .build();
     }

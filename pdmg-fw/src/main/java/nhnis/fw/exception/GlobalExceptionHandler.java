@@ -1,5 +1,7 @@
 package nhnis.fw.exception;
 
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -36,14 +38,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ServiceHandlerNotFound.class)
     public ResponseEntity<NH_NIS_ERR_DTO> handleServiceHandlerNotFound(ServiceHandlerNotFound e) {
         log.warn("[GlobalExceptionHandler] handler not found: {}", e.getMessage());
-        return error("E9999", e.getMessage(), TYPE.SERVICE, HttpStatus.INTERNAL_SERVER_ERROR, null);
+        return error("E9999", e.getMessage(), TYPE.SERVICE, HttpStatus.INTERNAL_SERVER_ERROR,
+                exceptionCodes.actionMessage("E9999"), e);
     }
 
     @ExceptionHandler(BizException.class)
     public ResponseEntity<NH_NIS_ERR_DTO> handleBizException(BizException e) {
         log.warn("[GlobalExceptionHandler] biz exception: code={}", e.getCode());
         String message = exceptionCodes.message(e.getCode(), e.getArgs());
-        return error(e.getCode(), message, TYPE.BIZ, HttpStatus.INTERNAL_SERVER_ERROR, null);
+        String action = exceptionCodes.actionMessage(e.getCode());
+        return error(e.getCode(), message, TYPE.BIZ, HttpStatus.INTERNAL_SERVER_ERROR, action, e);
     }
 
     @ExceptionHandler(OnlineTimeoutException.class)
@@ -53,8 +57,9 @@ public class GlobalExceptionHandler {
         String detail = "serviceId=" + nullToEmpty(e.getServiceId())
                 + ",guid=" + nullToEmpty(e.getGuid())
                 + ",timeoutMs=" + e.getTimeoutMs()
-                + ",elapsedMs=" + e.getElapsedMs();
-        return error("FW_TIMEOUT", e.getMessage(), TYPE.COMMON, HttpStatus.GATEWAY_TIMEOUT, detail);
+                + ",elapsedMs=" + e.getElapsedMs()
+                + ",조치메시지=" + exceptionCodes.actionMessage("FW_TIMEOUT");
+        return error("FW_TIMEOUT", e.getMessage(), TYPE.COMMON, HttpStatus.GATEWAY_TIMEOUT, detail, e);
     }
 
     @ExceptionHandler(OnlineOverloadException.class)
@@ -65,12 +70,13 @@ public class GlobalExceptionHandler {
                 + ",guid=" + nullToEmpty(e.getGuid())
                 + ",active=" + e.getActive()
                 + ",poolSize=" + e.getPoolSize()
-                + ",queueSize=" + e.getQueueSize();
-        return error("FW_OVERLOADED", e.getMessage(), TYPE.COMMON, HttpStatus.SERVICE_UNAVAILABLE, detail);
+                + ",queueSize=" + e.getQueueSize()
+                + ",조치메시지=" + exceptionCodes.actionMessage("FW_OVERLOADED");
+        return error("FW_OVERLOADED", e.getMessage(), TYPE.COMMON, HttpStatus.SERVICE_UNAVAILABLE, detail, e);
     }
 
     private ResponseEntity<NH_NIS_ERR_DTO> error(String code, String message, TYPE type,
-            HttpStatus status, String addMsg) {
+            HttpStatus status, String addMsg, Throwable source) {
         NH_NIS_ERR_DTO dto = new NH_NIS_ERR_DTO();
         dto.setStdErrCode(code);
         dto.setStdErrMsgCntn(message);
@@ -78,7 +84,32 @@ public class GlobalExceptionHandler {
         if (addMsg != null && !addMsg.isBlank()) {
             dto.setAddMsgContents(addMsg);
         }
+        fillSourceLocation(dto, source);
         return ResponseEntity.status(status).body(dto);
+    }
+
+    /**
+     * 스택에서 업무 패키지({@code nhnis.*}) 프레임을 골라 클래스/메서드/파일/라인을 채운다.
+     * (핸들러 자신은 제외)
+     */
+    private static void fillSourceLocation(NH_NIS_ERR_DTO dto, Throwable source) {
+        if (source == null) {
+            return;
+        }
+        StackTraceElement[] stack = source.getStackTrace();
+        if (stack == null || stack.length == 0) {
+            return;
+        }
+        String handlerName = GlobalExceptionHandler.class.getName();
+        StackTraceElement target = Arrays.stream(stack)
+                .filter(el -> el.getClassName() != null && el.getClassName().startsWith("nhnis"))
+                .filter(el -> !handlerName.equals(el.getClassName()))
+                .findFirst()
+                .orElse(stack[0]);
+        dto.setErrClassName(target.getClassName());
+        dto.setErrMethodName(target.getMethodName());
+        dto.setErrFileName(target.getFileName());
+        dto.setErrLineNo(target.getLineNumber());
     }
 
     private static String nullToEmpty(String value) {

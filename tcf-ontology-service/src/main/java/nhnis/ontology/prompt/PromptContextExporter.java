@@ -147,12 +147,48 @@ public class PromptContextExporter {
     private String summarizeRuntime() {
         Map<String, Object> runtime = registry.runtimeBundle();
         List<String> lines = new ArrayList<>();
-        lines.add("RequestThread(TX밖): Filter → Interceptor.pre → Controller → TcfFacade → Future.get");
-        lines.add("Worker(TX안=TransactionTemplate): Dispatcher → Handler → Facade(REQUIRED) → BizPre → Service → DAO → BizPost → Deadline");
-        lines.add("RequestThread(TX밖): ResponseResolver → Interceptor.after → Filter clear");
+        Object stepsObj = runtime.get("steps");
+        if (stepsObj instanceof List<?> steps && !steps.isEmpty()) {
+            List<Map<?, ?>> ordered = new ArrayList<>();
+            for (Object item : steps) {
+                if (item instanceof Map<?, ?> m) {
+                    ordered.add(m);
+                }
+            }
+            ordered.sort((a, b) -> Integer.compare(asInt(a.get("seq")), asInt(b.get("seq"))));
+            StringBuilder request = new StringBuilder("RequestThread:");
+            StringBuilder worker = new StringBuilder("Worker:");
+            for (Map<?, ?> step : ordered) {
+                String id = String.valueOf(step.get("id"));
+                Object threadObj = step.get("thread");
+                String thread = threadObj == null ? "" : String.valueOf(threadObj);
+                String tx = step.get("tx") == null ? "" : ("/" + step.get("tx"));
+                if (thread.startsWith("request")) {
+                    request.append(" → ").append(id).append(tx);
+                } else {
+                    worker.append(" → ").append(id).append(tx);
+                }
+            }
+            lines.add(request.toString());
+            lines.add(worker.toString());
+            lines.add("source: ontology/technical/tx-runtime.yml steps (dynamic)");
+        } else {
+            lines.add("UNRESOLVED: tx-runtime.yml steps missing");
+        }
         if (runtime.get("outcomes") instanceof Map<?, ?> outcomes) {
             lines.add("outcomes: " + outcomes);
         }
         return String.join("\n", lines);
+    }
+
+    private static int asInt(Object v) {
+        if (v instanceof Number n) {
+            return n.intValue();
+        }
+        try {
+            return Integer.parseInt(String.valueOf(v));
+        } catch (Exception e) {
+            return 0;
+        }
     }
 }

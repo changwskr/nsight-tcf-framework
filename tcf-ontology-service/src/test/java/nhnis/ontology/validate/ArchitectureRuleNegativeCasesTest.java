@@ -67,6 +67,25 @@ class ArchitectureRuleNegativeCasesTest {
     }
 
     @Test
+    void validateAll_broken_graph_status_fail_and_failCount_positive() {
+        OntologyStore store = new OntologyStore();
+        // Intentionally broken: ServiceId without HANDLED_BY Handler
+        put(store, ConceptIds.service("mgcoa8888S0"), ConceptType.SERVICE_ID, "mgcoa8888S0");
+        put(store, ConceptIds.program("MG", "CO", "A", "8888"), ConceptType.PROGRAM, "mgcoa8888");
+        // Program without PROVIDES_SERVICE also breaks RULE-004
+        Map<String, Object> all = new ArchitectureRuleValidator(store).validateAll();
+
+        assertThat(all.get("status")).as("validateAll=%s", all).isEqualTo("FAIL");
+        assertThat(((Number) all.get("failCount")).longValue()).isGreaterThan(0L);
+
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> findings = (List<Map<String, Object>>) all.get("findings");
+        long verdictFails = findings.stream().filter(f -> "FAIL".equals(f.get("verdict"))).count();
+        assertThat(((Number) all.get("failCount")).longValue()).isEqualTo(verdictFails);
+        assertThat(findings).anyMatch(f -> "FAIL".equals(f.get("verdict")) && "RULE-002".equals(f.get("ruleId")));
+    }
+
+    @Test
     void findings_include_ruleId_and_evidence() {
         OntologyStore store = new OntologyStore();
         put(store, ConceptIds.service("mgcoa8888S0"), ConceptType.SERVICE_ID, "mgcoa8888S0");

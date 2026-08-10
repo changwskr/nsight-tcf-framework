@@ -28,7 +28,7 @@ public final class ConceptIds {
 
     public static String programFromShortId(String programId) {
         // mgcoa8888 → program:MG:CO:A:8888
-        if (programId == null || programId.length() < 9) {
+        if (programId == null || programId.length() != 9) {
             throw new IllegalArgumentException("Invalid programId: " + programId);
         }
         String p = programId.toLowerCase(Locale.ROOT);

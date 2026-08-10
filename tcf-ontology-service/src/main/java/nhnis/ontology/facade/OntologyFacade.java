@@ -48,7 +48,8 @@ public class OntologyFacade {
                 "relationCount", store.allRelations().size(),
                 "programsInGraph", store.findConceptsByType(ConceptType.PROGRAM).size(),
                 "servicesInGraph", store.findConceptsByType(ConceptType.SERVICE_ID).size(),
-                "runtimeComponents", store.findConceptsByType(ConceptType.RUNTIME_COMPONENT).size()));
+                "runtimeComponents", store.findConceptsByType(ConceptType.RUNTIME_COMPONENT).size(),
+                "byType", queryService.listConcepts(null, null).get("byType")));
         out.put("unified", true);
         return out;
     }

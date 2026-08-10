@@ -13,11 +13,12 @@ import nhnis.ontology.store.OntologyStore;
 
 class ReverseImpactUnitTest {
 
+    private OntologyStore store;
     private OntologyQueryService query;
 
     @BeforeEach
     void setUp() {
-        OntologyStore store = new OntologyStore();
+        store = new OntologyStore();
         Mgcoa8888OntologySeed.seed(store);
         query = new OntologyQueryService(store);
     }
@@ -44,6 +45,30 @@ class ReverseImpactUnitTest {
         List<String> systems = (List<String>) impact.get("affectedSystems");
         assertThat(systems).contains("MG");
         assertThat(String.valueOf(((Map<?, ?>) impact.get("table")).get("type"))).isEqualTo("TABLE");
+        assertThat(impact.get("pathStatus")).isIn("COMPLETE", "PARTIAL");
+    }
+
+    @Test
+    void impact_paths_never_invent_handledBy_to_table() {
+        Map<String, Object> impact = query.impactByTable("TB_FW_IMAGE_LOG");
+        @SuppressWarnings("unchecked")
+        List<List<Map<String, Object>>> paths = (List<List<Map<String, Object>>>) impact.get("paths");
+        assertThat(paths).isNotEmpty();
+        for (List<Map<String, Object>> path : paths) {
+            for (Map<String, Object> step : path) {
+                if (!"HANDLED_BY".equals(String.valueOf(step.get("predicate")))) {
+                    continue;
+                }
+                String to = String.valueOf(step.get("to"));
+                assertThat(to)
+                        .as("invented edge: %s", step)
+                        .doesNotContain("table:");
+                store.findConcept(to).ifPresent(c ->
+                        assertThat(c.getType().name())
+                                .as("HANDLED_BY target must not be TABLE: %s", step)
+                                .isNotEqualTo("TABLE"));
+            }
+        }
     }
 
     @Test

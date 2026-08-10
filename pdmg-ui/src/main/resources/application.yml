@@ -7,8 +7,12 @@ spring:
 
 pdmg:
   ui:
-    # 전문 테스트 대상. 화면에서 바꿔가며 시험할 수 있고 여기 값은 초기값이다.
+    # 전문 테스트 대상. 화면에서 바꿔가며 시험할 수 있고 여기 값은 기본값이다.
     target-base-url: http://localhost:8080
+    # Architecture Design Wizard (tcf-ontology-service Workbench)
+    ontology-base-url: http://localhost:8098
+    # JWT 포털 대상 (pdmg-jwt). 브라우저가 직접 호출한다.
+    jwt-base-url: http://localhost:8110
     # 브라우저 → pdmg-service 직접 fetch Abort 제한(ms). 서버 OnlineTimeout(5s)과 별개.
     timeout-ms: 10000
 

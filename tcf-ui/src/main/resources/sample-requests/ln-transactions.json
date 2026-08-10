@@ -1,0 +1,10 @@
+[
+  {
+    "label": "고객연락처 목록조회",
+    "sampleFile": "ln-customer-contact-selectList.json"
+  },
+  {
+    "label": "고객연락처 상세조회",
+    "sampleFile": "ln-customer-contact-selectDetail.json"
+  }
+]

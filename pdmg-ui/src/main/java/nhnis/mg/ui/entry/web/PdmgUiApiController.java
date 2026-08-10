@@ -37,6 +37,8 @@ public class PdmgUiApiController {
     public Map<String, Object> config() {
         Map<String, Object> config = new LinkedHashMap<>();
         config.put("targetBaseUrl", properties.getTargetBaseUrl());
+        config.put("ontologyBaseUrl", properties.getOntologyBaseUrl());
+        config.put("jwtBaseUrl", properties.getJwtBaseUrl());
         config.put("timeoutMs", properties.getTimeoutMs());
         return config;
     }

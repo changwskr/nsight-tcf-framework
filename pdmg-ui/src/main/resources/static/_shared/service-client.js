@@ -24,6 +24,30 @@
    * @param {string} [transactionId]
    * @returns {Promise<{transactionId:string,targetUrl:string,httpStatus:number,elapsedMs:number,responseBody:string}>}
    */
+  var JWT_SESSION_KEY = 'pdmg.jwt.session';
+
+  /** 로그인 세션(accessToken)이 있으면 Authorization Bearer 를 붙인다. */
+  function authorizationHeaders() {
+    const headers = {
+      'Content-Type': 'application/json;charset=UTF-8',
+      Accept: 'application/json'
+    };
+    try {
+      const raw = sessionStorage.getItem(JWT_SESSION_KEY);
+      if (!raw) {
+        return headers;
+      }
+      const session = JSON.parse(raw);
+      if (session && session.accessToken) {
+        const type = session.tokenType || 'Bearer';
+        headers.Authorization = type + ' ' + session.accessToken;
+      }
+    } catch (e) {
+      /* session 파싱 실패 시 헤더 없이 진행 */
+    }
+    return headers;
+  }
+
   async function post(targetUrl, body, timeoutMs, transactionId) {
     const started = performance.now();
     const controller = new AbortController();
@@ -35,10 +59,7 @@
     try {
       const response = await fetch(targetUrl, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-          Accept: 'application/json'
-        },
+        headers: authorizationHeaders(),
         body: typeof body === 'string' ? (body || '{}') : JSON.stringify(body == null ? {} : body),
         signal: controller.signal
       });

@@ -293,4 +293,26 @@ public class OntologyStore {
         relations.clear();
         aliases.clear();
     }
+
+    /**
+     * Atomic swap helper: replace live contents from a fully loaded temporary store.
+     */
+    public synchronized void replaceFrom(OntologyStore other) {
+        if (other == null || other == this) {
+            return;
+        }
+        Map<String, OntologyConcept> nextConcepts = new LinkedHashMap<>();
+        Map<String, OntologyRelation> nextRelations = new LinkedHashMap<>();
+        for (OntologyConcept c : other.allConcepts()) {
+            nextConcepts.put(c.getId(), c);
+        }
+        for (OntologyRelation r : other.allRelations()) {
+            nextRelations.put(r.edgeKey(), r);
+        }
+        concepts.clear();
+        relations.clear();
+        aliases.clear();
+        nextConcepts.values().forEach(this::putConcept);
+        nextRelations.values().forEach(this::putRelation);
+    }
 }

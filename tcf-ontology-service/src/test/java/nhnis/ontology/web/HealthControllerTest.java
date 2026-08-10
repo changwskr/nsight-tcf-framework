@@ -19,7 +19,11 @@ class HealthControllerTest {
     void health_returnsUp() {
         ResponseEntity<String> response = restTemplate.getForEntity("/health", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).contains("tcf-ontology-service");
-        assertThat(response.getBody()).contains("UP");
+        String body = response.getBody();
+        assertThat(body).contains("tcf-ontology-service");
+        assertThat(body).contains("UP");
+        assertThat(body).contains("productVersion");
+        assertThat(body).contains("knowledgeSnapshot");
+        assertThat(body).contains("workbench/index.html");
     }
 }

@@ -1,6 +1,9 @@
 # PDMG UI (`pdmg-ui`)
 
-`pdmg-service` 전문 테스트용 로컬 UI입니다. 네이밍은 `pdmg-service/docs/MG-NAMING_CONVENTION.md` 를 따른다.
+`pdmg-service` 전문 테스트 + `tcf-ontology-service` Architecture Design Wizard 통합 셸입니다.
+화면 구조·시각 스타일은 `tcf-ontology-service` Workbench(`workbench.css`)를 기준으로 통일했습니다.
+- 셸: `_shared/pdmg-workbench.css`
+- 전문/관리 화면: `_shared/online.css` (Workbench 라이트 톤)
 
 ## 실행
 
@@ -9,12 +12,33 @@
 cd ..\pdmg-service
 .\RUN.bat
 
-# 2) pdmg-ui (8090) — pdmg-service를 HTTP로 중계
+# 2) tcf-ontology-service (8098) — Architecture Design
+cd ..\tcf-ontology-service
+.\RUN.bat
+
+# 3) pdmg-ui (8090)
 cd ..\pdmg-ui
 .\RUN.bat
 ```
 
 브라우저: http://localhost:8090
+
+## 라우팅 (Workbench 정렬)
+
+| Hash | 화면 |
+|---|---|
+| `#/home` | Home · 카드/통계 |
+| `#/design` | Architecture Design Wizard (ontology embed) |
+| `#/mgcoa5530` … | 전문 테스트 iframe |
+| `#/imagelog`, `#/txparam` | 관리 화면 iframe |
+
+레거시 `#view=mgcoa5530` 해시는 `#/mgcoa5530`으로 자동 변환됩니다.
+
+## Architecture Design
+
+- 메뉴 **07 · Architecture Design** → ontology Workbench `#/design?embed=1`
+- 설정: `pdmg.ui.ontology-base-url` (기본 `http://localhost:8098`)
+- Done 저장 후 Designs 조회: ontology `#/dashboard?view=designs`
 
 ## 전문 형식
 

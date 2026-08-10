@@ -63,10 +63,11 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     api 'com.google.code.gson:gson:2.10.1'
 
-    /* JWT */
+    /* JWT (HS256 jjwt + RS256/JWKS nimbus) */
     api 'io.jsonwebtoken:jjwt-api:0.13.0'
     api 'io.jsonwebtoken:jjwt-jackson:0.13.0'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.13.0'
+    api 'com.nimbusds:nimbus-jose-jwt:9.37.3'
 
     /* 사내 JAR (있는 경우) */
     api fileTree(dir: 'libs', include: ['*.jar'])

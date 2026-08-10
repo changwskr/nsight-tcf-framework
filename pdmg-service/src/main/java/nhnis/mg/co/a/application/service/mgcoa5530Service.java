@@ -36,7 +36,8 @@ public class mgcoa5530Service {
         log.info("▶▶▶▶▶▶▶▶ mgcoa5530S0 Service Start!");
 
         /*
-         * 7초간의 sleep을 추가한다.
+         * 타임아웃 검증용 sleep (기존 ~8초 + 4초 = 약 12초).
+         * mgcoa5530S0 override=10000ms 이면 FW_TIMEOUT 유도.
          */
         try {
             Thread.sleep(1000);
@@ -52,6 +53,8 @@ public class mgcoa5530Service {
             Thread.sleep(1000);
             Thread.sleep(1000);
             System.out.println("6");
+            Thread.sleep(4000);
+            System.out.println("7 (+4s)");
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

@@ -1,5 +1,6 @@
 package nhnis.ontology.loader;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -96,8 +97,8 @@ public class YamlGraphLoader {
 
         String mapperXml = str(data.get("mapperXml"), null);
         String namespace = str(data.get("namespace"), daoFqcn);
-        String tableName = str(data.get("table"), null);
-        String pk = str(data.get("pk"), null);
+        List<String> tableNames = normalizeStringList(firstPresent(data, "tables", "table"));
+        List<String> pkColumns = normalizeStringList(data.get("pk"));
         String deleteMode = str(data.get("deleteMode"), null);
 
         String mapperId = null;
@@ -110,26 +111,33 @@ public class YamlGraphLoader {
                     "programId", programShortId));
         }
 
-        String tableId = null;
-        String columnId = null;
-        if (tableName != null) {
-            tableId = ConceptIds.table(DEFAULT_SCHEMA, tableName);
+        List<String> tableIds = new ArrayList<>();
+        for (String tableName : tableNames) {
+            if (tableName == null || tableName.isBlank() || looksLikeSerializedList(tableName)) {
+                log.warn("Skip invalid table name in {}: {}", programShortId, tableName);
+                continue;
+            }
+            String tableId = ConceptIds.table(DEFAULT_SCHEMA, tableName);
             put(tableId, ConceptType.TABLE, tableName, "Table " + tableName, yaml, attrs(
                     "tableName", tableName,
                     "schema", DEFAULT_SCHEMA,
-                    "pk", pk,
+                    "pkColumns", pkColumns,
                     "deleteMode", deleteMode));
-            if (pk != null) {
-                columnId = ConceptIds.column(DEFAULT_SCHEMA, tableName, pk);
-                put(columnId, ConceptType.COLUMN, pk, "PK " + pk, yaml, attrs(
+            for (String pkCol : pkColumns) {
+                if (pkCol == null || pkCol.isBlank() || looksLikeSerializedList(pkCol)) {
+                    continue;
+                }
+                String columnId = ConceptIds.column(DEFAULT_SCHEMA, tableName, pkCol);
+                put(columnId, ConceptType.COLUMN, pkCol, "PK " + pkCol, yaml, attrs(
                         "tableName", tableName,
-                        "columnName", pk,
+                        "columnName", pkCol,
                         "pk", true));
                 link(tableId, RelationType.HAS_COLUMN, columnId, yaml);
             }
             if (mapperId != null) {
                 link(mapperId, RelationType.ACCESSES, tableId, yaml);
             }
+            tableIds.add(tableId);
         }
 
         if (handlerId != null && facadeId != null) {
@@ -158,12 +166,12 @@ public class YamlGraphLoader {
                     log.warn("Skip invalid serviceId in {}: {}", programShortId, sid);
                     continue;
                 }
-                loadService(sid, programId, handlerId, daoId, mapperId, tableId, svc, yaml);
+                loadService(sid, programId, handlerId, daoId, mapperId, tableIds, svc, yaml);
                 serviceCount++;
             }
         }
 
-        log.debug("Loaded mapping graph: program={}, services={}", programShortId, serviceCount);
+        log.debug("Loaded mapping graph: program={}, services={}, tables={}", programShortId, serviceCount, tableIds.size());
         return serviceCount;
     }
 
@@ -174,7 +182,7 @@ public class YamlGraphLoader {
             String handlerId,
             String daoId,
             String mapperId,
-            String tableId,
+            List<String> tableIds,
             Map<String, Object> svc,
             Provenance yaml) {
         ServiceIdParts parts = ServiceIdParser.parse(serviceId);
@@ -210,8 +218,9 @@ public class YamlGraphLoader {
                 if (daoId != null) {
                     link(daoId, RelationType.EXECUTES, sqlConceptId, yaml);
                 }
-                if (tableId != null) {
-                    link(sqlConceptId, RelationType.ACCESSES, tableId, yaml);
+                // Only link SqlId→Table when exactly one table is known (avoid inventing multi links)
+                if (tableIds != null && tableIds.size() == 1) {
+                    link(sqlConceptId, RelationType.ACCESSES, tableIds.get(0), yaml);
                 }
             }
         }
@@ -304,6 +313,46 @@ public class YamlGraphLoader {
         }
         String s = String.valueOf(o).trim();
         return s.isEmpty() || "null".equals(s) ? defaultValue : s;
+    }
+
+    /** Scalar or list YAML values → trimmed non-blank strings (never String.valueOf(List)). */
+    static List<String> normalizeStringList(Object value) {
+        List<String> out = new ArrayList<>();
+        if (value == null) {
+            return out;
+        }
+        if (value instanceof List<?> list) {
+            for (Object item : list) {
+                if (item == null) {
+                    continue;
+                }
+                String s = String.valueOf(item).trim();
+                if (!s.isEmpty() && !"null".equals(s) && !looksLikeSerializedList(s)) {
+                    out.add(s);
+                }
+            }
+            return out;
+        }
+        String s = String.valueOf(value).trim();
+        if (s.isEmpty() || "null".equals(s) || looksLikeSerializedList(s)) {
+            return out;
+        }
+        out.add(s);
+        return out;
+    }
+
+    private static Object firstPresent(Map<String, Object> data, String... keys) {
+        for (String key : keys) {
+            Object v = data.get(key);
+            if (v != null) {
+                return v;
+            }
+        }
+        return null;
+    }
+
+    private static boolean looksLikeSerializedList(String s) {
+        return s.startsWith("[") && s.endsWith("]");
     }
 
     private static String extractIdentifier(String programId) {

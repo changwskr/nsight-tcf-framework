@@ -8,6 +8,20 @@
   <link rel="stylesheet" href="/_shared/online.css">
 </head>
 <body class="pdmg-page">
+<script>
+(function(){
+  if (window.self === window.top) return;
+  document.documentElement.classList.add("pdmg-embed");
+  document.addEventListener("click", function(e){
+    var a = e.target.closest('a[href*="index.html#/"]');
+    if (!a) return;
+    e.preventDefault();
+    var href = a.getAttribute("href") || "";
+    var i = href.indexOf("#");
+    if (i >= 0) window.parent.location.hash = href.slice(i);
+  });
+})();
+</script>
   <div class="tcf-main">
     <header class="tcf-topbar">
       <div class="tcf-topbar__brand">
@@ -15,9 +29,9 @@
         <p>TB_MG_TX_CONTROL 조회/등록/수정/삭제 전문 테스트. serviceId별 허용·사용·시간·시스템/지점 통제.</p>
       </div>
       <nav class="tcf-topbar__nav" aria-label="화면 이동">
-        <a class="tcf-topbar__link" href="/index.html">홈</a>
-        <a class="tcf-topbar__link tcf-topbar__link--active" href="/mgcoa9001/index.html">전문 테스트</a>
-        <a class="tcf-topbar__link" href="/mgcoa9000/index.html">mgcoa9000</a>
+        <a class="tcf-topbar__link" href="/index.html#/home">홈</a>
+        <a class="tcf-topbar__link tcf-topbar__link--active" href="/index.html#/mgcoa9001">전문 테스트</a>
+        <a class="tcf-topbar__link" href="/index.html#/mgcoa9000">mgcoa9000</a>
       </nav>
     </header>
 

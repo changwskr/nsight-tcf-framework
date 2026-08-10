@@ -29,6 +29,13 @@ public class OntologyQueryController {
         return queryService.meta();
     }
 
+    @GetMapping("/concepts")
+    public Map<String, Object> concepts(
+            @org.springframework.web.bind.annotation.RequestParam(required = false) String type,
+            @org.springframework.web.bind.annotation.RequestParam(required = false) String q) {
+        return queryService.listConcepts(type, q);
+    }
+
     @GetMapping("/snapshot")
     public Map<String, Object> snapshot() {
         return queryService.snapshot();

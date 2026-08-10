@@ -92,6 +92,12 @@ public class ResponseBodyArgumentResolver implements ResponseBodyAdvice<Object> 
     private Object beforeBodyWriteInternal(Object body, MethodParameter returnType, MediaType selectedContentType,
             Class<? extends HttpMessageConverter<?>> converterType, ServerHttpRequest request,
             ServerHttpResponse response) {
+        // JWKS 등 표준 공개 엔드포인트는 업무 전문(dto) 래핑을 하지 않는다.
+        String path = request.getURI() != null ? request.getURI().getPath() : "";
+        if (path != null && path.startsWith("/.well-known/")) {
+            return body;
+        }
+
         if (log.isInfoEnabled()) {
             log.info(PdmgTxLog.systemPostStart());
         }

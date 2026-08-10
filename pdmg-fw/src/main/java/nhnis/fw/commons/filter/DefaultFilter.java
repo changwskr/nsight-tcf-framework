@@ -7,7 +7,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.ThreadContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpHeaders;
@@ -29,13 +28,13 @@ import nhnis.fw.commons.context.ServiceContext;
 import nhnis.fw.commons.context.ServiceContextHolder;
 import nhnis.fw.commons.dto.header.hdr_nhnis;
 import nhnis.fw.commons.dto.header.sys_comm;
-import nhnis.fw.commons.jwt.JwtProvider;
 import nhnis.fw.commons.log.PdmgTxFlowLog;
 
 /**
- * PDMG 공통 요청 필터. ServiceContext / GUID / JWT(비-local)를 준비한다.
+ * PDMG 공통 요청 필터. ServiceContext / GUID 를 준비한다.
  *
- * <p>{@code nhnis.fw.commons.filter.enabled=true} 일 때 활성.
+ * <p>JWT 검증은 {@code ServicePreventionInterceptor}(시스템 선처리)에서 수행한다.
+ * {@code nhnis.fw.commons.filter.enabled=true} 일 때 활성.
  * local 프로파일에서는 {@code hdr_nhnis} 없이 {@code {"dto":...}} 만 와도 합성 Header로 통과시킨다.
  * {@link OncePerRequestFilter} 로 FORWARD/ERROR 디스패치에서 중복 실행을 막는다.
  */
@@ -61,20 +60,25 @@ public class DefaultFilter extends OncePerRequestFilter {
     @Value("${spring.application.name}")
     private String applicationName;
 
-    @Autowired
-    private JwtProvider jwtProvider;
-
     DefaultFilter(ClientHttpConnector connector) {
         this.connector = connector;
     }
 
     /**
-     * CORS preflight(OPTIONS)는 Body/JWT 검사가 없고 CorsFilter가 처리한다.
-     * 여기서 막으면 브라우저 직접 호출이 실패한다.
+     * CORS preflight(OPTIONS)는 Body 검사가 없고 CorsFilter가 처리한다.
+     * GET(JWKS 등)·actuator 는 Body 없는 공개 엔드포인트다.
      */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return "OPTIONS".equalsIgnoreCase(request.getMethod());
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
+        if ("GET".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
+        String uri = request.getRequestURI() == null ? "" : request.getRequestURI();
+        return uri.startsWith("/actuator")
+                || uri.startsWith("/.well-known/");
     }
 
     @Override
@@ -134,37 +138,6 @@ public class DefaultFilter extends OncePerRequestFilter {
             } else {
                 CachedBodyHttpServletRequest wrapper =
                         new CachedBodyHttpServletRequest(request);
-
-                if (!"local".equalsIgnoreCase(active)) {
-                    String authorization =
-                            request.getHeader(HttpHeaders.AUTHORIZATION);
-                    if (authorization == null
-                            || !authorization.startsWith("Bearer ")) {
-                        response.sendError(
-                                HttpServletResponse.SC_UNAUTHORIZED,
-                                "Access Token이 없습니다."
-                        );
-                        return;
-                    }
-
-                    String token = authorization.substring(7);
-
-                    if (!jwtProvider.validate(token)) {
-                        response.sendError(
-                                HttpServletResponse.SC_UNAUTHORIZED,
-                                "유효하지 않은 Token입니다."
-                        );
-                        return;
-                    } else if (!jwtProvider.isAccessToken(token)) {
-                        response.sendError(
-                                HttpServletResponse.SC_UNAUTHORIZED,
-                                "Access Token이 아닙니다."
-                        );
-                        return;
-                    }
-                    String ssoId = jwtProvider.getSsoId(token);
-                    request.setAttribute("ssoId", ssoId);
-                }
 
                 String requestBody = wrapper.getReader()
                         .lines()

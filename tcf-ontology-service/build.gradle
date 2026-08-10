@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'nhnis.ontology'
-version = '0.0.1-SNAPSHOT'
+version = '0.1.0-RC1'
 
 bootWar {
     enabled = false
@@ -55,6 +55,9 @@ tasks.named('processResources', ProcessResources).configure {
     filteringCharset = 'UTF-8'
     from('ontology') {
         into 'ontology'
+    }
+    from('docs/knowledge/exearchidoc') {
+        into 'docs/knowledge/exearchidoc'
     }
 }
 

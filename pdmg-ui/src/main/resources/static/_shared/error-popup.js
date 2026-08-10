@@ -127,7 +127,7 @@
     }
     const text = String(raw).trim();
     if (!text.includes('=')) {
-      return [['추가정보', text]];
+      return [['조치메시지', text]];
     }
     const labelMap = {
       serviceId: '서비스 ID',
@@ -136,7 +136,9 @@
       elapsedMs: '경과(ms)',
       active: '활성 스레드',
       poolSize: '풀 크기',
-      queueSize: '대기 큐'
+      queueSize: '대기 큐',
+      action: '조치메시지',
+      '조치메시지': '조치메시지'
     };
     return text.split(',').map((part) => {
       const idx = part.indexOf('=');
