@@ -36,7 +36,14 @@ class ReverseImpactUnitTest {
         List<String> businesses = (List<String>) impact.get("affectedBusinesses");
         assertThat(handlers).contains("mgcoa8888Handler");
         assertThat(programs).contains("mgcoa8888");
+        @SuppressWarnings("unchecked")
+        List<String> functions = (List<String>) impact.get("affectedFunctions");
+        assertThat(functions).isNotEmpty();
         assertThat(businesses).contains("CO");
+        @SuppressWarnings("unchecked")
+        List<String> systems = (List<String>) impact.get("affectedSystems");
+        assertThat(systems).contains("MG");
+        assertThat(String.valueOf(((Map<?, ?>) impact.get("table")).get("type"))).isEqualTo("TABLE");
     }
 
     @Test

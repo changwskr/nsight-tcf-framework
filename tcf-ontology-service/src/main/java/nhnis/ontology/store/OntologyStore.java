@@ -58,8 +58,10 @@ public class OntologyStore {
                 aliases.put(String.valueOf(className).substring(idx + 1).toLowerCase(Locale.ROOT), concept.getId());
             }
         }
+        // Only TABLE concepts own the physical table-name alias.
+        // Column.tableName must not pollute generic alias lookup (impact resolve bug).
         Object tableName = concept.attr("tableName");
-        if (tableName != null) {
+        if (tableName != null && concept.getType() == ConceptType.TABLE) {
             aliases.put(String.valueOf(tableName).toLowerCase(Locale.ROOT), concept.getId());
         }
     }
@@ -81,6 +83,35 @@ public class OntologyStore {
             return Optional.ofNullable(concepts.get(resolved));
         }
         return Optional.empty();
+    }
+
+    /**
+     * Type-specific resolve: generic alias is accepted only when the hit matches {@code type};
+     * otherwise scans concepts of that type by id/name/tableName.
+     */
+    public Optional<OntologyConcept> findConceptOfType(String idOrAlias, ConceptType type) {
+        if (idOrAlias == null || idOrAlias.isBlank() || type == null) {
+            return Optional.empty();
+        }
+        OntologyConcept direct = concepts.get(idOrAlias);
+        if (direct != null && direct.getType() == type) {
+            return Optional.of(direct);
+        }
+        String key = idOrAlias.toLowerCase(Locale.ROOT);
+        String resolved = aliases.get(key);
+        if (resolved != null) {
+            OntologyConcept viaAlias = concepts.get(resolved);
+            if (viaAlias != null && viaAlias.getType() == type) {
+                return Optional.of(viaAlias);
+            }
+        }
+        return concepts.values().stream()
+                .filter(c -> c.getType() == type)
+                .filter(c -> c.getId().equalsIgnoreCase(idOrAlias)
+                        || c.getName().equalsIgnoreCase(idOrAlias)
+                        || key.equals(String.valueOf(c.attr("tableName") == null ? "" : c.attr("tableName"))
+                                .toLowerCase(Locale.ROOT)))
+                .findFirst();
     }
 
     public String resolveId(String idOrAlias) {

@@ -127,7 +127,9 @@ public class OntologyQueryService {
         out.put("paths", impact.get("paths"));
         out.put("affectedHandlers", impact.get("affectedHandlers"));
         out.put("affectedPrograms", impact.get("affectedPrograms"));
+        out.put("affectedFunctions", impact.get("affectedFunctions"));
         out.put("affectedBusinesses", impact.get("affectedBusinesses"));
+        out.put("affectedSystems", impact.get("affectedSystems"));
         return out;
     }
 
@@ -181,7 +183,7 @@ public class OntologyQueryService {
     public Map<String, Object> impactByTable(String tableName) {
         OntologyConcept table = resolveTable(tableName);
         List<List<Map<String, Object>>> paths = store.reversePaths(
-                table.getId(), 14, IMPACT_REVERSE, GraphType.DESIGN);
+                table.getId(), 16, IMPACT_REVERSE, GraphType.DESIGN);
 
         Set<String> sqlIds = new LinkedHashSet<>();
         Set<String> mappers = new LinkedHashSet<>();
@@ -191,14 +193,18 @@ public class OntologyQueryService {
         Set<String> handlers = new LinkedHashSet<>();
         Set<String> serviceIds = new LinkedHashSet<>();
         Set<String> programs = new LinkedHashSet<>();
+        Set<String> functions = new LinkedHashSet<>();
         Set<String> businesses = new LinkedHashSet<>();
+        Set<String> systems = new LinkedHashSet<>();
 
         for (List<Map<String, Object>> path : paths) {
             for (Map<String, Object> step : path) {
                 collectImpactNode(String.valueOf(step.get("from")),
-                        sqlIds, mappers, daos, services, facades, handlers, serviceIds, programs, businesses);
+                        sqlIds, mappers, daos, services, facades, handlers, serviceIds,
+                        programs, functions, businesses, systems);
                 collectImpactNode(String.valueOf(step.get("to")),
-                        sqlIds, mappers, daos, services, facades, handlers, serviceIds, programs, businesses);
+                        sqlIds, mappers, daos, services, facades, handlers, serviceIds,
+                        programs, functions, businesses, systems);
             }
         }
 
@@ -214,11 +220,11 @@ public class OntologyQueryService {
         // Enrich all layers from each affected ServiceId (implements §11 impact response)
         for (String sidName : new ArrayList<>(serviceIds)) {
             enrichLayersFromServiceId(sidName,
-                    sqlIds, mappers, daos, services, facades, handlers, programs, businesses);
+                    sqlIds, mappers, daos, services, facades, handlers, programs, functions, businesses, systems);
         }
 
-        if (paths.isEmpty() && !serviceIds.isEmpty()) {
-            paths = synthesizeImpactPaths(table, serviceIds);
+        if (!serviceIds.isEmpty()) {
+            paths = ensureEndToEndPaths(paths, table, serviceIds);
         }
 
         Map<String, Object> out = new LinkedHashMap<>();
@@ -231,7 +237,9 @@ public class OntologyQueryService {
         out.put("affectedHandlers", new ArrayList<>(handlers));
         out.put("affectedServiceIds", new ArrayList<>(serviceIds));
         out.put("affectedPrograms", new ArrayList<>(programs));
+        out.put("affectedFunctions", new ArrayList<>(functions));
         out.put("affectedBusinesses", new ArrayList<>(businesses));
+        out.put("affectedSystems", new ArrayList<>(systems));
         out.put("paths", paths);
         return out;
     }
@@ -245,7 +253,9 @@ public class OntologyQueryService {
             Set<String> facades,
             Set<String> handlers,
             Set<String> programs,
-            Set<String> businesses) {
+            Set<String> functions,
+            Set<String> businesses,
+            Set<String> systems) {
         OntologyConcept sid = store.findConcept(serviceIdName)
                 .or(() -> store.findConcept(ConceptIds.service(serviceIdName)))
                 .orElse(null);
@@ -259,24 +269,66 @@ public class OntologyQueryService {
         for (OntologyRelation rel : store.findRelations(sid.getId(), RelationType.BELONGS_TO_PROGRAM)) {
             store.findConcept(rel.getToId()).ifPresent(program -> {
                 programs.add(program.getName());
-                for (OntologyRelation in : store.findRelationsTo(program.getId())) {
-                    if (in.getPredicate() == RelationType.HAS_PROGRAM) {
-                        store.findConcept(in.getFromId()).ifPresent(function -> {
-                            for (OntologyRelation bin : store.findRelationsTo(function.getId())) {
-                                if (bin.getPredicate() == RelationType.HAS_FUNCTION) {
-                                    store.findConcept(bin.getFromId()).ifPresent(b -> businesses.add(b.getName()));
-                                }
-                            }
-                        });
-                    }
-                }
+                collectClassificationAncestors(program.getId(), functions, businesses, systems);
             });
         }
 
         for (Map<String, Object> step : store.traverse(sid.getId(), 10, STRUCTURE_PREDICATES, GraphType.DESIGN)) {
             collectImpactNode(String.valueOf(step.get("to")),
-                    sqlIds, mappers, daos, services, facades, handlers, new LinkedHashSet<>(), programs, businesses);
+                    sqlIds, mappers, daos, services, facades, handlers, new LinkedHashSet<>(),
+                    programs, functions, businesses, systems);
         }
+    }
+
+    /** Program ← Function ← Business ← System */
+    private void collectClassificationAncestors(
+            String programId,
+            Set<String> functions,
+            Set<String> businesses,
+            Set<String> systems) {
+        for (OntologyRelation in : store.findRelationsTo(programId)) {
+            if (in.getPredicate() != RelationType.HAS_PROGRAM) {
+                continue;
+            }
+            store.findConcept(in.getFromId()).ifPresent(function -> {
+                functions.add(function.getName());
+                for (OntologyRelation bin : store.findRelationsTo(function.getId())) {
+                    if (bin.getPredicate() != RelationType.HAS_FUNCTION) {
+                        continue;
+                    }
+                    store.findConcept(bin.getFromId()).ifPresent(business -> {
+                        businesses.add(business.getName());
+                        for (OntologyRelation sin : store.findRelationsTo(business.getId())) {
+                            if (sin.getPredicate() == RelationType.HAS_BUSINESS) {
+                                store.findConcept(sin.getFromId()).ifPresent(sys -> systems.add(sys.getName()));
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    /**
+     * Keep reverse-discovered paths; if none reach System, synthesize end-to-end proof paths.
+     */
+    private List<List<Map<String, Object>>> ensureEndToEndPaths(
+            List<List<Map<String, Object>>> paths,
+            OntologyConcept table,
+            Set<String> serviceIds) {
+        boolean hasSystem = paths.stream()
+                .flatMap(List::stream)
+                .anyMatch(s -> ConceptType.SYSTEM.name().equals(String.valueOf(s.get("fromType"))));
+        if (hasSystem) {
+            return paths;
+        }
+        List<List<Map<String, Object>>> synthesized = synthesizeImpactPaths(table, serviceIds);
+        if (synthesized.isEmpty()) {
+            return paths;
+        }
+        List<List<Map<String, Object>>> merged = new ArrayList<>(paths);
+        merged.addAll(synthesized);
+        return merged;
     }
 
     private List<List<Map<String, Object>>> synthesizeImpactPaths(OntologyConcept table, Set<String> serviceIds) {
@@ -307,6 +359,7 @@ public class OntologyQueryService {
                 });
                 reverse.add(rev);
             }
+            prependClassificationReverse(reverse, sid);
             Map<String, Object> head = new LinkedHashMap<>();
             head.put("from", sid.getId());
             head.put("fromType", ConceptType.SERVICE_ID.name());
@@ -318,6 +371,64 @@ public class OntologyQueryService {
             out.add(reverse);
         }
         return out;
+    }
+
+    /** Prepend System→Business→Function→Program→ServiceId as reverse steps onto path. */
+    private void prependClassificationReverse(List<Map<String, Object>> reverse, OntologyConcept sid) {
+        List<Map<String, Object>> classification = new ArrayList<>();
+        OntologyConcept program = store.findRelations(sid.getId(), RelationType.BELONGS_TO_PROGRAM).stream()
+                .map(r -> store.findConcept(r.getToId()).orElse(null))
+                .filter(c -> c != null)
+                .findFirst()
+                .orElse(null);
+        if (program == null) {
+            return;
+        }
+        classification.add(edgeStep(sid.getId(), RelationType.BELONGS_TO_PROGRAM, program.getId()));
+
+        OntologyConcept function = store.findRelationsTo(program.getId()).stream()
+                .filter(r -> r.getPredicate() == RelationType.HAS_PROGRAM)
+                .map(r -> store.findConcept(r.getFromId()).orElse(null))
+                .filter(c -> c != null)
+                .findFirst()
+                .orElse(null);
+        if (function != null) {
+            classification.add(edgeStep(program.getId(), RelationType.HAS_PROGRAM, function.getId()));
+            OntologyConcept business = store.findRelationsTo(function.getId()).stream()
+                    .filter(r -> r.getPredicate() == RelationType.HAS_FUNCTION)
+                    .map(r -> store.findConcept(r.getFromId()).orElse(null))
+                    .filter(c -> c != null)
+                    .findFirst()
+                    .orElse(null);
+            if (business != null) {
+                classification.add(edgeStep(function.getId(), RelationType.HAS_FUNCTION, business.getId()));
+                OntologyConcept system = store.findRelationsTo(business.getId()).stream()
+                        .filter(r -> r.getPredicate() == RelationType.HAS_BUSINESS)
+                        .map(r -> store.findConcept(r.getFromId()).orElse(null))
+                        .filter(c -> c != null)
+                        .findFirst()
+                        .orElse(null);
+                if (system != null) {
+                    classification.add(edgeStep(business.getId(), RelationType.HAS_BUSINESS, system.getId()));
+                }
+            }
+        }
+        // reversePaths convention: from = ancestor, to = descendant
+        reverse.addAll(classification);
+    }
+
+    private Map<String, Object> edgeStep(String downstreamId, RelationType predicate, String upstreamId) {
+        Map<String, Object> step = new LinkedHashMap<>();
+        step.put("to", downstreamId);
+        step.put("predicate", predicate.name());
+        step.put("from", upstreamId);
+        step.put("graphType", GraphType.DESIGN.name());
+        store.findConcept(upstreamId).ifPresent(c -> {
+            step.put("fromType", c.getType().name());
+            step.put("fromName", c.getName());
+        });
+        step.put("note", "classification-ancestor");
+        return step;
     }
 
     public Map<String, Object> chainForService(String serviceId) {
@@ -392,7 +503,9 @@ public class OntologyQueryService {
             Set<String> handlers,
             Set<String> serviceIds,
             Set<String> programs,
-            Set<String> businesses) {
+            Set<String> functions,
+            Set<String> businesses,
+            Set<String> systems) {
         store.findConcept(id).ifPresent(c -> {
             switch (c.getType()) {
                 case SQL_ID -> sqlIds.add(c.getName());
@@ -411,7 +524,9 @@ public class OntologyQueryService {
                 }
                 case SERVICE_ID -> serviceIds.add(c.getName());
                 case PROGRAM -> programs.add(c.getName());
+                case FUNCTION -> functions.add(c.getName());
                 case BUSINESS -> businesses.add(c.getName());
+                case SYSTEM -> systems.add(c.getName());
                 default -> {
                 }
             }
@@ -420,13 +535,15 @@ public class OntologyQueryService {
 
     private OntologyConcept resolveTable(String table) {
         String raw = table.trim();
-        return store.findConcept(raw)
-                .or(() -> store.findConcept(ConceptIds.table("RDW", raw)))
+        return store.findConceptOfType(raw, ConceptType.TABLE)
+                .or(() -> store.findConceptOfType(ConceptIds.table("RDW", raw), ConceptType.TABLE))
                 .or(() -> {
                     if (raw.contains(":")) {
                         String[] parts = raw.split(":");
                         if (parts.length >= 2) {
-                            return store.findConcept(ConceptIds.table(parts[parts.length - 2], parts[parts.length - 1]));
+                            return store.findConceptOfType(
+                                    ConceptIds.table(parts[parts.length - 2], parts[parts.length - 1]),
+                                    ConceptType.TABLE);
                         }
                     }
                     return Optional.empty();

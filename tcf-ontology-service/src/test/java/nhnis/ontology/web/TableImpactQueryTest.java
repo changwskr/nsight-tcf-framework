@@ -28,6 +28,10 @@ class TableImpactQueryTest {
         assertThat(response.getBody()).contains("mgcoa8888");
         assertThat(response.getBody()).contains("affectedBusinesses");
         assertThat(response.getBody()).contains("\"CO\"");
+        assertThat(response.getBody()).contains("affectedFunctions");
+        assertThat(response.getBody()).contains("affectedSystems");
+        assertThat(response.getBody()).contains("\"MG\"");
+        assertThat(response.getBody()).contains("\"type\":\"TABLE\"");
         assertThat(response.getBody()).contains("paths");
     }
 }
