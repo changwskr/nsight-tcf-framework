@@ -1,0 +1,59 @@
+spring:
+  profiles:
+    active: local
+  application:
+    name: tcf-ontology-service
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+server:
+  port: 8098
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when_authorized
+
+nhnis:
+  ontology:
+    base-path: ontology
+    versions-path: ontology/versions
+    scan:
+      pdmg-service: ../pdmg-service
+      pdmg-ui: ../pdmg-ui
+      pdmg-fw: ../pdmg-fw
+      import-output: test-data/ontology/inventory-pdmg.yml
+      report-output: test-data/queries/last-validation-report.json
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+server:
+  port: 8098
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+server:
+  port: 8098
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+server:
+  port: 8098
