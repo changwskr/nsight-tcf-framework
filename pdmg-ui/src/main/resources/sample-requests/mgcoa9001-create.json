@@ -18,13 +18,10 @@
     }
   },
   "dto": {
-    "serviceId": "mgcoa9000S0",
-    "allowYn": "Y",
-    "useYn": "Y",
-    "allowStartTm": "090000",
-    "allowEndTm": "180000",
-    "allowSysIds": "PDMG",
-    "allowBrcs": "10001,10002",
+    "controlType": "SERVICE",
+    "targetValue": "mgcoa5530S0",
+    "blockYn": "Y",
+    "changeReason": "샘플 서비스 차단 등록",
     "regUserId": "E0000001"
   }
 }

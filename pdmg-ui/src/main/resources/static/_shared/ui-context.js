@@ -34,7 +34,7 @@
       const goesHome = href === '/'
           || href === './'
           || /(^|\/)index\.html(#|$)/.test(href);
-      const staysInApp = /\/(mgcoa|imagelog|txparam)\//.test(href);
+      const staysInApp = /\/(mgcoa|imagelog|txparam|txcontrol)\//.test(href);
       if (goesHome && !staysInApp) {
         event.preventDefault();
         try {
@@ -55,7 +55,9 @@
     '/mgcoa9000/index.html': 'mgcoa9000',
     '/mgcoa9999/index.html': 'mgcoa9999',
     '/imagelog/index.html': 'imagelog',
-    '/txparam/index.html': 'txparam'
+    '/txparam/index.html': 'txparam',
+    '/txcontrol/index.html': 'txcontrol',
+    '/mgcoa9001/index.html': 'mgcoa9001'
   };
   const matched = Object.keys(viewMap).find((key) => path.endsWith(key) || path.endsWith(key.replace('/index.html', '')));
   if (matched) {

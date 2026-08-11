@@ -112,7 +112,7 @@ public class TransactionCatalog {
                 "mgcoa9001",
                 "POST",
                 "/mgcoa9001S0",
-                "TB_MG_TX_CONTROL 조회(페이징). keyword·serviceId·useYn·allowYn 조건.",
+                "TB_MG_TX_CONTROL 조회(페이징). controlType·targetValue·blockYn 조건.",
                 readSample("mgcoa9001-list.json")));
 
         register(new TransactionInfo(
@@ -121,7 +121,7 @@ public class TransactionCatalog {
                 "mgcoa9001",
                 "POST",
                 "/mgcoa9001C0",
-                "TB_MG_TX_CONTROL 등록. serviceId·allowYn·useYn 필수. 실패는 BizException(result).",
+                "TB_MG_TX_CONTROL 등록. controlType·blockYn·changeReason 필수(GLOBAL 제외 targetValue).",
                 readSample("mgcoa9001-create.json")));
 
         register(new TransactionInfo(
@@ -130,7 +130,7 @@ public class TransactionCatalog {
                 "mgcoa9001",
                 "POST",
                 "/mgcoa9001U0",
-                "TB_MG_TX_CONTROL 수정. serviceId 기준 허용·사용·시간·시스템/지점.",
+                "TB_MG_TX_CONTROL 수정. 복합키 7필드 + controlType·blockYn·changeReason.",
                 readSample("mgcoa9001-update.json")));
 
         register(new TransactionInfo(
@@ -139,8 +139,17 @@ public class TransactionCatalog {
                 "mgcoa9001",
                 "POST",
                 "/mgcoa9001D0",
-                "TB_MG_TX_CONTROL 물리 삭제. dto.serviceIdList 로 다건 삭제.",
+                "TB_MG_TX_CONTROL 물리 삭제. 복합키 7필드 + changeReason.",
                 readSample("mgcoa9001-delete.json")));
+
+        register(new TransactionInfo(
+                "mgcoa9100S0",
+                "런타임 진단 조회",
+                "mgcoa9100",
+                "POST",
+                "/mgcoa9100S0",
+                "pdmg-service JVM/Thread/DB Pool 스냅샷·원인판정. includeDetails=Y. 진단 가이드(/rtdiag)도 동일 API.",
+                readSample("mgcoa9100-inquiry.json")));
     }
 
     public List<TransactionInfo> findAll() {

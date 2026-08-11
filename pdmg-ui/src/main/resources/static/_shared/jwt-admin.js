@@ -137,6 +137,36 @@ window.JwtAdmin = (function () {
     }
   }
 
+  const AUTH_SKEW_MS = 30000;
+
+  function accessTokenExpiresAt(session) {
+    const s = session || getSession();
+    if (!s || !s.accessToken) return null;
+    const claims = decodeJwtPayload(s.accessToken);
+    if (claims && claims.exp != null && !Number.isNaN(Number(claims.exp))) {
+      return Number(claims.exp) * 1000;
+    }
+    if (s.loggedInAt != null && s.expiresIn != null) {
+      const loggedInAt = Number(s.loggedInAt);
+      const expiresIn = Number(s.expiresIn);
+      if (!Number.isNaN(loggedInAt) && !Number.isNaN(expiresIn)) {
+        return loggedInAt + expiresIn * 1000;
+      }
+    }
+    return null;
+  }
+
+  function isAccessTokenValid(session) {
+    if (window.PdmgServiceClient && typeof window.PdmgServiceClient.isAccessTokenValid === 'function') {
+      return window.PdmgServiceClient.isAccessTokenValid(session === undefined ? undefined : session);
+    }
+    const s = session === undefined ? getSession() : session;
+    if (!s || !s.accessToken) return false;
+    const expAt = accessTokenExpiresAt(s);
+    if (expAt == null) return true;
+    return Date.now() < (expAt - AUTH_SKEW_MS);
+  }
+
   function setSession(session) {
     sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
   }
@@ -169,7 +199,12 @@ window.JwtAdmin = (function () {
   async function requireAuth() {
     if (location.pathname.endsWith('login.html')) return null;
     const session = getSession();
-    if (session && session.accessToken) return session;
+    if (isAccessTokenValid(session)) return session;
+    if (window.PdmgServiceClient && typeof window.PdmgServiceClient.redirectToLogin === 'function') {
+      window.PdmgServiceClient.redirectToLogin();
+      return null;
+    }
+    clearSession();
     location.href = uiPath('/jwt/admin/login.html');
     return null;
   }
@@ -553,6 +588,7 @@ window.JwtAdmin = (function () {
   return {
     NAV, TX, config, targetUrl, SESSION_KEY, BUSINESS_CODE,
     uiPath, field, getSession, setSession, clearSession, syncSessionFromBody,
+    isAccessTokenValid, accessTokenExpiresAt,
     loadConfig, login, logout, refreshTokens, revokeAccess, fetchJwks,
     decodeJwtPayload, formatExpiry, maskToken, sha256Hex, formatTs, shortJti, chipForResult,
     resolveJwksUrl, resolveJwtBaseUrl,

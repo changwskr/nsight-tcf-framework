@@ -80,9 +80,18 @@ public class TransactionContext {
     public long elapsedMs() {
         log.info("========================= [TransactionContext.elapsedMs] 시작");
         try {
-            return (System.nanoTime() - startedAtNanos) / 1_000_000L;
+            return elapsedMsSinceStart();
         } finally {
             log.info("========================= [TransactionContext.elapsedMs] 종료");
         }
+    }
+
+    /** 거래 시작 시각(나노) 기준 경과 ms. 로그 없이 계산만 한다. */
+    public long elapsedMsSinceStart() {
+        return (System.nanoTime() - startedAtNanos) / 1_000_000L;
+    }
+
+    public long getStartedAtNanos() {
+        return startedAtNanos;
     }
 }

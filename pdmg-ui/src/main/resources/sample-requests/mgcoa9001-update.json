@@ -18,13 +18,17 @@
     }
   },
   "dto": {
-    "serviceId": "mgcoa8888S0",
-    "allowYn": "Y",
-    "useYn": "Y",
-    "allowStartTm": "080000",
-    "allowEndTm": "200000",
-    "allowSysIds": "PDMG",
-    "allowBrcs": "10001",
+    "serviceId": "mgcoa9999S0",
+    "transactionCode": "*",
+    "businessCode": "*",
+    "serviceName": "*",
+    "userId": "*",
+    "channelId": "*",
+    "branchId": "*",
+    "controlType": "SERVICE",
+    "targetValue": "mgcoa9999S0",
+    "blockYn": "N",
+    "changeReason": "샘플 서비스 허용으로 변경",
     "chgUserId": "E0000001"
   }
 }

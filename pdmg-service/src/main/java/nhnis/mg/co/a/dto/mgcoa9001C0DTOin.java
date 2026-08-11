@@ -1,31 +1,22 @@
 package nhnis.mg.co.a.dto;
 
-/** 거래통제 등록 입력 (mgcoa9001C0). */
+/** 거래통제 등록 입력 (mgcoa9001C0). OM TransactionControl.save 대응. */
 public class mgcoa9001C0DTOin {
 
-    private String serviceId;
-    private String allowYn;
-    private String useYn;
-    private String allowStartTm;
-    private String allowEndTm;
-    private String allowSysIds;
-    private String allowBrcs;
+    private String controlType;
+    private String targetValue;
+    private String blockYn;
+    private String changeReason;
     private String regUserId;
 
-    public String getServiceId() { return serviceId; }
-    public void setServiceId(String serviceId) { this.serviceId = serviceId; }
-    public String getAllowYn() { return allowYn; }
-    public void setAllowYn(String allowYn) { this.allowYn = allowYn; }
-    public String getUseYn() { return useYn; }
-    public void setUseYn(String useYn) { this.useYn = useYn; }
-    public String getAllowStartTm() { return allowStartTm; }
-    public void setAllowStartTm(String allowStartTm) { this.allowStartTm = allowStartTm; }
-    public String getAllowEndTm() { return allowEndTm; }
-    public void setAllowEndTm(String allowEndTm) { this.allowEndTm = allowEndTm; }
-    public String getAllowSysIds() { return allowSysIds; }
-    public void setAllowSysIds(String allowSysIds) { this.allowSysIds = allowSysIds; }
-    public String getAllowBrcs() { return allowBrcs; }
-    public void setAllowBrcs(String allowBrcs) { this.allowBrcs = allowBrcs; }
+    public String getControlType() { return controlType; }
+    public void setControlType(String controlType) { this.controlType = controlType; }
+    public String getTargetValue() { return targetValue; }
+    public void setTargetValue(String targetValue) { this.targetValue = targetValue; }
+    public String getBlockYn() { return blockYn; }
+    public void setBlockYn(String blockYn) { this.blockYn = blockYn; }
+    public String getChangeReason() { return changeReason; }
+    public void setChangeReason(String changeReason) { this.changeReason = changeReason; }
     public String getRegUserId() { return regUserId; }
     public void setRegUserId(String regUserId) { this.regUserId = regUserId; }
 }

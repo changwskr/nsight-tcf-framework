@@ -18,6 +18,13 @@
     }
   },
   "dto": {
-    "serviceIdList": ["mgcoa9999S0"]
+    "serviceId": "mgcoa9999S0",
+    "transactionCode": "*",
+    "businessCode": "*",
+    "serviceName": "*",
+    "userId": "*",
+    "channelId": "*",
+    "branchId": "*",
+    "changeReason": "샘플 서비스 차단 삭제"
   }
 }

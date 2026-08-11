@@ -378,6 +378,26 @@
       return false;
     }
 
+    const authCode = (err && err.stdErrCode) || relayCode || '';
+    if (httpStatus === 401 || String(authCode).toUpperCase() === 'FW0401') {
+      if (global.PdmgServiceClient && typeof global.PdmgServiceClient.redirectToLogin === 'function') {
+        global.PdmgServiceClient.redirectToLogin();
+      } else {
+        try {
+          if (global.self !== global.top) {
+            global.top.location.hash = '#/jwt';
+          } else {
+            location.hash = '#/jwt';
+          }
+        } catch (_e) {
+          location.href = (typeof global.nsightUiUrl === 'function'
+              ? global.nsightUiUrl('/jwt/admin/login.html')
+              : '/jwt/admin/login.html');
+        }
+      }
+      return true;
+    }
+
     const fullRaw = parsed != null ? parsed : (rawBody != null ? rawBody : null);
 
     if (err) {

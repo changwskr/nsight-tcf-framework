@@ -34,8 +34,18 @@
   <script>
     function goTokenPage() {
       try {
+        const returnHash = sessionStorage.getItem('pdmg.jwt.returnHash');
+        if (returnHash) {
+          sessionStorage.removeItem('pdmg.jwt.returnHash');
+        }
         if (window.self !== window.top) {
-          window.top.location.hash = '#/jwt-token';
+          window.top.location.hash = (returnHash && returnHash.indexOf('#/') === 0)
+              ? returnHash
+              : '#/jwt-token';
+          return;
+        }
+        if (returnHash && returnHash.indexOf('#/') === 0) {
+          location.href = JwtAdmin.uiPath('/index.html') + returnHash;
           return;
         }
       } catch (e) { /* ignore */ }
@@ -44,9 +54,12 @@
     (async function () {
       await JwtAdmin.loadConfig();
       const session = JwtAdmin.getSession();
-      if (session && session.accessToken) {
+      if (session && JwtAdmin.isAccessTokenValid(session)) {
         goTokenPage();
         return;
+      }
+      if (session && session.accessToken) {
+        JwtAdmin.clearSession();
       }
       const form = document.getElementById('loginForm');
       const errorEl = document.getElementById('loginError');

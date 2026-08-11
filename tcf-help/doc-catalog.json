@@ -2,9 +2,9 @@
   "version": "1.1",
   "title": "NSIGHT TCF 문서 라이브러리",
   "description": "nsight-tcf-framework 저장소 전체 마크다운 카탈로그",
-  "generatedAt": "2026-08-10T11:02:50.955Z",
+  "generatedAt": "2026-08-11T12:07:11.541Z",
   "repoRoot": "nsight-tcf-framework",
-  "total": 3815,
+  "total": 3835,
   "corpora": [
     {
       "id": "help-meta",
@@ -157,7 +157,7 @@
       "order": 12,
       "meta": "meta/module-readme-개요.md",
       "metaDocId": "meta-module-readme",
-      "count": 47
+      "count": 48
     },
     {
       "id": "infra",
@@ -194,7 +194,7 @@
       "order": 99,
       "meta": "meta/root-개요.md",
       "metaDocId": "meta-root",
-      "count": 2514
+      "count": 2533
     }
   ],
   "featured": [
@@ -586,6 +586,20 @@
       "title": "README",
       "summary": "원본 SuperSpring JAR가 없을 때 DTO 생성 코드 컴파일을 위한 최소 stub입니다.",
       "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-jwt--README",
+      "corpus": "module-readme",
+      "source": "pdmg-jwt/README.md",
+      "title": "pdmg-jwt",
+      "summary": "JWT 발급·관리 서비스. 패키지/네이밍과 전문(온라인 거래) 구조는 pdmg-service(mgcoa8888 등) 체계를 그대로 따른다.",
+      "module": "pdmg-jwt",
       "audience": [
         "developer"
       ],
@@ -1705,6 +1719,216 @@
       "source": "pdmg-service/docs/32.범용CRUD프롬프트.md",
       "title": "PDMG 범용 CRUD 프롬프트",
       "summary": "이 문서는 AI에게 `pdmg-service`의 CRUD 기능을 정확하고 안전하게 설계·구현하도록 요청하기 위한 재사용 프롬프트다. 단순히 “CRUD를 만들어 달라”고 요청하는 대신 업무 규칙, DB 계약, 서비스 ID, 트랜잭션, 오류 처리와 검증 기준을 명시하여 추정 구현을 방지한다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--33-요청쓰레드와-Work쓰레드-분리아키텍처",
+      "corpus": "root",
+      "source": "pdmg-service/docs/33.요청쓰레드와 Work쓰레드 분리아키텍처.md",
+      "title": "33.요청쓰레드와 Work쓰레드 분리아키텍처",
+      "summary": "맞습니다. `nhnis.fw.timeout.enabled=true` 일 때 그렇게 나뉩니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--34-서비스ID별-타임아웃조정-방법",
+      "corpus": "root",
+      "source": "pdmg-service/docs/34.서비스ID별 타임아웃조정 방법.md",
+      "title": "34.서비스ID별 타임아웃조정 방법",
+      "summary": "serviceId별 `overrides`에 ms를 넣으면 됩니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--35-에러코드-설정방법",
+      "corpus": "root",
+      "source": "pdmg-service/docs/35.에러코드 설정방법.md",
+      "title": "35.에러코드 설정방법",
+      "summary": "",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--36-프로그램-예외-처리-방법",
+      "corpus": "root",
+      "source": "pdmg-service/docs/36.프로그램 예외 처리 방법.md",
+      "title": "프로그램 예외 처리 방법",
+      "summary": "PDMG 업무 프로그램(`Service` 등)의 표준 예외는 `BizException`이다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--37-TCF-프레임워크-적용하지-않는-방법",
+      "corpus": "root",
+      "source": "pdmg-service/docs/37.TCF 프레임워크 적용하지 않는 방법.md",
+      "title": "TCF 프레임워크 적용하지 않는 방법",
+      "summary": "TCF(단일 `/online` · Handler · TcfFacade · OnlineTimeoutExecutor)를 끄려면 설정만 바꾸면 된다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--38-TCF-off-이면-트랜잭션-시작은-어디인가",
+      "corpus": "root",
+      "source": "pdmg-service/docs/38.TCF off 이면 트랜잭션 시작은 어디인가.md",
+      "title": "38.TCF off 이면 트랜잭션 시작은 어디인가",
+      "summary": "",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--39-TCF-on-이면-트랜잭션-시작은-어디인가",
+      "corpus": "root",
+      "source": "pdmg-service/docs/39.TCF on 이면 트랜잭션 시작은 어디인가.md",
+      "title": "TCF ON 이면 트랜잭션 시작은 어디인가",
+      "summary": "`nhnis.fw.tcf.enabled=true` 일 때 진입은",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--40-시스템-선처리에서-어떤-필터를-처리하는가",
+      "corpus": "root",
+      "source": "pdmg-service/docs/40.시스템 선처리에서 어떤 필터를 처리하는가.md",
+      "title": "40.시스템 선처리에서 어떤 필터를 처리하는가",
+      "summary": "로그의 `[시스템 선처리]`는 Servlet Filter가 아니라 `ServicePreventionInterceptor.preHandle`입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--41-시스템-컨텍스트-정보는-어디서-생성되는가",
+      "corpus": "root",
+      "source": "pdmg-service/docs/41.시스템 컨텍스트 정보는 어디서 생성되는가.md",
+      "title": "시스템 컨텍스트(ServiceContext) 정보는 어디서 생성되는가",
+      "summary": "생성 위치: `pdmg-fw`의 `DefaultFilter`",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--42-토큰을-생성해서-pdmg-service로-요청시-전달하는-방법",
+      "corpus": "root",
+      "source": "pdmg-service/docs/42.토큰을 생성해서 pdmg-service로 요청시 전달하는 방법.md",
+      "title": "토큰을 생성해서 pdmg-service로 요청 시 전달하는 방법",
+      "summary": "1. pdmg-jwt에서 Access Token 발급 (`mgjwa1000C0`)",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--43-pdmg-service에서-JWT-토큰을-받으면-누가-검증하는가",
+      "corpus": "root",
+      "source": "pdmg-service/docs/43.pdmg-service에서 JWT 토큰을 받으면 누가 검증하는가.md",
+      "title": "pdmg-service에서 JWT 토큰을 받으면 누가 검증하는가",
+      "summary": "검증 주체: `pdmg-fw`의 `DefaultFilter` → `JwtProvider`",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--44-pdmg-ui는-JWT를-pdmg-service로-보내고-시스템-선처리에서-검증하는가",
+      "corpus": "root",
+      "source": "pdmg-service/docs/44.pdmg-ui는 JWT를 pdmg-service로 보내고 시스템 선처리에서 검증하는가.md",
+      "title": "pdmg-ui는 JWT를 pdmg-service로 보내고 시스템 선처리에서 검증하는가",
+      "summary": "---",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--45-pdmg-ui-로그인-JWT-service-선처리-검증-확인",
+      "corpus": "root",
+      "source": "pdmg-service/docs/45.pdmg-ui-로그인-JWT-service-선처리-검증-확인.md",
+      "title": "pdmg-ui 로그인 JWT → pdmg-service 선처리 검증 확인",
+      "summary": "즉, “올려주면 선처리에서 검증한다”는 현재 코드 기준으로 성립하지 않는다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--45-시스템선처리에서-JWT의-무엇을-점검하는가",
+      "corpus": "root",
+      "source": "pdmg-service/docs/45.시스템선처리에서 JWT의 무엇을 점검하는가.md",
+      "title": "45.시스템선처리에서 JWT의 무엇을 점검하는가",
+      "summary": "`jwt.enabled=true`일 때 `ServicePreventionInterceptor`가 점검하는 항목은 다음과 같습니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--46-토큰",
+      "corpus": "root",
+      "source": "pdmg-service/docs/46.토큰.md",
+      "title": "46.토큰",
+      "summary": "RSA 개인키(비대칭) 로 서명합니다. 공유 `jwt.secret`(HS256)이 아닙니다.",
       "module": "pdmg-service",
       "audience": [
         "developer"
@@ -8376,6 +8600,62 @@
       "title": "TCF-OM 런타임·장애진단 설계 요약",
       "summary": "> 원본: `NSIGHT TCF-OM 런타임 장애 진단 화면 설계서.docx` (2026-07-12)",
       "module": "tcf-om",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-ontology-service--ONTOLOGY-1-0-IMPLEMENTATION-REPORT",
+      "corpus": "root",
+      "source": "tcf-ontology-service/ONTOLOGY-1.0-IMPLEMENTATION-REPORT.md",
+      "title": "ONTOLOGY-1.0-IMPLEMENTATION-REPORT",
+      "summary": "작성일: 2026-08-10",
+      "module": "tcf-ontology-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-ontology-service--ONTOLOGY-ANALYSIS",
+      "corpus": "root",
+      "source": "tcf-ontology-service/ONTOLOGY-ANALYSIS.md",
+      "title": "ONTOLOGY-ANALYSIS",
+      "summary": "- Date: 2026-08-10 (재분석)",
+      "module": "tcf-ontology-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-ontology-service--ONTOLOGY-CHECK-REPORT",
+      "corpus": "root",
+      "source": "tcf-ontology-service/ONTOLOGY-CHECK-REPORT.md",
+      "title": "ONTOLOGY-CHECK-REPORT",
+      "summary": "- Date: 2026-08-10",
+      "module": "tcf-ontology-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-ontology-service--ONTOLOGY-FINAL-ACCEPTANCE-REPORT",
+      "corpus": "root",
+      "source": "tcf-ontology-service/ONTOLOGY-FINAL-ACCEPTANCE-REPORT.md",
+      "title": "ONTOLOGY-FINAL-ACCEPTANCE-REPORT",
+      "summary": "- Date: 2026-08-10",
+      "module": "tcf-ontology-service",
       "audience": [
         "developer"
       ],

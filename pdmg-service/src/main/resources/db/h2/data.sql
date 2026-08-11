@@ -60,11 +60,17 @@ VALUES
      STRINGDECODE('\uAC70\uB798\u0020\uD30C\uB77C\uBBF8\uD130\u0020\uC0AD\uC81C'),
      'pdmg-service', '/mgcoa9000D0', 'POST', 'sysadmin', '20260809090700');
 
--- mgcoa9001 sample rows (거래통제)
+-- mgcoa9001 sample rows (거래통제 · OM 유형 모델)
+-- 주의: BUSINESS=MG + BLOCK_YN=Y 는 mgcoa5530 등 모든 MG 거래를 막으므로
+-- 로컬 기본 샘플은 SERVICE(mgcoa9999S0)만 차단한다.
 INSERT INTO TB_MG_TX_CONTROL
-    (SERVICE_ID, ALLOW_YN, USE_YN, ALLOW_START_TM, ALLOW_END_TM,
-     ALLOW_SYS_IDS, ALLOW_BRCS, REG_USER_ID, REG_DTM)
+    (SERVICE_ID, TRANSACTION_CODE, BUSINESS_CODE, SERVICE_NAME,
+     USER_ID, CHANNEL_ID, BRANCH_ID, CONTROL_TYPE, BLOCK_YN,
+     CHANGE_REASON, REG_USER_ID, REG_DTM)
 VALUES
-    ('mgcoa8888S0', 'Y', 'Y', '000000', '235959', 'PDMG', '10001,10002', 'sysadmin', '20260810090000'),
-    ('mgcoa5530S0', 'Y', 'Y', '090000', '180000', 'PDMG', NULL, 'sysadmin', '20260810090100'),
-    ('mgcoa9999S0', 'N', 'Y', '000000', '235959', NULL, NULL, 'sysadmin', '20260810090200');
+    ('mgcoa9999S0', '*', '*', '*', '*', '*', '*', 'SERVICE', 'Y',
+     '샘플 서비스 차단(mgcoa9999S0만)', 'sysadmin', '20260810090000'),
+    ('*', '*', 'MG', '*', '*', '*', '*', 'BUSINESS', 'N',
+     '샘플 업무코드 규칙(기본 허용·UI에서 Y로 바꿔 테스트)', 'sysadmin', '20260810090100'),
+    ('*', '*', '*', '*', 'E0000001', '*', '*', 'USER', 'N',
+     '샘플 사용자 규칙(기본 허용·UI에서 Y로 바꿔 테스트)', 'sysadmin', '20260810090200');

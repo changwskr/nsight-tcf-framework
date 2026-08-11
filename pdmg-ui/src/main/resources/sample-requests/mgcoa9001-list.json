@@ -18,10 +18,9 @@
     }
   },
   "dto": {
-    "keyword": null,
-    "serviceId": null,
-    "useYn": null,
-    "allowYn": null,
+    "controlType": null,
+    "targetValue": null,
+    "blockYn": null,
     "pageNo": 1,
     "pageSize": 20
   }

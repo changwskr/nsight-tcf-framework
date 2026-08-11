@@ -45,6 +45,8 @@ import nhnis.fw.commons.log.PdmgTxLog;
  * {@code jwt.enabled=false} 이면 토큰 유무와 관계없이 검증을 생략한다.
  * {@code jwt.enabled=true} 이면 Bearer Access Token 필수·검증.
  *
+ * <p>거래통제({@code TB_MG_TX_CONTROL})는 {@code nhnis.fw.tcf.stf.stf} 에서 수행한다.
+ *
  * <p>{@code log.info} 는 이 클래스에서 직접 호출한다. 그래야 운영 로그의
  * {@code [ServicePreventionInterceptor.postHandle]} 위치가 유지된다.
  *

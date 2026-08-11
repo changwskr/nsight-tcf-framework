@@ -57,10 +57,18 @@ data:
   mapperXml: rdw.mg.co.a/mgcoa9001-ORA.xml
   namespace: nhnis.mg.co.a.persistence.dao.mgcoa9001DAO
   table: TB_MG_TX_CONTROL
-  pk: SERVICE_ID
+  pk:
+    - SERVICE_ID
+    - TRANSACTION_CODE
+    - BUSINESS_CODE
+    - SERVICE_NAME
+    - USER_ID
+    - CHANNEL_ID
+    - BRANCH_ID
   deleteMode: physical
 operations:
   uiRoute: /mgcoa9001/index.html
+  adminRoute: /txcontrol/index.html
   shellView: mgcoa9001
   samples:
     - sample-requests/mgcoa9001-list.json

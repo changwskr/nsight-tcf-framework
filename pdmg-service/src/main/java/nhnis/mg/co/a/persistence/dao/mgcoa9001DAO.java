@@ -6,7 +6,8 @@ import java.util.Map;
 import nhnis.mg.co.a.config.RDWMapper;
 
 /**
- * 거래통제(serviceId별) DAO.
+ * 거래통제 DAO (OM TransactionControl 대응).
+ * 복합키: serviceId + transactionCode + businessCode + serviceName + userId + channelId + branchId
  *
  * @logicalName mgcoa9001DAO
  */

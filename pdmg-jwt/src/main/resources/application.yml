@@ -51,6 +51,9 @@ nhnis:
         enabled: true
       filter:
         enabled: true
+    # JWT 발급/검증은 업무 거래통제 대상이 아님 (테이블·규칙 없음)
+    txcontrol:
+      enabled: false
 
 nsight:
   security:
