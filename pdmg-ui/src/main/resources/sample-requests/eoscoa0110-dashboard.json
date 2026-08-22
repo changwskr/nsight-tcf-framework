@@ -1,0 +1,21 @@
+{
+  "hdr_nhnis": {
+    "sys_comm": {
+      "rms_svc_c": "eoscoa0110S0",
+      "sync_dsc": "S",
+      "tr_sysid": "PDMGEOS",
+      "ttl_ug_ync": 0,
+      "std_tgrm_rqr_rsp_dsc": "Q",
+      "std_tgrm_lclc": "KO",
+      "tr_trm_ipadr": "127.0.0.1",
+      "tr_dtm": "20260816120000",
+      "tr_brc": "10001",
+      "trmno": "LOCAL01",
+      "trm_kdc": "01",
+      "scid": "eoscoa0110",
+      "optr_eno": "LOCAL",
+      "tr_optrnm": "EOS_TESTER"
+    }
+  },
+  "dto": {}
+}

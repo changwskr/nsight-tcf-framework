@@ -96,11 +96,15 @@ async function init() {
     fetch('/api/config')
   ]);
   const all = await txRes.json();
+  config = await configRes.json();
   const programId = programFilter();
   transactions = programId ? all.filter(tx => tx.programId === programId) : all;
-  config = await configRes.json();
 
+  const eosDefault = programId && String(programId).indexOf('eos') === 0
+      ? (config.eosBaseUrl || 'http://localhost:8082')
+      : null;
   targetBaseUrlEl.value = document.documentElement.dataset.defaultBaseUrl
+      || eosDefault
       || config.targetBaseUrl
       || 'http://localhost:8080';
   renderTransactionOptions();

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nhnis.eos.co.a.persistence.dao.eoscoa0150DAO">
+    <select id="existsResource" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM TB_EOS_RESOURCE WHERE RESOURCE_ID = #{resourceId} AND DISPOSE_YN = 'N'
+    </select>
+    <select id="selectLatest" parameterType="map" resultType="map">
+        SELECT * FROM (
+          SELECT ASSESS_ID, RESOURCE_ID, TOTAL_SCORE, RISK_GRADE_CD, COMMENT_TXT, ASSESSOR_ID, ASSESS_DTM
+            FROM TB_EOS_RISK_ASSESS WHERE RESOURCE_ID = #{resourceId}
+           ORDER BY ASSESS_DTM DESC
+        ) WHERE ROWNUM = 1
+    </select>
+    <select id="selectScores" parameterType="map" resultType="map">
+        SELECT ITEM_CD, SCORE FROM TB_EOS_RISK_SCORE WHERE ASSESS_ID = #{assessId}
+    </select>
+    <select id="selectHistory" parameterType="map" resultType="map">
+        SELECT ASSESS_ID, TOTAL_SCORE, RISK_GRADE_CD, ASSESSOR_ID, ASSESS_DTM, COMMENT_TXT
+          FROM TB_EOS_RISK_ASSESS WHERE RESOURCE_ID = #{resourceId}
+         ORDER BY ASSESS_DTM DESC
+    </select>
+    <insert id="insertAssess" parameterType="map">
+        INSERT INTO TB_EOS_RISK_ASSESS (
+            ASSESS_ID, RESOURCE_ID, TOTAL_SCORE, RISK_GRADE_CD, COMMENT_TXT,
+            ASSESSOR_ID, ASSESS_DTM, POLICY_ID, REG_USER_ID, REG_DTM
+        ) VALUES (
+            #{assessId}, #{resourceId}, #{totalScore}, #{riskGradeCd}, #{commentTxt},
+            #{assessorId}, #{assessDtm}, #{policyId}, #{regUserId}, #{regDtm}
+        )
+    </insert>
+    <insert id="insertScore" parameterType="map">
+        INSERT INTO TB_EOS_RISK_SCORE (ASSESS_ID, ITEM_CD, SCORE) VALUES (#{assessId}, #{itemCd}, #{score})
+    </insert>
+    <update id="updateResourceGrade" parameterType="map">
+        UPDATE TB_EOS_RESOURCE SET RISK_GRADE_CD = #{riskGradeCd}, CHG_USER_ID = #{chgUserId}, CHG_DTM = #{chgDtm}
+         WHERE RESOURCE_ID = #{resourceId}
+    </update>
+    <select id="selectPolicyVal" parameterType="map" resultType="string">
+        SELECT POLICY_VAL FROM TB_EOS_POLICY
+         WHERE POLICY_TYPE_CD = #{policyTypeCd} AND POLICY_KEY = #{policyKey}
+           AND USE_YN = 'Y' AND EFFECTIVE_TO_DTM IS NULL FETCH FIRST 1 ROWS ONLY
+    </select>
+</mapper>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nhnis.eos.co.a.persistence.dao.eoscoaAuditDAO">
+    <insert id="insert" parameterType="map">
+        INSERT INTO TB_EOS_CHG_HIST (
+            HIST_ID, TRACE_ID, USER_ID, ORG_CD, SERVICE_ID, ENTITY_TYPE, ENTITY_ID,
+            ACTION_CD, BEFORE_JSON, AFTER_JSON, RESULT_CD, REASON_TXT, EVENT_DTM
+        ) VALUES (
+            #{histId}, #{traceId}, #{userId}, #{orgCd}, #{serviceId}, #{entityType}, #{entityId},
+            #{actionCd}, #{beforeJson}, #{afterJson}, #{resultCd}, #{reasonTxt}, #{eventDtm}
+        )
+    </insert>
+</mapper>

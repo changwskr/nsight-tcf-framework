@@ -1,0 +1,88 @@
+spring:
+  profiles:
+    active: local
+  application:
+    name: pdmg-eos
+  config:
+    import: classpath:exceptionCode.yml
+  mvc:
+    cors:
+      allowed-origins:
+        - http://localhost:8090
+        - http://127.0.0.1:8090
+      allowed-methods:
+        - GET
+        - POST
+        - OPTIONS
+      allowed-headers:
+        - "*"
+
+  datasource:
+    rdw:
+      jdbc-url: jdbc:log4jdbc:h2:mem:pdmg_eos;MODE=Oracle;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      username: sa
+      password:
+      hikari:
+        maximum-pool-size: 10
+        minimum-idle: 1
+        keepalive-time: 30000
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
+      schema-locations: classpath:db/h2/schema.sql
+      data-locations: classpath:db/h2/data.sql
+
+server:
+  port: 8082
+
+nhnis:
+  fw:
+    tcf:
+      enabled: true
+    timeout:
+      enabled: true
+      milliseconds: 5000
+      pool-size: 20
+      queue-capacity: 100
+    commons:
+      legacy-web:
+        enabled: true
+      filter:
+        enabled: true
+    txcontrol:
+      enabled: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+jwt:
+  enabled: false
+  jwk-set-uri: http://127.0.0.1:8110/.well-known/jwks.json
+  secret: "${PDMG_JWT_SECRET:pdmg-local-dev-secret-key-change-me-32b}"
+  access-token-expiration: 180000
+
+eos:
+  batch:
+    enabled: true
+    run-on-startup: true
+    status-recalc-cron: "0 0 2 * * *"
+    exception-expire-cron: "0 15 2 * * *"
+    action-overdue-cron: "0 30 2 * * *"
+    monthly-check-miss-cron: "0 0 3 1 * *"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+jwt:
+  enabled: false
+  jwk-set-uri: http://127.0.0.1:8110/.well-known/jwks.json
+  secret: "${PDMG_JWT_SECRET:pdmg-local-dev-secret-key-change-me-32b}"
+  access-token-expiration: 240000

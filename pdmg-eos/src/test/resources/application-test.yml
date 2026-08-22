@@ -1,0 +1,4 @@
+eos:
+  batch:
+    enabled: false
+    run-on-startup: false

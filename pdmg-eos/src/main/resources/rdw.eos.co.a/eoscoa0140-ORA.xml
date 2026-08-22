@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nhnis.eos.co.a.persistence.dao.eoscoa0140DAO">
+
+    <sql id="eoscoa0140Where">
+        WHERE l.EFFECTIVE_TO_DTM IS NULL
+        <if test="productId != null and productId != ''">
+           AND p.PRODUCT_ID = #{productId}
+        </if>
+        <if test="versionId != null and versionId != ''">
+           AND v.VERSION_ID = #{versionId}
+        </if>
+        <if test="resourceTypeCd != null and resourceTypeCd != ''">
+           AND p.RESOURCE_TYPE_CD = #{resourceTypeCd}
+        </if>
+    </sql>
+
+    <select id="eoscoa0140S0_S0" parameterType="map" resultType="map">
+        SELECT * FROM (
+          SELECT a.*, ROWNUM rnum FROM (
+            SELECT p.PRODUCT_ID, p.PRODUCT_NAME, p.RESOURCE_TYPE_CD,
+                   v.VERSION_ID, v.VERSION_NO,
+                   l.LFC_ID, l.GA_YMD, l.EOS_YMD, l.EOL_YMD, l.EFFECTIVE_FROM_DTM, l.EVIDENCE_ID, l.SOURCE_DESC
+              FROM TB_EOS_PRODUCT_LFC l
+              JOIN TB_EOS_PRODUCT_VER v ON v.VERSION_ID = l.VERSION_ID
+              JOIN TB_EOS_PRODUCT p ON p.PRODUCT_ID = v.PRODUCT_ID
+            <include refid="eoscoa0140Where"/>
+             ORDER BY p.PRODUCT_NAME, v.VERSION_NO
+          ) a WHERE ROWNUM &lt;= #{offset} + #{pageSize}
+        ) WHERE rnum &gt; #{offset}
+    </select>
+
+    <select id="eoscoa0140S0_S0_count" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+          FROM TB_EOS_PRODUCT_LFC l
+          JOIN TB_EOS_PRODUCT_VER v ON v.VERSION_ID = l.VERSION_ID
+          JOIN TB_EOS_PRODUCT p ON p.PRODUCT_ID = v.PRODUCT_ID
+        <include refid="eoscoa0140Where"/>
+    </select>
+
+    <select id="selectOpenLfcId" parameterType="map" resultType="string">
+        SELECT LFC_ID FROM TB_EOS_PRODUCT_LFC
+         WHERE VERSION_ID = #{versionId} AND EFFECTIVE_TO_DTM IS NULL
+         FETCH FIRST 1 ROWS ONLY
+    </select>
+
+    <update id="closeLfc" parameterType="map">
+        UPDATE TB_EOS_PRODUCT_LFC
+           SET EFFECTIVE_TO_DTM = #{effectiveToDtm}
+         WHERE LFC_ID = #{lfcId}
+           AND EFFECTIVE_TO_DTM IS NULL
+    </update>
+
+    <insert id="insertLfc" parameterType="map">
+        INSERT INTO TB_EOS_PRODUCT_LFC (
+            LFC_ID, VERSION_ID, GA_YMD, EOS_YMD, EOL_YMD, EVIDENCE_ID, SOURCE_DESC,
+            EFFECTIVE_FROM_DTM, CHANGE_REASON, REG_USER_ID, REG_DTM
+        ) VALUES (
+            #{lfcId}, #{versionId}, #{gaYmd}, #{eosYmd}, #{eolYmd}, #{evidenceId}, #{sourceDesc},
+            #{effectiveFromDtm}, #{changeReason}, #{regUserId}, #{regDtm}
+        )
+    </insert>
+
+    <select id="listResourcesByVersion" parameterType="map" resultType="map">
+        SELECT RESOURCE_ID, EOS_STATUS_CD
+          FROM TB_EOS_RESOURCE
+         WHERE VERSION_ID = #{versionId}
+           AND DISPOSE_YN = 'N'
+    </select>
+
+    <update id="updateResourceStatus" parameterType="map">
+        UPDATE TB_EOS_RESOURCE
+           SET EOS_STATUS_CD = #{eosStatusCd},
+               CHG_USER_ID = #{chgUserId},
+               CHG_DTM = #{chgDtm}
+         WHERE RESOURCE_ID = #{resourceId}
+    </update>
+
+    <select id="selectPolicyVal" parameterType="map" resultType="string">
+        SELECT POLICY_VAL FROM TB_EOS_POLICY
+         WHERE POLICY_TYPE_CD = #{policyTypeCd} AND POLICY_KEY = #{policyKey}
+           AND USE_YN = 'Y' AND EFFECTIVE_TO_DTM IS NULL
+         FETCH FIRST 1 ROWS ONLY
+    </select>
+</mapper>

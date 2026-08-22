@@ -13,6 +13,8 @@ pdmg:
     ontology-base-url: http://localhost:8098
     # JWT 포털 대상 (pdmg-jwt). 브라우저가 직접 호출한다.
     jwt-base-url: http://localhost:8110
+    # EOS 자원관리 (pdmg-eos)
+    eos-base-url: http://localhost:8082
     # 브라우저 → pdmg-service 직접 fetch Abort 제한(ms). 서버 OnlineTimeout(5s)과 별개.
     timeout-ms: 10000
 

@@ -39,6 +39,7 @@ public class PdmgUiApiController {
         config.put("targetBaseUrl", properties.getTargetBaseUrl());
         config.put("ontologyBaseUrl", properties.getOntologyBaseUrl());
         config.put("jwtBaseUrl", properties.getJwtBaseUrl());
+        config.put("eosBaseUrl", properties.getEosBaseUrl());
         config.put("timeoutMs", properties.getTimeoutMs());
         return config;
     }

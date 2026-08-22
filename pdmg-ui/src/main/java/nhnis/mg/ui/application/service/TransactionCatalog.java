@@ -150,6 +150,42 @@ public class TransactionCatalog {
                 "/mgcoa9100S0",
                 "pdmg-service JVM/Thread/DB Pool 스냅샷·원인판정. includeDetails=Y. 진단 가이드(/rtdiag)도 동일 API.",
                 readSample("mgcoa9100-inquiry.json")));
+
+        register(new TransactionInfo(
+                "eoscoa0110S0",
+                "EOS Dashboard KPI",
+                "eoscoa",
+                "POST",
+                "/eoscoa0110S0",
+                "pdmg-eos Dashboard 집계. 대상 URL 기본 http://localhost:8082",
+                readSample("eoscoa0110-dashboard.json")));
+
+        register(new TransactionInfo(
+                "eoscoa0120S0",
+                "EOS 자원 목록",
+                "eoscoa",
+                "POST",
+                "/eoscoa0120S0",
+                "TB_EOS_RESOURCE 목록(페이징). remainDays 서버 계산.",
+                readSample("eoscoa0120-list.json")));
+
+        register(new TransactionInfo(
+                "eoscoa0130S0",
+                "EOS 자원 상세",
+                "eoscoa",
+                "POST",
+                "/eoscoa0130S0",
+                "자원 상세 + LFC + 탭 카운트.",
+                readSample("eoscoa0130-detail.json")));
+
+        register(new TransactionInfo(
+                "eoscoa0150C0",
+                "EOS 위험 재평가",
+                "eoscoa",
+                "POST",
+                "/eoscoa0150C0",
+                "7항목 점수 등록. 총점·등급 서버 계산.",
+                readSample("eoscoa0150-assess.json")));
     }
 
     public List<TransactionInfo> findAll() {

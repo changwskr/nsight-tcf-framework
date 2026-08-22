@@ -1,0 +1,15 @@
+.gradle/
+build/
+bin/
+out/
+data/
+logs/
+
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+.idea/
+*.iml
+.classpath
+.project
+.settings/

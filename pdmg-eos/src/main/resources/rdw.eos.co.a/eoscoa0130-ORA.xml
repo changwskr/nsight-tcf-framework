@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nhnis.eos.co.a.persistence.dao.eoscoa0130DAO">
+
+    <select id="eoscoa0130S0_S0" parameterType="map" resultType="map">
+        SELECT r.RESOURCE_ID, r.RESOURCE_NAME, r.VERSION_ID, r.ENV_CD, r.CENTER_CD,
+               r.HOST_NAME, r.IP_ADDR, r.NSIGHT_AREA_CD, r.ORG_CD, r.OWNER_USER_ID,
+               r.EOS_STATUS_CD, r.RISK_GRADE_CD, r.EXCEPTION_ACTIVE_YN, r.USE_YN, r.DISPOSE_YN, r.REMARK,
+               p.PRODUCT_ID, p.PRODUCT_NAME, p.RESOURCE_TYPE_CD, v.VERSION_NO,
+               l.EOS_YMD, l.EOL_YMD, l.GA_YMD, l.LFC_ID
+          FROM TB_EOS_RESOURCE r
+          JOIN TB_EOS_PRODUCT_VER v ON v.VERSION_ID = r.VERSION_ID
+          JOIN TB_EOS_PRODUCT p ON p.PRODUCT_ID = v.PRODUCT_ID
+          LEFT JOIN TB_EOS_PRODUCT_LFC l
+            ON l.VERSION_ID = v.VERSION_ID AND l.EFFECTIVE_TO_DTM IS NULL
+         WHERE r.RESOURCE_ID = #{resourceId}
+    </select>
+
+    <select id="selectCurrentLfc" parameterType="map" resultType="map">
+        SELECT EOS_YMD, EOL_YMD
+          FROM TB_EOS_PRODUCT_LFC
+         WHERE VERSION_ID = #{versionId}
+           AND EFFECTIVE_TO_DTM IS NULL
+         FETCH FIRST 1 ROWS ONLY
+    </select>
+
+    <select id="countOpenAction" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+          FROM TB_EOS_ACTION_PLAN
+         WHERE RESOURCE_ID = #{resourceId}
+           AND STATUS_CD NOT IN ('DONE')
+    </select>
+
+    <select id="countActiveException" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+          FROM TB_EOS_RESOURCE
+         WHERE RESOURCE_ID = #{resourceId}
+           AND EXCEPTION_ACTIVE_YN = 'Y'
+    </select>
+
+    <select id="countRisk" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM TB_EOS_RISK_ASSESS WHERE RESOURCE_ID = #{resourceId}
+    </select>
+
+    <select id="countAction" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM TB_EOS_ACTION_PLAN WHERE RESOURCE_ID = #{resourceId}
+    </select>
+
+    <select id="countException" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM TB_EOS_EXC_REQ WHERE RESOURCE_ID = #{resourceId}
+    </select>
+
+    <select id="existsVersion" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM TB_EOS_PRODUCT_VER WHERE VERSION_ID = #{versionId} AND USE_YN = 'Y'
+    </select>
+
+    <insert id="eoscoa0130C0_C0" parameterType="map">
+        INSERT INTO TB_EOS_RESOURCE (
+            RESOURCE_ID, RESOURCE_NAME, VERSION_ID, ENV_CD, CENTER_CD, HOST_NAME, IP_ADDR,
+            NSIGHT_AREA_CD, ORG_CD, OWNER_USER_ID, EOS_STATUS_CD, RISK_GRADE_CD,
+            EXCEPTION_ACTIVE_YN, USE_YN, DISPOSE_YN, REMARK, REG_USER_ID, REG_DTM
+        ) VALUES (
+            #{resourceId}, #{resourceName}, #{versionId}, #{envCd}, #{centerCd}, #{hostName}, #{ipAddr},
+            #{nsightAreaCd}, #{orgCd}, #{ownerUserId}, #{eosStatusCd}, NULL,
+            'N', 'Y', 'N', #{remark}, #{regUserId}, #{regDtm}
+        )
+    </insert>
+
+    <update id="eoscoa0130U0_U0" parameterType="map">
+        UPDATE TB_EOS_RESOURCE
+           SET RESOURCE_NAME = #{resourceName},
+               VERSION_ID = #{versionId},
+               ENV_CD = #{envCd},
+               CENTER_CD = #{centerCd},
+               HOST_NAME = #{hostName},
+               IP_ADDR = #{ipAddr},
+               NSIGHT_AREA_CD = #{nsightAreaCd},
+               ORG_CD = #{orgCd},
+               OWNER_USER_ID = #{ownerUserId},
+               EOS_STATUS_CD = #{eosStatusCd},
+               REMARK = #{remark},
+               CHG_USER_ID = #{chgUserId},
+               CHG_DTM = #{chgDtm}
+         WHERE RESOURCE_ID = #{resourceId}
+           AND DISPOSE_YN = 'N'
+    </update>
+
+    <update id="eoscoa0130D0_D0" parameterType="map">
+        UPDATE TB_EOS_RESOURCE
+           SET DISPOSE_YN = 'Y',
+               USE_YN = 'N',
+               REMARK = #{remark},
+               CHG_USER_ID = #{chgUserId},
+               CHG_DTM = #{chgDtm}
+         WHERE RESOURCE_ID = #{resourceId}
+           AND DISPOSE_YN = 'N'
+    </update>
+
+    <select id="selectPolicyVal" parameterType="map" resultType="string">
+        SELECT POLICY_VAL
+          FROM TB_EOS_POLICY
+         WHERE POLICY_TYPE_CD = #{policyTypeCd}
+           AND POLICY_KEY = #{policyKey}
+           AND USE_YN = 'Y'
+           AND EFFECTIVE_TO_DTM IS NULL
+         FETCH FIRST 1 ROWS ONLY
+    </select>
+
+</mapper>

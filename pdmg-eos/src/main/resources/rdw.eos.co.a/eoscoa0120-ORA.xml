@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nhnis.eos.co.a.persistence.dao.eoscoa0120DAO">
+
+    <sql id="eoscoa0120Where">
+        WHERE r.DISPOSE_YN = 'N'
+        <if test="resourceName != null and resourceName != ''">
+           AND UPPER(r.RESOURCE_NAME) LIKE '%' || UPPER(#{resourceName}) || '%'
+        </if>
+        <if test="resourceTypeCd != null and resourceTypeCd != ''">
+           AND p.RESOURCE_TYPE_CD = #{resourceTypeCd}
+        </if>
+        <if test="envCd != null and envCd != ''">
+           AND r.ENV_CD = #{envCd}
+        </if>
+        <if test="orgCd != null and orgCd != ''">
+           AND r.ORG_CD = #{orgCd}
+        </if>
+        <if test="eosStatusCd != null and eosStatusCd != ''">
+           AND r.EOS_STATUS_CD = #{eosStatusCd}
+        </if>
+        <if test="riskGradeCd != null and riskGradeCd != ''">
+           AND r.RISK_GRADE_CD = #{riskGradeCd}
+        </if>
+        <if test="exceptionActiveYn != null and exceptionActiveYn != ''">
+           AND r.EXCEPTION_ACTIVE_YN = #{exceptionActiveYn}
+        </if>
+        <if test="productId != null and productId != ''">
+           AND p.PRODUCT_ID = #{productId}
+        </if>
+        <if test="versionId != null and versionId != ''">
+           AND r.VERSION_ID = #{versionId}
+        </if>
+    </sql>
+
+    <select id="eoscoa0120S0_S0" parameterType="map" resultType="map">
+        SELECT * FROM (
+          SELECT a.*, ROWNUM rnum
+            FROM (
+               SELECT r.RESOURCE_ID        AS RESOURCE_ID
+                    , r.RESOURCE_NAME      AS RESOURCE_NAME
+                    , p.PRODUCT_NAME       AS PRODUCT_NAME
+                    , p.RESOURCE_TYPE_CD   AS RESOURCE_TYPE_CD
+                    , v.VERSION_NO         AS VERSION_NO
+                    , r.ENV_CD             AS ENV_CD
+                    , r.ORG_CD             AS ORG_CD
+                    , r.EOS_STATUS_CD      AS EOS_STATUS_CD
+                    , r.RISK_GRADE_CD      AS RISK_GRADE_CD
+                    , r.EXCEPTION_ACTIVE_YN AS EXCEPTION_ACTIVE_YN
+                    , r.OWNER_USER_ID      AS OWNER_USER_ID
+                    , l.EOS_YMD            AS EOS_YMD
+                    , l.EOL_YMD            AS EOL_YMD
+                 FROM TB_EOS_RESOURCE r
+                 JOIN TB_EOS_PRODUCT_VER v ON v.VERSION_ID = r.VERSION_ID
+                 JOIN TB_EOS_PRODUCT p ON p.PRODUCT_ID = v.PRODUCT_ID
+                 LEFT JOIN TB_EOS_PRODUCT_LFC l
+                   ON l.VERSION_ID = v.VERSION_ID
+                  AND l.EFFECTIVE_TO_DTM IS NULL
+               <include refid="eoscoa0120Where"/>
+                ORDER BY r.RESOURCE_ID ASC
+            ) a
+           WHERE ROWNUM &lt;= #{offset} + #{pageSize}
+        )
+        WHERE rnum &gt; #{offset}
+    </select>
+
+    <select id="eoscoa0120S0_S0_count" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+          FROM TB_EOS_RESOURCE r
+          JOIN TB_EOS_PRODUCT_VER v ON v.VERSION_ID = r.VERSION_ID
+          JOIN TB_EOS_PRODUCT p ON p.PRODUCT_ID = v.PRODUCT_ID
+        <include refid="eoscoa0120Where"/>
+    </select>
+
+</mapper>

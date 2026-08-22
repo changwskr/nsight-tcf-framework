@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nhnis.eos.co.a.persistence.dao.eoscoa0170DAO">
+    <select id="list" parameterType="map" resultType="map">
+        SELECT EXC_REQ_ID, RESOURCE_ID, START_YMD, END_YMD, STATUS_CD, REQ_USER_ID, REQ_DTM
+          FROM TB_EOS_EXC_REQ
+         WHERE 1=1
+        <if test="resourceId != null and resourceId != ''">AND RESOURCE_ID = #{resourceId}</if>
+         ORDER BY REQ_DTM DESC
+    </select>
+    <select id="selectOne" parameterType="map" resultType="map">
+        SELECT * FROM TB_EOS_EXC_REQ WHERE EXC_REQ_ID = #{excReqId}
+    </select>
+    <select id="inbox" parameterType="map" resultType="map">
+        SELECT EXC_REQ_ID, RESOURCE_ID, START_YMD, END_YMD, STATUS_CD, REQ_USER_ID, REQ_DTM
+          FROM TB_EOS_EXC_REQ WHERE STATUS_CD = 'PENDING' ORDER BY REQ_DTM ASC
+    </select>
+    <insert id="insert" parameterType="map">
+        INSERT INTO TB_EOS_EXC_REQ (
+            EXC_REQ_ID, RESOURCE_ID, REQ_ORG_CD, REQ_USER_ID, REQ_DTM, START_YMD, END_YMD,
+            REASON_TXT, BLOCKER_TXT, MITIGATION_TXT, FINAL_PLAN_TXT, FINAL_TARGET_YMD,
+            MONTHLY_CHECK_YN, EXIT_CRITERIA_TXT, STATUS_CD, REG_USER_ID, REG_DTM
+        ) VALUES (
+            #{excReqId}, #{resourceId}, #{reqOrgCd}, #{reqUserId}, #{reqDtm}, #{startYmd}, #{endYmd},
+            #{reasonTxt}, #{blockerTxt}, #{mitigationTxt}, #{finalPlanTxt}, #{finalTargetYmd},
+            #{monthlyCheckYn}, #{exitCriteriaTxt}, #{statusCd}, #{regUserId}, #{regDtm}
+        )
+    </insert>
+    <update id="updateStatus" parameterType="map">
+        UPDATE TB_EOS_EXC_REQ SET STATUS_CD=#{statusCd}, CHG_USER_ID=#{chgUserId}, CHG_DTM=#{chgDtm}
+         WHERE EXC_REQ_ID=#{excReqId}
+    </update>
+    <insert id="insertAppr" parameterType="map">
+        INSERT INTO TB_EOS_EXC_APPR (
+            APPR_ID, EXC_REQ_ID, DECISION_CD, CONDITION_TXT, REJECT_REASON_TXT,
+            APPROVER_ID, APPROVE_DTM, EXTEND_OF_APPR_ID, REG_USER_ID, REG_DTM
+        ) VALUES (
+            #{apprId}, #{excReqId}, #{decisionCd}, #{conditionTxt}, #{rejectReasonTxt},
+            #{approverId}, #{approveDtm}, #{extendOfApprId}, #{regUserId}, #{regDtm}
+        )
+    </insert>
+    <update id="updateResourceExceptionYn" parameterType="map">
+        UPDATE TB_EOS_RESOURCE SET EXCEPTION_ACTIVE_YN=#{exceptionActiveYn}, CHG_USER_ID=#{chgUserId}, CHG_DTM=#{chgDtm}
+         WHERE RESOURCE_ID=#{resourceId}
+    </update>
+    <insert id="insertMonthly" parameterType="map">
+        INSERT INTO TB_EOS_MONTHLY_CHK (
+            CHECK_ID, EXC_REQ_ID, CHECK_YM, MITIGATION_OK_YN, RESIDUAL_RISK_TXT, PLAN_PROGRESS_TXT,
+            ISSUE_TXT, NEXT_CHECK_YMD, CHECKER_ID, CHECK_DTM, REG_USER_ID, REG_DTM
+        ) VALUES (
+            #{checkId}, #{excReqId}, #{checkYm}, #{mitigationOkYn}, #{residualRiskTxt}, #{planProgressTxt},
+            #{issueTxt}, #{nextCheckYmd}, #{checkerId}, #{checkDtm}, #{regUserId}, #{regDtm}
+        )
+    </insert>
+    <select id="listMonthly" parameterType="map" resultType="map">
+        SELECT * FROM TB_EOS_MONTHLY_CHK
+         WHERE 1=1
+        <if test="excReqId != null and excReqId != ''">AND EXC_REQ_ID = #{excReqId}</if>
+        <if test="checkYm != null and checkYm != ''">AND CHECK_YM = #{checkYm}</if>
+         ORDER BY CHECK_YM DESC
+    </select>
+</mapper>

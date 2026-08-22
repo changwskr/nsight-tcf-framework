@@ -19,6 +19,9 @@ public class PdmgUiProperties {
     /** pdmg-jwt 기본 주소 (브라우저 직접 호출). */
     private String jwtBaseUrl = "http://localhost:8110";
 
+    /** pdmg-eos 기본 주소 (EOS 전문 테스트). */
+    private String eosBaseUrl = "http://localhost:8082";
+
     /** 브라우저 fetch Abort 타임아웃(ms). pdmg-service OnlineTimeout과 별개. */
     private int timeoutMs = 10000;
 
@@ -44,6 +47,14 @@ public class PdmgUiProperties {
 
     public void setJwtBaseUrl(String jwtBaseUrl) {
         this.jwtBaseUrl = jwtBaseUrl;
+    }
+
+    public String getEosBaseUrl() {
+        return eosBaseUrl;
+    }
+
+    public void setEosBaseUrl(String eosBaseUrl) {
+        this.eosBaseUrl = eosBaseUrl;
     }
 
     public int getTimeoutMs() {

@@ -39,7 +39,31 @@ public class WebConfiguration implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(servicePreventionInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/error");
+                .excludePathPatterns(
+                        "/",
+                        "/error",
+                        "/favicon.ico",
+                        "/health",
+                        "/index.html",
+                        "/actuator/**",
+                        "/.well-known/**",
+                        "/_shared/**",
+                        "/infra/**",
+                        "/exports/**",
+                        "/evidence/**",
+                        "/**/*.html",
+                        "/**/*.js",
+                        "/**/*.css",
+                        "/**/*.map",
+                        "/**/*.png",
+                        "/**/*.jpg",
+                        "/**/*.jpeg",
+                        "/**/*.gif",
+                        "/**/*.svg",
+                        "/**/*.ico",
+                        "/**/*.woff",
+                        "/**/*.woff2",
+                        "/**/*.ttf");
         WebMvcConfigurer.super.addInterceptors(registry);
     }
 }

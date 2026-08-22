@@ -1,0 +1,54 @@
+@echo off
+setlocal
+
+rem ============================================================
+rem  pdmg-eos WAR build script
+rem
+rem  Usage:
+rem    build.bat                                 clean build -x test (default)
+rem    build.bat war                             run the given Gradle tasks
+rem ============================================================
+
+pushd "%~dp0.."
+if errorlevel 1 goto :no_project
+
+if not exist "gradlew.bat" goto :no_wrapper
+
+set "GRADLE_TASKS=clean build -x test"
+if not "%~1"=="" set "GRADLE_TASKS=%*"
+
+echo ------------------------------------------------------------
+echo  PROJECT : "%CD%"
+echo  TASKS   : %GRADLE_TASKS%
+echo ------------------------------------------------------------
+echo.
+
+call gradlew.bat --no-daemon %GRADLE_TASKS%
+set "BUILD_RESULT=%ERRORLEVEL%"
+
+echo.
+if not "%BUILD_RESULT%"=="0" goto :failed
+
+echo [OK] build succeeded
+if not exist "build\libs\*.war" goto :done
+echo.
+echo  Artifacts:
+for %%F in ("build\libs\*.war") do echo   - "%%~fF"  %%~zF bytes
+
+:done
+popd
+endlocal & exit /b 0
+
+:failed
+echo [FAIL] build failed - exit=%BUILD_RESULT%
+popd
+endlocal & exit /b 1
+
+:no_wrapper
+echo [ERROR] gradlew.bat not found in "%CD%"
+popd
+endlocal & exit /b 1
+
+:no_project
+echo [ERROR] cannot enter project home "%~dp0.."
+endlocal & exit /b 1

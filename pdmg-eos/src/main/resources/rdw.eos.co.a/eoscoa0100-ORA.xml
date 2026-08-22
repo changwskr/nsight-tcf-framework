@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nhnis.eos.co.a.persistence.dao.eoscoa0100DAO">
+
+    <!-- legacy bridge → TB_EOS_RESOURCE (deprecated; use eoscoa0120S0) -->
+    <select id="eoscoa0100S0_S0" parameterType="map" resultType="map">
+        SELECT r.RESOURCE_ID   AS ASSET_ID,
+               r.RESOURCE_NAME AS ASSET_NAME,
+               p.PRODUCT_NAME  AS PRODUCT_NAME,
+               v.VERSION_NO    AS VERSION_NO,
+               l.EOL_YMD       AS EOL_DATE,
+               l.EOS_YMD       AS EOS_DATE,
+               r.RISK_GRADE_CD AS RISK_CD,
+               r.EOS_STATUS_CD AS STATUS_CD,
+               r.REMARK        AS REMARK
+          FROM TB_EOS_RESOURCE r
+          JOIN TB_EOS_PRODUCT_VER v ON v.VERSION_ID = r.VERSION_ID
+          JOIN TB_EOS_PRODUCT p ON p.PRODUCT_ID = v.PRODUCT_ID
+          LEFT JOIN TB_EOS_PRODUCT_LFC l
+            ON l.VERSION_ID = v.VERSION_ID
+           AND l.EFFECTIVE_TO_DTM IS NULL
+         WHERE r.DISPOSE_YN = 'N'
+        <if test="riskCd != null and riskCd != ''">
+           AND r.RISK_GRADE_CD = #{riskCd}
+        </if>
+        <if test="statusCd != null and statusCd != ''">
+           AND r.EOS_STATUS_CD = #{statusCd}
+        </if>
+         ORDER BY l.EOS_YMD ASC, r.RESOURCE_ID ASC
+    </select>
+
+</mapper>

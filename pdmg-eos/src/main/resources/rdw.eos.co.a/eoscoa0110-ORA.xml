@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nhnis.eos.co.a.persistence.dao.eoscoa0110DAO">
+    <select id="countTotal" resultType="int">
+        SELECT COUNT(*) FROM TB_EOS_RESOURCE WHERE DISPOSE_YN = 'N'
+    </select>
+    <select id="countByRisk" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM TB_EOS_RESOURCE WHERE DISPOSE_YN = 'N' AND RISK_GRADE_CD = #{riskGradeCd}
+    </select>
+    <select id="countByStatusIn" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM TB_EOS_RESOURCE
+         WHERE DISPOSE_YN = 'N'
+           AND EOS_STATUS_CD IN
+        <foreach collection="statuses" item="s" open="(" separator="," close=")">#{s}</foreach>
+    </select>
+    <select id="countExceptionNeed" resultType="int">
+        SELECT COUNT(*) FROM TB_EOS_RESOURCE
+         WHERE DISPOSE_YN = 'N'
+           AND RISK_GRADE_CD IN ('CRITICAL','HIGH')
+           AND EXCEPTION_ACTIVE_YN = 'N'
+           AND RESOURCE_ID NOT IN (
+                SELECT RESOURCE_ID FROM TB_EOS_ACTION_PLAN WHERE STATUS_CD NOT IN ('DONE')
+           )
+    </select>
+    <select id="countActionInProgress" resultType="int">
+        SELECT COUNT(DISTINCT RESOURCE_ID) FROM TB_EOS_ACTION_PLAN
+         WHERE STATUS_CD IN ('PLANNED','IN_PROGRESS','TESTING')
+    </select>
+    <select id="topPriority" parameterType="map" resultType="map">
+        SELECT * FROM (
+          SELECT r.RESOURCE_ID, r.RESOURCE_NAME, r.RISK_GRADE_CD, r.EOS_STATUS_CD, l.EOS_YMD,
+                 ROWNUM rn
+            FROM TB_EOS_RESOURCE r
+            LEFT JOIN TB_EOS_PRODUCT_LFC l ON l.VERSION_ID = r.VERSION_ID AND l.EFFECTIVE_TO_DTM IS NULL
+           WHERE r.DISPOSE_YN = 'N'
+           ORDER BY CASE r.RISK_GRADE_CD
+                      WHEN 'CRITICAL' THEN 1 WHEN 'HIGH' THEN 2 WHEN 'MEDIUM' THEN 3 ELSE 4 END,
+                    l.EOS_YMD ASC
+        ) WHERE rn &lt;= #{limit}
+    </select>
+    <select id="selectKpiFormula" resultType="string">
+        SELECT POLICY_VAL FROM TB_EOS_POLICY
+         WHERE POLICY_TYPE_CD = 'KPI_FORMULA' AND POLICY_KEY = 'RISK_STATUS'
+           AND USE_YN = 'Y' AND EFFECTIVE_TO_DTM IS NULL
+         FETCH FIRST 1 ROWS ONLY
+    </select>
+</mapper>

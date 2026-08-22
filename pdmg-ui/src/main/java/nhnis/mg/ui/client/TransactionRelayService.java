@@ -39,7 +39,7 @@ public class TransactionRelayService {
 
     public String resolveTargetUrl(String transactionId, String baseUrl) {
         TransactionInfo info = catalog.findById(transactionId);
-        return trimTrailingSlash(baseUrl) + info.path();
+        return resolveBase(baseUrl, info) + info.path();
     }
 
     public RelayResult relay(String transactionId, String requestBody, String baseUrl) {
@@ -53,7 +53,7 @@ public class TransactionRelayService {
         if (!normalized.startsWith("/")) {
             normalized = "/" + normalized;
         }
-        String targetUrl = trimTrailingSlash(baseUrl) + normalized;
+        String targetUrl = resolveBase(baseUrl, null) + normalized;
         return post("path:" + normalized, targetUrl, requestBody);
     }
 
@@ -82,6 +82,16 @@ public class TransactionRelayService {
         return """
                 {"error":"%s","targetUrl":"%s","hint":"pdmg-service가 기동 중인지, 대상 URL이 맞는지 확인하세요."}"""
                 .formatted(escapeJson(message), escapeJson(targetUrl));
+    }
+
+    private String resolveBase(String baseUrl, TransactionInfo info) {
+        if (StringUtils.hasText(baseUrl)) {
+            return trimTrailingSlash(baseUrl.trim());
+        }
+        if (info != null && info.programId() != null && info.programId().startsWith("eos")) {
+            return trimTrailingSlash(properties.getEosBaseUrl());
+        }
+        return trimTrailingSlash(properties.getTargetBaseUrl());
     }
 
     private String trimTrailingSlash(String baseUrl) {

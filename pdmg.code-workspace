@@ -1,0 +1,41 @@
+{
+  "folders": [
+    {
+      "name": "pdmg-jwt",
+      "path": "pdmg-jwt"
+    },
+    {
+      "name": "pdmg-ui",
+      "path": "pdmg-ui"
+    },
+    {
+      "name": "pdmg-service",
+      "path": "pdmg-service"
+    },
+    {
+      "name": "pdmg-infra",
+      "path": "pdmg-infra"
+    },
+    {
+      "name": "pdmg-eos",
+      "path": "pdmg-eos"
+    },
+    {
+      "name": "pdmg-fw",
+      "path": "pdmg-fw"
+    }
+  ],
+  "settings": {
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.import.gradle.enabled": true,
+    "java.import.gradle.wrapper.enabled": true,
+    "java.jdt.ls.java.home": "C:\\Users\\chang.JWS\\.jdks\\temurin-21.0.4",
+    "java.configuration.runtimes": [
+      {
+        "name": "JavaSE-21",
+        "path": "C:\\Users\\chang.JWS\\.jdks\\temurin-21.0.4",
+        "default": true
+      }
+    ]
+  }
+}

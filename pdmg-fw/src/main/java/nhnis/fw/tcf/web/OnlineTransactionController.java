@@ -77,8 +77,11 @@ public class OnlineTransactionController {
     /**
      * pdmg-service URL 스타일.
      * 예: {@code POST /mgcoa5530S0}
+     *
+     * <p>serviceId 는 영숫자만 허용한다({@code index.html}, {@code favicon.ico} 등
+     * 정적 경로가 POST 매핑에 잡혀 GET 405 가 나는 것을 막는다).
      */
-    @PostMapping("/{serviceId}")
+    @PostMapping("/{serviceId:[A-Za-z][A-Za-z0-9]{2,63}}")
     public Object handleByServiceId(
             @PathVariable("serviceId") String serviceId,
             @RequestBody Map<String, Object> request,
@@ -99,6 +102,14 @@ public class OnlineTransactionController {
             String serviceId = resolveServiceId(pathServiceId, request);
             ensureRmsSvcC(serviceId);
             Object dtoBody = request == null ? null : request.get(DTO);
+            if (dtoBody == null && request != null && !request.isEmpty()) {
+                // flat JSON 호환: {"resourceId":"..."} → dto 노드 없이 루트 필드를 본문으로 사용
+                java.util.LinkedHashMap<String, Object> flat = new java.util.LinkedHashMap<>(request);
+                flat.remove(HEADER);
+                if (!flat.isEmpty()) {
+                    dtoBody = flat;
+                }
+            }
 
             log.info("[OnlineTransactionController] serviceId={}", serviceId);
             return tcfFacade.process(serviceId, dtoBody);

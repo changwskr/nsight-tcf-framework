@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nhnis.eos.co.a.persistence.dao.eoscoa0160DAO">
+    <select id="listByResource" parameterType="map" resultType="map">
+        SELECT ACTION_ID, RESOURCE_ID, ACTION_TYPE_CD, STATUS_CD, PLAN_END_YMD, OWNER_USER_ID, ORG_CD
+          FROM TB_EOS_ACTION_PLAN WHERE RESOURCE_ID = #{resourceId} ORDER BY REG_DTM DESC
+    </select>
+    <select id="selectOne" parameterType="map" resultType="map">
+        SELECT * FROM TB_EOS_ACTION_PLAN WHERE ACTION_ID = #{actionId}
+    </select>
+    <insert id="insert" parameterType="map">
+        INSERT INTO TB_EOS_ACTION_PLAN (
+            ACTION_ID, RESOURCE_ID, ACTION_TYPE_CD, CUR_VERSION_ID, TGT_VERSION_ID,
+            DETAIL_TXT, IMPACT_TXT, PREREQ_TXT, TEST_PLAN_TXT, CUTOVER_TYPE_CD,
+            OUTAGE_YN, OFFHOURS_YN, DR_VERIFY_YN,
+            ROLLBACK_COND_TXT, ROLLBACK_PROC_TXT, ROLLBACK_TARGET_TXT,
+            ORG_CD, OWNER_USER_ID, PLAN_START_YMD, PLAN_END_YMD, STATUS_CD, ISSUE_TXT,
+            REG_USER_ID, REG_DTM
+        ) VALUES (
+            #{actionId}, #{resourceId}, #{actionTypeCd}, #{curVersionId}, #{tgtVersionId},
+            #{detailTxt}, #{impactTxt}, #{prereqTxt}, #{testPlanTxt}, #{cutoverTypeCd},
+            #{outageYn}, #{offhoursYn}, #{drVerifyYn},
+            #{rollbackCondTxt}, #{rollbackProcTxt}, #{rollbackTargetTxt},
+            #{orgCd}, #{ownerUserId}, #{planStartYmd}, #{planEndYmd}, #{statusCd}, #{issueTxt},
+            #{regUserId}, #{regDtm}
+        )
+    </insert>
+    <update id="update" parameterType="map">
+        UPDATE TB_EOS_ACTION_PLAN SET
+            ACTION_TYPE_CD=#{actionTypeCd}, DETAIL_TXT=#{detailTxt}, IMPACT_TXT=#{impactTxt},
+            PREREQ_TXT=#{prereqTxt}, TEST_PLAN_TXT=#{testPlanTxt}, CUTOVER_TYPE_CD=#{cutoverTypeCd},
+            OUTAGE_YN=#{outageYn}, ROLLBACK_COND_TXT=#{rollbackCondTxt},
+            ROLLBACK_PROC_TXT=#{rollbackProcTxt}, ROLLBACK_TARGET_TXT=#{rollbackTargetTxt},
+            ORG_CD=#{orgCd}, OWNER_USER_ID=#{ownerUserId}, PLAN_START_YMD=#{planStartYmd},
+            PLAN_END_YMD=#{planEndYmd}, ISSUE_TXT=#{issueTxt},
+            CHG_USER_ID=#{chgUserId}, CHG_DTM=#{chgDtm}
+         WHERE ACTION_ID=#{actionId}
+    </update>
+    <update id="updateStatus" parameterType="map">
+        UPDATE TB_EOS_ACTION_PLAN SET STATUS_CD=#{statusCd}, ACTUAL_END_YMD=#{actualEndYmd},
+               CHG_USER_ID=#{chgUserId}, CHG_DTM=#{chgDtm}
+         WHERE ACTION_ID=#{actionId} AND STATUS_CD=#{fromStatusCd}
+    </update>
+    <insert id="insertHist" parameterType="map">
+        INSERT INTO TB_EOS_ACTION_ST_HIST (HIST_ID, ACTION_ID, FROM_STATUS_CD, TO_STATUS_CD, CHG_USER_ID, CHG_DTM, REASON_TXT)
+        VALUES (#{histId}, #{actionId}, #{fromStatusCd}, #{toStatusCd}, #{chgUserId}, #{chgDtm}, #{reasonTxt})
+    </insert>
+    <insert id="insertEvid" parameterType="map">
+        INSERT INTO TB_EOS_ACTION_EVID (ACTION_ID, EVIDENCE_ID, VERIFY_USER_ID, VERIFY_DTM, VERIFY_RESULT_CD)
+        VALUES (#{actionId}, #{evidenceId}, #{verifyUserId}, #{verifyDtm}, #{verifyResultCd})
+    </insert>
+</mapper>

@@ -2,7 +2,7 @@
  * PDMG UI shell — hash router aligned with tcf-ontology-service workbench (#/design).
  */
 (function () {
-  const STATIC_PROGRAM_IDS = new Set(["mgcoa9000", "mgcoa9001", "mgcoa9100", "mgcoa8888", "mgcoa5530", "mgcoa9999"]);
+  const STATIC_PROGRAM_IDS = new Set(["mgcoa9000", "mgcoa9001", "mgcoa9100", "mgcoa8888", "mgcoa5530", "mgcoa9999", "eoscoa"]);
   const VIEW_SRC = {
     mgcoa5530: "/mgcoa5530/index.html",
     mgcoa8888: "/mgcoa8888/index.html",
@@ -10,6 +10,8 @@
     mgcoa9001: "/mgcoa9001/index.html",
     mgcoa9100: "/mgcoa9100/index.html",
     mgcoa9999: "/mgcoa9999/index.html",
+    eoscoa: "/eoscoa/index.html",
+    eos: "/eos/index.html",
     imagelog: "/imagelog/index.html",
     txparam: "/txparam/index.html",
     txcontrol: "/txcontrol/index.html",
@@ -36,6 +38,8 @@
     mgcoa9001: { title: "mgcoa9001", desc: "거래통제 CRUD 전문 테스트" },
     mgcoa9100: { title: "mgcoa9100", desc: "런타임 진단 스냅샷 조회 전문 테스트" },
     mgcoa9999: { title: "mgcoa9999", desc: "영업팁 실적 목록 조회 전문 테스트" },
+    eoscoa: { title: "eoscoa", desc: "EOS 자원관리 전문 테스트 · pdmg-eos :8082" },
+    eos: { title: "EOS 자원관리", desc: "Dashboard KPI · 자원 목록/상세 (EOS-010/020/030)" },
     imagelog: { title: "이미지로그 관리", desc: "TB_FW_IMAGE_LOG 조건검색 관리 화면" },
     txparam: { title: "거래 파라미터 관리", desc: "TB_MG_TX_PARAM 그리드 관리 화면" },
     txcontrol: { title: "거래통제 관리", desc: "TB_MG_TX_CONTROL 유형·대상·차단 관리 화면" },
@@ -58,6 +62,7 @@
   let ontologyBaseUrl = "http://localhost:8098";
   let targetBaseUrl = "http://localhost:8080";
   let jwtBaseUrl = "http://localhost:8110";
+  let eosBaseUrl = "http://localhost:8082";
 
   /** 로그인 없이 허용하는 셸 라우트 */
   const PUBLIC_ROUTES = new Set(["home", "design", "jwt"]);
@@ -165,7 +170,8 @@
       targetBaseUrl = config.targetBaseUrl || targetBaseUrl;
       ontologyBaseUrl = config.ontologyBaseUrl || ontologyBaseUrl;
       jwtBaseUrl = config.jwtBaseUrl || jwtBaseUrl;
-      targetInfo.textContent = `pdmg ${targetBaseUrl} · jwt ${jwtBaseUrl} · ontology ${ontologyBaseUrl}`;
+      eosBaseUrl = config.eosBaseUrl || eosBaseUrl;
+      targetInfo.textContent = `pdmg ${targetBaseUrl} · eos ${eosBaseUrl} · jwt ${jwtBaseUrl}`;
 
       const grouped = new Map();
       transactions.forEach((tx) => {
@@ -223,6 +229,7 @@
           <div class="wb-panel">
             <h2>대상</h2>
             <p class="wb-empty">전문 테스트 → <code>${escapeHtml(targetBaseUrl)}</code></p>
+            <p class="wb-empty">EOS → <code>${escapeHtml(eosBaseUrl)}</code></p>
             <p class="wb-empty">JWT → <code>${escapeHtml(jwtBaseUrl)}</code></p>
             <p class="wb-empty">Ontology → <code>${escapeHtml(ontologyBaseUrl)}</code></p>
           </div>
@@ -286,6 +293,14 @@
               <p>영업팁 실적 목록 조회. dto.salzTipKdc 를 비우면 전체 조회.</p>
               <div class="links"><a href="#/mgcoa9999">전문 테스트 (S0)</a></div>
             </article>
+            <article class="wb-hub-card">
+              <h3>eoscoa <span class="group-tag">EOS</span></h3>
+              <p>EOS 자원관리. Dashboard KPI·목록·상세. 대상 pdmg-eos <code>${escapeHtml(eosBaseUrl)}</code>.</p>
+              <div class="links">
+                <a href="#/eoscoa">전문 테스트 (0110/0120/0130/0150)</a>
+                <a href="#/eos">관리 화면 (Dashboard·목록)</a>
+              </div>
+            </article>
             ${dynamicCards}
           </div>
         </section>`;
@@ -303,9 +318,10 @@
       targetBaseUrl = config.targetBaseUrl || targetBaseUrl;
       ontologyBaseUrl = config.ontologyBaseUrl || ontologyBaseUrl;
       jwtBaseUrl = config.jwtBaseUrl || jwtBaseUrl;
-      targetInfo.textContent = `pdmg ${targetBaseUrl} · jwt ${jwtBaseUrl} · ontology ${ontologyBaseUrl}`;
+      eosBaseUrl = config.eosBaseUrl || eosBaseUrl;
+      targetInfo.textContent = `pdmg ${targetBaseUrl} · eos ${eosBaseUrl} · jwt ${jwtBaseUrl}`;
     } catch (_) {
-      targetInfo.textContent = `pdmg ${targetBaseUrl} · jwt ${jwtBaseUrl} · ontology ${ontologyBaseUrl}`;
+      targetInfo.textContent = `pdmg ${targetBaseUrl} · eos ${eosBaseUrl} · jwt ${jwtBaseUrl}`;
     }
   }
 

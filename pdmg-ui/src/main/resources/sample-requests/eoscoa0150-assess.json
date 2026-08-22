@@ -1,0 +1,31 @@
+{
+  "hdr_nhnis": {
+    "sys_comm": {
+      "rms_svc_c": "eoscoa0150C0",
+      "sync_dsc": "S",
+      "tr_sysid": "PDMGEOS",
+      "ttl_ug_ync": 0,
+      "std_tgrm_rqr_rsp_dsc": "Q",
+      "std_tgrm_lclc": "KO",
+      "tr_trm_ipadr": "127.0.0.1",
+      "tr_dtm": "20260816120000",
+      "tr_brc": "10001",
+      "trmno": "LOCAL01",
+      "trm_kdc": "01",
+      "scid": "eoscoa0150",
+      "optr_eno": "LOCAL",
+      "tr_optrnm": "EOS_TESTER"
+    }
+  },
+  "dto": {
+    "resourceId": "RSC20260816000001",
+    "scoreBiz": 4,
+    "scoreEnv": 4,
+    "scoreExp": 3,
+    "scoreSec": 4,
+    "scoreImp": 4,
+    "scoreAlt": 3,
+    "scoreEos": 5,
+    "commentTxt": "UI sample"
+  }
+}

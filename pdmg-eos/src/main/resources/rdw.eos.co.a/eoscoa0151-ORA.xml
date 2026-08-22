@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nhnis.eos.co.a.persistence.dao.eoscoa0151DAO">
+    <sql id="where">
+        WHERE 1=1
+        <if test="entityType != null and entityType != ''">AND ENTITY_TYPE = #{entityType}</if>
+        <if test="entityId != null and entityId != ''">AND ENTITY_ID = #{entityId}</if>
+        <if test="userId != null and userId != ''">AND USER_ID = #{userId}</if>
+        <if test="actionCd != null and actionCd != ''">AND ACTION_CD = #{actionCd}</if>
+        <if test="traceId != null and traceId != ''">AND TRACE_ID = #{traceId}</if>
+    </sql>
+    <select id="search" parameterType="map" resultType="map">
+        SELECT * FROM (
+          SELECT a.*, ROWNUM rnum FROM (
+            SELECT HIST_ID, TRACE_ID, USER_ID, ORG_CD, SERVICE_ID, ENTITY_TYPE, ENTITY_ID,
+                   ACTION_CD, RESULT_CD, REASON_TXT, EVENT_DTM
+              FROM TB_EOS_CHG_HIST
+            <include refid="where"/>
+             ORDER BY EVENT_DTM DESC
+          ) a WHERE ROWNUM &lt;= #{offset} + #{pageSize}
+        ) WHERE rnum &gt; #{offset}
+    </select>
+    <select id="count" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM TB_EOS_CHG_HIST <include refid="where"/>
+    </select>
+    <select id="detail" parameterType="map" resultType="map">
+        SELECT * FROM TB_EOS_CHG_HIST WHERE HIST_ID = #{histId}
+    </select>
+</mapper>

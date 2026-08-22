@@ -1,0 +1,16 @@
+---
+description: pdmg-eos는 docs/eos 기준 개발; 진행은 eos-progress-manager 스킬로 관리
+globs: pdmg-eos/**/*
+alwaysApply: false
+---
+
+# EOS development baseline
+
+- **직접 기준:** `pdmg-eos/docs/eos/` (Gate·화면·DB·서비스·구현계획)
+- **상위 원천:** `analysys/`, `design/` — 이미 eos에 반영. 재해석으로 설계 번복 금지
+- **진행 관리:** 스킬 `eos-progress-manager` (「진행해」/EOS 상태 시 필수 적용)
+- **상태 파일:** `pdmg-eos/docs/eos/00-AGENT-STATUS.md` — 작업 후 Pipeline·NEXT 갱신
+- **구현 패턴:** `pdmg-service` `mgcoa9000` (Handler→Facade→Service→DAO)
+- **규칙:** `EOS-RULES.md` (서버 계산, Entity 분리, SoD, 상태전이)
+
+사용자 응답은 한국어. 한 턴에 Wave/목표 하나.

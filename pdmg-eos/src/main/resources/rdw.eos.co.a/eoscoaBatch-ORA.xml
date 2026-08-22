@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nhnis.eos.co.a.persistence.dao.eoscoaBatchDAO">
+
+    <select id="listActiveResourcesWithLfc" resultType="map">
+        SELECT r.RESOURCE_ID, r.EOS_STATUS_CD, l.EOS_YMD, l.EOL_YMD
+          FROM TB_EOS_RESOURCE r
+          JOIN TB_EOS_PRODUCT_LFC l
+            ON l.VERSION_ID = r.VERSION_ID
+           AND l.EFFECTIVE_TO_DTM IS NULL
+         WHERE r.DISPOSE_YN = 'N'
+           AND r.USE_YN = 'Y'
+    </select>
+
+    <update id="updateResourceStatus" parameterType="map">
+        UPDATE TB_EOS_RESOURCE
+           SET EOS_STATUS_CD = #{eosStatusCd},
+               CHG_USER_ID = #{chgUserId},
+               CHG_DTM = #{chgDtm}
+         WHERE RESOURCE_ID = #{resourceId}
+    </update>
+
+    <select id="selectPolicyVal" parameterType="map" resultType="string">
+        SELECT POLICY_VAL FROM TB_EOS_POLICY
+         WHERE POLICY_TYPE_CD = #{policyTypeCd} AND POLICY_KEY = #{policyKey}
+           AND USE_YN = 'Y' AND EFFECTIVE_TO_DTM IS NULL
+         FETCH FIRST 1 ROWS ONLY
+    </select>
+
+    <select id="listExpiredExceptions" parameterType="map" resultType="map">
+        SELECT EXC_REQ_ID, RESOURCE_ID, END_YMD, STATUS_CD
+          FROM TB_EOS_EXC_REQ
+         WHERE STATUS_CD IN ('APPROVED', 'CONDITIONAL')
+           AND END_YMD &lt; #{asOfYmd}
+    </select>
+
+    <update id="expireException" parameterType="map">
+        UPDATE TB_EOS_EXC_REQ
+           SET STATUS_CD = 'EXPIRED',
+               CHG_USER_ID = #{chgUserId},
+               CHG_DTM = #{chgDtm}
+         WHERE EXC_REQ_ID = #{excReqId}
+           AND STATUS_CD IN ('APPROVED', 'CONDITIONAL')
+    </update>
+
+    <update id="clearResourceExceptionYn" parameterType="map">
+        UPDATE TB_EOS_RESOURCE
+           SET EXCEPTION_ACTIVE_YN = 'N',
+               CHG_USER_ID = #{chgUserId},
+               CHG_DTM = #{chgDtm}
+         WHERE RESOURCE_ID = #{resourceId}
+           AND EXCEPTION_ACTIVE_YN = 'Y'
+    </update>
+
+    <select id="countActionOverdue" parameterType="map" resultType="int">
+        SELECT COUNT(1)
+          FROM TB_EOS_ACTION_PLAN
+         WHERE STATUS_CD NOT IN ('DONE', 'EXC_MGMT')
+           AND PLAN_END_YMD &lt; #{asOfYmd}
+    </select>
+
+    <select id="countMonthlyCheckMiss" parameterType="map" resultType="int">
+        SELECT COUNT(1)
+          FROM TB_EOS_EXC_REQ e
+         WHERE e.STATUS_CD IN ('APPROVED', 'CONDITIONAL')
+           AND e.MONTHLY_CHECK_YN = 'Y'
+           AND NOT EXISTS (
+               SELECT 1 FROM TB_EOS_MONTHLY_CHK m
+                WHERE m.EXC_REQ_ID = e.EXC_REQ_ID
+                  AND m.CHECK_YM = #{checkYm}
+           )
+    </select>
+
+    <insert id="insertBatchRun" parameterType="map">
+        INSERT INTO TB_EOS_BATCH_RUN (
+            RUN_ID, JOB_ID, START_DTM, PROCESS_CNT, SUCCESS_CNT, FAIL_CNT, STATUS_CD, MSG_TXT
+        ) VALUES (
+            #{runId}, #{jobId}, #{startDtm}, 0, 0, 0, 'RUNNING', NULL
+        )
+    </insert>
+
+    <update id="finishBatchRun" parameterType="map">
+        UPDATE TB_EOS_BATCH_RUN
+           SET END_DTM = #{endDtm},
+               PROCESS_CNT = #{processCnt},
+               SUCCESS_CNT = #{successCnt},
+               FAIL_CNT = #{failCnt},
+               STATUS_CD = #{statusCd},
+               MSG_TXT = #{msgTxt}
+         WHERE RUN_ID = #{runId}
+    </update>
+</mapper>
