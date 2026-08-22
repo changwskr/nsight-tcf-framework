@@ -1,3 +1,14 @@
+# PDMG Timeout / Transaction — pdmg-fw vs pdmg-service 수정 가이드
+
+| 항목 | 값 |
+| --- | --- |
+| audience | 구현 담당자 |
+| full-design | [PDMG_트랜잭션_타임아웃_개선_설계서.md](./PDMG_트랜잭션_타임아웃_개선_설계서.md) |
+| index | [README.md](./README.md) |
+| 1차 수정 파일 | `pdmg-fw/.../DefaultOnlineTimeoutExecutor.java` |
+
+## 모듈 책임 (80% fw / 20% service)
+
 핵심 수정 위치는 **`pdmg-fw`가 맞습니다.**
 지금 이야기한 **트랜잭션 타임아웃 엔진 자체**는 `pdmg-fw`에 들어가 있고, `pdmg-service`는 그 엔진에 **업무별 정책과 TransactionManager를 제공하는 역할**로 두는 것이 구조적으로 맞습니다.
 
@@ -356,5 +367,30 @@ Runtime Evidence / Test
       MyBatis / JDBC / DB
 ```
 
-**따라서 지금 당장 소스를 고친다면 시작점은 `pdmg-fw`의 `DefaultOnlineTimeoutExecutor.java`입니다.**
+**따라서 지금 당장 소스를 고친다면 시작점은 `pdmg-fw`의 `DefaultOnlineTimeoutExecutor.java`입니다.**  
 다만 최종적으로 제대로 개선하려면 `pdmg-fw`만 고쳐 끝내는 것이 아니라, **`pdmg-fw = 실행 엔진`, `pdmg-service = ServiceId별 Transaction Policy 공급자`**로 역할을 나누는 것이 맞습니다.
+
+---
+
+## 현재 구현 vs 1단계 목표
+
+| 항목 | 현재 (2026-08-22) | 1단계 목표 |
+| --- | --- | --- |
+| `Future.get(timeoutMs)` | ✅ | 유지 |
+| Worker `TransactionTemplate` | ✅ (timeout 없음) | `setTimeout(remainingSec)` |
+| Queue 대기 후 Remaining Budget | ❌ | Worker 시작 직전 검사 |
+| `readOnly` 외곽 TX | ❌ | Policy 기반 |
+| `rdwTransactionManager` 고정 | ✅ | `TransactionPolicyResolver` |
+| 단위 테스트 | ✅ `DefaultOnlineTimeoutExecutorTest` | Remaining Budget 케이스 추가 |
+
+## 설정 분리 (운영 시 혼동 금지)
+
+```yaml
+nhnis:
+  fw:
+    timeout:          # ← 본 가이드·설계서 범위
+      enabled: true
+      milliseconds: 5000
+    txcontrol:        # ← 거래통제 (mgcoa9001). 타임아웃과 무관
+      enabled: true
+```

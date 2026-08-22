@@ -1,3 +1,13 @@
+# PDMG 트랜잭션·타임아웃 — 초보자 가이드
+
+| 항목 | 값 |
+| --- | --- |
+| audience | 신규 개발자·운영 입문 |
+| next | [pdmg-tx-processing.md](./pdmg-tx-processing.md) → [timeout-tx-mg-guide.md](./timeout-tx-mg-guide.md) → [설계서](./PDMG_트랜잭션_타임아웃_개선_설계서.md) |
+| 현재 설정 키 | `nhnis.fw.timeout.milliseconds`, `nhnis.fw.timeout.overrides.{serviceId}` |
+
+---
+
 물론입니다. 초보자 관점에서는 **트랜잭션 관리 = “업무를 하나의 묶음으로 보고, 끝까지 성공하면 저장하고 중간에 문제가 생기면 전부 취소하는 것”**이라고 이해하면 됩니다.
 
 은행 업무로 예를 들어보겠습니다.
@@ -605,3 +615,15 @@ DB
 ```
 
 즉 **PDMG 트랜잭션 관리의 핵심은 “하나의 거래 시간을 정하고, 그 시간 안에서 Physical Transaction과 SQL 실행까지 함께 통제하는 것”**이라고 이해하면 가장 쉽습니다.
+
+---
+
+## 다음 단계
+
+| 문서 | 내용 |
+| --- | --- |
+| [pdmg-tx-processing.md](./pdmg-tx-processing.md) | Facade `@Transactional`이 외곽 TX에 어떻게 참여하는지 |
+| [timeout-tx-mg-guide.md](./timeout-tx-mg-guide.md) | pdmg-fw / pdmg-service 수정 위치 |
+| [README.md](./README.md) | 문서 세트·구현 스냅샷 |
+
+> **참고:** `nhnis.fw.txcontrol`(거래통제, `mgcoa9001`)과 `nhnis.fw.timeout`(제한시간)은 별개 설정입니다. 타임아웃 개선과 혼동하지 마세요.

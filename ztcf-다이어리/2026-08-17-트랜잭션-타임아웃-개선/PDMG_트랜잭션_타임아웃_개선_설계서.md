@@ -4,15 +4,34 @@
 
 document-status: PROPOSED
 system-scope: PDMG
-source-baseline: nsight-tcf-framework (2).zip / 2026-08-17
+source-baseline: nsight-tcf-framework @ develop (2026-08-22)
 verified-against-source: true
 architecture-area: TCF / Transaction / Timeout / Runtime Evidence
 change-type: Architecture Improvement
 priority: P0
+related-docs:
+  - README.md
+  - pdmg-tx-timeout-easy.md
+  - pdmg-tx-processing.md
+  - timeout-tx-mg-guide.md
 
 ---
 
-## 0. 문서 목적
+## 0. 문서 세트
+
+| 문서 | 역할 |
+| --- | --- |
+| [README.md](./README.md) | 읽는 순서·소스 위치·구현 스냅샷 |
+| [pdmg-tx-timeout-easy.md](./pdmg-tx-timeout-easy.md) | 초보자용 3계층 Timeout 개념 |
+| [pdmg-tx-processing.md](./pdmg-tx-processing.md) | `@Transactional(REQUIRED)` 참여 조건 |
+| [timeout-tx-mg-guide.md](./timeout-tx-mg-guide.md) | pdmg-fw / pdmg-service 수정 가이드 |
+| **본 문서** | AS-IS / GAP / TO-BE / Gate / 테스트 |
+
+> **SSOT:** `pdmg-fw/docs/timeout/01.timeout.md` 는 구현 이전 초안이다. 타임아웃 설계의 공식 기준은 **본 `ztcf-다이어리` 세트**를 따른다.
+
+---
+
+## 0.1 문서 목적
 
 본 문서는 현재 PDMG Framework의 온라인 거래 타임아웃 구조를 실제 `pdmg-fw`, `pdmg-service` 소스를 기준으로 분석하고, 단순한 `Future.get(timeout)` 기반 응답 타임아웃을 **실제 트랜잭션·SQL·외부호출·Runtime Evidence까지 연결되는 End-to-End Deadline 제어 구조**로 개선하기 위한 목표 아키텍처와 구현 기준을 정의한다.
 
@@ -91,7 +110,38 @@ pdmg-service/
 
 pdmg-service/
  └─ src/main/resources/application.yml
+
+pdmg-fw/
+ └─ src/test/java/nhnis/fw/tcf/timeout/
+      ├─ DefaultOnlineTimeoutExecutorTest.java
+      └─ OnlineTimeoutPropertiesTest.java
 ```
+
+## 1.3 Timeout과 거래통제(TxControl) 분리
+
+PDMG 온라인 경로에서 **제한시간**과 **거래 허용/차단**은 별도 정책이다. `TcfFacade.process()` 실행 순서는 다음과 같다.
+
+```text
+MgActiveTransactionRegistry.begin()
+        ↓
+stf.preProcess()          ← nhnis.fw.txcontrol (MgTxControlService, TB_MG_TX_CONTROL)
+        ↓
+OnlineTimeoutExecutor     ← nhnis.fw.timeout (Worker + Future.get)
+        ↓
+dispatcher → Handler → Facade → Service → DAO
+        ↓
+finally: registry.end() + etf.postProcess()   ← elapsed vs timeout 재점검
+```
+
+| 정책 | 설정 키 | 런타임 | 관리 UI/프로그램 |
+| --- | --- | --- | --- |
+| Timeout | `nhnis.fw.timeout.*` | `DefaultOnlineTimeoutExecutor` | YAML (향후 OM) |
+| TxControl | `nhnis.fw.txcontrol.enabled` | `stf` → `MgTxControlService` | `mgcoa9001` |
+
+**`mgcoa9001`은 타임아웃 정책 프로그램이 아니다.** ServiceId별 timeout ms를 CRUD하는 대상이 아니며, 본 개선의 1차 구현 범위에도 포함하지 않는다.
+
+현재 예외 코드(구현됨): `FW_TIMEOUT`(504), `FW_OVERLOADED`(503) — `GlobalExceptionHandler`.  
+본 문서 §19의 `FW-TIMEOUT-00x` 세분 코드는 **TO-BE Runtime Evidence**용이다.
 
 ---
 
@@ -107,9 +157,9 @@ HTTP Request Thread
         ▼
 TcfFacade.process()
         │
-        ├─ ActiveTransactionRegistry.begin()
+        ├─ MgActiveTransactionRegistry.begin()
         │
-        ├─ STF.preProcess()
+        ├─ stf.preProcess()          ← 거래통제 (TxControl)
         │
         ▼
 DefaultOnlineTimeoutExecutor.execute()
@@ -195,6 +245,45 @@ nhnis:
 | Worker 시작 전 Remaining Budget 검사 | **미적용**           |
 | ServiceId별 Transaction Mode         | **미적용**           |
 | Timeout 응답과 Worker 종료상태 분리  | **미적용**           |
+| ETF Handler 후 elapsed 재점검       | **적용** (`etf.checkTimeoutInterval`) |
+| 단위 테스트 (Executor/Properties)   | **적용** (`DefaultOnlineTimeoutExecutorTest`) |
+
+## 2.4 소스 검증 스냅샷 (2026-08-22)
+
+아래는 AS-IS 설명의 근거가 되는 **현재 구현** 요약이다.
+
+**`DefaultOnlineTimeoutExecutor` — TX timeout 미설정, deadline은 Worker 복귀 시점에만 검사**
+
+```java
+this.transactionTemplate = new TransactionTemplate(transactionManager);
+this.transactionTemplate.setPropagationBehavior(PROPAGATION_REQUIRED);
+// setTimeout() 없음
+
+Future<T> future = pool.submit(() -> runInWorker(..., deadlineNanos, action));
+return future.get(timeoutMs, MILLISECONDS);  // Request Thread 대기
+
+// Worker 내부: action.call() 후 deadline 초과 시 rollbackOnly + OnlineTimeoutException
+```
+
+**`OnlineTimeoutConfiguration` — `rdwTransactionManager` 고정 주입**
+
+```java
+@Qualifier("rdwTransactionManager") PlatformTransactionManager transactionManager
+```
+
+**설정 예 (`pdmg-service/.../application.yml`)**
+
+```yaml
+nhnis:
+  fw:
+    timeout:
+      enabled: true
+      milliseconds: 5000
+      overrides:
+        mgcoa5530S0: 10000
+    txcontrol:
+      enabled: true   # STF 거래통제 — timeout과 독립
+```
 
 ---
 
@@ -490,20 +579,22 @@ MyBatis는 Transaction Timeout과 Mapper/Default Statement Timeout을 조합할 
 
 ## GAP-TX-007. Timeout 응답 시 ActiveTransaction 상태가 실제 Worker보다 먼저 종료될 수 있다
 
-`TcfFacade.process()`는 다음 형태다.
+`TcfFacade.process()`는 다음 형태다 (`MgActiveTransactionRegistry`).
 
 ```text
-activeTransactionRegistry.begin()
+activeTransactionRegistry.begin(context)
         ↓
-OnlineTimeoutExecutor.execute()
+stf.preProcess(context)
         ↓
-Timeout Exception
+onlineTimeoutExecutor.execute(...)
+        ↓
+Timeout Exception (Request Thread)
         ↓
 finally
         ↓
-activeTransactionRegistry.end()
+activeTransactionRegistry.end(context)
         ↓
-ETF
+etf.postProcess(context)    ← Handler 완료 후 elapsed 재점검 (Worker 지속과 별개)
 ```
 
 그러나 `future.cancel(true)` 이후에도 Worker/JDBC가 계속 실행 중일 수 있다.
@@ -1561,6 +1652,15 @@ nhnis:
 
 # 19. 예외 코드 체계
 
+## 19.1 AS-IS (현재 구현)
+
+| 코드 | HTTP | 의미 |
+| --- | --- | --- |
+| `FW_TIMEOUT` | 504 | `OnlineTimeoutException` — Service deadline / ETF interval 초과 |
+| `FW_OVERLOADED` | 503 | Worker Pool 또는 Queue 포화 |
+
+## 19.2 TO-BE (Runtime Evidence 연계)
+
 Timeout을 하나의 코드로 처리하지 않는다.
 
 | 코드 예           | 의미                          |
@@ -2166,11 +2266,13 @@ COMMIT        ROLLBACK
 
 ## G-TX-10 — Source Gate
 
-- [ ] `DefaultOnlineTimeoutExecutor` AS-IS 재확인
-- [ ] ServiceId Timeout 설정 확인
-- [ ] RDW TransactionManager 확인
-- [ ] MyBatis 버전 확인
-- [ ] Oracle Driver 운영버전 확인
+- [x] `DefaultOnlineTimeoutExecutor` AS-IS 재확인 (2026-08-22)
+- [x] ServiceId Timeout 설정 확인 (`OnlineTimeoutProperties.resolveMilliseconds`)
+- [x] RDW TransactionManager 확인 (`OnlineTimeoutConfiguration` `@Qualifier`)
+- [x] Timeout vs TxControl 분리 확인 (`stf` / `MgTxControlService`)
+- [x] 단위 테스트 존재 확인 (`DefaultOnlineTimeoutExecutorTest`)
+- [ ] MyBatis Statement timeout 전달 Integration Test
+- [ ] Oracle Driver 운영버전 Timeout 동작 검증
 
 ## G-TX-20 — Design Gate
 
