@@ -58,25 +58,30 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
     @Override
     public <T> T execute(Callable<T> action) throws Exception {
         OnlineTimeoutWorkerContext workerContext = OnlineTimeoutWorkerContext.capture();
-        long timeoutMs = properties.resolveMilliseconds(workerContext.getServiceId());
-        ExecutionDeadline deadline = ExecutionDeadline.start(timeoutMs);
+        long configuredTimeoutMs = properties.resolveMilliseconds(workerContext.getServiceId());
+        ExecutionDeadline boundDeadline = ExecutionDeadlineContext.current();
+        if (boundDeadline == null) {
+            boundDeadline = ExecutionDeadline.start(configuredTimeoutMs);
+        }
+        final ExecutionDeadline deadline = boundDeadline;
 
         Future<T> future;
         try {
             future = taskExecutor.getThreadPoolExecutor().submit(
-                    () -> runInWorker(workerContext, timeoutMs, deadline, action));
+                    () -> runInWorker(workerContext, configuredTimeoutMs, deadline, action));
         } catch (RejectedExecutionException ex) {
             throw overload(workerContext);
         }
         evidenceRegistry.markQueued(workerContext.getGuid());
 
+        long waitMs = Math.max(1L, deadline.remainingMillis());
         try {
-            T result = future.get(timeoutMs, TimeUnit.MILLISECONDS);
+            T result = future.get(waitMs, TimeUnit.MILLISECONDS);
             if (log.isDebugEnabled()) {
                 log.debug("[ONLINE-TIMEOUT] completed guid={} serviceId={} timeoutMs={} elapsedMs={}",
                         workerContext.getGuid(),
                         workerContext.getServiceId(),
-                        timeoutMs,
+                        configuredTimeoutMs,
                         deadline.elapsedMillis());
             }
             return result;
@@ -87,11 +92,11 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
             log.warn("[ONLINE-TIMEOUT] guid={} serviceId={} timeoutMs={} elapsedMs={} cancelRequested={}",
                     workerContext.getGuid(),
                     workerContext.getServiceId(),
-                    timeoutMs,
+                    configuredTimeoutMs,
                     elapsed,
                     cancelled);
             throw new OnlineTimeoutException(
-                    timeoutMs,
+                    configuredTimeoutMs,
                     elapsed,
                     workerContext.getServiceId(),
                     workerContext.getGuid());
@@ -99,7 +104,7 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
             future.cancel(true);
             Thread.currentThread().interrupt();
             throw new OnlineTimeoutException(
-                    timeoutMs,
+                    configuredTimeoutMs,
                     deadline.elapsedMillis(),
                     workerContext.getServiceId(),
                     workerContext.getGuid());

@@ -7,14 +7,16 @@ import org.springframework.stereotype.Component;
 
 import nhnis.fw.commons.log.PdmgTxFlowLog;
 import nhnis.fw.tcf.core.context.TransactionContext;
-import nhnis.fw.tcf.timeout.OnlineTimeoutException;
+import nhnis.fw.tcf.execution.ExecutionDeadline;
+import nhnis.fw.tcf.execution.ExecutionDeadlineContext;
+import nhnis.fw.tcf.execution.ExecutionDeadlineGuard;
 import nhnis.fw.tcf.timeout.OnlineTimeoutProperties;
 
 /**
  * PDMG ETF (End-of-Transaction Framework).
  *
  * <p>TCF ON 경로에서 Handler 종료 후 공통 후처리를 수행한다.
- * 거래 시작시각 기준 serviceId 타임아웃 인터벌을 점검한다.
+ * {@link ExecutionDeadline} 이 바인딩되어 있으면 stf·Worker 와 동일 deadline 을 점검한다.
  *
  * <pre>
  * … → Handler → etf.postProcess(checkTimeoutInterval) → …
@@ -56,10 +58,9 @@ public class etf {
     }
 
     /**
-     * 트랜잭션 시작시각을 기준으로 serviceId 타임아웃(ms)과 현재 시각 경과분을 비교한다.
-     * 경과 시간이 허용 인터벌을 초과하면 {@link OnlineTimeoutException} 을 던진다.
+     * Service Deadline 초과 여부를 검사한다.
      *
-     * @param context 거래 컨텍스트 (시작시각·serviceId·guid 포함)
+     * @param context 거래 컨텍스트 (serviceId·guid 포함)
      */
     public void checkTimeoutInterval(TransactionContext context) {
         if (context == null) {
@@ -70,18 +71,18 @@ public class etf {
             return;
         }
 
-        String serviceId = context.getServiceId();
-        long timeoutMs = timeoutProperties.resolveMilliseconds(serviceId);
-        long elapsedMs = context.elapsedMsSinceStart();
-        String guid = context.getGuid();
-
-        log.info("[etf] timeout interval check serviceId={} timeoutMs={} elapsedMs={} guid={}",
-                serviceId, timeoutMs, elapsedMs, guid);
-
-        if (elapsedMs > timeoutMs) {
-            log.warn("[etf] timeout interval exceeded serviceId={} timeoutMs={} elapsedMs={} guid={}",
+        ExecutionDeadline deadline = ExecutionDeadlineContext.current();
+        if (deadline != null) {
+            String serviceId = context.getServiceId();
+            long timeoutMs = timeoutProperties.resolveMilliseconds(serviceId);
+            long elapsedMs = deadline.elapsedMillis();
+            String guid = context.getGuid();
+            log.info("[etf] timeout interval check serviceId={} timeoutMs={} elapsedMs={} guid={} source=ExecutionDeadline",
                     serviceId, timeoutMs, elapsedMs, guid);
-            throw new OnlineTimeoutException(timeoutMs, elapsedMs, serviceId, guid);
+            ExecutionDeadlineGuard.throwIfExpired(context, timeoutProperties);
+            return;
         }
+
+        log.debug("[etf] timeout interval check skipped (no ExecutionDeadline bound)");
     }
 }

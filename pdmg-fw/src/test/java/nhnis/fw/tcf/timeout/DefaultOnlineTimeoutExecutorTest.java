@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import nhnis.fw.tcf.execution.ExecutionDeadline;
+import nhnis.fw.tcf.execution.ExecutionDeadlineContext;
 import nhnis.fw.tcf.execution.OnlineExecutionEvidenceRegistry;
 import nhnis.fw.tcf.execution.OnlineTransactionPolicyProperties;
 import nhnis.fw.tcf.execution.PropertiesTransactionPolicyResolver;
@@ -66,6 +68,7 @@ class DefaultOnlineTimeoutExecutorTest {
 
     @AfterEach
     void tearDown() {
+        ExecutionDeadlineContext.clear();
         ThreadContext.clearAll();
         taskExecutor.shutdown();
     }
@@ -292,6 +295,29 @@ class DefaultOnlineTimeoutExecutorTest {
         assertThat(entered).isTrue();
         assertThat(transactionManager.rollbackOnlyObserved.get() || transactionManager.rollbackCount.get() > 0)
                 .isTrue();
+    }
+
+    @Test
+    void usesPreBoundServiceDeadlineRemainingBudget() throws Exception {
+        properties.setMilliseconds(500);
+        properties.setMinStartBudgetMs(50);
+        ExecutionDeadlineContext.bind(ExecutionDeadline.start(500));
+        Thread.sleep(420);
+
+        assertThatThrownBy(() -> executor.execute(() -> {
+            Thread.sleep(200);
+            return "late";
+        })).isInstanceOf(OnlineTimeoutException.class);
+    }
+
+    @Test
+    void rejectsWhenPreBoundDeadlineAlreadyExpiredBeforeWorkerStarts() throws Exception {
+        properties.setMilliseconds(200);
+        ExecutionDeadlineContext.bind(ExecutionDeadline.start(200));
+        Thread.sleep(220);
+
+        assertThatThrownBy(() -> executor.execute(() -> "never"))
+                .isInstanceOf(OnlineTimeoutException.class);
     }
 
     private void awaitWorkerQuiet() {

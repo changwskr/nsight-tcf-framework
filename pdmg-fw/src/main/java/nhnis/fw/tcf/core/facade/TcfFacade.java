@@ -9,9 +9,13 @@ import nhnis.fw.commons.runtime.MgActiveTransactionRegistry;
 import nhnis.fw.tcf.core.context.TransactionContext;
 import nhnis.fw.tcf.core.dispatch.TransactionDispatcher;
 import nhnis.fw.tcf.etf.etf;
+import nhnis.fw.tcf.execution.ExecutionDeadline;
+import nhnis.fw.tcf.execution.ExecutionDeadlineContext;
+import nhnis.fw.tcf.execution.ExecutionDeadlineGuard;
 import nhnis.fw.tcf.stf.stf;
 import nhnis.fw.tcf.timeout.OnlineTimeoutException;
 import nhnis.fw.tcf.timeout.OnlineTimeoutExecutor;
+import nhnis.fw.tcf.timeout.OnlineTimeoutProperties;
 
 /**
  * TCF Core Facade.
@@ -21,12 +25,14 @@ import nhnis.fw.tcf.timeout.OnlineTimeoutExecutor;
  * 그대로 유지하고, 여기서는 STF → Handler → ETF 연결을 담당한다.
  *
  * <p>{@link OnlineTimeoutExecutor} 가 활성이면 Dispatcher 이하를 Worker + TX 로 감싼다.
+ * Service Deadline 은 {@link ExecutionDeadline} 하나로 stf·Worker·etf 가 공유한다.
  *
  * <pre>
  * Filter → 시스템선처리 → Controller → TcfFacade
+ *   → ExecutionDeadline 시작
  *   → stf.preProcess(거래통제) → OnlineTimeoutExecutor
  *   → Handler → 업무Facade → …
- *   → etf.postProcess(성공/예외 무관 finally, 타임아웃 인터벌 점검)
+ *   → etf.postProcess(동일 deadline 점검)
  * </pre>
  */
 @Component
@@ -37,6 +43,7 @@ public class TcfFacade {
 
     private final TransactionDispatcher dispatcher;
     private final OnlineTimeoutExecutor onlineTimeoutExecutor;
+    private final OnlineTimeoutProperties timeoutProperties;
     private final stf stf;
     private final etf etf;
     private final MgActiveTransactionRegistry activeTransactionRegistry;
@@ -44,6 +51,7 @@ public class TcfFacade {
     public TcfFacade(
             TransactionDispatcher dispatcher,
             OnlineTimeoutExecutor onlineTimeoutExecutor,
+            OnlineTimeoutProperties timeoutProperties,
             stf stf,
             etf etf,
             MgActiveTransactionRegistry activeTransactionRegistry) {
@@ -51,6 +59,7 @@ public class TcfFacade {
         try {
             this.dispatcher = dispatcher;
             this.onlineTimeoutExecutor = onlineTimeoutExecutor;
+            this.timeoutProperties = timeoutProperties;
             this.stf = stf;
             this.etf = etf;
             this.activeTransactionRegistry = activeTransactionRegistry;
@@ -69,9 +78,11 @@ public class TcfFacade {
         TransactionContext context = TransactionContext.fromCurrent(serviceId);
         Exception primary = null;
         activeTransactionRegistry.begin(context);
+        bindServiceDeadline(serviceId);
         try {
             log.debug("[TcfFacade] process start serviceId={}", serviceId);
             stf.preProcess(context);
+            ExecutionDeadlineGuard.throwIfExpired(context, timeoutProperties);
             Object result = onlineTimeoutExecutor.execute(
                     () -> dispatcher.dispatch(serviceId, dtoBody, context));
             log.debug("[TcfFacade] process end serviceId={} elapsedMs={}",
@@ -81,26 +92,40 @@ public class TcfFacade {
             primary = e;
             throw e;
         } finally {
-            if (primary instanceof OnlineTimeoutException timeoutEx) {
+            RuntimeException etfFailure = null;
+            try {
+                etf.postProcess(context);
+            } catch (RuntimeException ex) {
+                etfFailure = ex;
+            }
+
+            Exception outcome = primary != null ? primary : etfFailure;
+            if (outcome instanceof OnlineTimeoutException timeoutEx) {
                 activeTransactionRegistry.markClientTimeout(context, timeoutEx.getElapsedMs());
-            } else if (primary != null) {
+            } else if (outcome != null) {
                 activeTransactionRegistry.markClientError(context);
             } else {
                 activeTransactionRegistry.markClientSuccess(context);
             }
             activeTransactionRegistry.finishClient(context);
-            // ETF는 성공/실패와 무관하게 항상 수행 (종료 후처리)
-            try {
-                etf.postProcess(context);
-            } catch (RuntimeException etfEx) {
+
+            if (etfFailure != null) {
                 if (primary != null) {
-                    primary.addSuppressed(etfEx);
+                    primary.addSuppressed(etfFailure);
                 } else {
-                    throw etfEx;
+                    throw etfFailure;
                 }
-            } finally {
-                log.info("========================= [TcfFacade.process] 종료");
             }
+            ExecutionDeadlineContext.clear();
+            log.info("========================= [TcfFacade.process] 종료");
         }
+    }
+
+    private void bindServiceDeadline(String serviceId) {
+        if (timeoutProperties == null || !timeoutProperties.isEnabled()) {
+            return;
+        }
+        long timeoutMs = timeoutProperties.resolveMilliseconds(serviceId);
+        ExecutionDeadlineContext.bind(ExecutionDeadline.start(timeoutMs));
     }
 }
