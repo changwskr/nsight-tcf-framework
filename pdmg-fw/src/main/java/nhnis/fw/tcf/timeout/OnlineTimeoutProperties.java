@@ -17,6 +17,7 @@ import jakarta.annotation.PostConstruct;
  * nhnis.fw.timeout.milliseconds=5000
  * nhnis.fw.timeout.pool-size=20
  * nhnis.fw.timeout.queue-capacity=100
+ * nhnis.fw.timeout.min-start-budget-ms=1000
  * nhnis.fw.timeout.overrides.mgcoa5530S0=10000
  * </pre>
  */
@@ -31,6 +32,9 @@ public class OnlineTimeoutProperties {
 
     private int queueCapacity = 100;
 
+    /** Worker 시작 시 TX를 열기 위한 최소 남은 시간(ms). */
+    private long minStartBudgetMs = 1000L;
+
     /** serviceId → timeout(ms). 미등록 시 {@link #milliseconds} 사용. */
     private Map<String, Long> overrides = new LinkedHashMap<>();
 
@@ -44,6 +48,9 @@ public class OnlineTimeoutProperties {
         }
         if (queueCapacity < 0) {
             throw new IllegalStateException("nhnis.fw.timeout.queue-capacity must be >= 0");
+        }
+        if (minStartBudgetMs < 1) {
+            throw new IllegalStateException("nhnis.fw.timeout.min-start-budget-ms must be >= 1");
         }
         if (overrides != null) {
             for (Map.Entry<String, Long> entry : overrides.entrySet()) {
@@ -102,6 +109,14 @@ public class OnlineTimeoutProperties {
 
     public void setQueueCapacity(int queueCapacity) {
         this.queueCapacity = queueCapacity;
+    }
+
+    public long getMinStartBudgetMs() {
+        return minStartBudgetMs;
+    }
+
+    public void setMinStartBudgetMs(long minStartBudgetMs) {
+        this.minStartBudgetMs = minStartBudgetMs;
     }
 
     public Map<String, Long> getOverrides() {

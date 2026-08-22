@@ -240,9 +240,9 @@ nhnis:
 | Worker 외곽 `TransactionTemplate`    | 적용                 |
 | Worker 복귀 후 Deadline 확인         | 적용                 |
 | Deadline 초과 후 Late Commit 방지    | 적용                 |
-| `TransactionTemplate.setTimeout()`   | **미적용**           |
+| `TransactionTemplate.setTimeout()`   | **Phase 1 적용** (Remaining Budget 기반) |
+| Worker 시작 전 Remaining Budget 검사 | **Phase 1 적용** (`min-start-budget-ms`) |
 | SQL Timeout 동적 연계                | **명시적 구성 없음** |
-| Worker 시작 전 Remaining Budget 검사 | **미적용**           |
 | ServiceId별 Transaction Mode         | **미적용**           |
 | Timeout 응답과 Worker 종료상태 분리  | **미적용**           |
 | ETF Handler 후 elapsed 재점검       | **적용** (`etf.checkTimeoutInterval`) |
@@ -279,6 +279,7 @@ nhnis:
     timeout:
       enabled: true
       milliseconds: 5000
+      min-start-budget-ms: 1000   # Worker TX 시작 최소 남은 시간
       overrides:
         mgcoa5530S0: 10000
     txcontrol:

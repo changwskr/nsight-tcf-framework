@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -30,6 +32,7 @@ class DefaultOnlineTimeoutExecutorTest {
         properties = new OnlineTimeoutProperties();
         properties.setEnabled(true);
         properties.setMilliseconds(200);
+        properties.setMinStartBudgetMs(50);
         properties.setPoolSize(2);
         properties.setQueueCapacity(1);
 
@@ -152,6 +155,77 @@ class DefaultOnlineTimeoutExecutorTest {
     }
 
     @Test
+    void appliesTransactionTimeoutFromRemainingBudget() throws Exception {
+        properties.setMilliseconds(5000);
+        properties.setMinStartBudgetMs(500);
+        ThreadContext.put("serviceId", "mgcoa8888S0");
+
+        String result = executor.execute(() -> "ok");
+        assertThat(result).isEqualTo("ok");
+        assertThat(transactionManager.lastTimeoutSeconds.get()).isBetween(4, 5);
+    }
+
+    @Test
+    void toConservativeTimeoutSecondsUsesFloorDivision() {
+        assertThat(DefaultOnlineTimeoutExecutor.toConservativeTimeoutSeconds(5000)).isEqualTo(5);
+        assertThat(DefaultOnlineTimeoutExecutor.toConservativeTimeoutSeconds(1500)).isEqualTo(1);
+        assertThat(DefaultOnlineTimeoutExecutor.toConservativeTimeoutSeconds(999)).isEqualTo(1);
+    }
+
+    @Test
+    void rejectsWhenWorkerStartsWithInsufficientRemainingBudget() throws Exception {
+        properties.setMilliseconds(400);
+        properties.setMinStartBudgetMs(250);
+        properties.setPoolSize(1);
+        properties.setQueueCapacity(5);
+        taskExecutor.shutdown();
+        taskExecutor = new ThreadPoolTaskExecutor();
+        taskExecutor.setThreadNamePrefix("pdmg-online-budget-");
+        taskExecutor.setCorePoolSize(1);
+        taskExecutor.setMaxPoolSize(1);
+        taskExecutor.setQueueCapacity(5);
+        taskExecutor.initialize();
+        executor = new DefaultOnlineTimeoutExecutor(properties, taskExecutor, transactionManager);
+
+        CountDownLatch workerHoldingPool = new CountDownLatch(1);
+        CountDownLatch releaseBlocker = new CountDownLatch(1);
+        ThreadContext.put("serviceId", "mgcoa8888S0");
+
+        Thread blocker = new Thread(() -> {
+            try {
+                ThreadContext.put("serviceId", "blockerS0");
+                executor.execute(() -> {
+                    workerHoldingPool.countDown();
+                    releaseBlocker.await(5, TimeUnit.SECONDS);
+                    return "block";
+                });
+            } catch (Exception ignored) {
+                // test cleanup
+            }
+        });
+        blocker.start();
+        assertThat(workerHoldingPool.await(2, TimeUnit.SECONDS)).isTrue();
+
+        Thread queued = new Thread(() -> {
+            try {
+                ThreadContext.put("serviceId", "mgcoa8888S0");
+                executor.execute(() -> "queued");
+            } catch (OnlineTimeoutException expected) {
+                // expected when worker starts with low remaining budget
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        queued.start();
+        Thread.sleep(200);
+        releaseBlocker.countDown();
+        queued.join(3000);
+        blocker.join(3000);
+
+        assertThat(transactionManager.beginCount.get()).isLessThanOrEqualTo(1);
+    }
+
+    @Test
     void lateWorkerMarksRollbackOnlyOnDeadline() throws Exception {
         AtomicBoolean entered = new AtomicBoolean();
         AtomicBoolean finishedWithoutCancel = new AtomicBoolean();
@@ -194,10 +268,14 @@ class DefaultOnlineTimeoutExecutorTest {
     private static final class RecordingTransactionManager implements PlatformTransactionManager {
         private final AtomicInteger commitCount = new AtomicInteger();
         private final AtomicInteger rollbackCount = new AtomicInteger();
+        private final AtomicInteger beginCount = new AtomicInteger();
         private final AtomicBoolean rollbackOnlyObserved = new AtomicBoolean();
+        private final AtomicInteger lastTimeoutSeconds = new AtomicInteger(-1);
 
         @Override
         public TransactionStatus getTransaction(TransactionDefinition definition) throws TransactionException {
+            beginCount.incrementAndGet();
+            lastTimeoutSeconds.set(definition.getTimeout());
             return new SimpleTransactionStatus() {
                 @Override
                 public void setRollbackOnly() {

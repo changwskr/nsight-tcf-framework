@@ -30,4 +30,14 @@ class OnlineTimeoutPropertiesTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("overrides.mgcoa5530S0");
     }
+
+    @Test
+    void validateRejectsInvalidMinStartBudget() {
+        OnlineTimeoutProperties properties = new OnlineTimeoutProperties();
+        properties.setMinStartBudgetMs(0);
+
+        assertThatThrownBy(properties::validate)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("min-start-budget-ms");
+    }
 }
