@@ -59,7 +59,8 @@ pdmg-fw/src/test/java/nhnis/fw/tcf/timeout/
 | `TransactionTemplate.setTimeout(remaining)` | ✅ Phase 1 (`DefaultOnlineTimeoutExecutor`) |
 | Worker 시작 전 Remaining Budget 검사 | ✅ Phase 1 (`min-start-budget-ms`, 기본 1000) |
 | `ExecutionDeadline` | ✅ Phase 1 (`nhnis.fw.tcf.execution`) |
-| ServiceId Transaction Policy (readOnly/manager) | ❌ Phase 3 |
+| ServiceId Transaction Policy (readOnly/manager) | ✅ Phase 3 (`TransactionPolicyResolver`) |
+| `rdwTransactionManager` 고정 | ✅ 제거 (`TransactionManagerRegistry`) |
 | MyBatis/JDBC 동적 Statement timeout | ✅ Phase 2 (`MybatisStatementTimeoutInterceptor`) |
 | Client/Worker 종료 상태 분리 Evidence | ❌ Phase 4 |
 

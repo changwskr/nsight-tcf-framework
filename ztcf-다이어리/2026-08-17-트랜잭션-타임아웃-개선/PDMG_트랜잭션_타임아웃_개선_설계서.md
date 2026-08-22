@@ -243,7 +243,8 @@ nhnis:
 | `TransactionTemplate.setTimeout()`   | **Phase 1 적용** (Remaining Budget 기반) |
 | Worker 시작 전 Remaining Budget 검사 | **Phase 1 적용** (`min-start-budget-ms`) |
 | SQL Timeout 동적 연계                | **Phase 2 적용** (Interceptor + defaultStatementTimeout) |
-| ServiceId별 Transaction Mode         | **미적용**           |
+| ServiceId별 Transaction Mode         | **Phase 3 적용** (`nhnis.fw.transaction`) |
+| `rdwTransactionManager` 고정           | **제거** (Policy + Registry) |
 | Timeout 응답과 Worker 종료상태 분리  | **미적용**           |
 | ETF Handler 후 elapsed 재점검       | **적용** (`etf.checkTimeoutInterval`) |
 | 단위 테스트 (Executor/Properties)   | **적용** (`DefaultOnlineTimeoutExecutorTest`) |

@@ -69,6 +69,12 @@ nhnis:
     # 시스템 선처리 거래통제 (TB_MG_TX_CONTROL). false 이면 강제 생략
     txcontrol:
       enabled: true
+    transaction:
+      default-manager: rdwTransactionManager
+      default-mode: RDW_READ_WRITE
+      services:
+        mgcoa5530S0:
+          mode: RDW_READ_ONLY
 
 ---
 spring:

@@ -16,9 +16,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import nhnis.fw.mybatis.StatementTimeoutResolver;
 import nhnis.fw.tcf.execution.ExecutionDeadline;
 import nhnis.fw.tcf.execution.ExecutionDeadlineContext;
-import nhnis.fw.mybatis.StatementTimeoutResolver;
+import nhnis.fw.tcf.execution.TransactionManagerRegistry;
+import nhnis.fw.tcf.execution.TransactionPolicy;
+import nhnis.fw.tcf.execution.TransactionPolicyResolver;
 
 /**
  * Worker Pool + TransactionTemplate + Future.get(timeout) 기반 온라인 타임아웃 실행기.
@@ -26,8 +29,8 @@ import nhnis.fw.mybatis.StatementTimeoutResolver;
  * <p>제한시간은 {@link OnlineTimeoutProperties#resolveMilliseconds(String)} 로
  * serviceId별 override를 반영한다.
  *
- * <p>Worker 시작 시점의 Remaining Budget으로 {@link TransactionTemplate#setTimeout(int)} 를
- * 설정해 응답 deadline과 DB transaction timeout을 연계한다.
+ * <p>Transaction 경계는 {@link TransactionPolicyResolver} 가 결정하고,
+ * {@link TransactionManagerRegistry} 로 Bean 이름을 해석한다.
  */
 public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
 
@@ -35,14 +38,17 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
 
     private final OnlineTimeoutProperties properties;
     private final ThreadPoolTaskExecutor taskExecutor;
-    private final PlatformTransactionManager transactionManager;
+    private final TransactionPolicyResolver policyResolver;
+    private final TransactionManagerRegistry transactionManagerRegistry;
 
     public DefaultOnlineTimeoutExecutor(OnlineTimeoutProperties properties,
             ThreadPoolTaskExecutor taskExecutor,
-            PlatformTransactionManager transactionManager) {
+            TransactionPolicyResolver policyResolver,
+            TransactionManagerRegistry transactionManagerRegistry) {
         this.properties = properties;
         this.taskExecutor = taskExecutor;
-        this.transactionManager = transactionManager;
+        this.policyResolver = policyResolver;
+        this.transactionManagerRegistry = transactionManagerRegistry;
     }
 
     @Override
@@ -99,7 +105,7 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
     }
 
     private <T> T runInWorker(OnlineTimeoutWorkerContext workerContext, long timeoutMs,
-            ExecutionDeadline deadline, Callable<T> action) {
+            ExecutionDeadline deadline, Callable<T> action) throws Exception {
         workerContext.install();
         try {
             long remainingMs = deadline.remainingMillis();
@@ -120,15 +126,32 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
                         workerContext.getGuid());
             }
 
+            TransactionPolicy policy = policyResolver.resolve(workerContext.getServiceId());
+            if (!policy.requiresTransaction()) {
+                if (log.isDebugEnabled()) {
+                    log.debug("[ONLINE-TIMEOUT] no-tx policy guid={} serviceId={} mode={}",
+                            workerContext.getGuid(),
+                            workerContext.getServiceId(),
+                            policy.mode());
+                }
+                return runWithoutTransaction(workerContext, timeoutMs, deadline, action);
+            }
+
+            PlatformTransactionManager transactionManager =
+                    transactionManagerRegistry.require(policy.transactionManagerBean());
             int transactionTimeoutSeconds = StatementTimeoutResolver.toConservativeTimeoutSeconds(remainingMs);
             TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
             transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
             transactionTemplate.setTimeout(transactionTimeoutSeconds);
+            transactionTemplate.setReadOnly(policy.readOnly());
 
             if (log.isDebugEnabled()) {
-                log.debug("[ONLINE-TIMEOUT] worker tx timeout guid={} serviceId={} remainingMs={} txTimeoutSec={}",
+                log.debug("[ONLINE-TIMEOUT] worker tx policy guid={} serviceId={} manager={} readOnly={} "
+                                + "remainingMs={} txTimeoutSec={}",
                         workerContext.getGuid(),
                         workerContext.getServiceId(),
+                        policy.transactionManagerBean(),
+                        policy.readOnly(),
                         remainingMs,
                         transactionTimeoutSeconds);
             }
@@ -169,6 +192,24 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
             });
         } finally {
             workerContext.clear();
+        }
+    }
+
+    private <T> T runWithoutTransaction(OnlineTimeoutWorkerContext workerContext, long timeoutMs,
+            ExecutionDeadline deadline, Callable<T> action) throws Exception {
+        ExecutionDeadlineContext.bind(deadline);
+        try {
+            T result = action.call();
+            if (deadline.expired() || Thread.currentThread().isInterrupted()) {
+                throw new OnlineTimeoutException(
+                        timeoutMs,
+                        deadline.elapsedMillis(),
+                        workerContext.getServiceId(),
+                        workerContext.getGuid());
+            }
+            return result;
+        } finally {
+            ExecutionDeadlineContext.clear();
         }
     }
 

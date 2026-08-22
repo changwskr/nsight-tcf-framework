@@ -53,6 +53,9 @@ nhnis:
         enabled: true
     txcontrol:
       enabled: true
+    transaction:
+      default-manager: rdwTransactionManager
+      default-mode: RDW_READ_WRITE
 
 ---
 spring:

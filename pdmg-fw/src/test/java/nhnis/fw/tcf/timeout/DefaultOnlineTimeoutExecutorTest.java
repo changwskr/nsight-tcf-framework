@@ -9,6 +9,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import nhnis.fw.tcf.execution.OnlineTransactionPolicyProperties;
+import nhnis.fw.tcf.execution.PropertiesTransactionPolicyResolver;
+import nhnis.fw.tcf.execution.TransactionManagerRegistry;
+import nhnis.fw.tcf.execution.TransactionMode;
+import nhnis.fw.tcf.execution.TransactionPolicyResolver;
 import org.apache.logging.log4j.ThreadContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +30,9 @@ class DefaultOnlineTimeoutExecutorTest {
     private ThreadPoolTaskExecutor taskExecutor;
     private OnlineTimeoutProperties properties;
     private RecordingTransactionManager transactionManager;
+    private OnlineTransactionPolicyProperties transactionPolicyProperties;
+    private TransactionPolicyResolver policyResolver;
+    private TransactionManagerRegistry transactionManagerRegistry;
     private DefaultOnlineTimeoutExecutor executor;
 
     @BeforeEach
@@ -36,6 +44,9 @@ class DefaultOnlineTimeoutExecutorTest {
         properties.setPoolSize(2);
         properties.setQueueCapacity(1);
 
+        transactionPolicyProperties = new OnlineTransactionPolicyProperties();
+        policyResolver = new PropertiesTransactionPolicyResolver(transactionPolicyProperties);
+
         taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setThreadNamePrefix("pdmg-online-test-");
         taskExecutor.setCorePoolSize(2);
@@ -44,7 +55,10 @@ class DefaultOnlineTimeoutExecutorTest {
         taskExecutor.initialize();
 
         transactionManager = new RecordingTransactionManager();
-        executor = new DefaultOnlineTimeoutExecutor(properties, taskExecutor, transactionManager);
+        transactionManagerRegistry = new TransactionManagerRegistry(
+                Map.of("rdwTransactionManager", transactionManager));
+        executor = new DefaultOnlineTimeoutExecutor(
+                properties, taskExecutor, policyResolver, transactionManagerRegistry);
     }
 
     @AfterEach
@@ -129,7 +143,8 @@ class DefaultOnlineTimeoutExecutorTest {
         taskExecutor.setMaxPoolSize(1);
         taskExecutor.setQueueCapacity(0);
         taskExecutor.initialize();
-        executor = new DefaultOnlineTimeoutExecutor(properties, taskExecutor, transactionManager);
+        executor = new DefaultOnlineTimeoutExecutor(
+                properties, taskExecutor, policyResolver, transactionManagerRegistry);
 
         AtomicBoolean hold = new AtomicBoolean(true);
         Thread blocker = new Thread(() -> {
@@ -152,6 +167,31 @@ class DefaultOnlineTimeoutExecutorTest {
 
         hold.set(false);
         blocker.join(1000);
+    }
+
+    @Test
+    void appliesReadOnlyPolicyFromResolver() throws Exception {
+        OnlineTransactionPolicyProperties.ServicePolicy servicePolicy =
+                new OnlineTransactionPolicyProperties.ServicePolicy();
+        servicePolicy.setMode(TransactionMode.RDW_READ_ONLY);
+        transactionPolicyProperties.getServices().put("readOnlyS0", servicePolicy);
+        ThreadContext.put("serviceId", "readOnlyS0");
+
+        executor.execute(() -> "ok");
+        assertThat(transactionManager.lastReadOnly.get()).isTrue();
+    }
+
+    @Test
+    void skipsTransactionForNoneMode() throws Exception {
+        OnlineTransactionPolicyProperties.ServicePolicy servicePolicy =
+                new OnlineTransactionPolicyProperties.ServicePolicy();
+        servicePolicy.setMode(TransactionMode.NONE);
+        transactionPolicyProperties.getServices().put("noTxS0", servicePolicy);
+        ThreadContext.put("serviceId", "noTxS0");
+
+        String result = executor.execute(() -> "no-tx");
+        assertThat(result).isEqualTo("no-tx");
+        assertThat(transactionManager.beginCount.get()).isZero();
     }
 
     @Test
@@ -178,7 +218,8 @@ class DefaultOnlineTimeoutExecutorTest {
         taskExecutor.setMaxPoolSize(1);
         taskExecutor.setQueueCapacity(5);
         taskExecutor.initialize();
-        executor = new DefaultOnlineTimeoutExecutor(properties, taskExecutor, transactionManager);
+        executor = new DefaultOnlineTimeoutExecutor(
+                properties, taskExecutor, policyResolver, transactionManagerRegistry);
 
         CountDownLatch workerHoldingPool = new CountDownLatch(1);
         CountDownLatch releaseBlocker = new CountDownLatch(1);
@@ -264,11 +305,13 @@ class DefaultOnlineTimeoutExecutorTest {
         private final AtomicInteger beginCount = new AtomicInteger();
         private final AtomicBoolean rollbackOnlyObserved = new AtomicBoolean();
         private final AtomicInteger lastTimeoutSeconds = new AtomicInteger(-1);
+        private final AtomicBoolean lastReadOnly = new AtomicBoolean();
 
         @Override
         public TransactionStatus getTransaction(TransactionDefinition definition) throws TransactionException {
             beginCount.incrementAndGet();
             lastTimeoutSeconds.set(definition.getTimeout());
+            lastReadOnly.set(definition.isReadOnly());
             return new SimpleTransactionStatus() {
                 @Override
                 public void setRollbackOnly() {

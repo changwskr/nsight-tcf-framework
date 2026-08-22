@@ -4,29 +4,36 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.transaction.PlatformTransactionManager;
 
 import jakarta.annotation.PreDestroy;
+import nhnis.fw.tcf.execution.OnlineTransactionPolicyProperties;
+import nhnis.fw.tcf.execution.PropertiesTransactionPolicyResolver;
+import nhnis.fw.tcf.execution.TransactionManagerRegistry;
+import nhnis.fw.tcf.execution.TransactionPolicyResolver;
 
 /**
  * 온라인 타임아웃 Executor 구성.
  *
  * <p>{@code nhnis.fw.timeout.enabled=true} 일 때 Worker Pool + TransactionTemplate 경로를 활성한다.
- * TransactionManager는 업무 애플리케이션의 {@code rdwTransactionManager} 를 주입받는다.
+ * TransactionManager는 {@link TransactionPolicyResolver} + {@link TransactionManagerRegistry} 로 해석한다.
  */
 @Configuration
-@EnableConfigurationProperties(OnlineTimeoutProperties.class)
+@EnableConfigurationProperties({OnlineTimeoutProperties.class, OnlineTransactionPolicyProperties.class})
 public class OnlineTimeoutConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(OnlineTimeoutConfiguration.class);
 
     private ThreadPoolTaskExecutor onlineTaskExecutor;
+
+    @Bean
+    public TransactionPolicyResolver transactionPolicyResolver(OnlineTransactionPolicyProperties properties) {
+        return new PropertiesTransactionPolicyResolver(properties);
+    }
 
     @Bean
     @ConditionalOnProperty(name = "nhnis.fw.timeout.enabled", havingValue = "false", matchIfMissing = true)
@@ -57,9 +64,12 @@ public class OnlineTimeoutConfiguration {
     @ConditionalOnProperty(name = "nhnis.fw.timeout.enabled", havingValue = "true")
     public OnlineTimeoutExecutor defaultOnlineTimeoutExecutor(
             OnlineTimeoutProperties properties,
-            @Qualifier("pdmgOnlineTimeoutTaskExecutor") ThreadPoolTaskExecutor taskExecutor,
-            @Qualifier("rdwTransactionManager") PlatformTransactionManager transactionManager) {
-        return new DefaultOnlineTimeoutExecutor(properties, taskExecutor, transactionManager);
+            @org.springframework.beans.factory.annotation.Qualifier("pdmgOnlineTimeoutTaskExecutor")
+            ThreadPoolTaskExecutor taskExecutor,
+            TransactionPolicyResolver policyResolver,
+            TransactionManagerRegistry transactionManagerRegistry) {
+        return new DefaultOnlineTimeoutExecutor(
+                properties, taskExecutor, policyResolver, transactionManagerRegistry);
     }
 
     @PreDestroy
