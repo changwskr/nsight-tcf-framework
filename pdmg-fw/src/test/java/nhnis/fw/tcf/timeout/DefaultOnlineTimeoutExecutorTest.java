@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import nhnis.fw.tcf.execution.OnlineExecutionEvidenceRegistry;
 import nhnis.fw.tcf.execution.OnlineTransactionPolicyProperties;
 import nhnis.fw.tcf.execution.PropertiesTransactionPolicyResolver;
 import nhnis.fw.tcf.execution.TransactionManagerRegistry;
@@ -33,6 +34,7 @@ class DefaultOnlineTimeoutExecutorTest {
     private OnlineTransactionPolicyProperties transactionPolicyProperties;
     private TransactionPolicyResolver policyResolver;
     private TransactionManagerRegistry transactionManagerRegistry;
+    private OnlineExecutionEvidenceRegistry evidenceRegistry;
     private DefaultOnlineTimeoutExecutor executor;
 
     @BeforeEach
@@ -57,8 +59,9 @@ class DefaultOnlineTimeoutExecutorTest {
         transactionManager = new RecordingTransactionManager();
         transactionManagerRegistry = new TransactionManagerRegistry(
                 Map.of("rdwTransactionManager", transactionManager));
+        evidenceRegistry = new OnlineExecutionEvidenceRegistry();
         executor = new DefaultOnlineTimeoutExecutor(
-                properties, taskExecutor, policyResolver, transactionManagerRegistry);
+                properties, taskExecutor, policyResolver, transactionManagerRegistry, evidenceRegistry);
     }
 
     @AfterEach
@@ -144,7 +147,7 @@ class DefaultOnlineTimeoutExecutorTest {
         taskExecutor.setQueueCapacity(0);
         taskExecutor.initialize();
         executor = new DefaultOnlineTimeoutExecutor(
-                properties, taskExecutor, policyResolver, transactionManagerRegistry);
+                properties, taskExecutor, policyResolver, transactionManagerRegistry, evidenceRegistry);
 
         AtomicBoolean hold = new AtomicBoolean(true);
         Thread blocker = new Thread(() -> {
@@ -219,7 +222,7 @@ class DefaultOnlineTimeoutExecutorTest {
         taskExecutor.setQueueCapacity(5);
         taskExecutor.initialize();
         executor = new DefaultOnlineTimeoutExecutor(
-                properties, taskExecutor, policyResolver, transactionManagerRegistry);
+                properties, taskExecutor, policyResolver, transactionManagerRegistry, evidenceRegistry);
 
         CountDownLatch workerHoldingPool = new CountDownLatch(1);
         CountDownLatch releaseBlocker = new CountDownLatch(1);

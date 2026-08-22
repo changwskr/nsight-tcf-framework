@@ -10,6 +10,7 @@ import nhnis.fw.tcf.core.context.TransactionContext;
 import nhnis.fw.tcf.core.dispatch.TransactionDispatcher;
 import nhnis.fw.tcf.etf.etf;
 import nhnis.fw.tcf.stf.stf;
+import nhnis.fw.tcf.timeout.OnlineTimeoutException;
 import nhnis.fw.tcf.timeout.OnlineTimeoutExecutor;
 
 /**
@@ -80,7 +81,14 @@ public class TcfFacade {
             primary = e;
             throw e;
         } finally {
-            activeTransactionRegistry.end(context);
+            if (primary instanceof OnlineTimeoutException timeoutEx) {
+                activeTransactionRegistry.markClientTimeout(context, timeoutEx.getElapsedMs());
+            } else if (primary != null) {
+                activeTransactionRegistry.markClientError(context);
+            } else {
+                activeTransactionRegistry.markClientSuccess(context);
+            }
+            activeTransactionRegistry.finishClient(context);
             // ETF는 성공/실패와 무관하게 항상 수행 (종료 후처리)
             try {
                 etf.postProcess(context);

@@ -67,9 +67,10 @@ public class OnlineTimeoutConfiguration {
             @org.springframework.beans.factory.annotation.Qualifier("pdmgOnlineTimeoutTaskExecutor")
             ThreadPoolTaskExecutor taskExecutor,
             TransactionPolicyResolver policyResolver,
-            TransactionManagerRegistry transactionManagerRegistry) {
+            TransactionManagerRegistry transactionManagerRegistry,
+            nhnis.fw.tcf.execution.OnlineExecutionEvidenceRegistry evidenceRegistry) {
         return new DefaultOnlineTimeoutExecutor(
-                properties, taskExecutor, policyResolver, transactionManagerRegistry);
+                properties, taskExecutor, policyResolver, transactionManagerRegistry, evidenceRegistry);
     }
 
     @PreDestroy

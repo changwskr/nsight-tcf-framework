@@ -1,80 +1,82 @@
 package nhnis.fw.commons.runtime;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import nhnis.fw.tcf.core.context.TransactionContext;
+import nhnis.fw.tcf.execution.OnlineExecutionEvidenceRegistry;
+import nhnis.fw.tcf.timeout.OnlineTimeoutProperties;
 
 /**
  * 실행 중 온라인 거래 레지스트리 (런타임 진단용).
+ *
+ * <p>Client/Worker 상태 분리는 {@link OnlineExecutionEvidenceRegistry} 에 위임한다.
  */
 @Component
 public class MgActiveTransactionRegistry {
 
-    private final ConcurrentHashMap<String, ActiveTx> active = new ConcurrentHashMap<>();
+    private final OnlineExecutionEvidenceRegistry evidence;
+    private final OnlineTimeoutProperties timeoutProperties;
+
+    public MgActiveTransactionRegistry(
+            OnlineExecutionEvidenceRegistry evidence,
+            OnlineTimeoutProperties timeoutProperties) {
+        this.evidence = evidence;
+        this.timeoutProperties = timeoutProperties;
+    }
 
     public void begin(TransactionContext context) {
         if (context == null || !StringUtils.hasText(context.getServiceId())) {
             return;
         }
-        String key = keyOf(context);
-        active.put(key, new ActiveTx(
-                context.getServiceId().trim(),
-                resolveBusinessCode(context.getServiceId()),
-                context.getGuid(),
-                Thread.currentThread().threadId(),
-                Thread.currentThread().getName(),
-                System.currentTimeMillis(),
-                "RUNNING"));
+        long configuredTimeoutMs = timeoutProperties.resolveMilliseconds(context.getServiceId());
+        evidence.begin(context, configuredTimeoutMs);
     }
 
+    /**
+     * @deprecated Client 종료는 {@link #finishClient(TransactionContext)} 를 사용한다.
+     */
+    @Deprecated
     public void end(TransactionContext context) {
-        if (context == null) {
-            return;
-        }
-        active.remove(keyOf(context));
+        finishClient(context);
+    }
+
+    public void markClientSuccess(TransactionContext context) {
+        evidence.markClientSuccess(context);
+    }
+
+    public void markClientTimeout(TransactionContext context, long elapsedMs) {
+        evidence.markClientTimeout(context, elapsedMs);
+    }
+
+    public void markClientError(TransactionContext context) {
+        evidence.markClientError(context);
+    }
+
+    public void finishClient(TransactionContext context) {
+        evidence.finishClient(context);
     }
 
     public int count() {
-        return active.size();
+        return evidence.activeCount();
+    }
+
+    public int workerOverrunCount() {
+        return evidence.workerOverrunCount();
     }
 
     public List<Map<String, Object>> snapshot(int limit) {
-        int max = Math.max(1, limit);
-        List<Map<String, Object>> rows = new ArrayList<>();
-        long now = System.currentTimeMillis();
-        for (ActiveTx tx : active.values()) {
-            if (rows.size() >= max) {
-                break;
-            }
-            Map<String, Object> row = new LinkedHashMap<>();
-            row.put("businessCode", tx.businessCode());
-            row.put("serviceId", tx.serviceId());
-            row.put("guid", tx.guid());
-            row.put("threadId", tx.threadId());
-            row.put("threadName", tx.threadName());
-            row.put("elapsedMs", Math.max(0L, now - tx.startedAtMs()));
-            row.put("currentStep", tx.currentStep());
-            rows.add(row);
-        }
-        return rows;
+        return evidence.snapshotActive(limit);
     }
 
-    private static String keyOf(TransactionContext context) {
-        String guid = context.getGuid();
-        if (StringUtils.hasText(guid)) {
-            return guid.trim();
-        }
-        return context.getServiceId() + "@" + Thread.currentThread().threadId() + "@" + System.identityHashCode(context);
+    public List<Map<String, Object>> snapshotRecent(int limit) {
+        return evidence.snapshotRecent(limit);
     }
 
-    static String resolveBusinessCode(String serviceId) {
+    public static String resolveBusinessCode(String serviceId) {
         if (!StringUtils.hasText(serviceId)) {
             return "MG";
         }
@@ -89,15 +91,5 @@ public class MgActiveTransactionRegistry {
             }
         }
         return letters.length() > 0 ? letters.toString() : "MG";
-    }
-
-    private record ActiveTx(
-            String serviceId,
-            String businessCode,
-            String guid,
-            long threadId,
-            String threadName,
-            long startedAtMs,
-            String currentStep) {
     }
 }

@@ -65,6 +65,8 @@ public class MgRuntimeMonitor {
         snapshot.put("jvm", jvm);
         snapshot.put("dbPools", pools);
         snapshot.put("activeTransactions", registry.snapshot(50));
+        snapshot.put("recentTransactions", registry.snapshotRecent(20));
+        snapshot.put("workerOverrunCount", registry.workerOverrunCount());
         snapshot.put("slowTransactions", List.of());
         snapshot.put("slowSql", List.of());
         return snapshot;
@@ -132,6 +134,7 @@ public class MgRuntimeMonitor {
         summary.put("primaryCauseCode", causeCode);
         summary.put("message", message);
         summary.put("activeTransactionCount", activeTx);
+        summary.put("workerOverrunCount", registry.workerOverrunCount());
         summary.put("slowTransactionCount", slowTx);
         summary.put("slowSqlCount", slowSql);
         return summary;

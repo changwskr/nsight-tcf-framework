@@ -19,6 +19,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import nhnis.fw.mybatis.StatementTimeoutResolver;
 import nhnis.fw.tcf.execution.ExecutionDeadline;
 import nhnis.fw.tcf.execution.ExecutionDeadlineContext;
+import nhnis.fw.tcf.execution.OnlineExecutionEvidenceRegistry;
 import nhnis.fw.tcf.execution.TransactionManagerRegistry;
 import nhnis.fw.tcf.execution.TransactionPolicy;
 import nhnis.fw.tcf.execution.TransactionPolicyResolver;
@@ -40,15 +41,18 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
     private final ThreadPoolTaskExecutor taskExecutor;
     private final TransactionPolicyResolver policyResolver;
     private final TransactionManagerRegistry transactionManagerRegistry;
+    private final OnlineExecutionEvidenceRegistry evidenceRegistry;
 
     public DefaultOnlineTimeoutExecutor(OnlineTimeoutProperties properties,
             ThreadPoolTaskExecutor taskExecutor,
             TransactionPolicyResolver policyResolver,
-            TransactionManagerRegistry transactionManagerRegistry) {
+            TransactionManagerRegistry transactionManagerRegistry,
+            OnlineExecutionEvidenceRegistry evidenceRegistry) {
         this.properties = properties;
         this.taskExecutor = taskExecutor;
         this.policyResolver = policyResolver;
         this.transactionManagerRegistry = transactionManagerRegistry;
+        this.evidenceRegistry = evidenceRegistry;
     }
 
     @Override
@@ -64,6 +68,7 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
         } catch (RejectedExecutionException ex) {
             throw overload(workerContext);
         }
+        evidenceRegistry.markQueued(workerContext.getGuid());
 
         try {
             T result = future.get(timeoutMs, TimeUnit.MILLISECONDS);
@@ -78,6 +83,7 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
         } catch (TimeoutException ex) {
             boolean cancelled = future.cancel(true);
             long elapsed = deadline.elapsedMillis();
+            evidenceRegistry.markCancelRequested(workerContext.getGuid());
             log.warn("[ONLINE-TIMEOUT] guid={} serviceId={} timeoutMs={} elapsedMs={} cancelRequested={}",
                     workerContext.getGuid(),
                     workerContext.getServiceId(),
@@ -106,7 +112,10 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
 
     private <T> T runInWorker(OnlineTimeoutWorkerContext workerContext, long timeoutMs,
             ExecutionDeadline deadline, Callable<T> action) throws Exception {
+        String guid = workerContext.getGuid();
+        evidenceRegistry.markWorkerStarted(guid, Thread.currentThread().threadId());
         workerContext.install();
+        boolean workerCommitted = false;
         try {
             long remainingMs = deadline.remainingMillis();
             if (remainingMs < properties.getMinStartBudgetMs()) {
@@ -134,12 +143,15 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
                             workerContext.getServiceId(),
                             policy.mode());
                 }
-                return runWithoutTransaction(workerContext, timeoutMs, deadline, action);
+                T result = runWithoutTransaction(workerContext, timeoutMs, deadline, action);
+                workerCommitted = true;
+                return result;
             }
 
             PlatformTransactionManager transactionManager =
                     transactionManagerRegistry.require(policy.transactionManagerBean());
             int transactionTimeoutSeconds = StatementTimeoutResolver.toConservativeTimeoutSeconds(remainingMs);
+            evidenceRegistry.markTxStarted(guid, policy.mode(), transactionTimeoutSeconds);
             TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
             transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
             transactionTemplate.setTimeout(transactionTimeoutSeconds);
@@ -156,7 +168,7 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
                         transactionTimeoutSeconds);
             }
 
-            return transactionTemplate.execute(status -> {
+            T txResult = transactionTemplate.execute(status -> {
                 ExecutionDeadlineContext.bind(deadline);
                 try {
                     T result = action.call();
@@ -190,7 +202,17 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
                     ExecutionDeadlineContext.clear();
                 }
             });
+            workerCommitted = true;
+            return txResult;
         } finally {
+            if (guid != null && !guid.isBlank()) {
+                if (workerCommitted) {
+                    evidenceRegistry.markWorkerCommitted(guid);
+                } else {
+                    evidenceRegistry.markWorkerRolledBack(guid);
+                }
+                evidenceRegistry.markWorkerTerminated(guid);
+            }
             workerContext.clear();
         }
     }
