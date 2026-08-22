@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"PDMG Conformance Result","type":"object","required":["referencePromotionStatus","targetRepository","results","summary"],"properties":{"results":{"type":"array"},"summary":{"type":"object"}}}

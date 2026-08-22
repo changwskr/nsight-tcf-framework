@@ -1,0 +1,28 @@
+{
+  "run_id": "RUN-SESSION",
+  "environment": "REPLACE",
+  "evidence_class": "PRODUCTION_RUNTIME",
+  "synthetic": false,
+  "build_commit": "REPLACE",
+  "config_version": "REPLACE",
+  "started_at": "REPLACE",
+  "ended_at": "REPLACE",
+  "production_status": "OPEN",
+  "required_evidence": [
+    "logs/session.log",
+    "logs/l4.log",
+    "logs/idp-auth.log",
+    "metrics/session-count.json",
+    "logs/failover.log"
+  ],
+  "machine_gates": [
+    "observed_behavior matches approved_session_policy",
+    "no_cross_user_session_leak = true",
+    "post_failover_login_path works"
+  ],
+  "human_gates": [
+    "Session ADR approved",
+    "Approve center-failure re-login vs preservation policy",
+    "Review session object serialization/memory impact"
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "wave": "3C",
+  "status": "STATIC_VERIFIED_RUNTIME_OPEN",
+  "tests": {
+    "tdd_initial_red": "PASS_EXPECTED_FAILURE_CAPTURED",
+    "null_template_red": "PASS_EXPECTED_FAILURE_CAPTURED",
+    "pytest_final": {
+      "passed": 9,
+      "failed": 0
+    },
+    "catalog_validation": {
+      "accepted": true,
+      "run_count": 3,
+      "errors": []
+    },
+    "execution_plan": {
+      "plan": [
+        "RUN-TIMEOUT",
+        "RUN-P600",
+        "RUN-P1200"
+      ]
+    },
+    "timeout_template_eval": {
+      "decision": "INCOMPLETE",
+      "failures": [],
+      "missing": [
+        "rolled_back",
+        "late_commit_count",
+        "tx_result",
+        "client_result",
+        "pending_after",
+        "active_before",
+        "active_after",
+        "worker_returned",
+        "context_leak_count"
+      ],
+      "warnings": []
+    },
+    "p600_template_eval": {
+      "decision": "INCOMPLETE",
+      "failures": [],
+      "missing": [
+        "tps",
+        "p95_seconds",
+        "error_rate_pct",
+        "timeout_rate_pct",
+        "cpu_pct",
+        "busy_thread_pct",
+        "hikari_active_pct"
+      ],
+      "warnings": []
+    },
+    "p1200_template_eval": {
+      "decision": "INCOMPLETE",
+      "failures": [],
+      "missing": [
+        "tps",
+        "p95_seconds",
+        "error_rate_pct",
+        "timeout_rate_pct",
+        "cpu_pct",
+        "busy_thread_pct",
+        "hikari_active_pct"
+      ],
+      "warnings": []
+    }
+  },
+  "production_runtime_runs_executed": 0,
+  "batch_runs_required": 3,
+  "gate": {
+    "G80": "HOLD",
+    "HG90": "HOLD"
+  },
+  "timestamp": "2026-08-19T00:23:03.362097+00:00"
+}

@@ -1,0 +1,69 @@
+{
+  "candidate": "NSIGHT-ARCH-CANDIDATE-2026-08-19",
+  "phase": "P0 Closure Wave 2A Change Specification",
+  "status": "SPEC_READY_NOT_IMPLEMENTED",
+  "changes": [
+    {
+      "id": "CHG-SEC-001",
+      "p0": "P0-SEC-001",
+      "title": "JWT Signing Key Provider",
+      "current": "Process-local RSA 2048 generation; production KMS/HSM provider not present",
+      "target": "JwtSigningKeyProvider SPI; local ephemeral only local/test; external signer/provider in prod",
+      "runtimeRequired": [
+        "RUN-JWT-ROTATE"
+      ],
+      "gate": [
+        "G50",
+        "G80",
+        "HG90"
+      ]
+    },
+    {
+      "id": "CHG-SEC-002",
+      "p0": "P0-SEC-002",
+      "title": "Versioned kid / Rotation / JWKS Grace",
+      "current": "fixed kid nsight-jwt-rs256; single current public JWK",
+      "target": "versioned kid; ACTIVE/PREVIOUS lifecycle; prepublish JWKS; grace; emergency revoke",
+      "runtimeRequired": [
+        "RUN-JWT-ROTATE"
+      ],
+      "gate": [
+        "G50",
+        "G80",
+        "HG90"
+      ]
+    },
+    {
+      "id": "CHG-TX-001",
+      "p0": "P0-TX-001",
+      "title": "Facade Transaction Boundary Cleanup",
+      "current": "EbUserService.create and EpUserEventService.receive duplicate Facade REQUIRED transaction",
+      "target": "remove redundant Service transaction; Facade remains default owner; exception allowlist",
+      "runtimeRequired": [
+        "EB atomic rollback integration test",
+        "EP rollback integration test"
+      ],
+      "gate": [
+        "G40",
+        "G80"
+      ]
+    },
+    {
+      "id": "CHG-TMO-001",
+      "p0": "P0-TMO-003",
+      "title": "Timeout Safety Harness / Policy Guard",
+      "current": "future.cancel(true); default online=5, tx=5, db=3; rollback/late-commit not proven",
+      "target": "policy audit/enforcement guard + integration harness + production-like RUN-TIMEOUT evidence",
+      "runtimeRequired": [
+        "RUN-TIMEOUT",
+        "RUN-SLOWSQL"
+      ],
+      "gate": [
+        "G40",
+        "G60",
+        "G80",
+        "HG90"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+........F                                                                [100%]
+=================================== FAILURES ===================================
+____________ test_null_template_values_are_incomplete_not_exception ____________
+
+    def test_null_template_values_are_incomplete_not_exception():
+        facts = {
+            'tps': None, 'p95_seconds': None, 'error_rate_pct': None,
+            'timeout_rate_pct':None,'cpu_pct':None,'busy_thread_pct':None,
+            'hikari_active_pct':None,'human_approvals_complete':False,
+        }
+>       out = evaluate_go_nogo('RUN-P600', facts)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_runbook_validate.py:125: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+run_id = 'RUN-P600'
+facts = {'busy_thread_pct': None, 'cpu_pct': None, 'error_rate_pct': None, 'hikari_active_pct': None, ...}
+
+    def evaluate_go_nogo(run_id: str, facts: Dict[str, Any]) -> Dict[str, Any]:
+        failures: List[str] = []
+        missing: List[str] = []
+        warnings: List[str] = []
+    
+        if run_id == 'RUN-TIMEOUT':
+            required = [
+                'rolled_back','late_commit_count','tx_result','client_result','pending_after',
+                'active_before','active_after','worker_returned','context_leak_count',
+                'human_approvals_complete'
+            ]
+            missing = _missing(facts, required)
+            if not missing:
+                if facts['rolled_back'] is not True: failures.append('rolled_back!=true')
+                if facts['late_commit_count'] != 0: failures.append('late_commit_count!=0')
+                if facts['tx_result'] != 'ROLLBACK': failures.append('tx_result!=ROLLBACK')
+                if facts['client_result'] != 'TIMEOUT': failures.append('client_result!=TIMEOUT')
+                if facts['pending_after'] not in (0, 0.0): failures.append('pending_after!=0')
+                if facts['active_after'] != facts['active_before']: failures.append('pool_active_not_restored')
+                if facts['worker_returned'] is not True: failures.append('worker_returned!=true')
+                if facts['context_leak_count'] != 0: failures.append('context_leak_count!=0')
+        elif run_id in {'RUN-P600','RUN-P1200'}:
+            target = 600 if run_id == 'RUN-P600' else 1200
+            required = [
+                'tps','p95_seconds','error_rate_pct','timeout_rate_pct','cpu_pct',
+                'busy_thread_pct','hikari_active_pct','human_approvals_complete'
+            ]
+            missing = _missing(facts, required)
+            if not missing:
+>               if float(facts['tps']) < target: failures.append(f'tps<{target}')
+                   ^^^^^^^^^^^^^^^^^^^
+E               TypeError: float() argument must be a string or a real number, not 'NoneType'
+
+tools/nsight_runbook_validate.py:79: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_runbook_validate.py::test_null_template_values_are_incomplete_not_exception - TypeError: float() argument must be a string or a real number, not 'NoneType'
+1 failed, 8 passed in 0.07s
+exit=1

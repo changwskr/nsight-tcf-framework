@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "wave": "3C",
+  "batch": "RUN-TIMEOUT -> RUN-P600 -> RUN-P1200",
+  "timestamp": "2026-08-19T00:22:42.497259+00:00",
+  "tool_availability": {
+    "python3": "/opt/pyvenv/bin/python3",
+    "pytest": "/opt/pyvenv/bin/pytest",
+    "java": "/usr/bin/java",
+    "javac": "/usr/bin/javac",
+    "jcmd": "/usr/bin/jcmd",
+    "curl": "/usr/local/bin/curl",
+    "jmeter": "NOT_FOUND",
+    "gatling": "NOT_FOUND",
+    "sqlplus": "NOT_FOUND",
+    "jq": "/usr/bin/jq"
+  },
+  "runtime_identity_provided": false,
+  "production_runtime_runs_executed": 0,
+  "production_runtime_runs_required_in_batch": 3,
+  "formal_timeout_acceptance_preflight": {
+    "current_known_order": "3 < 5 < 5",
+    "required_order": "dbQuery < tx < online < client",
+    "status": "BLOCKED_POLICY_ORDER_FOR_FORMAL_ACCEPTANCE",
+    "source": "P0-WAVE2A-TIMEOUT-VALIDATOR-RESULT.txt / Wave3 baseline"
+  },
+  "load_generation": {
+    "jmeter": "BLOCKED_NOT_INSTALLED",
+    "gatling": "BLOCKED_NOT_INSTALLED"
+  },
+  "oracle_cli": "BLOCKED_NOT_INSTALLED",
+  "gate_effect": {
+    "G80": "HOLD",
+    "HG90": "HOLD"
+  },
+  "notes": "Wave3C is operator-ready runbook/static tooling only. No runtime PASS is asserted."
+}

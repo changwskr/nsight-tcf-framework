@@ -1,0 +1,27 @@
+{
+  "adr_id": "ADR-SES-001",
+  "title": "Session Strategy",
+  "decision": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "conditions": [],
+  "comment": null,
+  "approval_state": "DRAFT_NOT_APPROVED",
+  "recommended_decision": "DEFER_UNTIL_PREREQUISITES",
+  "readiness": "NEEDS_OWNER_INPUT_AND_RUNTIME",
+  "required_approver": "Application Architect + Ops Owner + Security",
+  "runtime_dependency": [
+    "RUN-SESSION",
+    "RUN-CF"
+  ],
+  "recommendation": "현재 자료만으로 최종안을 확정하지 않는다. 센터내 Sticky+DeltaManager와 외부 Session Store를 동일 기준으로 비교하고, 센터장애 시 재로그인 허용정책을 먼저 승인한다.",
+  "prerequisites": [
+    "Session idle 정책 60/90분 승인",
+    "센터장애 재로그인 허용정책"
+  ],
+  "closure": [
+    "approved session policy",
+    "failover behavior matches ADR"
+  ]
+}

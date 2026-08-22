@@ -1,0 +1,28 @@
+{
+  "run_id": "RUN-HIKARI",
+  "environment": "REPLACE",
+  "evidence_class": "PRODUCTION_RUNTIME",
+  "synthetic": false,
+  "build_commit": "REPLACE",
+  "config_version": "REPLACE",
+  "started_at": "REPLACE",
+  "ended_at": "REPLACE",
+  "production_status": "OPEN",
+  "required_evidence": [
+    "metrics/pool.json",
+    "metrics/db-session.json",
+    "metrics/connection-acquire.json",
+    "logs/run.log"
+  ],
+  "machine_gates": [
+    "connection_leak = 0",
+    "pool_active returns to baseline after pressure",
+    "persistent_pending_after_recovery = 0",
+    "db_session <= approved_db_session_ceiling"
+  ],
+  "human_gates": [
+    "Approve final Hikari pool size",
+    "Approve Pending/connection acquire operating threshold",
+    "Confirm DB DBA session ceiling"
+  ]
+}

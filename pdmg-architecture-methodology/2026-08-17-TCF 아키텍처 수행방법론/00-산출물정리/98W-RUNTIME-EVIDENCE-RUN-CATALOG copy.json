@@ -1,0 +1,98 @@
+{
+  "schema_version": "1.0",
+  "runs": {
+    "RUN-TIMEOUT": {
+      "purpose": "Timeout rollback / late commit / pool & context cleanup",
+      "required": [
+        "db/before-after.json",
+        "logs/transaction.json",
+        "metrics/pool.json",
+        "metrics/thread.json"
+      ]
+    },
+    "RUN-P600": {
+      "purpose": "General peak 600 TPS",
+      "target_tps": 600,
+      "required": [
+        "metrics/summary.json",
+        "logs/run.log"
+      ]
+    },
+    "RUN-P1200": {
+      "purpose": "Design peak 1,200 TPS",
+      "target_tps": 1200,
+      "required": [
+        "metrics/summary.json",
+        "logs/run.log"
+      ]
+    },
+    "RUN-S1800": {
+      "purpose": "Stress 1,800 TPS and saturation characterization",
+      "target_tps": 1800,
+      "required": [
+        "metrics/summary.json",
+        "logs/run.log",
+        "db/integrity.json"
+      ]
+    },
+    "RUN-HIKARI": {
+      "purpose": "Hikari pool pressure and DB session ceiling",
+      "required": [
+        "metrics/pool.json",
+        "metrics/db-session.json"
+      ]
+    },
+    "RUN-SLOWSQL": {
+      "purpose": "Slow SQL query timeout < TX timeout and connection return",
+      "required": [
+        "metrics/slow-sql.json",
+        "logs/transaction.json",
+        "metrics/pool.json"
+      ]
+    },
+    "RUN-N1": {
+      "purpose": "AP N-1 at design peak",
+      "required": [
+        "metrics/summary.json",
+        "logs/routing.log",
+        "logs/failover.log"
+      ]
+    },
+    "RUN-SESSION": {
+      "purpose": "Session failover/re-authentication policy",
+      "required": [
+        "logs/session.log",
+        "logs/l4.log"
+      ]
+    },
+    "RUN-CF": {
+      "purpose": "Center failover/failback RTO/RPO",
+      "required": [
+        "logs/failover.log",
+        "metrics/rto-rpo.json"
+      ]
+    },
+    "RUN-TRACE": {
+      "purpose": "GUID+ServiceId end-to-end traceability",
+      "required": [
+        "logs/e2e-trace.json"
+      ]
+    },
+    "RUN-ROLLING": {
+      "purpose": "Rolling deployment residual capacity / health",
+      "required": [
+        "logs/deploy.log",
+        "logs/health.log",
+        "metrics/summary.json"
+      ]
+    },
+    "RUN-JWT-ROTATE": {
+      "purpose": "JWT active/previous kid grace, multi-node/restart verification",
+      "required": [
+        "logs/jwt-rotation.json",
+        "logs/jwks.json",
+        "logs/key-audit.log"
+      ]
+    }
+  }
+}

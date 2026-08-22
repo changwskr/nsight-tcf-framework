@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INF-240 업무·Application 매핑 관리 · pdmg-infra</title>
+  <link rel="stylesheet" href="/_shared/infra.css?v=nav2">
+</head>
+<body>
+  <div class="infra-shell">
+    <aside class="infra-sidebar">
+      <div class="infra-sidebar__brand">
+        <h1>인프라 아키텍처 관리</h1>
+        <p>INF-240 Mapping</p>
+      </div>
+      <nav id="infraNav" class="infra-sidebar__nav" aria-label="화면 메뉴"></nav>
+      <div class="infra-sidebar__foot">업무코드 ↔ Application</div>
+    </aside>
+
+    <div class="infra-main">
+      <header class="infra-topbar">
+        <div>
+          <h1>INF-240 업무·Application 매핑 관리</h1>
+          <p>업무 분류와 Application·인프라 자원을 연결하여 관리합니다. 업무코드 단위 매핑(다중 App 가능).</p>
+        </div>
+        <div class="actions">
+          <button class="btn-secondary" type="button" id="searchBtn">조회</button>
+          <button class="btn-secondary" type="button" id="resetBtn">초기화</button>
+          <button class="btn-secondary" type="button" id="excelBtn">엑셀</button>
+          <button class="btn-secondary" type="button" id="helpBtn">도움말</button>
+        </div>
+      </header>
+
+      <section class="map-wizard map-wizard--mock">
+        <section class="panel map-filter-bar">
+          <div class="toolbar" style="box-shadow:none;margin:0;padding:0;border:0;background:transparent">
+            <div class="field field-wide"><label for="systemId">시스템</label><select id="systemId"></select></div>
+            <div class="field field-wide"><label for="domainCd">업무군</label><select id="domainCd"></select></div>
+            <div class="field"><label for="envCd">환경</label>
+              <select id="envCd"><option value="PROD">PROD</option><option value="STG">STG</option><option value="DEV">DEV</option></select>
+            </div>
+            <div class="field"><label for="mapStatusFilter">매핑 상태</label>
+              <select id="mapStatusFilter">
+                <option value="">전체</option>
+                <option value="DONE">매핑완료</option>
+                <option value="PARTIAL">부분매핑</option>
+                <option value="NONE">미매핑</option>
+              </select>
+            </div>
+            <div class="actions" style="align-self:end">
+              <button class="btn-primary" type="button" id="filterSearchBtn">조회</button>
+            </div>
+          </div>
+        </section>
+
+        <div class="map-mock-grid" id="editMode">
+          <!-- ① -->
+          <section class="panel map-sec map-sec-1">
+            <div class="panel-head"><h2>① 업무 분류 선택</h2></div>
+            <div class="field"><input id="treeKeyword" placeholder="업무명 입력"></div>
+            <div class="map-biz-tree" id="bizTreePanel"></div>
+            <div class="map-legend">
+              <span><i class="map-status-dot done">●</i> 매핑완료</span>
+              <span><i class="map-status-dot partial">●</i> 부분매핑</span>
+              <span><i class="map-status-dot none">●</i> 미매핑</span>
+              <span><i class="map-status-dot inactive">●</i> 비활성</span>
+            </div>
+          </section>
+
+          <!-- ② -->
+          <section class="panel map-sec map-sec-2">
+            <div class="panel-head">
+              <h2>② 선택 업무 정보</h2>
+              <span class="map-badge" id="cardStatusBadge">-</span>
+            </div>
+            <div class="map-biz-info">
+              <div class="map-biz-info__grid">
+                <div><span>시스템</span><strong id="cardSystem">-</strong></div>
+                <div><span>업무군</span><strong id="cardDomain">-</strong></div>
+                <div><span>업무</span><strong id="cardBiz">-</strong></div>
+                <div><span>세부업무</span><strong id="cardDetail">-</strong></div>
+              </div>
+              <div class="map-biz-info__key">
+                <span>Mapping Key</span>
+                <strong class="mono" id="cardKey">-</strong>
+              </div>
+              <div class="map-biz-info__meta">
+                <div>Primary App <strong class="mono" id="cardPrimaryApp">-</strong></div>
+                <div>최종수정자 <strong id="cardChgUser">-</strong></div>
+                <div>최종수정일시 <strong id="cardChgDtm">-</strong></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ③ -->
+          <section class="panel map-sec map-sec-3">
+            <div class="panel-head">
+              <h2>③ Application 매핑</h2>
+              <div class="actions">
+                <button class="btn-primary" type="button" id="linkBizAppBtn">+ App 추가</button>
+                <button class="btn-secondary" type="button" id="unlinkBizAppBtn">연결해제</button>
+              </div>
+            </div>
+            <div class="toolbar" style="box-shadow:none;margin:0 0 8px;padding:0;border:0;background:transparent">
+              <div class="field field-wide"><input id="appKeyword" placeholder="App ID / 명 검색"></div>
+              <div class="field"><label for="mapRoleCd">Role</label>
+                <select id="mapRoleCd"><option value="PRIMARY">PRIMARY</option><option value="ONLINE">ONLINE</option><option value="BATCH">BATCH</option><option value="UI">UI</option></select>
+              </div>
+              <div class="actions"><button class="btn-secondary" type="button" id="appSearchBtn">조회</button></div>
+            </div>
+            <div class="table-wrap map-app-table-wrap">
+              <table class="data-table" id="appMapTable">
+                <thead>
+                  <tr>
+                    <th>선택</th>
+                    <th>Primary</th>
+                    <th>App ID</th>
+                    <th>App명</th>
+                    <th>Type</th>
+                    <th>Role</th>
+                    <th>상태</th>
+                    <th>DB연결</th>
+                    <th>작업</th>
+                  </tr>
+                </thead>
+                <tbody id="appMapBody"><tr><td colspan="9" class="empty">-</td></tr></tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ④ -->
+          <section class="panel map-sec map-sec-4">
+            <div class="panel-head"><h2>④ 인프라 자원 연결</h2></div>
+            <p class="map-infra-caption" id="infraAppHead">선택한 Application의 연결 자원</p>
+            <div class="map-tabs" id="runtimeTabs">
+              <button type="button" class="map-tab is-active" data-tab="group">Server Group</button>
+              <button type="button" class="map-tab" data-tab="server">Server</button>
+              <button type="button" class="map-tab" data-tab="db">DB</button>
+              <button type="button" class="map-tab" data-tab="mw">Middleware</button>
+              <button type="button" class="map-tab" data-tab="net">Network</button>
+            </div>
+            <div class="map-tab-panels">
+              <div class="map-tab-panel is-active" data-panel="group">
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead>
+                      <tr><th></th><th>Server Group ID</th><th>서버군명</th><th>Role</th><th>상태</th></tr>
+                    </thead>
+                    <tbody id="groupBody"><tr><td colspan="5" class="empty">-</td></tr></tbody>
+                  </table>
+                </div>
+                <div class="map-server-summary">
+                  <div class="panel-head" style="padding:10px 0 6px"><h3 style="margin:0;font-size:0.9rem">연결된 Server 요약</h3></div>
+                  <div class="table-wrap">
+                    <table class="data-table">
+                      <thead><tr><th>Server ID</th><th>서버명</th><th>IP</th><th>상태</th></tr></thead>
+                      <tbody id="serverSummaryBody"><tr><td colspan="4" class="empty">-</td></tr></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="map-tab-panel" data-panel="server">
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead><tr><th>Server ID</th><th>서버명</th><th>Group</th><th>상태</th></tr></thead>
+                    <tbody id="serverBody"><tr><td colspan="4" class="empty">-</td></tr></tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="map-tab-panel" data-panel="db">
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead><tr><th>DB ID</th><th>DB명</th><th>Engine</th><th>Version</th></tr></thead>
+                    <tbody id="dbBody"><tr><td colspan="4" class="empty">-</td></tr></tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="map-tab-panel" data-panel="mw">
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead><tr><th>Product</th><th>Version</th><th>Asset</th></tr></thead>
+                    <tbody id="mwBody"><tr><td colspan="3" class="empty">-</td></tr></tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="map-tab-panel" data-panel="net">
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead><tr><th>Endpoint</th><th>Asset</th><th>Address</th><th>Port</th><th>Protocol</th><th>Primary</th></tr></thead>
+                    <tbody id="netBody"><tr><td colspan="6" class="empty">-</td></tr></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ⑤ -->
+          <section class="panel map-sec map-sec-5">
+            <div class="panel-head"><h2>⑤ 매핑 결과 요약</h2></div>
+            <div class="table-wrap">
+              <table class="data-table" id="resultSummaryTable">
+                <thead>
+                  <tr>
+                    <th>세부업무</th>
+                    <th>연결 App 수</th>
+                    <th>연결 Server Group 수</th>
+                    <th>연결 Server 수</th>
+                    <th>DB 연결</th>
+                    <th>상태</th>
+                  </tr>
+                </thead>
+                <tbody id="resultSummaryBody"><tr><td colspan="6" class="empty">-</td></tr></tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ⑥ -->
+          <section class="panel map-sec map-sec-6">
+            <div class="panel-head"><h2>⑥ 구조 미리보기</h2></div>
+            <div class="map-flow" id="previewFlow"></div>
+            <pre class="map-tree map-tree--compact" id="previewView" hidden>-</pre>
+          </section>
+        </div>
+
+        <section class="panel map-footer map-footer--mock">
+          <div class="map-status-row">
+            <div>Mapping 상태 : <strong id="sessionStatus">DRAFT</strong></div>
+            <div>최종수정자 : <span id="sessionUser">-</span></div>
+            <div>최종수정일시 : <span id="sessionDtm">-</span></div>
+            <div id="sessionWarn" class="map-warn"></div>
+          </div>
+          <div class="actions">
+            <button class="btn-secondary" type="button" id="draftBtn">임시저장</button>
+            <button class="btn-secondary" type="button" id="validateBtn">검증</button>
+            <button class="btn-primary" type="button" id="confirmBtn">확정</button>
+            <button class="btn-danger" type="button" id="cancelBtn">취소</button>
+          </div>
+          <section class="response-meta" id="resultMeta">조회를 실행하세요.</section>
+        </section>
+      </section>
+    </div>
+  </div>
+
+  <div id="toast" class="map-toast" hidden></div>
+  <script src="/_shared/error-codes.js"></script>
+  <script src="/_shared/error-popup.js"></script>
+  <script src="/_shared/infra-api.js"></script>
+  <script src="/_shared/infra-nav.js?v=nav1"></script>
+  <script src="/_shared/infra-combo.js?v=20260816a"></script>
+  <script src="/infra/mapping/mapping.js?v=240-mock2"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "run_id": "RUN-ROLLING",
+  "environment": "REPLACE",
+  "evidence_class": "PRODUCTION_RUNTIME",
+  "synthetic": false,
+  "build_commit": "REPLACE",
+  "config_version": "REPLACE",
+  "started_at": "REPLACE",
+  "ended_at": "REPLACE",
+  "production_status": "OPEN",
+  "required_evidence": [
+    "logs/deploy.log",
+    "logs/health.log",
+    "metrics/summary.json",
+    "logs/smoke-test.json",
+    "logs/version-trace.json",
+    "logs/rollback-test.json"
+  ],
+  "machine_gates": [
+    "actual_tps >= 1200 during planned peak test",
+    "p95_sec <= 3 during planned peak test",
+    "drained_node_receives_new_traffic = false",
+    "serviceid_smoke_test = pass",
+    "rejoined_node_health = healthy"
+  ],
+  "human_gates": [
+    "Approve residual-capacity safety factor (currently OPEN)",
+    "Approve DB/config backward compatibility",
+    "Approve rollback or roll-forward strategy"
+  ]
+}

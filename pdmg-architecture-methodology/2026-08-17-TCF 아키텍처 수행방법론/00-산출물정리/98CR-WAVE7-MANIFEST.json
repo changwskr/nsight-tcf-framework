@@ -1,0 +1,97 @@
+{
+  "phase": "Wave 7",
+  "generated_date": "2026-08-19",
+  "file_count": 18,
+  "files": [
+    {
+      "path": "98CL-ARCHITECTURE-BOARD-ONE-PAGE.md",
+      "sha256": "9534cad7a74c8b49dc338c3d3dd8384e0e6aaab82a397866d5448837d19cbb28",
+      "size": 4949
+    },
+    {
+      "path": "98CM-BOARD-DECISION-MATRIX.csv",
+      "sha256": "72cdc689c829ec829429f2147c971af790facd5ea3472538de5ca6952dcbd5fd",
+      "size": 4933
+    },
+    {
+      "path": "98CM-BOARD-DECISION-MATRIX.json",
+      "sha256": "02642573407631084a01b2b4d380d9bbf3ed231f0e122f8d530e796dee717d76",
+      "size": 10068
+    },
+    {
+      "path": "98CN-DEFERRED-ADR-INPUT-SHEET.md",
+      "sha256": "90fb10de86ccfd8dda87f212192befcbf5475a8ac1c8b7ae20041a6f8598e17c",
+      "size": 2838
+    },
+    {
+      "path": "98CO-ARCHITECTURE-BOARD-MINUTES-TEMPLATE.md",
+      "sha256": "5fdef18921604642b2e92078019e46e3695a8a6aaad7ff7f23a62a518803c5b0",
+      "size": 1282
+    },
+    {
+      "path": "98CP-WAVE7-APPROVAL-EXECUTION-GUIDE.md",
+      "sha256": "1ca6cc7fde7f9b5fd8db60a3913b3eb15f8ab8821ed98427cce72e083311cd8d",
+      "size": 940
+    },
+    {
+      "path": "98CQ-WAVE7-VERIFICATION-RESULT.json",
+      "sha256": "16be443496c385ed56aada9008bf6ead3aace82fc3f95609a966203fb5398d8e",
+      "size": 276
+    },
+    {
+      "path": "approval-records/ADR-DATA-001.json",
+      "sha256": "13a99e88a1c45ba332cbec2021237a99d0696ee666ec3423c68376d533ffe349",
+      "size": 353
+    },
+    {
+      "path": "approval-records/ADR-DEP-001.json",
+      "sha256": "31c91f37670248a6b78360aae806087df539ca7bd348aeb153c9975a073fd6e1",
+      "size": 367
+    },
+    {
+      "path": "approval-records/ADR-GOV-001.json",
+      "sha256": "a9db1fffbe92edeefa5e72be2ba65f2adf7c7d2aeaf80239278661ec85e5f9b2",
+      "size": 335
+    },
+    {
+      "path": "approval-records/ADR-INFRA-001.json",
+      "sha256": "1546ed1359f4ce73c9cfb02c2d28dca20dfc9bd54aae97e9ef24431468b478e7",
+      "size": 399
+    },
+    {
+      "path": "approval-records/ADR-INT-001.json",
+      "sha256": "c78d0edcc22ec61306fcdc954b638ec557199250c263ea7c4398845ee8238335",
+      "size": 377
+    },
+    {
+      "path": "approval-records/ADR-OBS-001.json",
+      "sha256": "053545a2cdfce4600db44f6c8212bf57c83bb96a90d95fa5b27b7a1e6980c57e",
+      "size": 391
+    },
+    {
+      "path": "approval-records/ADR-OPS-001.json",
+      "sha256": "2936a1a4abb7b3f6839d18fa4db2eb18e462ab01edabb5b39f5db407af55113f",
+      "size": 367
+    },
+    {
+      "path": "approval-records/ADR-SEC-001.json",
+      "sha256": "44e95d314e56c298a0b5d2bf7f033e98078c5baa477b3c9910badaa6e990a5c4",
+      "size": 373
+    },
+    {
+      "path": "approval-records/ADR-SEC-002.json",
+      "sha256": "0daf17b4933b4adc3af937f0f96599a9d00b6f8a200e613ca34d1efb02329d7b",
+      "size": 379
+    },
+    {
+      "path": "approval-records/ADR-TMO-001.json",
+      "sha256": "9d362923b9aef77c9775e1736c41c59f6f9f0ae3c96e346fb092c01cc1fc1dd9",
+      "size": 406
+    },
+    {
+      "path": "approval-records/ADR-TX-001.json",
+      "sha256": "2b2075beff413466c86935443d7d5a3c4b99ff4cc05d03d78e44893236f3970a",
+      "size": 385
+    }
+  ]
+}

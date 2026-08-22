@@ -1,0 +1,13 @@
+gaps:
+  - id: "GAP-0001"
+    category: ""
+    title: ""
+    evidence: []
+    currentState: ""
+    expectedState: ""
+    impact: ""
+    risk: ""
+    owner: ""
+    priority: ""
+    targetGate: ""
+    status: "OPEN"

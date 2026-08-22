@@ -1,0 +1,35 @@
+{
+  "phase": "Wave 2B Production Mapping",
+  "status": "PASS",
+  "server_rows": 71,
+  "unique_hostnames": 71,
+  "role_counts": {
+    "WEB": 20,
+    "WAS": 28,
+    "AP": 13,
+    "DB": 10
+  },
+  "system_counts": {
+    "마케팅플랫폼": 15,
+    "신BI포털시스템": 16,
+    "데이터거버넌스": 4,
+    "IT 서비스 및 업무지원": 28,
+    "데이터플랫폼 시스템": 8
+  },
+  "lifecycle_counts": {
+    "신규": 54,
+    "삭제": 4,
+    "삭제검토": 1,
+    "단독": 4,
+    "어플라이언스": 8
+  },
+  "dr_flag_o": 30,
+  "dr_exact_examples": 7,
+  "dr_naming_candidates": 23,
+  "runtime_working_candidate_rows": 8,
+  "actual_route_confirmed_rows": 0,
+  "actual_war_confirmed_rows": 0,
+  "actual_serviceid_deployment_confirmed_rows": 0,
+  "issues": [],
+  "conclusion": "Server master normalized; production runtime relations remain evidence-blocked and are intentionally UNKNOWN."
+}

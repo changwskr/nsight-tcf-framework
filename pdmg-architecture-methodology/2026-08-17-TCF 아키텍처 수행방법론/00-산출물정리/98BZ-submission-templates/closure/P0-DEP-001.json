@@ -1,0 +1,11 @@
+{
+  "item_id": "P0-DEP-001",
+  "area": "Rolling/Rollback safety",
+  "current_status": "HARNESS_READY_BLOCKED_PRODUCTION_RUNTIME",
+  "status": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "closure_comment": null,
+  "required_next": "RUN-ROLLING + rollback + DB/config backward compatibility"
+}

@@ -1,0 +1,28 @@
+{
+  "adr_id": "ADR-HA-001",
+  "title": "AP HA Topology",
+  "decision": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "conditions": [],
+  "comment": null,
+  "approval_state": "DRAFT_NOT_APPROVED",
+  "recommended_decision": "DEFER_UNTIL_PREREQUISITES",
+  "readiness": "RUNTIME_DEPENDENT",
+  "required_approver": "Infra Architect + Performance Lead + Ops Owner",
+  "runtime_dependency": [
+    "RUN-P1200",
+    "RUN-N1",
+    "RUN-CF",
+    "RUN-ROLLING"
+  ],
+  "recommendation": "2+2, 3+3, 8Core Scale-Out 중 최종 토폴로지는 Runtime Approved Capacity와 N-1/Center Failure 결과 후 결정한다.",
+  "prerequisites": [
+    "ADR-PERF-001 runtime value"
+  ],
+  "closure": [
+    "residual capacity approved",
+    "center failure and rolling evidence"
+  ]
+}

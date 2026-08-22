@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"Runtime Evidence Manifest","type":"object","required":["runtimeEvidencePresent","evidence"],"properties":{"runtimeEvidencePresent":{"type":"boolean"},"evidence":{"type":"array"}}}

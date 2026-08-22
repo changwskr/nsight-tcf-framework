@@ -1,0 +1,7 @@
+{
+  "note": "Runtime-generated candidate rules are written to each reference run. This file contains only immutable governance seeds.",
+  "rules": [
+    {"ruleId": "PDMG-GOV-RAW-NOT-REFERENCE", "description": "RAW source facts are not automatically promoted to REFERENCE", "severity": "CRITICAL"},
+    {"ruleId": "PDMG-GOV-UNKNOWN-NOT-GUESSED", "description": "Unknown branch/commit/runtime evidence remains UNKNOWN", "severity": "HIGH"}
+  ]
+}

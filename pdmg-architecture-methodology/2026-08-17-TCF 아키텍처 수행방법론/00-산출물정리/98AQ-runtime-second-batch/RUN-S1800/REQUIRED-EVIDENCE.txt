@@ -1,0 +1,5 @@
+metrics/summary.json
+metrics/resource.json
+logs/run.log
+db/integrity.json
+screenshots/saturation-chart.png

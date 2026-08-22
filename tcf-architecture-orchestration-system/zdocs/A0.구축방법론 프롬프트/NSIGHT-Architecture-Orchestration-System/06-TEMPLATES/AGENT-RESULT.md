@@ -1,0 +1,15 @@
+# Agent Result Template
+
+## STAGE
+## STATUS
+## SYSTEM SCOPE
+## FACT
+## CONFIRMED
+## AS-IS
+## TO-BE
+## GAP
+## UNKNOWN
+## EVIDENCE
+## ARTIFACTS
+## GATE CANDIDATE
+## NEXT HANDOFF

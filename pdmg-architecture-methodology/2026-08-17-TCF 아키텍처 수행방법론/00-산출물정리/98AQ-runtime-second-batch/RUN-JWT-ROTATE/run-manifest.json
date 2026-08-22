@@ -1,0 +1,30 @@
+{
+  "run_id": "RUN-JWT-ROTATE",
+  "environment": "REPLACE",
+  "evidence_class": "PRODUCTION_RUNTIME",
+  "synthetic": false,
+  "build_commit": "REPLACE",
+  "config_version": "REPLACE",
+  "started_at": "REPLACE",
+  "ended_at": "REPLACE",
+  "production_status": "OPEN",
+  "required_evidence": [
+    "logs/jwt-rotation.json",
+    "logs/jwks.json",
+    "logs/key-audit.log",
+    "logs/multinode-validation.json",
+    "logs/restart-validation.json"
+  ],
+  "machine_gates": [
+    "new_token_kid = active_kid",
+    "old_token_valid_during_grace = true",
+    "all_nodes_publish_consistent_jwks = true",
+    "restart_does_not_create_unplanned_key = true",
+    "post_grace_behavior matches approved_policy"
+  ],
+  "human_gates": [
+    "Approve Key Provider/KMS-HSM implementation",
+    "Approve grace period and retirement policy",
+    "Approve audit evidence and emergency rollback procedure"
+  ]
+}

@@ -1,0 +1,318 @@
+{
+  "gates": {
+    "G00": {
+      "gateId": "G00",
+      "allowConditional": false,
+      "rules": [
+        {
+          "ruleId": "G00-SOURCE",
+          "evaluator": "file_exists",
+          "path": "00-SOURCE/source-baseline.json",
+          "hard": true
+        },
+        {
+          "ruleId": "G00-DOC",
+          "evaluator": "file_exists",
+          "path": "10-DOCUMENT/CURRENT-ARCHITECTURE.md",
+          "hard": true
+        }
+      ]
+    },
+    "G10": {
+      "gateId": "G10",
+      "allowConditional": true,
+      "rules": [
+        {
+          "ruleId": "G10-DOC",
+          "evaluator": "file_exists",
+          "path": "10-DOCUMENT/CURRENT-ARCHITECTURE.md",
+          "hard": true
+        }
+      ]
+    },
+    "G20": {
+      "gateId": "G20",
+      "allowConditional": false,
+      "rules": [
+        {
+          "ruleId": "G20-MODEL",
+          "evaluator": "file_exists",
+          "path": "20-MODEL/target-source-model.json",
+          "hard": true
+        },
+        {
+          "ruleId": "G20-SCHEMA",
+          "evaluator": "json_field_equals",
+          "path": "20-MODEL/schema-validation.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        }
+      ]
+    },
+    "G30": {
+      "gateId": "G30",
+      "allowConditional": true,
+      "rules": [
+        {
+          "ruleId": "G30-CONFORMANCE",
+          "evaluator": "file_exists",
+          "path": "30-CONFORMANCE/conformance-result.json",
+          "hard": true
+        },
+        {
+          "ruleId": "G30-TRACE",
+          "evaluator": "file_exists",
+          "path": "00-SOURCE/traceability.json",
+          "hard": false
+        },
+        {
+          "ruleId": "G30-REFERENCE-RELEASED",
+          "evaluator": "json_field_equals",
+          "path": "30-CONFORMANCE/reference-status.json",
+          "field": "promotionStatus",
+          "threshold": "RELEASED",
+          "hard": false
+        }
+      ]
+    },
+    "G40": {
+      "gateId": "G40",
+      "allowConditional": false,
+      "rules": [
+        {
+          "ruleId": "G40-BUILD",
+          "evaluator": "json_field_equals",
+          "path": "40-TEST/build-result.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        },
+        {
+          "ruleId": "G40-TEST",
+          "evaluator": "json_field_equals",
+          "path": "40-TEST/test-result.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        },
+        {
+          "ruleId": "G40-SECURITY",
+          "evaluator": "json_field_equals",
+          "path": "40-TEST/security-result.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        },
+        {
+          "ruleId": "G40-ARCH",
+          "evaluator": "json_field_equals",
+          "path": "40-TEST/architecture-result.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        },
+        {
+          "ruleId": "G40-ARTIFACT",
+          "evaluator": "artifact_hash_present",
+          "path": "40-TEST/artifact-manifest.json",
+          "hard": true
+        }
+      ]
+    },
+    "G50": {
+      "gateId": "G50",
+      "allowConditional": false,
+      "rules": [
+        {
+          "ruleId": "G50-DEPLOY",
+          "evaluator": "json_field_equals",
+          "path": "50-RUNTIME/deployment-evidence.json",
+          "field": "status",
+          "threshold": "DEPLOYED",
+          "hard": true
+        },
+        {
+          "ruleId": "G50-RUNTIME",
+          "evaluator": "runtime_present",
+          "path": "50-RUNTIME/EVIDENCE-MANIFEST.json",
+          "hard": true
+        },
+        {
+          "ruleId": "G50-ARTIFACT-MATCH",
+          "evaluator": "json_fields_equal",
+          "leftPath": "40-TEST/artifact-manifest.json",
+          "leftField": "artifactHash",
+          "rightPath": "50-RUNTIME/deployment-evidence.json",
+          "rightField": "artifactHash",
+          "hard": true
+        }
+      ]
+    },
+    "G60": {
+      "gateId": "G60",
+      "allowConditional": true,
+      "rules": [
+        {
+          "ruleId": "G60-DRIFT",
+          "evaluator": "file_exists",
+          "path": "60-DRIFT/DRIFT-REGISTER.json",
+          "hard": true
+        }
+      ]
+    },
+    "G70": {
+      "gateId": "G70",
+      "allowConditional": true,
+      "rules": [
+        {
+          "ruleId": "G70-GAP",
+          "evaluator": "file_exists",
+          "path": "70-GAP-ADR/GAP-REGISTER.json",
+          "hard": true
+        }
+      ]
+    },
+    "G80": {
+      "gateId": "G80",
+      "allowConditional": false,
+      "rules": [
+        {
+          "ruleId": "G80-APPROVAL",
+          "evaluator": "approval_register_valid",
+          "path": "80-APPROVAL/REQUIRED-APPROVALS.json",
+          "hard": true,
+          "approvalsDir": "80-APPROVAL",
+          "minRequired": 1
+        }
+      ]
+    },
+    "HG90": {
+      "gateId": "HG90",
+      "allowConditional": false,
+      "rules": [
+        {
+          "ruleId": "HG90-REFERENCE-RELEASED",
+          "evaluator": "json_field_equals",
+          "path": "30-CONFORMANCE/reference-status.json",
+          "field": "promotionStatus",
+          "threshold": "RELEASED",
+          "hard": true
+        },
+        {
+          "ruleId": "HG90-DOCUMENT",
+          "evaluator": "file_exists",
+          "path": "10-DOCUMENT/CURRENT-ARCHITECTURE.md",
+          "hard": true
+        },
+        {
+          "ruleId": "HG90-MODEL",
+          "evaluator": "file_exists",
+          "path": "20-MODEL/target-source-model.json",
+          "hard": true
+        },
+        {
+          "ruleId": "HG90-SCHEMA",
+          "evaluator": "json_field_equals",
+          "path": "20-MODEL/schema-validation.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        },
+        {
+          "ruleId": "HG90-MODEL-SOURCE",
+          "evaluator": "file_exists",
+          "path": "00-SOURCE/traceability.json",
+          "hard": true
+        },
+        {
+          "ruleId": "HG90-CONFORMANCE",
+          "evaluator": "file_exists",
+          "path": "30-CONFORMANCE/conformance-result.json",
+          "hard": true
+        },
+        {
+          "ruleId": "HG90-BUILD",
+          "evaluator": "json_field_equals",
+          "path": "40-TEST/build-result.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        },
+        {
+          "ruleId": "HG90-TEST",
+          "evaluator": "json_field_equals",
+          "path": "40-TEST/test-result.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        },
+        {
+          "ruleId": "HG90-SECURITY",
+          "evaluator": "json_field_equals",
+          "path": "40-TEST/security-result.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        },
+        {
+          "ruleId": "HG90-ARCH",
+          "evaluator": "json_field_equals",
+          "path": "40-TEST/architecture-result.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        },
+        {
+          "ruleId": "HG90-ARTIFACT-HASH",
+          "evaluator": "artifact_hash_present",
+          "path": "40-TEST/artifact-manifest.json",
+          "hard": true
+        },
+        {
+          "ruleId": "HG90-DEPLOY",
+          "evaluator": "json_field_equals",
+          "path": "50-RUNTIME/deployment-evidence.json",
+          "field": "status",
+          "threshold": "DEPLOYED",
+          "hard": true
+        },
+        {
+          "ruleId": "HG90-ARTIFACT-MATCH",
+          "evaluator": "json_fields_equal",
+          "leftPath": "40-TEST/artifact-manifest.json",
+          "leftField": "artifactHash",
+          "rightPath": "50-RUNTIME/deployment-evidence.json",
+          "rightField": "artifactHash",
+          "hard": true
+        },
+        {
+          "ruleId": "HG90-RUNTIME",
+          "evaluator": "runtime_present",
+          "path": "50-RUNTIME/EVIDENCE-MANIFEST.json",
+          "hard": true
+        },
+        {
+          "ruleId": "HG90-CRITICAL-DRIFT",
+          "evaluator": "critical_open_zero",
+          "path": "60-DRIFT/DRIFT-REGISTER.json",
+          "hard": true
+        },
+        {
+          "ruleId": "HG90-CRITICAL-GAP",
+          "evaluator": "critical_open_zero",
+          "path": "70-GAP-ADR/GAP-REGISTER.json",
+          "hard": true
+        },
+        {
+          "ruleId": "HG90-APPROVAL",
+          "evaluator": "approval_register_valid",
+          "path": "80-APPROVAL/REQUIRED-APPROVALS.json",
+          "hard": true,
+          "approvalsDir": "80-APPROVAL",
+          "minRequired": 1
+        }
+      ]
+    }
+  }
+}

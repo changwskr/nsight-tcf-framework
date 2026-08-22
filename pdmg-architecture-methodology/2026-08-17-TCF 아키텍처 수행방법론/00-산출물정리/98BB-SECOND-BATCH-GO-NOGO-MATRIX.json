@@ -1,0 +1,138 @@
+{
+  "schema_version": "1.0",
+  "runs": {
+    "RUN-S1800": {
+      "production_status": "OPEN",
+      "machine_gates": [
+        "actual_tps >= 1800 target attempt",
+        "data_integrity = true",
+        "post_test_recovery = true"
+      ],
+      "human_gates": [
+        "Confirm whether p95<=3s is a hard stress acceptance or observation-only NFR",
+        "Approve saturation point and degradation pattern",
+        "Approve error/timeout tolerance (currently UNKNOWN)"
+      ],
+      "promotion_rule": "PASS requires PRODUCTION_RUNTIME evidence + all applicable machine gates + all mandatory human/ADR gates. UNKNOWN thresholds may not be invented."
+    },
+    "RUN-HIKARI": {
+      "production_status": "OPEN",
+      "machine_gates": [
+        "connection_leak = 0",
+        "pool_active returns to baseline after pressure",
+        "persistent_pending_after_recovery = 0",
+        "db_session <= approved_db_session_ceiling"
+      ],
+      "human_gates": [
+        "Approve final Hikari pool size",
+        "Approve Pending/connection acquire operating threshold",
+        "Confirm DB DBA session ceiling"
+      ],
+      "promotion_rule": "PASS requires PRODUCTION_RUNTIME evidence + all applicable machine gates + all mandatory human/ADR gates. UNKNOWN thresholds may not be invented."
+    },
+    "RUN-SLOWSQL": {
+      "production_status": "OPEN",
+      "machine_gates": [
+        "db_query_timeout < tx_timeout",
+        "transaction_rollback = true",
+        "late_commit = 0",
+        "connection_return = true"
+      ],
+      "human_gates": [
+        "Approve ServiceId-specific timeout chain",
+        "Review Oracle cancellation semantics and SQL state"
+      ],
+      "promotion_rule": "PASS requires PRODUCTION_RUNTIME evidence + all applicable machine gates + all mandatory human/ADR gates. UNKNOWN thresholds may not be invented."
+    },
+    "RUN-N1": {
+      "production_status": "OPEN",
+      "machine_gates": [
+        "actual_tps >= 1200",
+        "p95_sec <= 3",
+        "failed_node_receives_traffic = false",
+        "peer_health = healthy"
+      ],
+      "human_gates": [
+        "Approve error/timeout tolerance (currently UNKNOWN)",
+        "Confirm residual capacity and 2+2/3+3 topology decision",
+        "Approve rejoin stability"
+      ],
+      "promotion_rule": "PASS requires PRODUCTION_RUNTIME evidence + all applicable machine gates + all mandatory human/ADR gates. UNKNOWN thresholds may not be invented."
+    },
+    "RUN-SESSION": {
+      "production_status": "OPEN",
+      "machine_gates": [
+        "observed_behavior matches approved_session_policy",
+        "no_cross_user_session_leak = true",
+        "post_failover_login_path works"
+      ],
+      "human_gates": [
+        "Session ADR approved",
+        "Approve center-failure re-login vs preservation policy",
+        "Review session object serialization/memory impact"
+      ],
+      "promotion_rule": "PASS requires PRODUCTION_RUNTIME evidence + all applicable machine gates + all mandatory human/ADR gates. UNKNOWN thresholds may not be invented."
+    },
+    "RUN-CF": {
+      "production_status": "OPEN",
+      "machine_gates": [
+        "observed_rto <= approved_rto",
+        "observed_rpo <= approved_rpo",
+        "business_validation = pass",
+        "failback_validation = pass"
+      ],
+      "human_gates": [
+        "RTO/RPO approved before pass",
+        "Approve traffic reroute and failback timeline",
+        "Approve data/session consistency result"
+      ],
+      "promotion_rule": "PASS requires PRODUCTION_RUNTIME evidence + all applicable machine gates + all mandatory human/ADR gates. UNKNOWN thresholds may not be invented."
+    },
+    "RUN-TRACE": {
+      "production_status": "OPEN",
+      "machine_gates": [
+        "same_guid_across_required_hops = true",
+        "same_serviceid_across_required_hops = true",
+        "reverse_trace_to_ingress = true",
+        "worker_context_leak = 0"
+      ],
+      "human_gates": [
+        "Approve required hop coverage for the selected ServiceId",
+        "Confirm masking/security policy compliance"
+      ],
+      "promotion_rule": "PASS requires PRODUCTION_RUNTIME evidence + all applicable machine gates + all mandatory human/ADR gates. UNKNOWN thresholds may not be invented."
+    },
+    "RUN-ROLLING": {
+      "production_status": "OPEN",
+      "machine_gates": [
+        "actual_tps >= 1200 during planned peak test",
+        "p95_sec <= 3 during planned peak test",
+        "drained_node_receives_new_traffic = false",
+        "serviceid_smoke_test = pass",
+        "rejoined_node_health = healthy"
+      ],
+      "human_gates": [
+        "Approve residual-capacity safety factor (currently OPEN)",
+        "Approve DB/config backward compatibility",
+        "Approve rollback or roll-forward strategy"
+      ],
+      "promotion_rule": "PASS requires PRODUCTION_RUNTIME evidence + all applicable machine gates + all mandatory human/ADR gates. UNKNOWN thresholds may not be invented."
+    },
+    "RUN-JWT-ROTATE": {
+      "production_status": "OPEN",
+      "machine_gates": [
+        "new_token_kid = active_kid",
+        "old_token_valid_during_grace = true",
+        "all_nodes_publish_consistent_jwks = true",
+        "restart_does_not_create_unplanned_key = true",
+        "post_grace_behavior matches approved_policy"
+      ],
+      "human_gates": [
+        "Approve Key Provider/KMS-HSM implementation",
+        "Approve grace period and retirement policy",
+        "Approve audit evidence and emergency rollback procedure"
+      ],
+      "promotion_rule": "PASS requires PRODUCTION_RUNTIME evidence + all applicable machine gates + all mandatory human/ADR gates. UNKNOWN thresholds may not be invented."
+    }
+  }
+}

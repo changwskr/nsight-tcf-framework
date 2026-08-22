@@ -1,0 +1,45 @@
+{
+  "phase": "P0 Closure Wave 5 — Actual Evidence Intake & Re-Gate Execution",
+  "verified_at": "2026-08-19T09:38:00+09:00",
+  "tdd": {
+    "passed": 11,
+    "failed": 0,
+    "status": "PASS"
+  },
+  "baseline_json": {
+    "files": 96,
+    "parse_errors": 0,
+    "status": "PASS",
+    "errors": []
+  },
+  "current_evidence_audit": {
+    "runtime_bundle_manifests": 25,
+    "runtime_status_counts": {
+      "SYNTHETIC_ONLY": 1,
+      "INVALID": 24
+    },
+    "production_runtime_approved": 0,
+    "config_inventory_entries": 122,
+    "production_config_accepted": 0,
+    "adr_approved": 0
+  },
+  "intake": {
+    "adr_approval_files": 0,
+    "accepted_adr_approvals": 0,
+    "runtime_bundles": 0,
+    "runtime_result_files": 0,
+    "production_config_manifests": 0,
+    "accepted_production_config_manifests": 0,
+    "closure_files": 0,
+    "accepted_closure_records": 0
+  },
+  "regate": {
+    "g80": "HOLD",
+    "hg90": "HOLD",
+    "hard_blocker_count": 38,
+    "adr": 16,
+    "runtime": 12,
+    "p0_closure": 10
+  },
+  "overall": "PASS_PIPELINE_HOLD_GATE_NO_PRODUCTION_EVIDENCE"
+}

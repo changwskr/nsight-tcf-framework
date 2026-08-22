@@ -1,0 +1,25 @@
+{
+  "adr_id": "ADR-DR-002",
+  "title": "Service RTO/RPO Classes",
+  "decision": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "conditions": [],
+  "comment": null,
+  "approval_state": "DRAFT_NOT_APPROVED",
+  "recommended_decision": "DEFER_UNTIL_PREREQUISITES",
+  "readiness": "NEEDS_OWNER_INPUT",
+  "required_approver": "Business Owner + Ops Owner + Data Owner",
+  "runtime_dependency": [
+    "RUN-CF"
+  ],
+  "recommendation": "전사 전략의 RTO 참조값을 시스템 승인값으로 자동 승격하지 않고 서비스 등급별 RTO/RPO를 명시 승인한다.",
+  "prerequisites": [
+    "business criticality classes"
+  ],
+  "closure": [
+    "approved RTO/RPO inputs",
+    "observed RTO/RPO within approved class"
+  ]
+}

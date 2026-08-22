@@ -1,0 +1,23 @@
+{
+  "run_id": "RUN-JWT-ROTATE",
+  "status": "OPEN",
+  "evidence_class": "UNSET",
+  "runtime_approved": false,
+  "synthetic": false,
+  "environment": null,
+  "hostname": null,
+  "git_commit": null,
+  "artifact_version": null,
+  "config_version": null,
+  "started_at": null,
+  "ended_at": null,
+  "approver": null,
+  "approval_date": null,
+  "required_evidence": [
+    "logs/jwt-rotation.json",
+    "logs/jwks.json",
+    "logs/key-audit.log"
+  ],
+  "evidence_ref": [],
+  "purpose": "JWT active/previous kid grace, multi-node/restart verification"
+}

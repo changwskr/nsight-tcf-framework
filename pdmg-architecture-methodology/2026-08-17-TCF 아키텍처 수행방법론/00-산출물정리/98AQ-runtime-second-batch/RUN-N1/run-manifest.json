@@ -1,0 +1,29 @@
+{
+  "run_id": "RUN-N1",
+  "environment": "REPLACE",
+  "evidence_class": "PRODUCTION_RUNTIME",
+  "synthetic": false,
+  "build_commit": "REPLACE",
+  "config_version": "REPLACE",
+  "started_at": "REPLACE",
+  "ended_at": "REPLACE",
+  "production_status": "OPEN",
+  "required_evidence": [
+    "metrics/summary.json",
+    "logs/routing.log",
+    "logs/failover.log",
+    "metrics/node-state.json",
+    "logs/health.log"
+  ],
+  "machine_gates": [
+    "actual_tps >= 1200",
+    "p95_sec <= 3",
+    "failed_node_receives_traffic = false",
+    "peer_health = healthy"
+  ],
+  "human_gates": [
+    "Approve error/timeout tolerance (currently UNKNOWN)",
+    "Confirm residual capacity and 2+2/3+3 topology decision",
+    "Approve rejoin stability"
+  ]
+}

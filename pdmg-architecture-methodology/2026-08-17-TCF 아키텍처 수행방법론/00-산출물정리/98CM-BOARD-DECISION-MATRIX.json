@@ -1,0 +1,304 @@
+{
+  "candidate": "NSIGHT-ARCH-CANDIDATE-2026-08-19",
+  "phase": "P0 Closure Wave 7 — Architecture Board One-Page Decision & Approval Execution Pack",
+  "generated_date": "2026-08-19",
+  "policy": {
+    "recommended_action_is_not_approval": true,
+    "approval_requires": [
+      "decision",
+      "approver",
+      "decision_date",
+      "evidence_ref"
+    ],
+    "runtime_closure_separate": true
+  },
+  "ready_for_human_decision": [
+    {
+      "adr_id": "ADR-SEC-001",
+      "title": "JWT Signing Key Source of Truth",
+      "recommended_board_action": "APPROVE",
+      "recommendation": "Production signing key의 Source of Truth는 KMS/HSM 또는 승인된 중앙 Key Store로 한다. Process-local RSA 생성은 DEV/LOCAL에만 허용한다.",
+      "approver_role": "Security Architect + Platform Owner",
+      "runtime_dependency": [
+        "RUN-JWT-ROTATE"
+      ],
+      "closure": [
+        "KMS/HSM adapter integrated",
+        "multi-node/restart/rotation evidence"
+      ],
+      "actual_decision": null,
+      "approver": null,
+      "decision_date": null,
+      "condition": null,
+      "evidence_ref": []
+    },
+    {
+      "adr_id": "ADR-SEC-002",
+      "title": "kid / Rotation / JWKS Grace Lifecycle",
+      "recommended_board_action": "APPROVE",
+      "recommendation": "Versioned kid를 사용하고 JWKS는 Active + Previous public key를 grace 기간 동안 동시 제공한다.",
+      "approver_role": "Security Architect + Platform Owner",
+      "runtime_dependency": [
+        "RUN-JWT-ROTATE"
+      ],
+      "closure": [
+        "rotation grace observed",
+        "restart does not create unplanned key"
+      ],
+      "actual_decision": null,
+      "approver": null,
+      "decision_date": null,
+      "condition": null,
+      "evidence_ref": []
+    },
+    {
+      "adr_id": "ADR-TX-001",
+      "title": "NSIGHT Transaction Owner",
+      "recommended_board_action": "APPROVE",
+      "recommendation": "표준 온라인 업무의 기본 Transaction Owner는 Facade/Use Case Boundary로 한다. Service TX는 명시적 예외만 허용한다.",
+      "approver_role": "Application Architect + Framework Owner",
+      "runtime_dependency": [
+        "RUN-TIMEOUT",
+        "RUN-SLOWSQL"
+      ],
+      "closure": [
+        "canonical build pass",
+        "rollback integration evidence"
+      ],
+      "actual_decision": null,
+      "approver": null,
+      "decision_date": null,
+      "condition": null,
+      "evidence_ref": []
+    },
+    {
+      "adr_id": "ADR-TMO-001",
+      "title": "Timeout Execution / Cancellation Model",
+      "recommended_board_action": "APPROVE",
+      "recommendation": "Online Timeout은 Deadline/응답통제 Owner로 두고 Thread.interrupt를 DB rollback 보장수단으로 간주하지 않는다. DB Query < TX < Online < Client 순서를 강제한다.",
+      "approver_role": "Framework Owner + DBA + Application Architect",
+      "runtime_dependency": [
+        "RUN-TIMEOUT",
+        "RUN-SLOWSQL"
+      ],
+      "closure": [
+        "late_commit=0",
+        "connection_return=true",
+        "context leak=0"
+      ],
+      "actual_decision": null,
+      "approver": null,
+      "decision_date": null,
+      "condition": null,
+      "evidence_ref": []
+    },
+    {
+      "adr_id": "ADR-INFRA-001",
+      "title": "Tomcat JVM : Application Deployment Unit",
+      "recommended_board_action": "APPROVE",
+      "recommendation": "운영 기준은 WAS Server/VM, Tomcat JVM, Application/WAR을 별도 Entity로 관리하고 장애격리가 필요한 업무는 독립 JVM을 기본으로 한다. Multi-WAR은 명시적 예외로 관리한다.",
+      "approver_role": "Infra Architect + Application Architect",
+      "runtime_dependency": [
+        "RUN-N1",
+        "RUN-ROLLING"
+      ],
+      "closure": [
+        "71 server runtime mapping",
+        "deployment/failure evidence"
+      ],
+      "actual_decision": null,
+      "approver": null,
+      "decision_date": null,
+      "condition": null,
+      "evidence_ref": []
+    },
+    {
+      "adr_id": "ADR-DATA-001",
+      "title": "RDW/ADW Ownership / Read-Write Boundary",
+      "recommended_board_action": "APPROVE",
+      "recommendation": "RDW는 온라인/Near Real-time, ADW는 분석/대량조회 책임을 기본으로 하고 Domain/Table/View Owner 및 Read/Write Matrix를 SoT로 관리한다.",
+      "approver_role": "Data Architect + Domain Owners",
+      "runtime_dependency": [],
+      "closure": [
+        "Domain/Table/View owner catalog complete",
+        "read-write matrix approved"
+      ],
+      "actual_decision": null,
+      "approver": null,
+      "decision_date": null,
+      "condition": null,
+      "evidence_ref": []
+    },
+    {
+      "adr_id": "ADR-INT-001",
+      "title": "Cross-Domain Integration Contract",
+      "recommended_board_action": "APPROVE",
+      "recommendation": "Cross-Domain 연계는 공개 ServiceId + 표준전문 + HTTP/EAI 계약을 사용하고 상대 Domain DAO/Mapper/Table 직접 접근을 금지한다. S2S Auth와 Remaining Deadline을 계약에 포함한다.",
+      "approver_role": "Integration Architect + Security Architect",
+      "runtime_dependency": [
+        "RUN-TRACE"
+      ],
+      "closure": [
+        "route/auth/deadline evidence",
+        "reverse trace available"
+      ],
+      "actual_decision": null,
+      "approver": null,
+      "decision_date": null,
+      "condition": null,
+      "evidence_ref": []
+    },
+    {
+      "adr_id": "ADR-OPS-001",
+      "title": "OM Control Plane Scope",
+      "recommended_board_action": "APPROVE",
+      "recommendation": "OM은 Control Plane으로 Catalog/Policy/Runtime/Deploy/Audit 관점을 제공하고 Runtime Plane의 TCF/STF가 정책을 집행한다.",
+      "approver_role": "Ops Owner + Architecture",
+      "runtime_dependency": [
+        "RUN-TRACE",
+        "RUN-ROLLING"
+      ],
+      "closure": [
+        "catalog/metric/alert/runbook loop connected"
+      ],
+      "actual_decision": null,
+      "approver": null,
+      "decision_date": null,
+      "condition": null,
+      "evidence_ref": []
+    },
+    {
+      "adr_id": "ADR-OBS-001",
+      "title": "GUID + ServiceId Runtime Evidence Standard",
+      "recommended_board_action": "APPROVE",
+      "recommendation": "GUID + ServiceId를 System/Transaction/Business/Image/Error/Runtime Evidence의 공통 추적키로 사용한다.",
+      "approver_role": "Ops/Observability Owner + Application Architect",
+      "runtime_dependency": [
+        "RUN-TRACE"
+      ],
+      "closure": [
+        "same GUID/ServiceId across required hops",
+        "reverse trace pass"
+      ],
+      "actual_decision": null,
+      "approver": null,
+      "decision_date": null,
+      "condition": null,
+      "evidence_ref": []
+    },
+    {
+      "adr_id": "ADR-GOV-001",
+      "title": "Architecture Model Source of Truth",
+      "recommended_board_action": "APPROVE",
+      "recommendation": "Machine-readable JSON Model + JSON Schema + Validator + Baseline Manifest를 Architecture SoT로 사용하고 Markdown은 Human-readable View로 관리한다.",
+      "approver_role": "Architecture Board",
+      "runtime_dependency": [],
+      "closure": [
+        "full critical trace edges complete",
+        "manifest/signoff integrated"
+      ],
+      "actual_decision": null,
+      "approver": null,
+      "decision_date": null,
+      "condition": null,
+      "evidence_ref": []
+    },
+    {
+      "adr_id": "ADR-DEP-001",
+      "title": "Production Deployment Pipeline",
+      "recommended_board_action": "APPROVE",
+      "recommendation": "GitLab→Runner→Artifact Repository→eCAMS/승인→Production의 재현가능한 Pipeline을 기준으로 하고 Rolling/rollback evidence를 의무화한다.",
+      "approver_role": "DevOps Owner + Ops Change Manager",
+      "runtime_dependency": [
+        "RUN-ROLLING"
+      ],
+      "closure": [
+        "rolling/rollback pass",
+        "artifact/config/db version trace complete"
+      ],
+      "actual_decision": null,
+      "approver": null,
+      "decision_date": null,
+      "condition": null,
+      "evidence_ref": []
+    }
+  ],
+  "deferred": [
+    {
+      "adr_id": "ADR-SES-001",
+      "title": "Session Strategy",
+      "recommended_board_action": "DEFER",
+      "readiness": "NEEDS_OWNER_INPUT_AND_RUNTIME",
+      "reason_prerequisites": [
+        "Session idle 정책 60/90분 승인",
+        "센터장애 재로그인 허용정책"
+      ],
+      "runtime_dependency": [
+        "RUN-SESSION",
+        "RUN-CF"
+      ],
+      "actual_decision": null
+    },
+    {
+      "adr_id": "ADR-HA-001",
+      "title": "AP HA Topology",
+      "recommended_board_action": "DEFER",
+      "readiness": "RUNTIME_DEPENDENT",
+      "reason_prerequisites": [
+        "ADR-PERF-001 runtime value"
+      ],
+      "runtime_dependency": [
+        "RUN-P1200",
+        "RUN-N1",
+        "RUN-CF",
+        "RUN-ROLLING"
+      ],
+      "actual_decision": null
+    },
+    {
+      "adr_id": "ADR-DR-001",
+      "title": "Center Failure Session/Data Continuity",
+      "recommended_board_action": "DEFER",
+      "readiness": "NEEDS_OWNER_INPUT_AND_RUNTIME",
+      "reason_prerequisites": [
+        "ADR-SES-001",
+        "service continuity policy"
+      ],
+      "runtime_dependency": [
+        "RUN-SESSION",
+        "RUN-CF"
+      ],
+      "actual_decision": null
+    },
+    {
+      "adr_id": "ADR-DR-002",
+      "title": "Service RTO/RPO Classes",
+      "recommended_board_action": "DEFER",
+      "readiness": "NEEDS_OWNER_INPUT",
+      "reason_prerequisites": [
+        "business criticality classes"
+      ],
+      "runtime_dependency": [
+        "RUN-CF"
+      ],
+      "actual_decision": null
+    },
+    {
+      "adr_id": "ADR-PERF-001",
+      "title": "Runtime Approved VM Capacity",
+      "recommended_board_action": "DEFER",
+      "readiness": "RUNTIME_DEPENDENT",
+      "reason_prerequisites": [
+        "performance environment identity"
+      ],
+      "runtime_dependency": [
+        "RUN-P600",
+        "RUN-P1200",
+        "RUN-S1800",
+        "RUN-HIKARI",
+        "RUN-N1"
+      ],
+      "actual_decision": null
+    }
+  ]
+}

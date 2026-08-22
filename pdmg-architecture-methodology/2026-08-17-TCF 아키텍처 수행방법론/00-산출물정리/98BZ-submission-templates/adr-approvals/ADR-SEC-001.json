@@ -1,0 +1,26 @@
+{
+  "adr_id": "ADR-SEC-001",
+  "title": "JWT Signing Key Source of Truth",
+  "decision": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "conditions": [],
+  "comment": null,
+  "approval_state": "DRAFT_NOT_APPROVED",
+  "recommended_decision": "APPROVE",
+  "readiness": "READY_FOR_HUMAN_DECISION",
+  "required_approver": "Security Architect + Platform Owner",
+  "runtime_dependency": [
+    "RUN-JWT-ROTATE"
+  ],
+  "recommendation": "Production signing key의 Source of Truth는 KMS/HSM 또는 승인된 중앙 Key Store로 한다. Process-local RSA 생성은 DEV/LOCAL에만 허용한다.",
+  "prerequisites": [
+    "승인된 Key Platform/KMS-HSM 규격",
+    "Canonical build integration"
+  ],
+  "closure": [
+    "KMS/HSM adapter integrated",
+    "multi-node/restart/rotation evidence"
+  ]
+}

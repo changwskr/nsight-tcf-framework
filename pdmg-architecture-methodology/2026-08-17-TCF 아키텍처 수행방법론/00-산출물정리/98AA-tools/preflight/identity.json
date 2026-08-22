@@ -1,0 +1,13 @@
+{
+  "environment": "LOCAL_PREFLIGHT",
+  "evidence_class": "TEST_HARNESS",
+  "synthetic": true,
+  "git_commit": "1111111111111111111111111111111111111111",
+  "artifact_version": "wave3b-preflight",
+  "config_version": "wave3b-preflight",
+  "service_id": "MG.TEST.sample",
+  "guid": "12345678-1234-1234-1234-1234567890ab",
+  "hostname": "localhost",
+  "tomcat_jvm_instance": "LOCAL-JVM",
+  "db_target": "LOCAL-NONE"
+}

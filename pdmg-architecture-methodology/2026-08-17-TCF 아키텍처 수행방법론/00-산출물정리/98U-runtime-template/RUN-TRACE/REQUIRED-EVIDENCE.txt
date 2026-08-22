@@ -1,0 +1,1 @@
+logs/e2e-trace.json

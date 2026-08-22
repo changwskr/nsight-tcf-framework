@@ -1,0 +1,16 @@
+{
+  "adr_approvals": [],
+  "runtime_results": {},
+  "production_config": [],
+  "closures": [],
+  "summary": {
+    "adr_approval_files": 0,
+    "accepted_adr_approvals": 0,
+    "runtime_bundles": 0,
+    "runtime_result_files": 0,
+    "production_config_manifests": 0,
+    "accepted_production_config_manifests": 0,
+    "closure_files": 0,
+    "accepted_closure_records": 0
+  }
+}

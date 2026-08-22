@@ -1,0 +1,15 @@
+{
+  "adr_id": "ADR-SEC-001",
+  "title": "JWT Signing Key Source of Truth",
+  "recommended_decision": "APPROVE",
+  "decision": null,
+  "approver": null,
+  "approver_role": "Security Architect + Platform Owner",
+  "decision_date": null,
+  "condition": null,
+  "evidence_ref": [],
+  "runtime_dependency": [
+    "RUN-JWT-ROTATE"
+  ],
+  "approval_state": "DRAFT_NOT_APPROVED"
+}

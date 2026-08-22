@@ -1,0 +1,13 @@
+{
+  "serviceId": "mgcoa8888S0",
+  "guid": "example-guid",
+  "traceId": "example-trace",
+  "thread": "http-nio-8080-exec-1",
+  "transaction": {"begin": true, "result": "COMMIT"},
+  "mapper": {"namespace": "sample.Mapper", "sqlId": "selectSample", "elapsedMs": 12},
+  "timeout": {"policyMs": 3000, "elapsedMs": 120},
+  "hikari": {"active": 3, "idle": 7},
+  "tomcat": {"busyThreads": 8},
+  "jvm": {"heapUsedMb": 512},
+  "audit": {"result": "SUCCESS"}
+}

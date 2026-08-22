@@ -1,0 +1,134 @@
+{
+  "candidate": "NSIGHT-ARCH-CANDIDATE-2026-08-19",
+  "phase": "P0 Closure Wave 3 — Runtime Evidence Harness & Local Preflight",
+  "items": [
+    {
+      "id": "P0-SEC-001",
+      "area": "JWT Signing Key SoT",
+      "status": "IMPLEMENTED_CANDIDATE_BUILD_BLOCKED",
+      "staticEvidence": "Wave2A isolated implementation introduces JwtSigningKeyProvider/External Provider boundary; canonical Gradle integration build and real KMS/HSM adapter remain unverified",
+      "requiredNext": "Integrate into canonical build, provide approved KMS/HSM adapter/config, RUN-JWT-ROTATE multi-node/restart evidence",
+      "gate": "G80/HG90"
+    },
+    {
+      "id": "P0-SEC-002",
+      "area": "kid / Rotation / JWKS Grace",
+      "status": "IMPLEMENTED_CANDIDATE_BUILD_BLOCKED",
+      "staticEvidence": "Wave2A candidate changes provider-driven active kid/JWKS lifecycle; no canonical build or runtime rotation evidence yet",
+      "requiredNext": "Canonical build + active/previous JWKS grace validation + RUN-JWT-ROTATE",
+      "gate": "G80/HG90"
+    },
+    {
+      "id": "P0-TX-001",
+      "area": "Facade Transaction Owner",
+      "status": "IMPLEMENTED_CANDIDATE_STATIC_PASS",
+      "staticEvidence": "Wave2A candidate removes redundant @Transactional from EbUserService.create and EpUserEventService.receive while keeping Facade TX boundary; canonical project build not executed",
+      "requiredNext": "Integrate candidate patch into canonical repository and run rollback/integration tests",
+      "gate": "G40/G80"
+    },
+    {
+      "id": "P0-TMO-001",
+      "area": "Policy-driven TX timeout",
+      "status": "CLOSED_STATIC",
+      "staticEvidence": "PolicyDrivenTransactionAttributeSource overrides @Transactional timeout from TimeoutContextHolder while preserving readOnly/propagation/rollback rules",
+      "requiredNext": "Runtime confirmation in RUN-TIMEOUT/RUN-SLOWSQL",
+      "gate": "G80"
+    },
+    {
+      "id": "P0-TMO-002",
+      "area": "DB Query timeout propagation",
+      "status": "CLOSED_STATIC",
+      "staticEvidence": "PolicyDrivenQueryTimeoutInterceptor copies MappedStatement with policy dbQueryTimeoutSec for query/update",
+      "requiredNext": "Slow SQL runtime proof",
+      "gate": "G80"
+    },
+    {
+      "id": "P0-TMO-003",
+      "area": "Timeout worker cancel semantics",
+      "status": "HARNESS_READY_BLOCKED_PRODUCTION_RUNTIME",
+      "staticEvidence": "OnlineTransactionTimeoutExecutor uses Future.get(timeout) and future.cancel(true); interrupt is best effort only; Wave3 RUN-TIMEOUT bundle evaluator and Java timeout-policy preflight are ready",
+      "requiredNext": "Fault test proving rollback, no late commit, connection return, thread cleanup",
+      "gate": "G80/HG90"
+    },
+    {
+      "id": "P0-CTX-001",
+      "area": "Worker context propagation/cleanup",
+      "status": "CLOSED_STATIC",
+      "staticEvidence": "TimeoutThreadContext captures TimeoutPolicy, TransactionContext, MDC, RequestAttributes and clears all in finally",
+      "requiredNext": "Concurrency/leak runtime test",
+      "gate": "G80"
+    },
+    {
+      "id": "P0-GOV-001",
+      "area": "Architecture Model JSON Schema",
+      "status": "CLOSED_STATIC",
+      "staticEvidence": "29-ARCHITECTURE-MODEL.schema.json created; validator PASS: 380 nodes/380 edges, no duplicate ids, dangling edges, undeclared node/relation types",
+      "requiredNext": "Expand model edges for requirement/screen/server/runtime evidence",
+      "gate": "G80"
+    },
+    {
+      "id": "P0-PHY-001",
+      "area": "71 Server -> JVM -> WAR -> Route",
+      "status": "INGESTION_READY_BLOCKED_PRODUCTION_EVIDENCE",
+      "staticEvidence": "Wave2B normalized 71-server map. Wave2C parser/validator parses 122 config candidates with 0 parse errors, but 0/122 qualify as hostname-bound PRODUCTION_RUNTIME evidence.",
+      "requiredNext": "Collect per-host evidence bundle: httpd.conf/includes, server.xml, setenv.sh/CATALINA_BASE, deployment manifest, application config, L4/GSLB and bind by env+hostname+path+hash+timestamp",
+      "gate": "G30/G80/HG90"
+    },
+    {
+      "id": "P0-PERF-001",
+      "area": "Runtime approved capacity",
+      "status": "HARNESS_READY_BLOCKED_PRODUCTION_RUNTIME",
+      "staticEvidence": "500 TPS legacy vs 855 TPS working remains versioned design values; Wave3 RUN-P600/P1200/S1800/HIKARI/SLOWSQL templates/evaluator ready",
+      "requiredNext": "RUN-P600/P1200/S1800/N1/HIKARI and approve final VM/JVM/Tomcat/Hikari baseline",
+      "gate": "G60/G80/HG90"
+    },
+    {
+      "id": "P0-HA-001",
+      "area": "Session / HA / DR",
+      "status": "HARNESS_READY_BLOCKED_PRODUCTION_RUNTIME_HUMAN",
+      "staticEvidence": "Working candidates exist, but no failover/failback runtime evidence or approved RTO/RPO/session ADR; Wave3 RUN-N1/SESSION/CF templates/evaluator ready",
+      "requiredNext": "ADR-SES-001/ADR-HA-001/ADR-DR-* + RUN-SESSION/RUN-CF",
+      "gate": "G70/G80/HG90"
+    },
+    {
+      "id": "P0-OBS-001",
+      "area": "GUID + ServiceId E2E",
+      "status": "HARNESS_READY_BLOCKED_PRODUCTION_RUNTIME",
+      "staticEvidence": "Logging/context model exists, no mandatory RUN-TRACE raw evidence attached; Wave3 RUN-TRACE template/evaluator ready",
+      "requiredNext": "Run end-to-end trace and attach Apache/Tomcat/TCF/SQL/external evidence",
+      "gate": "G70/G80/HG90"
+    },
+    {
+      "id": "P0-DEP-001",
+      "area": "Rolling/Rollback safety",
+      "status": "HARNESS_READY_BLOCKED_PRODUCTION_RUNTIME",
+      "staticEvidence": "CI/CD architecture exists but no production-like rolling/rollback evidence; Wave3 RUN-ROLLING template/evaluator ready",
+      "requiredNext": "RUN-ROLLING + rollback + DB/config backward compatibility",
+      "gate": "G70/G80/HG90"
+    },
+    {
+      "id": "P0-MIG-001",
+      "area": "Migration cutover readiness",
+      "status": "BLOCKED_RUNTIME_HUMAN",
+      "staticEvidence": "Source->Stage->Target architecture defined; no reconciliation/go-no-go/rollback rehearsal evidence",
+      "requiredNext": "Migration reconciliation result, go/no-go criteria, rollback rehearsal",
+      "gate": "G70/G80/HG90"
+    },
+    {
+      "id": "P0-CONFIG-001",
+      "area": "Production Config Evidence Ingestion",
+      "status": "CLOSED_STATIC",
+      "staticEvidence": "Evidence JSON Schema + TDD parser/validator created. 122 znsight-config-info candidates parsed successfully; generated/build copies excluded; secret-like keys redacted.",
+      "requiredNext": "Use tool on real per-host Production/DR evidence bundles; this item being closed does not close P0-PHY-001.",
+      "gate": "G30/G60/G70/G80"
+    },
+    {
+      "id": "P0-RUN-001",
+      "area": "Runtime Evidence Harness",
+      "status": "CLOSED_STATIC",
+      "staticEvidence": "Manifest Schema + 12 Run Catalog + bundle evaluator + TDD tests (11 pass) + synthetic/reference non-promotion guard",
+      "requiredNext": "Execute real bundles in performance/production-like environment; harness closure does not close any runtime P0",
+      "gate": "G60/G70/G80"
+    }
+  ]
+}

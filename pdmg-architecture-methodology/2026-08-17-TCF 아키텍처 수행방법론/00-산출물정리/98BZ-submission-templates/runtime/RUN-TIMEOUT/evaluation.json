@@ -1,0 +1,24 @@
+{
+  "run_id": "RUN-TIMEOUT",
+  "status": "OPEN",
+  "evidence_class": "UNSET",
+  "runtime_approved": false,
+  "synthetic": false,
+  "environment": null,
+  "hostname": null,
+  "git_commit": null,
+  "artifact_version": null,
+  "config_version": null,
+  "started_at": null,
+  "ended_at": null,
+  "approver": null,
+  "approval_date": null,
+  "required_evidence": [
+    "db/before-after.json",
+    "logs/transaction.json",
+    "metrics/pool.json",
+    "metrics/thread.json"
+  ],
+  "evidence_ref": [],
+  "purpose": "Timeout rollback / late commit / pool & context cleanup"
+}

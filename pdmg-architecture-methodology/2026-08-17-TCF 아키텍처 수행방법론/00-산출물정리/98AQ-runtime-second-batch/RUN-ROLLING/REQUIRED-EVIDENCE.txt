@@ -1,0 +1,6 @@
+logs/deploy.log
+logs/health.log
+metrics/summary.json
+logs/smoke-test.json
+logs/version-trace.json
+logs/rollback-test.json

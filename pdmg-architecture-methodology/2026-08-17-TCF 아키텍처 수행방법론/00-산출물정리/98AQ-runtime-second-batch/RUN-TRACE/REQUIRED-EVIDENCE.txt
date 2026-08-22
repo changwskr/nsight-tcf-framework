@@ -1,0 +1,6 @@
+logs/GUID-trace.json
+logs/ServiceId-trace.json
+logs/apache.log
+logs/tomcat.log
+logs/tcf.log
+logs/sql-or-external.json

@@ -1,0 +1,7 @@
+{
+  "plan": [
+    "RUN-TIMEOUT",
+    "RUN-P600",
+    "RUN-P1200"
+  ]
+}

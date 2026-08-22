@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"Hash-bound Approval","type":"object","required":["approvalId","artifact","artifactHash","approver","role","decision","approvedAt"],"properties":{"decision":{"enum":["APPROVED","CONDITIONAL_APPROVAL","REJECTED"]}}}

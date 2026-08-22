@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nsight:architecture:model:draft:v1",
+  "title": "NSIGHT Architecture Model Draft Schema",
+  "type": "object",
+  "required": ["baseline", "generatedAt", "status", "source", "scopeNotes", "nodeTypes", "relationTypes", "sourceExtracted"],
+  "properties": {
+    "baseline": {"type": "string", "minLength": 1},
+    "generatedAt": {"type": "string", "minLength": 1},
+    "status": {"type": "string", "minLength": 1},
+    "source": {"type": "string", "minLength": 1},
+    "scopeNotes": {"type": "array", "items": {"type": "string"}},
+    "nodeTypes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "relationTypes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "sourceExtracted": {
+      "type": "object",
+      "required": ["nodes", "edges"],
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "type", "module"],
+            "properties": {
+              "id": {"type": "string", "minLength": 1},
+              "type": {"type": "string", "minLength": 1},
+              "module": {"type": "string", "minLength": 1},
+              "path": {"type": "string", "minLength": 1},
+              "value": {"type": "string"}
+            },
+            "additionalProperties": true
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["from", "relation", "to"],
+            "properties": {
+              "from": {"type": "string", "minLength": 1},
+              "relation": {"type": "string", "minLength": 1},
+              "to": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}

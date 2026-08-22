@@ -1,0 +1,13 @@
+{
+  "adr_id": "ADR-GOV-001",
+  "title": "Architecture Model Source of Truth",
+  "recommended_decision": "APPROVE",
+  "decision": null,
+  "approver": null,
+  "approver_role": "Architecture Board",
+  "decision_date": null,
+  "condition": null,
+  "evidence_ref": [],
+  "runtime_dependency": [],
+  "approval_state": "DRAFT_NOT_APPROVED"
+}

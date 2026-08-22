@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INF-230 App 연결 · pdmg-infra</title>
+  <link rel="stylesheet" href="/_shared/infra.css?v=nav1">
+</head>
+<body>
+  <div class="infra-shell">
+    <aside class="infra-sidebar">
+      <div class="infra-sidebar__brand"><h1>인프라 아키텍처 관리</h1><p>INF-230 App Map</p></div>
+      <nav id="infraNav" class="infra-sidebar__nav" aria-label="화면 메뉴"></nav>
+      <div class="infra-sidebar__foot">ifina2300* · SERVER|GROUP|DB</div>
+    </aside>
+    <div class="infra-main">
+      <header class="infra-topbar">
+        <div><h1>INF-230 Application 배치/DB 연결</h1><p>App ↔ Server / Group / DB 매핑.</p></div>
+        <div class="actions">
+          <button class="btn-secondary" type="button" id="searchBtn">조회</button>
+          <button class="btn-primary" type="button" id="addBtn">연결+</button>
+        </div>
+      </header>
+      <section class="toolbar">
+        <div class="field field-wide"><label for="appId">App ID</label><select id="appId" data-combo="apps" data-empty="전체" data-selected="APP-MK-CAMP"></select></div>
+        <div class="field"><label for="mapTypeCd">Map Type</label>
+          <select id="mapTypeCd"><option value="">전체</option><option>SERVER</option><option>GROUP</option><option>DB</option></select>
+        </div>
+        <div class="field field-wide"><label for="keyword">키워드</label><input id="keyword" placeholder="mapId / refId"></div>
+      </section>
+      <section class="response-meta" id="resultMeta">조회를 실행하세요.</section>
+      <section class="panel">
+        <div class="panel-head"><h2>Mappings</h2><span class="group-tag" id="rowCount">0</span></div>
+        <div class="table-wrap"><table class="data-table"><thead>
+          <tr><th>Map ID</th><th>App</th><th>Type</th><th>Ref</th><th>Role</th><th>Remark</th><th></th></tr>
+        </thead><tbody id="rowBody"><tr><td colspan="7" class="empty">-</td></tr></tbody></table></div>
+      </section>
+    </div>
+  </div>
+  <div class="modal" id="editModal" hidden>
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-card">
+      <div class="panel-head"><h2>연결 등록</h2><button class="btn-secondary" type="button" data-close="true">닫기</button></div>
+      <div class="modal-body">
+        <div class="field"><label for="formMapId">Map ID *</label><input id="formMapId"></div>
+        <div class="field"><label for="formAppId">App ID *</label><select id="formAppId" data-combo="apps" data-selected="APP-MK-CAMP"></select></div>
+        <div class="field"><label for="formMapType">Map Type</label>
+          <select id="formMapType"><option>GROUP</option><option>SERVER</option><option>DB</option></select>
+        </div>
+        <div class="field"><label for="formRefId">Ref ID *</label><select id="formRefId" data-combo-type-src="formMapType" data-empty="선택"></select></div>
+        <div class="field"><label for="formRole">Role</label><select id="formRole"><option value="">-</option><option>PRIMARY</option><option>SECONDARY</option></select></div>
+        <div class="field field-span"><label for="formRemark">비고</label><input id="formRemark"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" type="button" data-close="true">취소</button>
+        <button class="btn-primary" type="button" id="saveBtn">저장</button>
+      </div>
+    </div>
+  </div>
+  <script src="/_shared/error-codes.js"></script>
+  <script src="/_shared/error-popup.js"></script>
+  <script src="/_shared/infra-api.js"></script>
+  <script src="/_shared/infra-nav.js?v=nav1"></script>
+  <script src="/_shared/infra-combo.js"></script>
+  <script src="/infra/app-maps/app-maps.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "adr_id": "ADR-DEP-001",
+  "title": "Production Deployment Pipeline",
+  "recommended_decision": "APPROVE",
+  "decision": null,
+  "approver": null,
+  "approver_role": "DevOps Owner + Ops Change Manager",
+  "decision_date": null,
+  "condition": null,
+  "evidence_ref": [],
+  "runtime_dependency": [
+    "RUN-ROLLING"
+  ],
+  "approval_state": "DRAFT_NOT_APPROVED"
+}

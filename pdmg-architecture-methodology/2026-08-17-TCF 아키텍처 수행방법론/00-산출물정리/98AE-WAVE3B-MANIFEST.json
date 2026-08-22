@@ -1,0 +1,211 @@
+{
+  "phase": "Wave3B",
+  "status": "AUTOMATION_READY_PRODUCTION_RUNTIME_BLOCKED",
+  "files": [
+    {
+      "path": "96-P0-CLOSURE-MATRIX.json",
+      "size": 7577,
+      "sha256": "286bc6b476a068e179663a40bd2ecb280420deca1b51ccc6dc61be9bc4530909"
+    },
+    {
+      "path": "98AA-P0-WAVE3B-RUNTIME-AUTOMATION.md",
+      "size": 5809,
+      "sha256": "a5c118b4f31d351d9842efbab37dd901d20f648d86dd390cd21f8b984e65d91e"
+    },
+    {
+      "path": "98AA-tools/README.md",
+      "size": 1847,
+      "sha256": "537e5c7a50b6298731fcf6496d9e9811e1df10acf1c53480259365c187ea7443"
+    },
+    {
+      "path": "98AA-tools/actions/operator-hook.sh",
+      "size": 470,
+      "sha256": "0dda4737b2d1234bd341a6fd9620bd86a8eaade7b8913757e05e63469e72b5ca"
+    },
+    {
+      "path": "98AA-tools/actions/run-center-failover.sh",
+      "size": 243,
+      "sha256": "99a71f8c58bb23797bc4b7767609e03b8ebbb2a94481c1a325324a0260e8e9de"
+    },
+    {
+      "path": "98AA-tools/actions/run-jwt-rotate.sh",
+      "size": 243,
+      "sha256": "99a71f8c58bb23797bc4b7767609e03b8ebbb2a94481c1a325324a0260e8e9de"
+    },
+    {
+      "path": "98AA-tools/actions/run-n1.sh",
+      "size": 243,
+      "sha256": "99a71f8c58bb23797bc4b7767609e03b8ebbb2a94481c1a325324a0260e8e9de"
+    },
+    {
+      "path": "98AA-tools/actions/run-rolling.sh",
+      "size": 243,
+      "sha256": "99a71f8c58bb23797bc4b7767609e03b8ebbb2a94481c1a325324a0260e8e9de"
+    },
+    {
+      "path": "98AA-tools/actions/run-session.sh",
+      "size": 243,
+      "sha256": "99a71f8c58bb23797bc4b7767609e03b8ebbb2a94481c1a325324a0260e8e9de"
+    },
+    {
+      "path": "98AA-tools/collect/collect-host.sh",
+      "size": 466,
+      "sha256": "4b5b44910ee4a0ac61f4c814a3f0b335a20e6e20550954edac68e4f9175319a7"
+    },
+    {
+      "path": "98AA-tools/collect/collect-jvm.sh",
+      "size": 468,
+      "sha256": "8dd3f67c2a3ec7a8f39cd9b6ea5cb4364a0bd9ee77d78dc6b467de7308d37cef"
+    },
+    {
+      "path": "98AA-tools/collect/collect-micrometer.sh",
+      "size": 742,
+      "sha256": "7697a2e62e722d163d1fc8b1111452fed14d9cbbf143b841cfafa518fcae0424"
+    },
+    {
+      "path": "98AA-tools/collect/oracle-session.sql",
+      "size": 432,
+      "sha256": "a4ce3395e156a05c05f999dfc94c8137b7279dceca31886ec25e367c0aefc9e8"
+    },
+    {
+      "path": "98AA-tools/collect/oracle-slow-sql.sql",
+      "size": 521,
+      "sha256": "c42fddc5af864607df3ce008ef5e49bc0e720a11cdb87c7e633237128a2a22f6"
+    },
+    {
+      "path": "98AA-tools/config/runtime-runner.example.json",
+      "size": 823,
+      "sha256": "6647909089afb558022f478fc2fe170cd3ec22b961581203bfedc4c48d491a5c"
+    },
+    {
+      "path": "98AA-tools/config/runtime-runner.schema.json",
+      "size": 1438,
+      "sha256": "df21e336938b313858456bc554726dac242378804f4ec44b6def0210787e6092"
+    },
+    {
+      "path": "98AA-tools/examples/resource-metrics.example.json",
+      "size": 102,
+      "sha256": "85316d341c1719555b71fbd3c32c47ccb82effe12b9ba2e40ed847c12fd3e9c5"
+    },
+    {
+      "path": "98AA-tools/load/gatling/NSightServiceSimulation.scala",
+      "size": 1379,
+      "sha256": "39bf08bc88461a3666a96c1d70bd5ae71c166676fdfb6ccbcd967302fe952924"
+    },
+    {
+      "path": "98AA-tools/load/jmeter/nsight-service.jmx",
+      "size": 4621,
+      "sha256": "7200836168d098ee743fa564adf9ad0b4ddee8096b5803144fc3f65e60158831"
+    },
+    {
+      "path": "98AA-tools/load/jmeter/run-jmeter.sh",
+      "size": 1037,
+      "sha256": "a45eff72c96118063cfcfd5eabe681e9c03be425ca1f7fa4bc661d219f4dd7a3"
+    },
+    {
+      "path": "98AA-tools/preflight/evaluate-result.json",
+      "size": 123,
+      "sha256": "d4daf4e309f8b5cb05c576818750588df19ee4de2f314d18285bc8094aeeb8e7"
+    },
+    {
+      "path": "98AA-tools/preflight/evidence/RUN-P600/approval.md",
+      "size": 45,
+      "sha256": "3622b4a4c62612d7abdce151f4d942933bc5247e78dc427df6af05b6fdfa54e2"
+    },
+    {
+      "path": "98AA-tools/preflight/evidence/RUN-P600/logs/run.log",
+      "size": 84,
+      "sha256": "e6df2da0e64dd5bc49fab834f69b136d8311de136917b67c320490c49fd8e5aa"
+    },
+    {
+      "path": "98AA-tools/preflight/evidence/RUN-P600/metrics/summary.json",
+      "size": 278,
+      "sha256": "a9f8783c98504d7cfb2baf67ab670b71aa4add2efd8c29f37f38676100775f9f"
+    },
+    {
+      "path": "98AA-tools/preflight/evidence/RUN-P600/result.md",
+      "size": 32,
+      "sha256": "b556a8e51f1045d0ddafc43458187680400c5b14993f36a68c52d3706eb4afa7"
+    },
+    {
+      "path": "98AA-tools/preflight/evidence/RUN-P600/run-manifest.json",
+      "size": 518,
+      "sha256": "b9538c765ed91e45ef52e83b924edc2548761ea39c0e544269a92683fa45ea77"
+    },
+    {
+      "path": "98AA-tools/preflight/identity.json",
+      "size": 416,
+      "sha256": "830164d9b4eaaf8c5f0cee4dd208657114c515b538a0956695505e6678b83a6b"
+    },
+    {
+      "path": "98AA-tools/preflight/ingest-result.json",
+      "size": 278,
+      "sha256": "a9f8783c98504d7cfb2baf67ab670b71aa4add2efd8c29f37f38676100775f9f"
+    },
+    {
+      "path": "98AA-tools/preflight/n1-dry-run.json",
+      "size": 113,
+      "sha256": "726e5f6cf1e64b630744f6c50c557c687237d3f57504d0ca2639d93e4a68970f"
+    },
+    {
+      "path": "98AA-tools/preflight/prepare-result.json",
+      "size": 104,
+      "sha256": "87631457e2bfb6addea8eac8218fd397b31ac97910ee87b46fbe34117ab74d72"
+    },
+    {
+      "path": "98AA-tools/preflight/resource-metrics.json",
+      "size": 86,
+      "sha256": "611421971abbfcd4231dce80d563de4976a329d162c8e0e9edc700bfb2bde247"
+    },
+    {
+      "path": "98AA-tools/preflight/result.jtl",
+      "size": 192,
+      "sha256": "86423a71ae0170adec1239bbe1d9b62be81ac9baa0e6b04e22eccc5b32b55f28"
+    },
+    {
+      "path": "98AA-tools/preflight/tool-availability.txt",
+      "size": 150,
+      "sha256": "d52bea7381d396611324b3398205c34dcf50985f21d0c786e6082c9d49a24e15"
+    },
+    {
+      "path": "98AA-tools/tests/test_runtime_automation.py",
+      "size": 5897,
+      "sha256": "c94353af13bc590057607f793665dbe2a178cad76b7a410d09fc49e84c2dc7c7"
+    },
+    {
+      "path": "98AA-tools/timeout/oracle-before-after-template.sql",
+      "size": 358,
+      "sha256": "36ddc2657009edbe2af863a3817f96dd2340ead10dfeb940848eea9806ccad81"
+    },
+    {
+      "path": "98AA-tools/timeout/run-timeout-probe.sh",
+      "size": 878,
+      "sha256": "6765dacab6eef51506339c099bf1b808c4bd46663be2c1ab3303eadbf3cd70c1"
+    },
+    {
+      "path": "98AA-tools/tools/nsight_run_automation.py",
+      "size": 12581,
+      "sha256": "613f4936be90c4ccc008155764d17bba075fbd070363911eb83f54e2095f13ab"
+    },
+    {
+      "path": "98AA-tools/tools/nsight_runtime_evidence.py",
+      "size": 11832,
+      "sha256": "db66c0eb298d330ded9ff56b9136deabf6705dbbe9ffa19de33d61c583df724c"
+    },
+    {
+      "path": "98AB-RUNTIME-RUNNER-CONFIG.schema.json",
+      "size": 1438,
+      "sha256": "df21e336938b313858456bc554726dac242378804f4ec44b6def0210787e6092"
+    },
+    {
+      "path": "98AC-RUNTIME-RUNNER-CONFIG.example.json",
+      "size": 823,
+      "sha256": "6647909089afb558022f478fc2fe170cd3ec22b961581203bfedc4c48d491a5c"
+    },
+    {
+      "path": "98AD-WAVE3B-VERIFICATION-RESULT.json",
+      "size": 922,
+      "sha256": "15c31e038d1ea8dfd6722a135539ee5b7b2ff9b967bea65e58e74fca94ef686c"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "candidate": "NSIGHT-ARCH-CANDIDATE-2026-08-19",
+  "g80": {
+    "hold_if_any": [
+      "P0 ADR status != APPROVED",
+      "mandatory runtime run not production-approved",
+      "P0 closure item not closed"
+    ],
+    "conditional_pass_if": "no hard blocker and non-P0 open conditions remain",
+    "pass_candidate_if": "no hard blocker and no non-P0 open conditions"
+  },
+  "runtime_approval_contract": {
+    "status": "PASS",
+    "evidence_class": "PRODUCTION_RUNTIME",
+    "runtime_approved": true
+  },
+  "mandatory_runtime_runs": [
+    "RUN-TIMEOUT",
+    "RUN-P600",
+    "RUN-P1200",
+    "RUN-S1800",
+    "RUN-HIKARI",
+    "RUN-SLOWSQL",
+    "RUN-N1",
+    "RUN-SESSION",
+    "RUN-CF",
+    "RUN-TRACE",
+    "RUN-ROLLING",
+    "RUN-JWT-ROTATE"
+  ],
+  "closed_p0_statuses": [
+    "CLOSED_STATIC",
+    "CLOSED_RUNTIME",
+    "CLOSED_APPROVED"
+  ],
+  "hg90": "G80 must be CONDITIONAL_PASS or PASS_CANDIDATE, then explicit human sign-off is still required"
+}

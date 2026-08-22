@@ -1,0 +1,30 @@
+{
+  "run_id": "RUN-CF",
+  "environment": "REPLACE",
+  "evidence_class": "PRODUCTION_RUNTIME",
+  "synthetic": false,
+  "build_commit": "REPLACE",
+  "config_version": "REPLACE",
+  "started_at": "REPLACE",
+  "ended_at": "REPLACE",
+  "production_status": "OPEN",
+  "required_evidence": [
+    "logs/failover.log",
+    "logs/failback.log",
+    "metrics/rto-rpo.json",
+    "logs/gslb-l4.log",
+    "db/consistency.json",
+    "logs/business-validation.log"
+  ],
+  "machine_gates": [
+    "observed_rto <= approved_rto",
+    "observed_rpo <= approved_rpo",
+    "business_validation = pass",
+    "failback_validation = pass"
+  ],
+  "human_gates": [
+    "RTO/RPO approved before pass",
+    "Approve traffic reroute and failback timeline",
+    "Approve data/session consistency result"
+  ]
+}

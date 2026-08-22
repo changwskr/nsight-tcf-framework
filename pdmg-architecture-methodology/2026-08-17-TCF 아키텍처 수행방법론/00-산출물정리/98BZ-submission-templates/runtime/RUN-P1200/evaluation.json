@@ -1,0 +1,22 @@
+{
+  "run_id": "RUN-P1200",
+  "status": "OPEN",
+  "evidence_class": "UNSET",
+  "runtime_approved": false,
+  "synthetic": false,
+  "environment": null,
+  "hostname": null,
+  "git_commit": null,
+  "artifact_version": null,
+  "config_version": null,
+  "started_at": null,
+  "ended_at": null,
+  "approver": null,
+  "approval_date": null,
+  "required_evidence": [
+    "metrics/summary.json",
+    "logs/run.log"
+  ],
+  "evidence_ref": [],
+  "purpose": "Design peak 1,200 TPS"
+}

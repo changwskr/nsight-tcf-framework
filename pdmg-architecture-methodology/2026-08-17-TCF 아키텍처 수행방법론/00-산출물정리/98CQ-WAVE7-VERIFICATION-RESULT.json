@@ -1,0 +1,13 @@
+{
+  "phase": "Wave 7",
+  "generated_date": "2026-08-19",
+  "checks": {
+    "ready_adr_count": 11,
+    "deferred_adr_count": 5,
+    "approval_record_count": 11,
+    "draft_records_not_approved": true,
+    "all_ready_ids_covered": true
+  },
+  "issues": [],
+  "status": "PASS"
+}

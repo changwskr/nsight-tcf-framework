@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INF-220 Application · pdmg-infra</title>
+  <link rel="stylesheet" href="/_shared/infra.css?v=nav1">
+</head>
+<body>
+  <div class="infra-shell">
+    <aside class="infra-sidebar">
+      <div class="infra-sidebar__brand"><h1>인프라 아키텍처 관리</h1><p>INF-220 Application</p></div>
+      <nav id="infraNav" class="infra-sidebar__nav" aria-label="화면 메뉴"></nav>
+      <div class="infra-sidebar__foot">ifina2200* · TB_IF_APPLICATION_PILOT</div>
+    </aside>
+    <div class="infra-main">
+      <header class="infra-topbar">
+        <div><h1>INF-220 Application</h1><p>App ID = APP-MK-*. 실행형태 = ONLINE / BATCH / UI <strong>복수 가능</strong>. 시스템 = SYS-MKTG.</p></div>
+        <span class="badge">scid=INF-220</span>
+      </header>
+      <section class="toolbar">
+        <div class="field field-wide"><label for="keyword">검색</label><input id="keyword" placeholder="APP-MK-CAMP / 캠페인"></div>
+        <div class="field"><label for="systemId">시스템</label><select id="systemId" data-combo="systems" data-empty="전체" data-selected="SYS-MKTG"></select></div>
+        <div class="field"><label for="pageSize">페이지</label><select id="pageSize"><option value="10">10</option><option value="20" selected>20</option><option value="50">50</option></select></div>
+        <div class="actions">
+          <button class="btn-secondary" type="button" id="searchBtn">조회</button>
+          <button class="btn-primary" type="button" id="addBtn">신규</button>
+        </div>
+      </section>
+      <section class="response-meta" id="resultMeta">조회를 실행하세요.</section>
+      <section class="panel">
+        <div class="panel-head"><h2>Application</h2><span class="group-tag" id="resultCount">0건</span></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>App ID</th><th>App명</th><th>실행형태</th><th>시스템</th><th>언어</th><th>상태</th><th>비고</th><th></th></tr></thead>
+            <tbody id="resultBody"><tr><td colspan="8" class="empty">데이터 없음</td></tr></tbody>
+          </table>
+        </div>
+        <div class="pager">
+          <button class="btn-secondary" type="button" id="prevPageBtn" disabled>이전</button>
+          <span id="pageInfo">1 / 1</span>
+          <button class="btn-secondary" type="button" id="nextPageBtn" disabled>다음</button>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div class="modal" id="editModal" hidden>
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-card">
+      <div class="panel-head"><h2 id="editTitle">Application 등록</h2><button class="btn-secondary" type="button" data-close="true">닫기</button></div>
+      <div class="modal-body">
+        <div class="field"><label for="formAppId">App ID *</label><input id="formAppId" maxlength="40" placeholder="APP-MK-CAMP"></div>
+        <div class="field"><label for="formAppName">App명 *</label><input id="formAppName" placeholder="캠페인엔진"></div>
+        <div class="field"><label for="formSystemId">시스템 *</label><select id="formSystemId" data-combo="systems" data-selected="SYS-MKTG"></select></div>
+        <div class="field field-span"><label>실행형태 * <span class="hint">(복수 선택 가능)</span></label>
+          <div class="check-row" id="formAppTypeList">
+            <label class="check"><input type="checkbox" name="appType" value="ONLINE" checked> ONLINE</label>
+            <label class="check"><input type="checkbox" name="appType" value="BATCH"> BATCH</label>
+            <label class="check"><input type="checkbox" name="appType" value="UI"> UI</label>
+          </div>
+        </div>
+        <div class="field"><label for="formLangCd">언어</label><select id="formLangCd" data-combo="code:LANG" data-selected="JAVA"></select></div>
+        <div class="field"><label for="formStatusCd">상태</label><select id="formStatusCd" data-combo="code:STATUS" data-selected="CONFIRMED"></select></div>
+        <div class="field field-span"><label for="formRemark">비고</label><input id="formRemark" placeholder="마케팅 캠페인 실행"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" type="button" data-close="true">취소</button>
+        <button class="btn-primary" type="button" id="saveBtn">저장</button>
+      </div>
+    </div>
+  </div>
+  <script src="/_shared/error-codes.js"></script>
+  <script src="/_shared/error-popup.js"></script>
+  <script src="/_shared/infra-api.js"></script>
+  <script src="/_shared/infra-nav.js?v=nav1"></script>
+  <script src="/_shared/infra-combo.js?v=20260816a"></script>
+  <script src="/infra/apps/apps.js?v=220-multitype1"></script>
+</body>
+</html>

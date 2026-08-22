@@ -1,0 +1,122 @@
+{
+  "candidate": "NSIGHT-ARCH-CANDIDATE-2026-08-19",
+  "phase": "P0 Closure Wave 2B Production Mapping Candidate",
+  "items": [
+    {
+      "id": "P0-SEC-001",
+      "area": "JWT Signing Key SoT",
+      "status": "SOURCE_IMPLEMENTED_EXTERNAL_ADAPTER_REQUIRED",
+      "staticEvidence": "Provider SPI, local-ephemeral provider, external provider/client boundary, profile guard and external prod configuration implemented in isolated Wave2A workspace",
+      "requiredNext": "Implement approved KMS/HSM JwtExternalKeyClient adapter; restore canonical Gradle root build; build/test; RUN-JWT-ROTATE",
+      "gate": "G80/HG90",
+      "changeSpec": "98A-JWT-KEY-PROVIDER-CHANGE-SPEC.md"
+    },
+    {
+      "id": "P0-SEC-002",
+      "area": "kid / Rotation / JWKS Grace",
+      "status": "SOURCE_IMPLEMENTED_RUNTIME_REQUIRED",
+      "staticEvidence": "JwtTokenIssuer now uses provider active kid/signer; JwkSetController reads provider publicJwkSet; external provider supports active + previous public keys supplied by adapter",
+      "requiredNext": "Implement real key metadata/previous-key adapter; build/test; RUN-JWT-ROTATE including prepublish/grace/restart/multi-node",
+      "gate": "G80/HG90",
+      "changeSpec": "98B-JWT-KID-ROTATION-CHANGE-SPEC.md"
+    },
+    {
+      "id": "P0-TX-001",
+      "area": "Facade Transaction Owner",
+      "status": "SOURCE_CLEANUP_STATIC_PASS_BUILD_RUNTIME_REQUIRED",
+      "staticEvidence": "EbUserService.create and EpUserEventService.receive Service-level @Transactional declarations removed; Facade transaction annotations remain; source contract PASS",
+      "requiredNext": "Gradle build + EB outbox rollback + EP rollback integration tests",
+      "gate": "G40/G80",
+      "changeSpec": "98C-TX-BOUNDARY-CLEANUP-SPEC.md"
+    },
+    {
+      "id": "P0-TMO-001",
+      "area": "Policy-driven TX timeout",
+      "status": "CLOSED_STATIC",
+      "staticEvidence": "PolicyDrivenTransactionAttributeSource overrides @Transactional timeout from TimeoutContextHolder while preserving readOnly/propagation/rollback rules",
+      "requiredNext": "Runtime confirmation in RUN-TIMEOUT/RUN-SLOWSQL",
+      "gate": "G80"
+    },
+    {
+      "id": "P0-TMO-002",
+      "area": "DB Query timeout propagation",
+      "status": "CLOSED_STATIC",
+      "staticEvidence": "PolicyDrivenQueryTimeoutInterceptor copies MappedStatement with policy dbQueryTimeoutSec for query/update",
+      "requiredNext": "Slow SQL runtime proof",
+      "gate": "G80"
+    },
+    {
+      "id": "P0-TMO-003",
+      "area": "Timeout worker cancel semantics",
+      "status": "VALIDATOR_IMPLEMENTED_RUNTIME_HARNESS_REQUIRED",
+      "staticEvidence": "TimeoutPolicyValidator implements DB < TX < Online strict ordering; standalone javac behavior test PASS; Future.cancel interrupt semantics unchanged",
+      "requiredNext": "Implement/execute DB integration harness; RUN-TIMEOUT/RUN-SLOWSQL; prove rollback, late-commit=0, pool/thread/context return",
+      "gate": "G80/HG90",
+      "changeSpec": "98D-TIMEOUT-SAFETY-HARNESS-SPEC.md"
+    },
+    {
+      "id": "P0-CTX-001",
+      "area": "Worker context propagation/cleanup",
+      "status": "CLOSED_STATIC",
+      "staticEvidence": "TimeoutThreadContext captures TimeoutPolicy, TransactionContext, MDC, RequestAttributes and clears all in finally",
+      "requiredNext": "Concurrency/leak runtime test",
+      "gate": "G80"
+    },
+    {
+      "id": "P0-GOV-001",
+      "area": "Architecture Model JSON Schema",
+      "status": "CLOSED_STATIC",
+      "staticEvidence": "29-ARCHITECTURE-MODEL.schema.json created; validator PASS: 380 nodes/380 edges, no duplicate ids, dangling edges, undeclared node/relation types",
+      "requiredNext": "Expand model edges for requirement/screen/server/runtime evidence",
+      "gate": "G80"
+    },
+    {
+      "id": "P0-PHY-001",
+      "area": "71 Server -> JVM -> WAR -> Route",
+      "status": "PARTIAL_MAPPING_BLOCKED_EVIDENCE",
+      "staticEvidence": "71/71 Server Master rows normalized; 20 WEB/28 WAS/13 AP/10 DB; coarse application classification built; 8 WAS/JVM working-pattern relations isolated; exact production Apache/JVM/WAR/ServiceId/DB mappings remain unsupported by config evidence",
+      "requiredNext": "Collect production httpd.conf/includes, server.xml, setenv.sh, CATALINA_BASE, deployed WAR manifest, OM/runtime ServiceId catalog, datasource config, L4/GSLB and DR asset inventory",
+      "gate": "G30/G80/HG90"
+    },
+    {
+      "id": "P0-PERF-001",
+      "area": "Runtime approved capacity",
+      "status": "BLOCKED_RUNTIME",
+      "staticEvidence": "500 TPS legacy vs 855 TPS working remains versioned design values",
+      "requiredNext": "RUN-P600/P1200/S1800/N1/HIKARI and approve final VM/JVM/Tomcat/Hikari baseline",
+      "gate": "G60/G80/HG90"
+    },
+    {
+      "id": "P0-HA-001",
+      "area": "Session / HA / DR",
+      "status": "BLOCKED_RUNTIME_HUMAN",
+      "staticEvidence": "Working candidates exist, but no failover/failback runtime evidence or approved RTO/RPO/session ADR",
+      "requiredNext": "ADR-SES-001/ADR-HA-001/ADR-DR-* + RUN-SESSION/RUN-CF",
+      "gate": "G70/G80/HG90"
+    },
+    {
+      "id": "P0-OBS-001",
+      "area": "GUID + ServiceId E2E",
+      "status": "BLOCKED_RUNTIME",
+      "staticEvidence": "Logging/context model exists, no mandatory RUN-TRACE raw evidence attached",
+      "requiredNext": "Run end-to-end trace and attach Apache/Tomcat/TCF/SQL/external evidence",
+      "gate": "G70/G80/HG90"
+    },
+    {
+      "id": "P0-DEP-001",
+      "area": "Rolling/Rollback safety",
+      "status": "BLOCKED_RUNTIME",
+      "staticEvidence": "CI/CD architecture exists but no production-like rolling/rollback evidence",
+      "requiredNext": "RUN-ROLLING + rollback + DB/config backward compatibility",
+      "gate": "G70/G80/HG90"
+    },
+    {
+      "id": "P0-MIG-001",
+      "area": "Migration cutover readiness",
+      "status": "BLOCKED_RUNTIME_HUMAN",
+      "staticEvidence": "Source->Stage->Target architecture defined; no reconciliation/go-no-go/rollback rehearsal evidence",
+      "requiredNext": "Migration reconciliation result, go/no-go criteria, rollback rehearsal",
+      "gate": "G70/G80/HG90"
+    }
+  ]
+}

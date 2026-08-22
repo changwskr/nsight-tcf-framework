@@ -1,0 +1,6 @@
+{
+  "status": "DRY_RUN",
+  "environment": "PERF",
+  "command": "echo WOULD_DISABLE_NODE",
+  "returncode": null
+}

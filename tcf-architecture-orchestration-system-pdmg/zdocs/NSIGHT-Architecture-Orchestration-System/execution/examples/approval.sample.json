@@ -1,0 +1,11 @@
+{
+  "approvalId": "APR-EXAMPLE-001",
+  "artifact": "/absolute/path/to/ADR.md",
+  "artifactHash": "sha256-generated-by-cli",
+  "approver": "architecture-owner",
+  "role": "ArchitectureBoard",
+  "decision": "APPROVED",
+  "approvedAt": "generated-by-cli",
+  "comment": "Example only",
+  "expiration": null
+}

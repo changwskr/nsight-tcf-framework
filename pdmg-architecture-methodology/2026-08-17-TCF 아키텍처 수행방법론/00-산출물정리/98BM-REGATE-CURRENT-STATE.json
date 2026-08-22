@@ -1,0 +1,292 @@
+{
+  "candidate": "NSIGHT-ARCH-CANDIDATE-2026-08-19",
+  "as_of": "2026-08-19",
+  "adrs": [
+    {
+      "id": "ADR-SEC-001",
+      "status": "PROPOSED",
+      "priority": "P0",
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null
+    },
+    {
+      "id": "ADR-SEC-002",
+      "status": "PROPOSED",
+      "priority": "P0",
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null
+    },
+    {
+      "id": "ADR-SES-001",
+      "status": "DRAFT",
+      "priority": "P0",
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null
+    },
+    {
+      "id": "ADR-TX-001",
+      "status": "PROPOSED",
+      "priority": "P0",
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null
+    },
+    {
+      "id": "ADR-TMO-001",
+      "status": "PROPOSED",
+      "priority": "P0",
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null
+    },
+    {
+      "id": "ADR-HA-001",
+      "status": "DRAFT",
+      "priority": "P0",
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null
+    },
+    {
+      "id": "ADR-DR-001",
+      "status": "DRAFT",
+      "priority": "P0",
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null
+    },
+    {
+      "id": "ADR-DR-002",
+      "status": "DRAFT",
+      "priority": "P0",
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null
+    },
+    {
+      "id": "ADR-INFRA-001",
+      "status": "PROPOSED",
+      "priority": "P0",
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null
+    },
+    {
+      "id": "ADR-PERF-001",
+      "status": "DRAFT",
+      "priority": "P0",
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null
+    },
+    {
+      "id": "ADR-DATA-001",
+      "status": "PROPOSED",
+      "priority": "P0",
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null
+    },
+    {
+      "id": "ADR-INT-001",
+      "status": "PROPOSED",
+      "priority": "P0",
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null
+    },
+    {
+      "id": "ADR-OPS-001",
+      "status": "PROPOSED",
+      "priority": "P0",
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null
+    },
+    {
+      "id": "ADR-OBS-001",
+      "status": "PROPOSED",
+      "priority": "P0",
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null
+    },
+    {
+      "id": "ADR-GOV-001",
+      "status": "PROPOSED",
+      "priority": "P0",
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null
+    },
+    {
+      "id": "ADR-DEP-001",
+      "status": "PROPOSED",
+      "priority": "P0",
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null
+    }
+  ],
+  "runtime_runs": [
+    {
+      "id": "RUN-TIMEOUT",
+      "status": "OPEN",
+      "evidence_class": null,
+      "runtime_approved": false
+    },
+    {
+      "id": "RUN-P600",
+      "status": "OPEN",
+      "evidence_class": null,
+      "runtime_approved": false
+    },
+    {
+      "id": "RUN-P1200",
+      "status": "OPEN",
+      "evidence_class": null,
+      "runtime_approved": false
+    },
+    {
+      "id": "RUN-S1800",
+      "status": "OPEN",
+      "evidence_class": null,
+      "runtime_approved": false
+    },
+    {
+      "id": "RUN-HIKARI",
+      "status": "OPEN",
+      "evidence_class": null,
+      "runtime_approved": false
+    },
+    {
+      "id": "RUN-SLOWSQL",
+      "status": "OPEN",
+      "evidence_class": null,
+      "runtime_approved": false
+    },
+    {
+      "id": "RUN-N1",
+      "status": "OPEN",
+      "evidence_class": null,
+      "runtime_approved": false
+    },
+    {
+      "id": "RUN-SESSION",
+      "status": "OPEN",
+      "evidence_class": null,
+      "runtime_approved": false
+    },
+    {
+      "id": "RUN-CF",
+      "status": "OPEN",
+      "evidence_class": null,
+      "runtime_approved": false
+    },
+    {
+      "id": "RUN-TRACE",
+      "status": "OPEN",
+      "evidence_class": null,
+      "runtime_approved": false
+    },
+    {
+      "id": "RUN-ROLLING",
+      "status": "OPEN",
+      "evidence_class": null,
+      "runtime_approved": false
+    },
+    {
+      "id": "RUN-JWT-ROTATE",
+      "status": "OPEN",
+      "evidence_class": null,
+      "runtime_approved": false
+    }
+  ],
+  "p0_items": [
+    {
+      "id": "P0-SEC-001",
+      "status": "IMPLEMENTED_CANDIDATE_BUILD_BLOCKED"
+    },
+    {
+      "id": "P0-SEC-002",
+      "status": "IMPLEMENTED_CANDIDATE_BUILD_BLOCKED"
+    },
+    {
+      "id": "P0-TX-001",
+      "status": "IMPLEMENTED_CANDIDATE_STATIC_PASS"
+    },
+    {
+      "id": "P0-TMO-001",
+      "status": "CLOSED_STATIC"
+    },
+    {
+      "id": "P0-TMO-002",
+      "status": "CLOSED_STATIC"
+    },
+    {
+      "id": "P0-TMO-003",
+      "status": "HARNESS_READY_BLOCKED_PRODUCTION_RUNTIME"
+    },
+    {
+      "id": "P0-CTX-001",
+      "status": "CLOSED_STATIC"
+    },
+    {
+      "id": "P0-GOV-001",
+      "status": "CLOSED_STATIC"
+    },
+    {
+      "id": "P0-PHY-001",
+      "status": "INGESTION_READY_BLOCKED_PRODUCTION_EVIDENCE"
+    },
+    {
+      "id": "P0-PERF-001",
+      "status": "HARNESS_READY_BLOCKED_PRODUCTION_RUNTIME"
+    },
+    {
+      "id": "P0-HA-001",
+      "status": "HARNESS_READY_BLOCKED_PRODUCTION_RUNTIME_HUMAN"
+    },
+    {
+      "id": "P0-OBS-001",
+      "status": "HARNESS_READY_BLOCKED_PRODUCTION_RUNTIME"
+    },
+    {
+      "id": "P0-DEP-001",
+      "status": "HARNESS_READY_BLOCKED_PRODUCTION_RUNTIME"
+    },
+    {
+      "id": "P0-MIG-001",
+      "status": "BLOCKED_RUNTIME_HUMAN"
+    },
+    {
+      "id": "P0-CONFIG-001",
+      "status": "CLOSED_STATIC"
+    },
+    {
+      "id": "P0-RUN-001",
+      "status": "CLOSED_STATIC"
+    },
+    {
+      "id": "P0-RUN-002",
+      "status": "CLOSED_STATIC"
+    },
+    {
+      "id": "P0-RUN-003",
+      "status": "CLOSED_STATIC"
+    },
+    {
+      "id": "P0-RUN-004",
+      "status": "CLOSED_STATIC"
+    }
+  ],
+  "non_p0_open": [
+    "G40-C08 HTTP error status policy",
+    "G40-C09 console trace control",
+    "G60-C12 L4 idle/sticky/keepalive alignment",
+    "G60-C13 official error/timeout acceptance threshold"
+  ]
+}

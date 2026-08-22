@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nhnis.infra.in.a.persistence.dao.ifina2400DAO">
+
+  <select id="ifina2400S0_systems" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT SYSTEM_ID AS SYSTEM_ID, SYSTEM_NAME AS SYSTEM_NAME, STATUS_CD AS STATUS_CD
+      FROM TB_IF_BIZ_SYSTEM_PILOT
+     WHERE SYSTEM_ID LIKE 'SYS-%'
+     ORDER BY SYSTEM_ID
+  </select>
+
+  <select id="ifina2400S0_domains" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT DOMAIN_CD AS DOMAIN_CD, SYSTEM_ID AS SYSTEM_ID, NAME_KO AS NAME_KO, NAME_EN AS NAME_EN, SORT_NO AS SORT_NO
+      FROM TB_IF_BIZ_DOMAIN_PILOT
+     WHERE ACTIVE_YN = 'Y'
+    <if test="systemId != null and systemId != ''">AND SYSTEM_ID = #{systemId}</if>
+     ORDER BY SORT_NO, DOMAIN_CD
+  </select>
+
+  <select id="ifina2400S0_units" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT BIZ_CD AS BIZ_CD, DOMAIN_CD AS DOMAIN_CD, NAME_KO AS NAME_KO, NAME_EN AS NAME_EN, SORT_NO AS SORT_NO
+      FROM TB_IF_BIZ_UNIT_PILOT
+     WHERE ACTIVE_YN = 'Y'
+    <if test="domainCd != null and domainCd != ''">AND DOMAIN_CD = #{domainCd}</if>
+     ORDER BY SORT_NO, BIZ_CD
+  </select>
+
+  <select id="ifina2400S0_details" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT DETAIL_CD AS DETAIL_CD, BIZ_CD AS BIZ_CD, FUNCTION_CD AS FUNCTION_CD,
+           NAME_KO AS NAME_KO, SORT_NO AS SORT_NO
+      FROM TB_IF_BIZ_DETAIL_PILOT
+     WHERE ACTIVE_YN = 'Y'
+    <if test="bizCd != null and bizCd != ''">AND BIZ_CD = #{bizCd}</if>
+     ORDER BY SORT_NO, DETAIL_CD
+  </select>
+
+  <select id="ifina2400S0_detailsBySystem" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT D.DETAIL_CD AS DETAIL_CD, D.BIZ_CD AS BIZ_CD, D.FUNCTION_CD AS FUNCTION_CD,
+           D.NAME_KO AS NAME_KO, D.SORT_NO AS SORT_NO,
+           U.DOMAIN_CD AS DOMAIN_CD, U.NAME_KO AS BIZ_NAME, U.NAME_EN AS BIZ_NAME_EN
+      FROM TB_IF_BIZ_DETAIL_PILOT D
+      INNER JOIN TB_IF_BIZ_UNIT_PILOT U ON U.BIZ_CD = D.BIZ_CD AND U.ACTIVE_YN = 'Y'
+      INNER JOIN TB_IF_BIZ_DOMAIN_PILOT DM ON DM.DOMAIN_CD = U.DOMAIN_CD AND DM.ACTIVE_YN = 'Y'
+     WHERE D.ACTIVE_YN = 'Y'
+    <if test="systemId != null and systemId != ''">AND DM.SYSTEM_ID = #{systemId}</if>
+    <if test="domainCd != null and domainCd != ''">AND U.DOMAIN_CD = #{domainCd}</if>
+     ORDER BY U.SORT_NO, D.SORT_NO, D.DETAIL_CD
+  </select>
+
+  <select id="ifina2400S0_bizAppMaps" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT B.BIZ_APP_MAP_ID AS BIZ_APP_MAP_ID, B.SYSTEM_ID AS SYSTEM_ID, B.DETAIL_CD AS DETAIL_CD,
+           B.APP_ID AS APP_ID, B.ENV_CD AS ENV_CD, B.DOMAIN_CD AS DOMAIN_CD, B.BIZ_CD AS BIZ_CD,
+           B.MAP_ROLE_CD AS MAP_ROLE_CD, B.PRIMARY_YN AS PRIMARY_YN, B.STATUS_CD AS STATUS_CD, B.REMARK AS REMARK,
+           A.APP_NAME AS APP_NAME, A.APP_TYPE_CD AS APP_TYPE_CD,
+           U.NAME_KO AS BIZ_NAME, U.NAME_EN AS BIZ_NAME_EN
+      FROM TB_IF_BIZ_APP_MAP_PILOT B
+      LEFT JOIN TB_IF_APPLICATION_PILOT A ON A.APP_ID = B.APP_ID
+      LEFT JOIN TB_IF_BIZ_UNIT_PILOT U ON U.BIZ_CD = B.BIZ_CD
+     WHERE 1=1
+    <if test="systemId != null and systemId != ''">AND B.SYSTEM_ID = #{systemId}</if>
+    <if test="domainCd != null and domainCd != ''">AND B.DOMAIN_CD = #{domainCd}</if>
+    <if test="envCd != null and envCd != ''">AND B.ENV_CD = #{envCd}</if>
+    <if test="bizCd != null and bizCd != ''">AND B.BIZ_CD = #{bizCd}</if>
+    <if test="appId != null and appId != ''">AND B.APP_ID = #{appId}</if>
+     ORDER BY B.BIZ_CD, B.PRIMARY_YN DESC, B.APP_ID
+  </select>
+
+  <select id="ifina2400S0_bizAppMapCounts" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT B.BIZ_CD AS BIZ_CD, COUNT(*) AS APP_CNT,
+           SUM(CASE WHEN B.STATUS_CD IN ('CONFIRMED','VALIDATED') THEN 1 ELSE 0 END) AS DONE_CNT,
+           SUM(CASE WHEN B.STATUS_CD = 'DRAFT' THEN 1 ELSE 0 END) AS DRAFT_CNT
+      FROM TB_IF_BIZ_APP_MAP_PILOT B
+     WHERE 1=1
+    <if test="systemId != null and systemId != ''">AND B.SYSTEM_ID = #{systemId}</if>
+    <if test="domainCd != null and domainCd != ''">AND B.DOMAIN_CD = #{domainCd}</if>
+    <if test="envCd != null and envCd != ''">AND B.ENV_CD = #{envCd}</if>
+     GROUP BY B.BIZ_CD
+  </select>
+
+  <select id="ifina2400S0_assetsBySystem" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT ASSET_ID AS ASSET_ID, ASSET_NAME AS ASSET_NAME, GROUP_ID AS GROUP_ID,
+           TECH_ROLE_CD AS TECH_ROLE_CD, ENV_CD AS ENV_CD, STATUS_CD AS STATUS_CD
+      FROM TB_IF_SERVER_ASSET_PILOT
+     WHERE NVL(STATUS_CD,'') &lt;&gt; 'DELETED'
+    <if test="systemId != null and systemId != ''">AND SYSTEM_ID = #{systemId}</if>
+    <if test="envCd != null and envCd != ''">AND ENV_CD = #{envCd}</if>
+    <if test="techRoleCd != null and techRoleCd != ''">AND TECH_ROLE_CD = #{techRoleCd}</if>
+     ORDER BY TECH_ROLE_CD, ASSET_ID
+  </select>
+
+  <select id="ifina2400S0_dbBySystem" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT DB_ID AS DB_ID, DB_NAME AS DB_NAME, ENGINE_CD AS ENGINE_CD, VERSION_NO AS VERSION_NO,
+           ASSET_ID AS ASSET_ID, SYSTEM_ID AS SYSTEM_ID, STATUS_CD AS STATUS_CD
+      FROM TB_IF_DB_INSTANCE_PILOT
+     WHERE 1=1
+    <if test="systemId != null and systemId != ''">AND SYSTEM_ID = #{systemId}</if>
+     ORDER BY DB_ID
+  </select>
+
+  <select id="ifina2400S0_mwBySystem" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT MW.MW_ID AS MW_ID, MW.PRODUCT_NAME AS PRODUCT_NAME, MW.VERSION_NO AS VERSION_NO,
+           MW.ASSET_ID AS ASSET_ID, MW.STATUS_CD AS STATUS_CD
+      FROM TB_IF_MW_INSTALL_PILOT MW
+      INNER JOIN TB_IF_SERVER_ASSET_PILOT A ON A.ASSET_ID = MW.ASSET_ID
+     WHERE 1=1
+    <if test="systemId != null and systemId != ''">AND A.SYSTEM_ID = #{systemId}</if>
+     ORDER BY MW.PRODUCT_NAME, MW.MW_ID
+  </select>
+
+  <select id="ifina2400C0_bizAppExists" resultType="int" parameterType="java.util.HashMap">
+    SELECT COUNT(*) FROM TB_IF_BIZ_APP_MAP_PILOT
+     WHERE SYSTEM_ID = #{systemId} AND BIZ_CD = #{bizCd}
+       AND APP_ID = #{appId} AND ENV_CD = #{envCd}
+  </select>
+
+  <insert id="ifina2400C0_bizAppInsert" parameterType="java.util.HashMap">
+    INSERT INTO TB_IF_BIZ_APP_MAP_PILOT (
+      BIZ_APP_MAP_ID, SYSTEM_ID, DOMAIN_CD, BIZ_CD, DETAIL_CD, APP_ID, ENV_CD,
+      MAP_ROLE_CD, PRIMARY_YN, STATUS_CD, REMARK, REG_USER_ID, REG_DTM
+    ) VALUES (
+      #{bizAppMapId}, #{systemId}, #{domainCd}, #{bizCd}, #{detailCd}, #{appId}, #{envCd},
+      #{mapRoleCd}, #{primaryYn}, #{statusCd}, #{remark}, #{regUserId}, #{regDtm}
+    )
+  </insert>
+
+  <select id="ifina2400U0_countPrimaryBizApp" resultType="int" parameterType="java.util.HashMap">
+    SELECT COUNT(*) FROM TB_IF_BIZ_APP_MAP_PILOT
+     WHERE SYSTEM_ID = #{systemId} AND BIZ_CD = #{bizCd} AND ENV_CD = #{envCd}
+       AND PRIMARY_YN = 'Y'
+    <if test="excludeAppId != null and excludeAppId != ''">AND APP_ID &lt;&gt; #{excludeAppId}</if>
+  </select>
+
+  <select id="ifina2400S0_app" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT APP_ID AS APP_ID, APP_NAME AS APP_NAME, SYSTEM_ID AS SYSTEM_ID,
+           DETAIL_CD AS DETAIL_CD, APP_TYPE_CD AS APP_TYPE_CD, STATUS_CD AS STATUS_CD,
+           LANG_CD AS LANG_CD, REMARK AS REMARK
+      FROM TB_IF_APPLICATION_PILOT
+     WHERE APP_ID = #{appId}
+  </select>
+
+  <select id="ifina2400U0_countDeletedServerMaps" resultType="int" parameterType="java.util.HashMap">
+    SELECT COUNT(*)
+      FROM TB_IF_APP_MAP_PILOT M
+      INNER JOIN TB_IF_SERVER_ASSET_PILOT A ON A.ASSET_ID = M.REF_ID
+     WHERE M.APP_ID = #{appId}
+       AND M.MAP_TYPE_CD = 'SERVER'
+       AND A.STATUS_CD = 'DELETED'
+  </select>
+
+  <delete id="ifina2400D0_bizAppDelete" parameterType="java.util.HashMap">
+    DELETE FROM TB_IF_BIZ_APP_MAP_PILOT
+     WHERE SYSTEM_ID = #{systemId} AND BIZ_CD = #{bizCd}
+       AND APP_ID = #{appId} AND ENV_CD = #{envCd}
+  </delete>
+
+  <update id="ifina2400U0_updateBizAppStatus" parameterType="java.util.HashMap">
+    UPDATE TB_IF_BIZ_APP_MAP_PILOT
+       SET STATUS_CD = #{statusCd},
+           CHG_USER_ID = #{chgUserId},
+           CHG_DTM = #{chgDtm}
+     WHERE SYSTEM_ID = #{systemId} AND BIZ_CD = #{bizCd}
+       AND APP_ID = #{appId} AND ENV_CD = #{envCd}
+  </update>
+
+  <select id="ifina2400S0_apps" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT A.APP_ID AS APP_ID, A.APP_NAME AS APP_NAME, A.SYSTEM_ID AS SYSTEM_ID,
+           A.DETAIL_CD AS DETAIL_CD, A.APP_TYPE_CD AS APP_TYPE_CD, A.STATUS_CD AS STATUS_CD,
+           A.LANG_CD AS LANG_CD, A.REMARK AS REMARK
+      FROM TB_IF_APPLICATION_PILOT A
+     WHERE 1=1
+    <if test="systemId != null and systemId != ''">AND A.SYSTEM_ID = #{systemId}</if>
+    <if test="appTypeCd != null and appTypeCd != ''">
+      AND (',' || REPLACE(NVL(A.APP_TYPE_CD,''), ' ', '') || ',' LIKE '%,' || #{appTypeCd} || ',%')
+    </if>
+    <if test="appKeyword != null and appKeyword != ''">
+      AND (UPPER(NVL(A.APP_ID,'')) LIKE '%'||UPPER(#{appKeyword})||'%'
+        OR UPPER(NVL(A.APP_NAME,'')) LIKE '%'||UPPER(#{appKeyword})||'%'
+        OR UPPER(NVL(A.APP_TYPE_CD,'')) LIKE '%'||UPPER(#{appKeyword})||'%')
+    </if>
+     ORDER BY A.APP_ID
+  </select>
+
+  <select id="ifina2400S0_groups" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT G.GROUP_ID AS GROUP_ID, G.GROUP_NAME AS GROUP_NAME, G.SYSTEM_ID AS SYSTEM_ID,
+           G.TECH_ROLE_CD AS TECH_ROLE_CD, G.ENV_CD AS ENV_CD, G.TIER_CD AS TIER_CD,
+           G.STATUS_CD AS STATUS_CD, G.ACTIVE_NODES AS ACTIVE_NODES,
+           G.STANDBY_NODES AS STANDBY_NODES, G.DR_NODES AS DR_NODES
+      FROM TB_IF_SERVER_GROUP_PILOT G
+     WHERE 1=1
+    <if test="systemId != null and systemId != ''">AND G.SYSTEM_ID = #{systemId}</if>
+    <if test="envCd != null and envCd != ''">AND G.ENV_CD = #{envCd}</if>
+    <if test="techRoleCd != null and techRoleCd != ''">AND G.TECH_ROLE_CD = #{techRoleCd}</if>
+    <if test="groupKeyword != null and groupKeyword != ''">
+      AND (UPPER(NVL(G.GROUP_ID,'')) LIKE '%'||UPPER(#{groupKeyword})||'%'
+        OR UPPER(NVL(G.GROUP_NAME,'')) LIKE '%'||UPPER(#{groupKeyword})||'%')
+    </if>
+     ORDER BY G.TECH_ROLE_CD, G.GROUP_ID
+  </select>
+
+  <select id="ifina2400S0_maps" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT M.MAP_ID AS MAP_ID, M.APP_ID AS APP_ID, M.MAP_TYPE_CD AS MAP_TYPE_CD,
+           M.REF_ID AS REF_ID, M.ROLE_CD AS ROLE_CD, M.PRIMARY_YN AS PRIMARY_YN,
+           M.STATUS_CD AS STATUS_CD, M.GROUP_ID AS GROUP_ID, M.REMARK AS REMARK,
+           CASE
+             WHEN M.MAP_TYPE_CD = 'SERVER' THEN NVL(A.ASSET_NAME, M.REF_ID)
+             WHEN M.MAP_TYPE_CD = 'GROUP' THEN NVL(G.GROUP_NAME, M.REF_ID)
+             WHEN M.MAP_TYPE_CD = 'DB' THEN NVL(D.DB_NAME, M.REF_ID)
+             ELSE M.REF_ID
+           END AS REF_NAME,
+           NVL(M.GROUP_ID, CASE WHEN M.MAP_TYPE_CD = 'GROUP' THEN M.REF_ID ELSE A.GROUP_ID END) AS RESOLVED_GROUP_ID
+      FROM TB_IF_APP_MAP_PILOT M
+      LEFT JOIN TB_IF_SERVER_ASSET_PILOT A ON M.MAP_TYPE_CD = 'SERVER' AND A.ASSET_ID = M.REF_ID
+      LEFT JOIN TB_IF_SERVER_GROUP_PILOT G ON M.MAP_TYPE_CD = 'GROUP' AND G.GROUP_ID = M.REF_ID
+      LEFT JOIN TB_IF_DB_INSTANCE_PILOT D ON M.MAP_TYPE_CD = 'DB' AND D.DB_ID = M.REF_ID
+     WHERE 1=1
+    <if test="appId != null and appId != ''">AND M.APP_ID = #{appId}</if>
+     ORDER BY M.MAP_TYPE_CD, M.MAP_ID
+  </select>
+
+  <select id="ifina2400S0_assetsByGroup" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT A.ASSET_ID AS ASSET_ID, A.ASSET_NAME AS ASSET_NAME, A.GROUP_ID AS GROUP_ID,
+           A.TECH_ROLE_CD AS TECH_ROLE_CD, A.ENV_CD AS ENV_CD, A.STATUS_CD AS STATUS_CD,
+           EP.ADDRESS AS IP_ADDR, EP.PORT_NO AS PORT_NO
+      FROM TB_IF_SERVER_ASSET_PILOT A
+      LEFT JOIN TB_IF_NETWORK_EP_PILOT EP
+        ON EP.ASSET_ID = A.ASSET_ID AND NVL(EP.PRIMARY_YN,'N') = 'Y'
+     WHERE A.GROUP_ID = #{groupId}
+       AND NVL(A.STATUS_CD,'') &lt;&gt; 'DELETED'
+     ORDER BY A.ASSET_ID
+  </select>
+
+  <select id="ifina2400S0_networkByApp" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT EP.ENDPOINT_ID AS ENDPOINT_ID, EP.ASSET_ID AS ASSET_ID, A.ASSET_NAME AS ASSET_NAME,
+           EP.ENDPOINT_TYPE_CD AS ENDPOINT_TYPE_CD, EP.ADDRESS AS ADDRESS, EP.PORT_NO AS PORT_NO,
+           EP.PROTOCOL_CD AS PROTOCOL_CD, EP.PRIMARY_YN AS PRIMARY_YN
+      FROM TB_IF_NETWORK_EP_PILOT EP
+      INNER JOIN TB_IF_SERVER_ASSET_PILOT A ON A.ASSET_ID = EP.ASSET_ID
+      INNER JOIN TB_IF_APP_MAP_PILOT M
+              ON ((M.MAP_TYPE_CD = 'SERVER' AND M.REF_ID = EP.ASSET_ID)
+               OR (M.MAP_TYPE_CD = 'GROUP' AND M.REF_ID = A.GROUP_ID))
+     WHERE M.APP_ID = #{appId}
+     ORDER BY EP.PRIMARY_YN DESC, EP.ENDPOINT_ID
+  </select>
+
+  <select id="ifina2400S0_asset" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT ASSET_ID AS ASSET_ID, ASSET_NAME AS ASSET_NAME, GROUP_ID AS GROUP_ID,
+           TECH_ROLE_CD AS TECH_ROLE_CD, ENV_CD AS ENV_CD, STATUS_CD AS STATUS_CD
+      FROM TB_IF_SERVER_ASSET_PILOT
+     WHERE ASSET_ID = #{assetId}
+  </select>
+
+  <select id="ifina2400S0_mw" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT DISTINCT MW.PRODUCT_NAME AS PRODUCT_NAME, MW.VERSION_NO AS VERSION_NO, MW.ASSET_ID AS ASSET_ID
+      FROM TB_IF_MW_INSTALL_PILOT MW
+      INNER JOIN TB_IF_APP_MAP_PILOT M
+              ON M.MAP_TYPE_CD = 'SERVER' AND M.REF_ID = MW.ASSET_ID
+     WHERE M.APP_ID = #{appId}
+     ORDER BY MW.PRODUCT_NAME
+  </select>
+
+  <select id="ifina2400S0_db" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT M.REF_ID AS DB_ID, NVL(D.DB_NAME, M.REF_ID) AS DB_NAME,
+           D.ENGINE_CD AS ENGINE_CD, D.VERSION_NO AS VERSION_NO
+      FROM TB_IF_APP_MAP_PILOT M
+      LEFT JOIN TB_IF_DB_INSTANCE_PILOT D ON D.DB_ID = M.REF_ID
+     WHERE M.APP_ID = #{appId} AND M.MAP_TYPE_CD = 'DB'
+     ORDER BY M.MAP_ID
+  </select>
+
+  <select id="ifina2400S0_session" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+    SELECT SYSTEM_ID AS SYSTEM_ID, BIZ_CD AS BIZ_CD, APP_ID AS APP_ID, ENV_CD AS ENV_CD,
+           STATUS_CD AS STATUS_CD, CHG_USER_ID AS CHG_USER_ID, CHG_DTM AS CHG_DTM, REMARK AS REMARK
+      FROM TB_IF_MAP_SESSION_PILOT
+     WHERE SYSTEM_ID = #{systemId}
+       AND BIZ_CD = #{bizCd}
+       AND APP_ID = #{appId}
+       AND ENV_CD = #{envCd}
+  </select>
+
+  <select id="ifina2400C0_exists" resultType="int" parameterType="java.util.HashMap">
+    SELECT COUNT(*) FROM TB_IF_APP_MAP_PILOT
+     WHERE APP_ID = #{appId} AND MAP_TYPE_CD = #{mapTypeCd} AND REF_ID = #{refId}
+  </select>
+
+  <insert id="ifina2400C0_insert" parameterType="java.util.HashMap">
+    INSERT INTO TB_IF_APP_MAP_PILOT (
+      MAP_ID, APP_ID, MAP_TYPE_CD, REF_ID, ROLE_CD, PRIMARY_YN, STATUS_CD, GROUP_ID, REMARK, REG_USER_ID, REG_DTM
+    ) VALUES (
+      #{mapId}, #{appId}, #{mapTypeCd}, #{refId}, #{roleCd}, #{primaryYn}, #{statusCd}, #{groupId}, #{remark}, #{regUserId}, #{regDtm}
+    )
+  </insert>
+
+  <delete id="ifina2400D0_delete" parameterType="java.util.HashMap">
+    DELETE FROM TB_IF_APP_MAP_PILOT
+     WHERE MAP_ID IN
+    <foreach collection="mapIdList" item="id" open="(" separator="," close=")">#{id}</foreach>
+  </delete>
+
+  <select id="ifina2400U0_sessionExists" resultType="int" parameterType="java.util.HashMap">
+    SELECT COUNT(*) FROM TB_IF_MAP_SESSION_PILOT
+     WHERE SYSTEM_ID = #{systemId} AND BIZ_CD = #{bizCd}
+       AND APP_ID = #{appId} AND ENV_CD = #{envCd}
+  </select>
+
+  <insert id="ifina2400U0_insertSession" parameterType="java.util.HashMap">
+    INSERT INTO TB_IF_MAP_SESSION_PILOT (
+      SYSTEM_ID, BIZ_CD, APP_ID, ENV_CD, STATUS_CD, CHG_USER_ID, CHG_DTM, REMARK
+    ) VALUES (
+      #{systemId}, #{bizCd}, #{appId}, #{envCd}, #{statusCd}, #{chgUserId}, #{chgDtm}, #{remark}
+    )
+  </insert>
+
+  <update id="ifina2400U0_updateSession" parameterType="java.util.HashMap">
+    UPDATE TB_IF_MAP_SESSION_PILOT
+       SET STATUS_CD = #{statusCd},
+           CHG_USER_ID = #{chgUserId},
+           CHG_DTM = #{chgDtm},
+           REMARK = #{remark}
+     WHERE SYSTEM_ID = #{systemId} AND BIZ_CD = #{bizCd}
+       AND APP_ID = #{appId} AND ENV_CD = #{envCd}
+  </update>
+
+  <select id="ifina2400U0_countMaps" resultType="int" parameterType="java.util.HashMap">
+    SELECT COUNT(*) FROM TB_IF_APP_MAP_PILOT
+     WHERE APP_ID = #{appId}
+       AND MAP_TYPE_CD IN ('GROUP', 'SERVER')
+  </select>
+
+  <select id="ifina2400U0_countPrimaryServer" resultType="int" parameterType="java.util.HashMap">
+    SELECT COUNT(*) FROM TB_IF_APP_MAP_PILOT
+     WHERE APP_ID = #{appId}
+       AND MAP_TYPE_CD = 'SERVER'
+       AND PRIMARY_YN = 'Y'
+  </select>
+</mapper>

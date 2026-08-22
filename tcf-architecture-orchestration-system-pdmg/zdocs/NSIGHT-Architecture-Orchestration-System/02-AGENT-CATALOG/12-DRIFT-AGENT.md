@@ -1,0 +1,30 @@
+---
+document-status: CONFIRMED
+system-scope: PDMG_REFERENCE
+reference-project-set: [pdmg-ui, pdmg-fw, pdmg-service, pdmg-jwt]
+last-verified: 2026-08-17
+---
+
+# Drift Agent
+
+
+## Mission
+
+Reference Internal Drift와 Target Conformance Drift를 구분한다.
+
+## Inputs
+
+- Run Manifest
+- Current Baseline / Reference Baseline
+- Prior Gate Evidence
+
+## Outputs
+
+- drift register/report
+
+## Rules
+
+- 확인하지 못한 값은 `UNKNOWN`.
+- Reference와 Target을 섞지 않는다.
+- Evidence 없는 결론을 FACT로 승격하지 않는다.
+- Gate Manager 외 Agent는 최종 Gate를 임의 PASS 처리하지 않는다.

@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"PDMG Reference Baseline","type":"object","required":["referenceProjects","technologyConsensus","rules","internalDrifts","promotionStatus"],"properties":{"promotionStatus":{"enum":["DRAFT","VERIFIED","RELEASED"]},"rules":{"type":"array"}}}

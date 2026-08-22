@@ -1,0 +1,355 @@
+{
+  "candidateId": "NSIGHT-ARCH-CANDIDATE-2026-08-19-P0-WAVE1",
+  "createdAt": "2026-08-18T15:48:31.904073+00:00",
+  "status": "HOLD",
+  "gate": {
+    "G80": "HOLD",
+    "HG90": "HOLD"
+  },
+  "releaseable": false,
+  "reason": "P0 static closure advanced, but runtime/human blockers remain.",
+  "blocking": [
+    "JWT key/rotation",
+    "Service TX duplicate 2 cases",
+    "RUN-TIMEOUT",
+    "runtime capacity",
+    "session/HA/DR",
+    "71 Server-JVM-WAR-route mapping",
+    "RUN-TRACE",
+    "rolling/rollback",
+    "migration cutover",
+    "human ADR sign-off"
+  ],
+  "files": [
+    {
+      "path": "00-EXECUTIVE-SUMMARY.md",
+      "size": 7967,
+      "sha256": "93a895e75d46d0d6a6d78a024ddd961fcd853b9718f8c7573a26566fc75f0d66"
+    },
+    {
+      "path": "01-SOURCE-EVIDENCE-INVENTORY.md",
+      "size": 4222,
+      "sha256": "f9b3da38b71a2c5cf3cdc6f9c029beb60601ddc3205b33f69a8ad14ded00ecc3"
+    },
+    {
+      "path": "02-CURRENT-BASELINE.md",
+      "size": 4340,
+      "sha256": "5548b81c01c48a1f17698d43fd972d7848eb0f41fc2d938e8e73e1fd48b6a790"
+    },
+    {
+      "path": "03-ARCHITECTURE-VISION-NFR.md",
+      "size": 3919,
+      "sha256": "f3d31694e0aabd9963e9ac621f14d37bae0dc843907b6f8ef60daddf226944d4"
+    },
+    {
+      "path": "04-BIG-PICTURE.md",
+      "size": 22331,
+      "sha256": "0565ae4ed108984017bc05e2819d52514893e85a899939b1ed7b1aaf22791273"
+    },
+    {
+      "path": "05-LOGICAL-ARCHITECTURE.md",
+      "size": 14156,
+      "sha256": "a3d5ee6c51199422a21d21dbb6df29b07a27dd2af977432759045fed3091712c"
+    },
+    {
+      "path": "06-PHYSICAL-ARCHITECTURE.md",
+      "size": 18744,
+      "sha256": "e8c2b8bb795ed01041dcde7600924a38f356c1ded1568b2d2e9dde171bc93c28"
+    },
+    {
+      "path": "07-APPLICATION-ARCHITECTURE.md",
+      "size": 7450,
+      "sha256": "2b4856c20e5df6f37bb7ab08a6b4b827bb9b181882de9b0213406463480d3c4a"
+    },
+    {
+      "path": "08-TCF-FRAMEWORK-ARCHITECTURE.md",
+      "size": 6974,
+      "sha256": "3e975f7a14c7b4972d05d019828b15c7131cd7ebcf85573ad1eb69986a5f8328"
+    },
+    {
+      "path": "09-TRANSACTION-TIMEOUT.md",
+      "size": 6353,
+      "sha256": "a8fb5745dd3f57af177f1eeb9600e38d497393542f5ba1ccd237e86eef083fed"
+    },
+    {
+      "path": "10-MESSAGE-CONTEXT-DTO.md",
+      "size": 3931,
+      "sha256": "971836d237e67cba2b35bb3c7c08e71bb4eed054b47cab2be0b9362c62672fd0"
+    },
+    {
+      "path": "11-VALIDATION-ERROR.md",
+      "size": 3716,
+      "sha256": "1ed98d29a5a7f3601f567cbf3dfe1b3896b939d30f84ee31cc6a6fcf7b05ee2a"
+    },
+    {
+      "path": "12-SECURITY-SSO-JWT-SESSION.md",
+      "size": 11559,
+      "sha256": "3ad729b985878064c0147a0e11ed75969c6d7d5b8eb30afc0dd68e586efbe672"
+    },
+    {
+      "path": "13-WEB-APACHE.md",
+      "size": 2413,
+      "sha256": "ef04588cda4d04138c5b26ef4c0926aac8bdca0f6fa45717f10e4266d7ba7573"
+    },
+    {
+      "path": "14-WAS-TOMCAT-JVM.md",
+      "size": 3154,
+      "sha256": "1a502312a518a645c7c50259a09548dc6cf0482e35623d976fafa2b8edcc029e"
+    },
+    {
+      "path": "15-SERVER-MASTER-INVENTORY.md",
+      "size": 4486,
+      "sha256": "781ffe6545a46d4b08235eb4f14e9030cef02542f5b92e7339febbeb5481bcd0"
+    },
+    {
+      "path": "16-CAPACITY-PERFORMANCE.md",
+      "size": 18269,
+      "sha256": "a7f26ce85ecde3a1f264cdb88255ff50240ad9d369c7b9c70b9c0e5ec409e658"
+    },
+    {
+      "path": "17-DATA-ARCHITECTURE.md",
+      "size": 6411,
+      "sha256": "089957c58be66767072b15429dd323b5771531e3912f5b14a872bd18f2c27903"
+    },
+    {
+      "path": "18-INTEGRATION-ARCHITECTURE.md",
+      "size": 7159,
+      "sha256": "ba13039d92d808477cc3c9d0283a7e0e655ab6cf1e22fbec719974a9d0796aa7"
+    },
+    {
+      "path": "19-DATA-MIGRATION.md",
+      "size": 5148,
+      "sha256": "b15cbb99c767871491dccfec6d7b49217e9c8b25547e988d0522a00d8dfd991d"
+    },
+    {
+      "path": "20-LOGGING-OBSERVABILITY.md",
+      "size": 5009,
+      "sha256": "8d0630243bb059a5004fb9ca2fa79224b75ff7be32a933b7668b876bf9a1421b"
+    },
+    {
+      "path": "21-OPERATION-CONTROL-OM.md",
+      "size": 5755,
+      "sha256": "1098397f95f16b9f433949badcd338a1510619fb5e20146b34470bde028ce5d0"
+    },
+    {
+      "path": "22-HA-DR.md",
+      "size": 5636,
+      "sha256": "ccd36f12f550cae715fa24890cee7661b16691a7c713eec0edf2b5d21d94863b"
+    },
+    {
+      "path": "23-CI-CD-DEPLOYMENT.md",
+      "size": 4021,
+      "sha256": "72caa8db9f80f28e8df209c35c809f2e8d66d5696b954c03fd95692b11789c8a"
+    },
+    {
+      "path": "24-UIUX-TRACEABILITY.md",
+      "size": 679,
+      "sha256": "8d1e8fcdaabc9bf6445c87d697efd32839360f71895c80b031f7e981a156cb0f"
+    },
+    {
+      "path": "25-HW-SW-DEPENDENCY.md",
+      "size": 1803,
+      "sha256": "501a8fd1153baa61d1c6f99fdc56b07d367b5cf4edc5eb0ce8a16f73ffe7d45e"
+    },
+    {
+      "path": "26-CONFIGURATION-BASELINE.md",
+      "size": 4370,
+      "sha256": "4650a2e80547f1edb33fe3abacb6189e4ddbcdae441117d3d01bbfb1193c46b0"
+    },
+    {
+      "path": "27-REQUIREMENT-TRACEABILITY.md",
+      "size": 1482,
+      "sha256": "cf93967e4e49b0f51bac4fbd5d9de43ce05b71fe6d82576b9295d3a8a8d885c9"
+    },
+    {
+      "path": "28-ARCHITECTURE-RULES.json",
+      "size": 24569,
+      "sha256": "4a1ac8b74f45930e74b2376ab7b3fcc52e2b935ef4e1016cf3e2c14fc414bd79"
+    },
+    {
+      "path": "28-ARCHITECTURE-RULES.md",
+      "size": 14825,
+      "sha256": "d91114b8f1a9d49cd38e70432f74ce6d85a674c71779cd8d1baab0f3bee46167"
+    },
+    {
+      "path": "29-ARCHITECTURE-MODEL-DRAFT.json",
+      "size": 174315,
+      "sha256": "787aea6d75f79d8b040c27b3f77a06ad10e5b2a4575d515f53ebd649ee105d37"
+    },
+    {
+      "path": "29-ARCHITECTURE-MODEL.md",
+      "size": 2396,
+      "sha256": "59fb8621b78a4f007441b67578169623ab0a16943d7b87001e87a44030d65e4e"
+    },
+    {
+      "path": "29-ARCHITECTURE-MODEL.schema.json",
+      "size": 1999,
+      "sha256": "9bc022dd5672bcf6646872f1c4eb56b4791500bb9a53a29234c89dbc8b8b23fb"
+    },
+    {
+      "path": "29-MODEL-VALIDATION-RESULT.json",
+      "size": 261,
+      "sha256": "b1570da310f6c37fb184f61eac5ffd368ce784aac2a368d7181e657f21387b57"
+    },
+    {
+      "path": "30-CONFORMANCE-RESULT.json",
+      "size": 3991,
+      "sha256": "582c5aeb9ece7580c9d9a53b0605adc6f9d78232f2ad0f02a90151579164546f"
+    },
+    {
+      "path": "30-CONFORMANCE-TEST.md",
+      "size": 3413,
+      "sha256": "09c936e19fce6e518c4a3d42ec56a8e295d42ac84b4b43d4fc510efef16303c3"
+    },
+    {
+      "path": "31-RUNTIME-EVIDENCE.md",
+      "size": 1800,
+      "sha256": "808ae7a801c1bb6b80d60bb067fd006def3e960552e5c81df131426ffa69f551"
+    },
+    {
+      "path": "32-DRIFT-REGISTER.json",
+      "size": 6071,
+      "sha256": "38e6508bd643bdee1485fd7fa1d54e447394131bb3f0fdf5888d210ddfc96c86"
+    },
+    {
+      "path": "32-DRIFT-REGISTER.md",
+      "size": 4132,
+      "sha256": "14b8815a2e74272f52d4fb1853955b36aa005fde79d8c3568bdea09c4a458fe4"
+    },
+    {
+      "path": "33-GAP-REGISTER.md",
+      "size": 2851,
+      "sha256": "7c6215eaf82ba3e06d5e488018fbb85fca4085841f6fc532f6147d5530097319"
+    },
+    {
+      "path": "34-RISK-REGISTER.md",
+      "size": 1768,
+      "sha256": "111a5438f460a7128e67e37df40c03258ce55cc066e823793d93fb481a78fd5a"
+    },
+    {
+      "path": "35-ADR-REGISTER.md",
+      "size": 1832,
+      "sha256": "2657308b4565f0abcd8c2b5786a952a3923018117b66d991e7aa1d54ab7d5da8"
+    },
+    {
+      "path": "36-OPEN-ISSUES.md",
+      "size": 1735,
+      "sha256": "9b16fc110806f1d40afa878b8600bbce5d0de08ef6c921aab1e2ecbd783482e5"
+    },
+    {
+      "path": "37-ARCHITECTURE-GATE.md",
+      "size": 12905,
+      "sha256": "41694af2c2988bd54cf34991cfd0a024a043e684386d109a52024e453bd549c9"
+    },
+    {
+      "path": "38-EXECUTION-ROADMAP.md",
+      "size": 1154,
+      "sha256": "d65ec926309c6dae99bf59c42965a7c44aaee54dc0ba061c9bdef7def676c229"
+    },
+    {
+      "path": "80-STATIC-SOURCE-SCAN.json",
+      "size": 306378,
+      "sha256": "a7239568d928d1f83ce7e751b2044af26d93a6cacc82330fd2f102216b003ecf"
+    },
+    {
+      "path": "90-HG90-HUMAN-GATE.md",
+      "size": 5785,
+      "sha256": "d2a84344e8fa01acac493dbd5c5355dbe85832832db8191e4949f758ab172948"
+    },
+    {
+      "path": "91-HG90-APPROVAL-CHECKLIST.md",
+      "size": 2579,
+      "sha256": "11c52f206699968cb8832d170ec4ad8af3c9637a5f5bf868fa9c90561cb0afe4"
+    },
+    {
+      "path": "92-P0-CLOSURE-MASTER.md",
+      "size": 1553,
+      "sha256": "ca1f699d362e54792814e7675895e01d86283f1a5cbf64f6a2a56c87d20a8f97"
+    },
+    {
+      "path": "93-P0-STATIC-EVIDENCE.md",
+      "size": 5360,
+      "sha256": "e8c0074a92cbeada1f3ec423e14719636a3597721a684eb42d487888d0e03870"
+    },
+    {
+      "path": "94-P0-RUNTIME-EXECUTION-PLAN.md",
+      "size": 2952,
+      "sha256": "46ca2dfe4b32942edd5dd7367fe4e07e062283e2c0c04c2fedcc21a6539c8972"
+    },
+    {
+      "path": "95-P0-ADR-DECISION-PACK.md",
+      "size": 2896,
+      "sha256": "fc6695d1de1fd69b718bf75034d3cd6336a8b6a379e0c57901066f38e12fb5b5"
+    },
+    {
+      "path": "96-P0-CLOSURE-MATRIX.json",
+      "size": 5227,
+      "sha256": "0a7338e4840743be950456398b231dfade7fd3cdf87221f02e871851c1d5e2af"
+    },
+    {
+      "path": "97-P0-EVIDENCE-REQUEST-PACK.md",
+      "size": 1084,
+      "sha256": "e0665d9ce6ec34200e95369d7ca861ebe8341ca768aa46defe0cb350adfcd201"
+    },
+    {
+      "path": "99-MASTER-ARCHITECTURE.md",
+      "size": 17810,
+      "sha256": "df6202a9816269458caff9ee5b357e860901ccf81e10b0b2d35aaf68b8c3ea05"
+    },
+    {
+      "path": "BASELINE-MANIFEST.json",
+      "size": 9540,
+      "sha256": "7621feb27a0ea8fbcd20eaa85d0620d94b212800e4f1de61e2cccaf80f44a83e"
+    },
+    {
+      "path": "G20-EXECUTION-RESULT.md",
+      "size": 871,
+      "sha256": "e99f58963057f58aa7176f7b07066767dd6e7303663559c031dd2341e1a03413"
+    },
+    {
+      "path": "G30-EXECUTION-RESULT.md",
+      "size": 1985,
+      "sha256": "6dedca3b0f5837cc6c03ac71498cffe312f3419d72e2b13283882931ff4f4271"
+    },
+    {
+      "path": "G40-EXECUTION-RESULT.md",
+      "size": 2538,
+      "sha256": "1a45f725599bf1ac34c45473e049b17a5be8fbd5e8cec63ea6b44e5efca267da"
+    },
+    {
+      "path": "G50-EXECUTION-RESULT.md",
+      "size": 3909,
+      "sha256": "27ccc7c81a2944df063c70bcbc72e220aad4a3f3939deccd7eeffad78d45da92"
+    },
+    {
+      "path": "G60-EXECUTION-RESULT.md",
+      "size": 2677,
+      "sha256": "7b82436bda1450c5b1041b4fa60d5987f38a298513ddd2be64307fcfd7e9c4a1"
+    },
+    {
+      "path": "G70-EXECUTION-RESULT.md",
+      "size": 3128,
+      "sha256": "591253adceb07b3e76ea77a6ff78eb9fbc28728895b70b87ef10c8afbb309fc1"
+    },
+    {
+      "path": "G80-EXECUTION-RESULT.md",
+      "size": 1933,
+      "sha256": "5b59a5f6fd816b8e9a74b707e2ff5a4c7e546cfbda5634cd010b0309e99929bd"
+    },
+    {
+      "path": "G80-MANIFEST.json",
+      "size": 1158,
+      "sha256": "18ba0bdb0d4cb1e5047ff160027146816db3be5ece70a412cc9524f70ddcc528"
+    },
+    {
+      "path": "HG90-EXECUTION-RESULT.md",
+      "size": 961,
+      "sha256": "a583fd58e6e840b58f296d629134dd7092502354e26415963d16846e52801790"
+    },
+    {
+      "path": "tools/validate_architecture_model.py",
+      "size": 2167,
+      "sha256": "74ccafffa8409812e644b6d29f7875b2c5b9e9ad060dec2543787d125753a483"
+    }
+  ]
+}

@@ -1,0 +1,320 @@
+{
+  "gates": {
+    "RG00": {
+      "gateId": "RG00",
+      "allowConditional": false,
+      "rules": [
+        {
+          "ruleId": "RG00-SOURCE",
+          "evaluator": "file_exists",
+          "path": "00-SOURCE/source-baseline.json",
+          "hard": true
+        },
+        {
+          "ruleId": "RG00-DOC",
+          "evaluator": "file_exists",
+          "path": "10-DOCUMENT/CURRENT-ARCHITECTURE.md",
+          "hard": true
+        }
+      ]
+    },
+    "RG10": {
+      "gateId": "RG10",
+      "allowConditional": true,
+      "rules": [
+        {
+          "ruleId": "RG10-DOC",
+          "evaluator": "file_exists",
+          "path": "10-DOCUMENT/CURRENT-ARCHITECTURE.md",
+          "hard": true
+        },
+        {
+          "ruleId": "RG10-SOURCE",
+          "evaluator": "file_exists",
+          "path": "00-SOURCE/SOURCE-BASELINE.md",
+          "hard": true
+        }
+      ]
+    },
+    "RG20": {
+      "gateId": "RG20",
+      "allowConditional": false,
+      "rules": [
+        {
+          "ruleId": "RG20-MODEL",
+          "evaluator": "file_exists",
+          "path": "20-MODEL/reference-baseline-draft.json",
+          "hard": true
+        },
+        {
+          "ruleId": "RG20-RULES",
+          "evaluator": "file_exists",
+          "path": "20-MODEL/reference-rules.json",
+          "hard": true
+        },
+        {
+          "ruleId": "RG20-SCHEMA",
+          "evaluator": "json_field_equals",
+          "path": "20-MODEL/schema-validation.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        }
+      ]
+    },
+    "RG30": {
+      "gateId": "RG30",
+      "allowConditional": false,
+      "rules": [
+        {
+          "ruleId": "RG30-RULE-CATALOG",
+          "evaluator": "file_exists",
+          "path": "30-CONFORMANCE/reference-rules.json",
+          "hard": true
+        },
+        {
+          "ruleId": "RG30-TRACE",
+          "evaluator": "file_exists",
+          "path": "00-SOURCE/traceability.json",
+          "hard": false
+        }
+      ]
+    },
+    "RG40": {
+      "gateId": "RG40",
+      "allowConditional": false,
+      "rules": [
+        {
+          "ruleId": "RG40-SELF-TEST",
+          "evaluator": "file_exists",
+          "path": "40-TEST/conformance-result.json",
+          "hard": true
+        },
+        {
+          "ruleId": "RG40-BUILD",
+          "evaluator": "json_field_equals",
+          "path": "40-TEST/build-result.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        },
+        {
+          "ruleId": "RG40-TEST",
+          "evaluator": "json_field_equals",
+          "path": "40-TEST/test-result.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        },
+        {
+          "ruleId": "RG40-SECURITY",
+          "evaluator": "json_field_equals",
+          "path": "40-TEST/security-result.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        },
+        {
+          "ruleId": "RG40-ARCH",
+          "evaluator": "json_field_equals",
+          "path": "40-TEST/architecture-result.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        },
+        {
+          "ruleId": "RG40-ARTIFACT",
+          "evaluator": "artifact_hash_present",
+          "path": "40-TEST/artifact-manifest.json",
+          "hard": true
+        }
+      ]
+    },
+    "RG50": {
+      "gateId": "RG50",
+      "allowConditional": false,
+      "rules": [
+        {
+          "ruleId": "RG50-DEPLOY",
+          "evaluator": "json_field_equals",
+          "path": "50-RUNTIME/deployment-evidence.json",
+          "field": "status",
+          "threshold": "DEPLOYED",
+          "hard": true
+        },
+        {
+          "ruleId": "RG50-RUNTIME",
+          "evaluator": "runtime_present",
+          "path": "50-RUNTIME/EVIDENCE-MANIFEST.json",
+          "hard": true
+        },
+        {
+          "ruleId": "RG50-ARTIFACT-MATCH",
+          "evaluator": "json_fields_equal",
+          "leftPath": "40-TEST/artifact-manifest.json",
+          "leftField": "artifactHash",
+          "rightPath": "50-RUNTIME/deployment-evidence.json",
+          "rightField": "artifactHash",
+          "hard": true
+        }
+      ]
+    },
+    "RG60": {
+      "gateId": "RG60",
+      "allowConditional": true,
+      "rules": [
+        {
+          "ruleId": "RG60-DRIFT-REGISTER",
+          "evaluator": "file_exists",
+          "path": "60-DRIFT/DRIFT-REGISTER.json",
+          "hard": true
+        }
+      ]
+    },
+    "RG70": {
+      "gateId": "RG70",
+      "allowConditional": true,
+      "rules": [
+        {
+          "ruleId": "RG70-GAP-REGISTER",
+          "evaluator": "file_exists",
+          "path": "70-GAP-ADR/GAP-REGISTER.json",
+          "hard": true
+        }
+      ]
+    },
+    "RG80": {
+      "gateId": "RG80",
+      "allowConditional": false,
+      "rules": [
+        {
+          "ruleId": "RG80-APPROVAL",
+          "evaluator": "approval_register_valid",
+          "path": "80-APPROVAL/REQUIRED-APPROVALS.json",
+          "hard": true,
+          "approvalsDir": "80-APPROVAL",
+          "minRequired": 1
+        }
+      ]
+    },
+    "RHG90": {
+      "gateId": "RHG90",
+      "allowConditional": false,
+      "rules": [
+        {
+          "ruleId": "RHG90-DOCUMENT",
+          "evaluator": "file_exists",
+          "path": "10-DOCUMENT/CURRENT-ARCHITECTURE.md",
+          "hard": true
+        },
+        {
+          "ruleId": "RHG90-MODEL",
+          "evaluator": "file_exists",
+          "path": "20-MODEL/reference-baseline-draft.json",
+          "hard": true
+        },
+        {
+          "ruleId": "RHG90-SCHEMA",
+          "evaluator": "json_field_equals",
+          "path": "20-MODEL/schema-validation.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        },
+        {
+          "ruleId": "RHG90-MODEL-SOURCE",
+          "evaluator": "file_exists",
+          "path": "00-SOURCE/traceability.json",
+          "hard": true
+        },
+        {
+          "ruleId": "RHG90-RULES",
+          "evaluator": "file_exists",
+          "path": "30-CONFORMANCE/reference-rules.json",
+          "hard": true
+        },
+        {
+          "ruleId": "RHG90-BUILD",
+          "evaluator": "json_field_equals",
+          "path": "40-TEST/build-result.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        },
+        {
+          "ruleId": "RHG90-TEST",
+          "evaluator": "json_field_equals",
+          "path": "40-TEST/test-result.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        },
+        {
+          "ruleId": "RHG90-SECURITY",
+          "evaluator": "json_field_equals",
+          "path": "40-TEST/security-result.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        },
+        {
+          "ruleId": "RHG90-ARCH",
+          "evaluator": "json_field_equals",
+          "path": "40-TEST/architecture-result.json",
+          "field": "exitCode",
+          "threshold": 0,
+          "hard": true
+        },
+        {
+          "ruleId": "RHG90-ARTIFACT-HASH",
+          "evaluator": "artifact_hash_present",
+          "path": "40-TEST/artifact-manifest.json",
+          "hard": true
+        },
+        {
+          "ruleId": "RHG90-DEPLOY",
+          "evaluator": "json_field_equals",
+          "path": "50-RUNTIME/deployment-evidence.json",
+          "field": "status",
+          "threshold": "DEPLOYED",
+          "hard": true
+        },
+        {
+          "ruleId": "RHG90-ARTIFACT-MATCH",
+          "evaluator": "json_fields_equal",
+          "leftPath": "40-TEST/artifact-manifest.json",
+          "leftField": "artifactHash",
+          "rightPath": "50-RUNTIME/deployment-evidence.json",
+          "rightField": "artifactHash",
+          "hard": true
+        },
+        {
+          "ruleId": "RHG90-RUNTIME",
+          "evaluator": "runtime_present",
+          "path": "50-RUNTIME/EVIDENCE-MANIFEST.json",
+          "hard": true
+        },
+        {
+          "ruleId": "RHG90-CRITICAL-DRIFT",
+          "evaluator": "critical_open_zero",
+          "path": "60-DRIFT/DRIFT-REGISTER.json",
+          "hard": true
+        },
+        {
+          "ruleId": "RHG90-CRITICAL-GAP",
+          "evaluator": "critical_open_zero",
+          "path": "70-GAP-ADR/GAP-REGISTER.json",
+          "hard": true
+        },
+        {
+          "ruleId": "RHG90-APPROVAL",
+          "evaluator": "approval_register_valid",
+          "path": "80-APPROVAL/REQUIRED-APPROVALS.json",
+          "hard": true,
+          "approvalsDir": "80-APPROVAL",
+          "minRequired": 1
+        }
+      ]
+    }
+  }
+}

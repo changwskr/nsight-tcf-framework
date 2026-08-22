@@ -1,0 +1,43 @@
+project:
+  name: "농협 상호금융 NSIGHT"
+  baselineDate: ""
+  repository: ""
+  branch: ""
+  commit: ""
+
+phase:
+  current: "A00"
+  status: "NOT_STARTED"
+
+agents:
+  - ArchitectureMasterAgent
+  - BaselineAgent
+  - RequirementAgent
+  - BusinessDomainAgent
+  - ApplicationArchitectureAgent
+  - TcfArchitectureAgent
+  - DataArchitectureAgent
+  - IntegrationArchitectureAgent
+  - SecurityArchitectureAgent
+  - InfrastructureArchitectureAgent
+  - CapacityPerformanceAgent
+  - DevOpsArchitectureAgent
+  - OperationsArchitectureAgent
+  - ArchitectureDecisionAgent
+  - TraceabilityAgent
+  - ArchitectureValidationAgent
+  - DocumentationAgent
+
+facts: []
+documents: []
+inferences: []
+proposals: []
+decisions: []
+gaps: []
+risks: []
+technicalDebt: []
+exceptions: []
+pendingQuestions: []
+gates: []
+artifacts: []
+evidences: []

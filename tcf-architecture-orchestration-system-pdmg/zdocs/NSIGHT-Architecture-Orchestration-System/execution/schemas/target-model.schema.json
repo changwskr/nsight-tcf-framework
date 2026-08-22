@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"Target Source Model","type":"object","required":["repositoryRoot","projects"],"properties":{"repositoryRoot":{"type":"string"},"projects":{"type":"array","items":{"type":"object","required":["name","technology","serviceIdOwners","relations","serviceTraces","tables"]}}}}

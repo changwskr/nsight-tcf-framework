@@ -1,0 +1,28 @@
+{
+  "adr_id": "ADR-TMO-001",
+  "title": "Timeout Execution / Cancellation Model",
+  "decision": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "conditions": [],
+  "comment": null,
+  "approval_state": "DRAFT_NOT_APPROVED",
+  "recommended_decision": "APPROVE",
+  "readiness": "READY_FOR_HUMAN_DECISION",
+  "required_approver": "Framework Owner + DBA + Application Architect",
+  "runtime_dependency": [
+    "RUN-TIMEOUT",
+    "RUN-SLOWSQL"
+  ],
+  "recommendation": "Online Timeout은 Deadline/응답통제 Owner로 두고 Thread.interrupt를 DB rollback 보장수단으로 간주하지 않는다. DB Query < TX < Online < Client 순서를 강제한다.",
+  "prerequisites": [
+    "Timeout policy approval",
+    "controlled slow SQL/fault fixture"
+  ],
+  "closure": [
+    "late_commit=0",
+    "connection_return=true",
+    "context leak=0"
+  ]
+}

@@ -2,9 +2,9 @@
   "version": "1.1",
   "title": "NSIGHT TCF 문서 라이브러리",
   "description": "nsight-tcf-framework 저장소 전체 마크다운 카탈로그",
-  "generatedAt": "2026-08-11T12:07:11.541Z",
+  "generatedAt": "2026-08-16T12:12:53.634Z",
   "repoRoot": "nsight-tcf-framework",
-  "total": 3835,
+  "total": 4218,
   "corpora": [
     {
       "id": "help-meta",
@@ -157,7 +157,7 @@
       "order": 12,
       "meta": "meta/module-readme-개요.md",
       "metaDocId": "meta-module-readme",
-      "count": 48
+      "count": 50
     },
     {
       "id": "infra",
@@ -194,7 +194,7 @@
       "order": 99,
       "meta": "meta/root-개요.md",
       "metaDocId": "meta-root",
-      "count": 2533
+      "count": 2914
     }
   ],
   "featured": [
@@ -348,6 +348,482 @@
       "title": "bootRun",
       "summary": "NSIGHT 마케팅 플랫폼 Product (PD) 업무 서비스입니다. 모든 거래는 TCF 파이프라인(`POST /online` 또는 `POST /pd/online`)을 통해 처리됩니다.",
       "module": "pd-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--AGENTS",
+      "corpus": "root",
+      "source": "pdmg-eos/AGENTS.md",
+      "title": "pdmg-eos Agent",
+      "summary": "EOS 자원관리 모듈 작업 시:",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--README",
+      "corpus": "module-readme",
+      "source": "pdmg-eos/README.md",
+      "title": "PDMG EOS (`pdmg-eos`)",
+      "summary": "EOL/EOS(수명주기) 업무용 Spring Boot 애플리케이션입니다.",
+      "module": "pdmg-eos",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--00-EOS-NAMING",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/00.EOS-NAMING.md",
+      "title": "PDMG EOS 네이밍",
+      "summary": "`pdmg-service`의 MG 규칙을 EOS 도메인에 맞춘 요약입니다.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--AGENT",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/AGENT.md",
+      "title": "EOS RESOURCE MANAGEMENT — AGENT.md",
+      "summary": "> 농협상호금융 정보계 EOS 자원관리 시스템",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--EOS-RULES",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/EOS-RULES.md",
+      "title": "EOS-RULES.md",
+      "summary": "> 농협상호금융 정보계 EOS 자원관리 시스템",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--analysys--00-분석및요건_종합정리",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/analysys/00.분석및요건_종합정리.md",
+      "title": "EOS 자원관리 — 분석·요건 종합 정리",
+      "summary": "> 근거 문서",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--analysys--EOS_자원관리_분석_요구사항_도출_마스터프롬프트",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/analysys/EOS_자원관리_분석_요구사항_도출_마스터프롬프트.md",
+      "title": "농협상호금융 정보계 EOS 자원관리 시스템",
+      "summary": "이 프롬프트는 다음 원본 Excel을 분석하여 농협상호금융 정보계 EOS 자원관리 시스템 요구사항 정의서를 작성하기 위한 실행 프롬프트다.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--analysys--분석및요건정의",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/analysys/분석및요건정의.md",
+      "title": "농협상호금융 정보계 EOS 자원관리 시스템 요구사항 정의서",
+      "summary": "본 요구사항은 `NH_상호금융정보계_EOS_자원관리_샘플양식.xlsx`의 다음 8개 관리영역을 분석하여 도출하였다.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--design--EOS_자원관리_데이터베이스_설계서_작성_마스터프롬프트",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/design/EOS_자원관리_데이터베이스_설계서_작성_마스터프롬프트.md",
+      "title": "농협상호금융 정보계 EOS 자원관리 시스템",
+      "summary": "이 프롬프트는 농협상호금융 정보계 EOS 자원관리 시스템의 요구사항 정의서와 화면설계서를 입력으로 받아,",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--design--EOS_자원관리_서비스_설계서_작성_마스터프롬프트",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/design/EOS_자원관리_서비스_설계서_작성_마스터프롬프트.md",
+      "title": "농협상호금융 정보계 EOS 자원관리 시스템",
+      "summary": "이 프롬프트는 농협상호금융 정보계 EOS 자원관리 시스템의",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--design--EOS_자원관리_화면설계서_작성_마스터프롬프트",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/design/EOS_자원관리_화면설계서_작성_마스터프롬프트.md",
+      "title": "농협상호금융 정보계 EOS 자원관리 시스템",
+      "summary": "이 프롬프트는 농협상호금융 정보계의 EOS 자원관리 시스템 요구사항과",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--00-AGENT-STATUS",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/00-AGENT-STATUS.md",
+      "title": "EOS Agent Status",
+      "summary": "> 기준: `docs/eos/` · 자동관리 파이프라인",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--01-requirements--EOS-GATE-R",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/01-requirements/EOS-GATE-R.md",
+      "title": "EOS GATE-R — Requirements Quality Gate",
+      "summary": "> 기준: `AGENT.md` §15 M03",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--01-requirements--EOS-REQUIREMENTS",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/01-requirements/EOS-REQUIREMENTS.md",
+      "title": "EOS-REQUIREMENTS (인덱스)",
+      "summary": "요구사항 본문은 분석 단계에서 이미 작성되어 있다. Agent 산출물 트랙에서는 아래를 공식 참조로 고정한다.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--02-screen--EOS-GATE-U",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/02-screen/EOS-GATE-U.md",
+      "title": "EOS GATE-U — Screen Design Gate",
+      "summary": "> Agent Step: M06",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--02-screen--EOS-NAVIGATION",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/02-screen/EOS-NAVIGATION.md",
+      "title": "EOS-NAVIGATION — 화면 정보구조 (M04)",
+      "summary": "> 모드: `SCREEN_DESIGN`",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--02-screen--EOS-SCREEN-DESIGN",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/02-screen/EOS-SCREEN-DESIGN.md",
+      "title": "EOS-SCREEN-DESIGN — 화면 상세설계 (M05)",
+      "summary": "> 모드: `SCREEN_DESIGN`",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--03-data--EOS-GATE-D",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/03-data/EOS-GATE-D.md",
+      "title": "EOS GATE-D — Data Design Gate",
+      "summary": "> Agent Step: M09",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--03-data--EOS-LOGICAL-ERD",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/03-data/EOS-LOGICAL-ERD.md",
+      "title": "EOS Logical Data Model (M07)",
+      "summary": "> Agent Step: M07",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--03-data--EOS-PHYSICAL-ERD",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/03-data/EOS-PHYSICAL-ERD.md",
+      "title": "EOS Physical Data Model (M08)",
+      "summary": "> Agent Step: M08",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--04-service--EOS-GATE-S",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/04-service/EOS-GATE-S.md",
+      "title": "EOS GATE-S — Service Design Gate",
+      "summary": "> Agent Step: M12 (Gate)",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--04-service--EOS-SERVICE-DESIGN",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/04-service/EOS-SERVICE-DESIGN.md",
+      "title": "EOS Service Design (M10/M11 초안)",
+      "summary": "> 매트릭스: [EOS-SERVICE-MATRIX.md](./EOS-SERVICE-MATRIX.md)",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--04-service--EOS-SERVICE-DTO",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/04-service/EOS-SERVICE-DTO.md",
+      "title": "EOS Service DTO Spec (M11)",
+      "summary": "> 패키지: `nhnis.eos.co.a.dto`",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--04-service--EOS-SERVICE-MATRIX",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/04-service/EOS-SERVICE-MATRIX.md",
+      "title": "EOS Service Matrix (M10)",
+      "summary": "> Agent Step: M10 — Use Case / ServiceId 식별",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--05-adr--ADR-001-open-decisions",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/05-adr/ADR-001-open-decisions.md",
+      "title": "ADR-001 — Open Design Decisions (EOS P0)",
+      "summary": "> 상태: Proposed",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--06-test--EOS-GATE-RUN",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/06-test/EOS-GATE-RUN.md",
+      "title": "EOS GATE-RUN — Runtime Gate",
+      "summary": "> 판정일: 2026-08-16",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--06-test--EOS-GATE-T",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/06-test/EOS-GATE-T.md",
+      "title": "EOS GATE-T — Test Gate",
+      "summary": "> 판정일: 2026-08-16",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--07-implementation--00-reference-selection",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/07-implementation/00-reference-selection.md",
+      "title": "EOS Reference Selection (M14)",
+      "summary": "> Agent Step: M14",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--07-implementation--00-source-analysis",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/07-implementation/00-source-analysis.md",
+      "title": "EOS Source Analysis (M13)",
+      "summary": "> Agent Step: M13",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--07-implementation--01-gap-analysis",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/07-implementation/01-gap-analysis.md",
+      "title": "EOS Design–Source GAP (M15)",
+      "summary": "> Agent Step: M15",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--07-implementation--02-implementation-plan",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/07-implementation/02-implementation-plan.md",
+      "title": "EOS Implementation Plan (M16)",
+      "summary": "> Agent Step: M16",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--07-implementation--03-GATE-I",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/07-implementation/03-GATE-I.md",
+      "title": "EOS GATE-I — Implementation Gate (초안)",
+      "summary": "> 판정일: 2026-08-16",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--eos--README",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/eos/README.md",
+      "title": "docs / eos 산출물 README",
+      "summary": "`AGENT.md` §59 디렉터리. 업무 내용의 1차 근거는 상위 `analysys/`, 설계 작성 방식의 근거는 상위 `design/` 마스터프롬프트이다.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-eos--docs--implementation--EOS_자원관리_구현_마스터프롬프트",
+      "corpus": "root",
+      "source": "pdmg-eos/docs/implementation/EOS_자원관리_구현_마스터프롬프트.md",
+      "title": "농협상호금융 정보계 EOS 자원관리 시스템",
+      "summary": "이 프롬프트는 농협상호금융 정보계 EOS 자원관리 시스템을",
+      "module": null,
       "audience": [
         "developer"
       ],
@@ -594,6 +1070,118 @@
       "priority": 0
     },
     {
+      "id": "pdmg-infra--README",
+      "corpus": "module-readme",
+      "source": "pdmg-infra/README.md",
+      "title": "PDMG Infra (`pdmg-infra`)",
+      "summary": "인프라/운영 보조용 Spring Boot 애플리케이션입니다.",
+      "module": "pdmg-infra",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-infra--zdocs--analysys--은행_정보계_차세대_서버군_분류_및_조사기준",
+      "corpus": "root",
+      "source": "pdmg-infra/zdocs/analysys/은행_정보계_차세대_서버군_분류_및_조사기준.md",
+      "title": "은행 정보계 차세대 제안용 서버군 분류 및 인프라 조사 기준서",
+      "summary": "은행 정보계 차세대를 제안할 때 서버를 단순히 `서버명 / CPU / Memory / OS / IP` 수준으로 조사하면 목표 아키텍처를 설계하기 어렵다.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-infra--zdocs--analysys--은행_정보계_차세대_인프라_정보관리_요구사항정의서",
+      "corpus": "root",
+      "source": "pdmg-infra/zdocs/analysys/은행_정보계_차세대_인프라_정보관리_요구사항정의서.md",
+      "title": "은행 정보계 차세대 인프라 정보관리 요구사항정의서",
+      "summary": "---",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-infra--zdocs--analysys--인프라관리대장--db--README",
+      "corpus": "root",
+      "source": "pdmg-infra/zdocs/analysys/인프라관리대장/db/README.md",
+      "title": "은행 정보계 서버군 조사 — 데이터베이스 설계",
+      "summary": "원천 문서: [`../은행_정보계_차세대_서버군_분류_및_조사기준.md`](../은행_정보계_차세대_서버군_분류_및_조사기준.md)",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-infra--zdocs--design--00-NSIGHT-마케팅-업무-구분-정보",
+      "corpus": "root",
+      "source": "pdmg-infra/zdocs/design/00.NSIGHT 마케팅 업무 구분 정보.md",
+      "title": "00.NSIGHT 마케팅 업무 구분 정보",
+      "summary": "",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-infra--zdocs--design--은행_정보계_차세대_인프라_정보관리_데이터베이스_설계서",
+      "corpus": "root",
+      "source": "pdmg-infra/zdocs/design/은행_정보계_차세대_인프라_정보관리_데이터베이스_설계서.md",
+      "title": "은행 정보계 차세대 인프라 정보관리 데이터베이스 설계서",
+      "summary": "---",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-infra--zdocs--design--은행_정보계_차세대_인프라_정보관리_서비스_설계서",
+      "corpus": "root",
+      "source": "pdmg-infra/zdocs/design/은행_정보계_차세대_인프라_정보관리_서비스_설계서.md",
+      "title": "은행 정보계 차세대 인프라 정보관리 서비스 설계서",
+      "summary": "---",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-infra--zdocs--design--은행_정보계_차세대_인프라_정보관리_화면설계서",
+      "corpus": "root",
+      "source": "pdmg-infra/zdocs/design/은행_정보계_차세대_인프라_정보관리_화면설계서.md",
+      "title": "은행 정보계 차세대 인프라 정보관리 화면 설계서",
+      "summary": "> 기준: `pdmg_infra` MySQL 8.0+ 스키마, 분류 코드/품질 Gate/체크리스트/조사 템플릿 Seed",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
       "id": "pdmg-jwt--README",
       "corpus": "module-readme",
       "source": "pdmg-jwt/README.md",
@@ -669,6 +1257,20 @@
       "source": "pdmg-service/docs/00.MG-NAMING_CONVENTION.md",
       "title": "PDMG Naming Convention Guide",
       "summary": "농협 상호금융 PDMG 명명 규칙. 코드 분류는 00.NSIGHT 애플리케이션 코드 분류표를 따르고, 컴포넌트 타입↔패키지↔네이밍·Handler/Facade/Controller/Service/DAO/DTO·MyBatis SQL ID 규칙을 정의한다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--00-NSIGHT-마케팅-업무-구분-정보",
+      "corpus": "root",
+      "source": "pdmg-service/docs/00.NSIGHT 마케팅 업무 구분 정보.md",
+      "title": "00.NSIGHT 마케팅 업무 구분 정보",
+      "summary": "",
       "module": "pdmg-service",
       "audience": [
         "developer"
@@ -1924,11 +2526,445 @@
       "priority": 0
     },
     {
+      "id": "pdmg-service--docs--46-전체-아키텍처-구조",
+      "corpus": "root",
+      "source": "pdmg-service/docs/46.전체 아키텍처 구조.md",
+      "title": "46.전체 아키텍처 구조",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
       "id": "pdmg-service--docs--46-토큰",
       "corpus": "root",
       "source": "pdmg-service/docs/46.토큰.md",
       "title": "46.토큰",
       "summary": "RSA 개인키(비대칭) 로 서명합니다. 공유 `jwt.secret`(HS256)이 아닙니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--47-pdmg-jwt-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/47.pdmg-jwt 아키텍처 다이어그램.md",
+      "title": "47.pdmg jwt 아키텍처 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--48-pdmg-fw-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/48.pdmg-fw 아키텍처 다이어그램.md",
+      "title": "48.pdmg fw 아키텍처 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--49-pdmg-service-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/49.pdmg-service 아키텍처 다이어그램.md",
+      "title": "49.pdmg service 아키텍처 다이어그램",
+      "summary": "",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--50-기술스택-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/50.기술스택 다이어그램.md",
+      "title": "50.기술스택 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--51-pdmg-ui-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/51.pdmg-ui 아키텍처 다이어그램.md",
+      "title": "51.pdmg ui 아키텍처 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--52-jwt-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/52.jwt 아키텍처 다이어그램.md",
+      "title": "JWT 관련 전체 흐름 텍스트 아키텍처 다이어그램",
+      "summary": "┌──────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--53-네이밍-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/53.네이밍 아키텍처 다이어그램.md",
+      "title": "PDMG Naming 텍스트 다이어그램",
+      "summary": "기준 문서는 [MG-NAMING_CONVENTION.md](</C:/Programming(23-08-15)/nsight-tcf-framework-codex/pdmg-service/docs/MG-NAMING_CONVENTION.md>)입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--54-http호출-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/54.http호출 다이어그램.md",
+      "title": "PDMG HTTP 호출 텍스트 다이어그램",
+      "summary": "┌──────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--55-시스템선후처리다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/55.시스템선후처리다이어그램.md",
+      "title": "시스템 선·후처리 텍스트 다이어그램",
+      "summary": "┌───────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--56-TCF-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/56.TCF 아키텍처 다이어그램.md",
+      "title": "TCF 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--57-Controller-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/57.Controller 다이어그램.md",
+      "title": "Controller 아키텍처 텍스트 다이어그램",
+      "summary": "PDMG에는 두 가지 Controller 진입 방식이 있습니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--58-업무선후처리-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/58.업무선후처리 다이어그램.md",
+      "title": "업무 선·후처리 아키텍처 텍스트 다이어그램",
+      "summary": "현재 기준으로 `BizPrePostAspect`의 포인트컷은 Business Service 메서드입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--59--Service-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/59. Service 다이어그램.md",
+      "title": "Business Service 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--60-DAO-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/60.DAO 다이어그램.md",
+      "title": "DAO 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--61-Service-ID-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/61.Service ID 아키텍처 다이어그램.md",
+      "title": "Service ID 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────┬──────────┬──────────┬────────────┬──────────┬──────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--62-화면번호-serviceid-controller-service-관계-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/62.화면번호-serviceid-controller-service 관계 다이어그램.md",
+      "title": "화면번호–Service ID–Controller–Service–DAO–Mapper 관계 다이어그램",
+      "summary": "화면번호 / 프로그램 ID",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--63-DTO-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/63.DTO 다이어그램.md",
+      "title": "DTO 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--64-Exception-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/64.Exception 다이어그램.md",
+      "title": "예외처리 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--65-트랜잭션-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/65.트랜잭션 다이어그램.md",
+      "title": "트랜잭션 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--66-TCF-OFF-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/66.TCF OFF 다이어그램.md",
+      "title": "TCF OFF 아키텍처 텍스트 다이어그램",
+      "summary": "설정:",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--67-로그인-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/67.로그인 아키텍처 다이어그램.md",
+      "title": "로그인 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--68-트랜잭션-이미지로그-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/68.트랜잭션 이미지로그 다이어그램.md",
+      "title": "트랜잭션 이미지로그 아키텍처 텍스트 다이어그램",
+      "summary": "이미지로그는 화면 이미지 파일을 저장하는 기능이라기보다, 온라인 거래의 요청·응답 전문과 처리 결과를 `TB_FW_IMAGE_LOG`에 기록하고 관리하는 기능입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--69-GUID-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/69.GUID 아키텍처 다이어그램.md",
+      "title": "GUID 아키텍처 텍스트 다이어그램",
+      "summary": "┌────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--70-Service-Context-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/70.Service Context 다이어그램.md",
+      "title": "Service Context 아키텍처 텍스트 다이어그램",
+      "summary": "┌────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--71-Transaction-Manager",
+      "corpus": "root",
+      "source": "pdmg-service/docs/71.Transaction Manager.md",
+      "title": "Transaction Manager 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--72-Spring-환경-구성-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/72.Spring 환경 구성 다이어그램.md",
+      "title": "72.Spring 환경 구성 다이어그램",
+      "summary": "",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--73-pdmg--패키지-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/73.pdmg  패키지 다이어그램.md",
+      "title": "PDMG 패키지 아키텍처 텍스트 다이어그램",
+      "summary": "nsight-tcf-framework-codex",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--74-PDMG-클린-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/74.PDMG 클린 아키텍처 다이어그램.md",
+      "title": "PDMG 클린 아키텍처 텍스트 다이어그램",
+      "summary": "현재 PDMG는 완전한 정통 Clean Architecture라기보다는 `TCF + Layered Architecture + Clean Architecture 원칙`을 결합한 구조입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--75-PDMG-컴포넌트-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/75.PDMG 컴포넌트 다이어그램.md",
+      "title": "PDMG 컴포넌트 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--76-페이징-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/76.페이징 아키텍처 다이어그램.md",
+      "title": "76.페이징 아키텍처 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────┐",
       "module": "pdmg-service",
       "audience": [
         "developer"
@@ -1971,6 +3007,4262 @@
       "source": "pdmg-service/docs/MG-NAMING_CONVENTION.md",
       "title": "PDMG Naming Convention Guide",
       "summary": "농협 상호금융 PDMG 명명 규칙. 애플리케이션 컴포넌트 타입↔패키지↔네이밍 매핑, Handler/Facade/Controller/Service/DAO/DTO, MyBatis SQL ID 규칙을 정의한다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--00-집필요청-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/00.집필요청-프롬프트.md",
+      "title": "Codex 장문 기술서 집필 마스터 프롬프트",
+      "summary": "너는 단순한 문서 요약 AI가 아니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--01-시작-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/01.시작 프롬프트.md",
+      "title": "01.시작 프롬프트",
+      "summary": "이 프로젝트는 「PDMG 애플리케이션 아키텍처와 개발 가이드」 집필 프로젝트다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--02-1장-집필지시",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/02.1장 집필지시.md",
+      "title": "02.1장 집필지시",
+      "summary": "",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--03-1장-집필점검",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/03.1장 집필점검.md",
+      "title": "03.1장 집필점검",
+      "summary": "방금 작성한 1장을 집필자 관점이 아니라",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--04-2장이후-집필지시-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/04.2장이후 집필지시 프롬프트.md",
+      "title": "04.2장이후 집필지시 프롬프트",
+      "summary": "2장을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--05-3장-집필지시-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/05.3장 집필지시 프롬프트.md",
+      "title": "05.3장 집필지시 프롬프트",
+      "summary": "3장을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--06-4장지시프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/06.4장지시프롬프트.md",
+      "title": "06.4장지시프롬프트",
+      "summary": "4장을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--07-5장",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/07.5장.md",
+      "title": "5장 집필 지시 — 네이밍 규칙",
+      "summary": "5장을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--08-6장",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/08.6장.md",
+      "title": "6장 집필 지시 — 패키지와 프로젝트 구조",
+      "summary": "6장을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--09-Filter와-Spring-MVC-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/09-Filter와-Spring-MVC-집필-프롬프트.md",
+      "title": "9장 집필 프롬프트 — Filter와 Spring MVC",
+      "summary": "9장 「Filter와 Spring MVC」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--09-7장",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/09.7장.md",
+      "title": "7장 집필 지시 — 도메인 정의와 호출 방식",
+      "summary": "7장을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--10-Interceptor와-시스템-선처리-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/10-Interceptor와-시스템-선처리-집필-프롬프트.md",
+      "title": "10장 집필 프롬프트 — Interceptor와 시스템 선처리",
+      "summary": "10장 「Interceptor와 시스템 선처리」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--10-8장",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/10.8장.md",
+      "title": "8장 집필 지시 — HTTP 요청과 표준 전문",
+      "summary": "8장을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--11-ServiceContext와-GUID-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/11-ServiceContext와-GUID-집필-프롬프트.md",
+      "title": "11장 집필 프롬프트 — ServiceContext와 GUID",
+      "summary": "11장 「ServiceContext와 GUID」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--12-TCF-온라인-거래-프레임워크-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/12-TCF-온라인-거래-프레임워크-집필-프롬프트.md",
+      "title": "12장 집필 프롬프트 — TCF 온라인 거래 프레임워크",
+      "summary": "12장 「TCF 온라인 거래 프레임워크」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--13-TCF-OFF-호환-구조-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/13-TCF-OFF-호환-구조-집필-프롬프트.md",
+      "title": "13장 집필 프롬프트 — TCF OFF 호환 구조",
+      "summary": "13장 「TCF OFF 호환 구조」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--14-Handler와-Controller-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/14-Handler와-Controller-집필-프롬프트.md",
+      "title": "14장 집필 프롬프트 — Handler와 Controller",
+      "summary": "14장 「Handler와 Controller」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--15-Business-Facade-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/15-Business-Facade-집필-프롬프트.md",
+      "title": "15장 집필 프롬프트 — Business Facade",
+      "summary": "15장 「Business Facade」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--16-업무-선후처리-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/16-업무-선후처리-집필-프롬프트.md",
+      "title": "16장 집필 프롬프트 — 업무 선후처리",
+      "summary": "16장 「업무 선후처리」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--17-Business-Service와-Rule-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/17-Business-Service와-Rule-집필-프롬프트.md",
+      "title": "17장 집필 프롬프트 — Business Service와 Rule",
+      "summary": "17장 「Business Service와 Rule」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--18-DTO와-데이터-계약-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/18-DTO와-데이터-계약-집필-프롬프트.md",
+      "title": "18장 집필 프롬프트 — DTO와 데이터 계약",
+      "summary": "18장 「DTO와 데이터 계약」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--19-DAO와-MyBatis-Mapper-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/19-DAO와-MyBatis-Mapper-집필-프롬프트.md",
+      "title": "19장 집필 프롬프트 — DAO와 MyBatis Mapper",
+      "summary": "19장 「DAO와 MyBatis Mapper」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--20-대용량-조회와-페이징-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/20-대용량-조회와-페이징-집필-프롬프트.md",
+      "title": "20장 집필 프롬프트 — 대용량 조회와 페이징",
+      "summary": "20장 「대용량 조회와 페이징」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--21-Spring-트랜잭션-기초-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/21-Spring-트랜잭션-기초-집필-프롬프트.md",
+      "title": "21장 집필 프롬프트 — Spring 트랜잭션 기초",
+      "summary": "21장 「Spring 트랜잭션 기초」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--22-PDMG-트랜잭션-경계-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/22-PDMG-트랜잭션-경계-집필-프롬프트.md",
+      "title": "22장 집필 프롬프트 — PDMG 트랜잭션 경계",
+      "summary": "22장 「PDMG 트랜잭션 경계」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--23-타임아웃과-작업-취소-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/23-타임아웃과-작업-취소-집필-프롬프트.md",
+      "title": "23장 집필 프롬프트 — 타임아웃과 작업 취소",
+      "summary": "23장 「타임아웃과 작업 취소」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--24-JWT-인증-전체-구조-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/24-JWT-인증-전체-구조-집필-프롬프트.md",
+      "title": "24장 집필 프롬프트 — JWT 인증 전체 구조",
+      "summary": "24장 「JWT 인증 전체 구조」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--25-업무-요청의-JWT-검증-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/25-업무-요청의-JWT-검증-집필-프롬프트.md",
+      "title": "25장 집필 프롬프트 — 업무 요청의 JWT 검증",
+      "summary": "25장 「업무 요청의 JWT 검증」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--26-예외처리와-표준-오류-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/26-예외처리와-표준-오류-집필-프롬프트.md",
+      "title": "26장 집필 프롬프트 — 예외처리와 표준 오류",
+      "summary": "26장 「예외처리와 표준 오류」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--27-이미지로그와-GUID-추적-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/27-이미지로그와-GUID-추적-집필-프롬프트.md",
+      "title": "27장 집필 프롬프트 — 이미지로그와 GUID 추적",
+      "summary": "27장 「이미지로그와 GUID 추적」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--28-성능-감시와-운영-진단-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/28-성능-감시와-운영-진단-집필-프롬프트.md",
+      "title": "28장 집필 프롬프트 — 성능 감시와 운영 진단",
+      "summary": "28장 「성능 감시와 운영 진단」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--29-Spring-환경구성-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/29-Spring-환경구성-집필-프롬프트.md",
+      "title": "29장 집필 프롬프트 — Spring 환경구성",
+      "summary": "29장 「Spring 환경구성」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--30-환경설정에서-소스까지-추적하기-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/30-환경설정에서-소스까지-추적하기-집필-프롬프트.md",
+      "title": "30장 집필 프롬프트 — 환경설정에서 소스까지 추적하기",
+      "summary": "30장 「환경설정에서 소스까지 추적하기」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--31-신규-프로그램-개발-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/31-신규-프로그램-개발-집필-프롬프트.md",
+      "title": "31장 집필 프롬프트 — 신규 프로그램 개발",
+      "summary": "31장 「신규 프로그램 개발」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--32-CRUD-구현-패턴-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/32-CRUD-구현-패턴-집필-프롬프트.md",
+      "title": "32장 집필 프롬프트 — CRUD 구현 패턴",
+      "summary": "32장 「CRUD 구현 패턴」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--33-테스트와-품질-검증-집필-프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/33-테스트와-품질-검증-집필-프롬프트.md",
+      "title": "33장 집필 프롬프트 — 테스트와 품질 검증",
+      "summary": "33장 「테스트와 품질 검증」을 집필하라.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--AGENTS",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/AGENTS.md",
+      "title": "AGENTS.md",
+      "summary": "> 이 파일은 이 저장소에서 Codex가 책 집필·수정·검토·기술 검증을 수행할 때 적용하는 최상위 프로젝트 지침이다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--BOOK-TOC",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/BOOK-TOC.md",
+      "title": "제안 도서명",
+      "summary": "PDMG 애플리케이션 아키텍처와 개발 가이드",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--BOOK-WRITING-RULE",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/BOOK-WRITING-RULE.md",
+      "title": "BOOK-WRITING-RULE.md",
+      "summary": "> 이 문서는 Codex가 `PDMG 애플리케이션 아키텍처와 개발 가이드`를 장기간 집필할 때 반드시 따라야 하는 최상위 집필 규칙이다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--SOURCE-MAP",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/SOURCE-MAP.md",
+      "title": "SOURCE-MAP.md",
+      "summary": "> 이 파일은 `AGENTS.md`와 `BOOK-WRITING-RULE.md`를 보조하는 장별 원천자료 탐색 지도다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--agent-guide",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/agent-guide.md",
+      "title": "agent guide",
+      "summary": "",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--01장-PDMG_시스템_개요_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/01장.PDMG_시스템_개요_ASCII_확장본.md",
+      "title": "제1장. PDMG 시스템 개요",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--02장-전체_온라인_거래_빅픽처_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/02장.전체_온라인_거래_빅픽처_ASCII_확장본.md",
+      "title": "제2장. 전체 온라인 거래 빅픽처",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--03장-레이어드_아키텍처와_컴포넌트_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/03장.레이어드_아키텍처와_컴포넌트_ASCII_확장본.md",
+      "title": "제3장. 레이어드 아키텍처와 컴포넌트",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--04장-애플리케이션_분류와_Service_ID_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/04장.애플리케이션_분류와_Service_ID_ASCII_확장본.md",
+      "title": "제4장. 애플리케이션 분류와 Service ID",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--05장-네이밍_규칙_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/05장.네이밍_규칙_ASCII_확장본.md",
+      "title": "제5장. 네이밍 규칙",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--06장-패키지와_프로젝트_구조_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/06장.패키지와_프로젝트_구조_ASCII_확장본.md",
+      "title": "제6장. 패키지와 프로젝트 구조",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--07장-도메인_정의와_호출_방식_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/07장.도메인_정의와_호출_방식_ASCII_확장본.md",
+      "title": "제7장. 도메인 정의와 호출 방식",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--08장-HTTP_요청과_표준_전문_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/08장.HTTP_요청과_표준_전문_ASCII_확장본.md",
+      "title": "제8장. HTTP 요청과 표준 전문",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--08장-HTTP_요청과_표준_전문_ASCII_확장본_상세목차_최종",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/08장.HTTP_요청과_표준_전문_ASCII_확장본_상세목차_최종.md",
+      "title": "제8장. HTTP 요청과 표준 전문 — ASCII 확장본 상세 목차",
+      "summary": "> 목차 작성 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--09장-Filter와_Spring_MVC_ASCII_확장본-1-",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/09장.Filter와_Spring_MVC_ASCII_확장본(1).md",
+      "title": "제9장. Filter와 Spring MVC",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--09장-Filter와_Spring_MVC_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/09장.Filter와_Spring_MVC_ASCII_확장본_상세목차.md",
+      "title": "제9장. Filter와 Spring MVC — ASCII 확장본 상세 목차",
+      "summary": "> 목차 작성 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--10장-Interceptor와_시스템_선처리_ASCII_확장본-1-",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/10장.Interceptor와_시스템_선처리_ASCII_확장본(1).md",
+      "title": "제10장. Interceptor와 시스템 선처리",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--10장-Interceptor와_시스템_선처리_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/10장.Interceptor와_시스템_선처리_ASCII_확장본_상세목차.md",
+      "title": "제10장. Interceptor와 시스템 선처리 — ASCII 확장본 상세 목차",
+      "summary": "> 목차 작성 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--10장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/10장_자체검증_보고서.md",
+      "title": "제10장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 212",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--11장-ServiceContext와_GUID_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/11장.ServiceContext와_GUID_ASCII_확장본.md",
+      "title": "제11장. ServiceContext와 GUID",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--11장-ServiceContext와_GUID_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/11장.ServiceContext와_GUID_ASCII_확장본_상세목차.md",
+      "title": "제11장. ServiceContext와 GUID — ASCII 확장본 상세 목차",
+      "summary": "> 목차 작성 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--11장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/11장_자체검증_보고서.md",
+      "title": "제11장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 228",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--12장-TCF_온라인_거래_프레임워크_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/12장.TCF_온라인_거래_프레임워크_ASCII_확장본.md",
+      "title": "제12장. TCF 온라인 거래 프레임워크",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--12장-TCF_온라인_거래_프레임워크_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/12장.TCF_온라인_거래_프레임워크_ASCII_확장본_상세목차.md",
+      "title": "제12장. TCF 온라인 거래 프레임워크 — ASCII 확장본 상세 목차",
+      "summary": "> 목차 작성 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--12장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/12장_자체검증_보고서.md",
+      "title": "제12장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 333",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--13장-TCF_OFF_호환_구조_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/13장.TCF_OFF_호환_구조_ASCII_확장본.md",
+      "title": "제13장. TCF OFF 호환 구조",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--13장-TCF_OFF_호환_구조_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/13장.TCF_OFF_호환_구조_ASCII_확장본_상세목차.md",
+      "title": "제13장. TCF OFF 호환 구조 — ASCII 확장본 상세 목차",
+      "summary": "> 목차 작성 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--13장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/13장_자체검증_보고서.md",
+      "title": "제13장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 385",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--14장-Handler와_Controller_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/14장.Handler와_Controller_ASCII_확장본.md",
+      "title": "제14장. Handler와 Controller",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--14장-Handler와_Controller_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/14장.Handler와_Controller_ASCII_확장본_상세목차.md",
+      "title": "제14장. Handler와 Controller — ASCII 확장본 상세 목차",
+      "summary": "> 목차 작성 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--14장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/14장_자체검증_보고서.md",
+      "title": "제14장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 372",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--15장-Business_Facade_ASCII_확장본--1-",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/15장.Business_Facade_ASCII_확장본 (1).md",
+      "title": "제15장. Business Facade",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--15장-Business_Facade_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/15장.Business_Facade_ASCII_확장본.md",
+      "title": "제15장. Business Facade",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--15장-Business_Facade_ASCII_확장본_상세목차--1-",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/15장.Business_Facade_ASCII_확장본_상세목차 (1).md",
+      "title": "제15장. Business Facade — ASCII 확장본 상세 목차",
+      "summary": "> 목차 작성 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--15장-Business_Facade_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/15장.Business_Facade_ASCII_확장본_상세목차.md",
+      "title": "제15장. Business Facade — ASCII 확장본 상세 목차",
+      "summary": "> 목차 작성 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--15장_자체검증_보고서--1-",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/15장_자체검증_보고서 (1).md",
+      "title": "제15장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 310",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--15장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/15장_자체검증_보고서.md",
+      "title": "제15장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 310",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--16장-업무_선후처리와_BizPrePostAspect_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/16장.업무_선후처리와_BizPrePostAspect_ASCII_확장본.md",
+      "title": "제16장. 업무 선후처리와 BizPrePostAspect",
+      "summary": "> 목차 작성 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--16장-업무_선후처리와_BizPrePostAspect_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/16장.업무_선후처리와_BizPrePostAspect_ASCII_확장본_상세목차.md",
+      "title": "제16장. 업무 선후처리와 BizPrePostAspect — ASCII 확장본 상세 목차",
+      "summary": "> 목차 작성 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--16장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/16장_자체검증_보고서.md",
+      "title": "제16장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 225",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--17장-Business_Service와_Rule_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/17장.Business_Service와_Rule_ASCII_확장본.md",
+      "title": "제17장. Business Service와 Rule",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--17장-Business_Service와_Rule_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/17장.Business_Service와_Rule_ASCII_확장본_상세목차.md",
+      "title": "제17장. Business Service와 Rule — ASCII 확장본 상세 목차",
+      "summary": "> 목차 작성 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--17장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/17장_자체검증_보고서.md",
+      "title": "제17장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 393",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--18장-DTO와_데이터_계약_ASCII_확장본--1-",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/18장.DTO와_데이터_계약_ASCII_확장본 (1).md",
+      "title": "제18장. DTO와 데이터 계약",
+      "summary": "> AS-IS 핵심",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--18장-DTO와_데이터_계약_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/18장.DTO와_데이터_계약_ASCII_확장본.md",
+      "title": "제18장. DTO와 데이터 계약",
+      "summary": "> AS-IS 핵심",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--18장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/18장_자체검증_보고서.md",
+      "title": "제18장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 190",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--19장-DAO와_MyBatis_Mapper_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/19장.DAO와_MyBatis_Mapper_ASCII_확장본.md",
+      "title": "제19장. DAO와 MyBatis Mapper",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--19장-DAO와_MyBatis_Mapper_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/19장.DAO와_MyBatis_Mapper_ASCII_확장본_상세목차.md",
+      "title": "제19장. DAO와 MyBatis Mapper — ASCII 확장본 상세목차",
+      "summary": "> 목차 작성 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--19장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/19장_자체검증_보고서.md",
+      "title": "제19장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 346",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--20장-대용량_조회와_페이징_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/20장.대용량_조회와_페이징_ASCII_확장본.md",
+      "title": "제20장. 대용량 조회와 페이징",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--20장-대용량_조회와_페이징_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/20장.대용량_조회와_페이징_ASCII_확장본_상세목차.md",
+      "title": "제20장. 대용량 조회와 페이징 — ASCII 확장본 상세목차",
+      "summary": "> 목차 작성 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--20장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/20장_자체검증_보고서.md",
+      "title": "제20장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 342",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--21장-Spring_트랜잭션_기초_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/21장.Spring_트랜잭션_기초_ASCII_확장본.md",
+      "title": "제21장. Spring 트랜잭션 기초",
+      "summary": "> 도입 전 안내말",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--21장-Spring_트랜잭션_기초_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/21장.Spring_트랜잭션_기초_ASCII_확장본_상세목차.md",
+      "title": "제21장. Spring 트랜잭션 기초 — ASCII 확장본 상세목차",
+      "summary": "> 작성 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--21장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/21장_자체검증_보고서.md",
+      "title": "제21장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 320",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--22장-PDMG_트랜잭션_경계_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/22장.PDMG_트랜잭션_경계_ASCII_확장본.md",
+      "title": "제22장. PDMG 트랜잭션 경계",
+      "summary": "> 도입 전 안내말",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--22장-PDMG_트랜잭션_경계_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/22장.PDMG_트랜잭션_경계_ASCII_확장본_상세목차.md",
+      "title": "제22장. PDMG 트랜잭션 경계 — ASCII 확장본 상세목차",
+      "summary": "> AS-IS 핵심",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--22장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/22장_자체검증_보고서.md",
+      "title": "제22장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 381",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--23장-타임아웃과_작업_취소_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/23장.타임아웃과_작업_취소_ASCII_확장본.md",
+      "title": "제23장. 타임아웃과 작업 취소",
+      "summary": "PDMG에서 `5초 Timeout`은 다음 네 사건을 동시에 의미하지 않는다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--23장-타임아웃과_작업_취소_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/23장.타임아웃과_작업_취소_ASCII_확장본_상세목차.md",
+      "title": "제23장. 타임아웃과 작업 취소 — ASCII 확장본 상세목차",
+      "summary": "> 목차 작성 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--23장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/23장_자체검증_보고서.md",
+      "title": "제23장 자체검증 보고서",
+      "summary": "- Base Topic 수: 361",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--24장-JWT_인증_전체_구조_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/24장.JWT_인증_전체_구조_ASCII_확장본.md",
+      "title": "제24장. JWT 인증 전체 구조",
+      "summary": "> 도입 전 안내말",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--24장-JWT_인증_전체_구조_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/24장.JWT_인증_전체_구조_ASCII_확장본_상세목차.md",
+      "title": "제24장. JWT 인증 전체 구조 — ASCII 확장본 상세목차",
+      "summary": "> 목차 작성 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--24장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/24장_자체검증_보고서.md",
+      "title": "제24장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 523",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--25장-업무_요청의_JWT_검증_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/25장.업무_요청의_JWT_검증_ASCII_확장본.md",
+      "title": "제25장. 업무 요청의 JWT 검증",
+      "summary": "> 도입 전 안내말",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--25장-업무_요청의_JWT_검증_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/25장.업무_요청의_JWT_검증_ASCII_확장본_상세목차.md",
+      "title": "제25장. 업무 요청의 JWT 검증 — ASCII 확장본 상세목차",
+      "summary": "> 기준: PDMG 2026-08 최신 재분석을 AS-IS로 하고 Legacy 충돌과 별도 TCF Source를 명시적으로 분리한다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--25장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/25장_자체검증_보고서.md",
+      "title": "제25장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 305",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--26장-예외처리와_표준_오류_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/26장.예외처리와_표준_오류_ASCII_확장본.md",
+      "title": "제26장. 예외처리와 표준 오류",
+      "summary": "> 도입 전 안내말",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--26장-예외처리와_표준_오류_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/26장.예외처리와_표준_오류_ASCII_확장본_상세목차.md",
+      "title": "제26장. 예외처리와 표준 오류 — ASCII 확장본 상세목차",
+      "summary": "> 최우선 AS-IS 판정",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--26장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/26장_자체검증_보고서.md",
+      "title": "제26장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 316",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--27장-이미지로그와_GUID_추적_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/27장.이미지로그와_GUID_추적_ASCII_확장본.md",
+      "title": "제27장. 이미지로그와 GUID 추적",
+      "summary": "> 도입 전 안내말",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--27장-이미지로그와_GUID_추적_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/27장.이미지로그와_GUID_추적_ASCII_확장본_상세목차.md",
+      "title": "제27장. 이미지로그와 GUID 추적 — ASCII 확장본 상세목차",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--27장_SOURCE_검증_메모",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/27장_SOURCE_검증_메모.md",
+      "title": "제27장 SOURCE 검증 메모",
+      "summary": "1. `chapter/27장.이미지로그와 GUID 추적.md`",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--27장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/27장_자체검증_보고서.md",
+      "title": "제27장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 405",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--28장-성능_감시와_운영_진단_ASCII_확장본--1-",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/28장.성능_감시와_운영_진단_ASCII_확장본 (1).md",
+      "title": "제28장. 성능 감시와 운영 진단",
+      "summary": "> 도입 전 안내말",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--28장-성능_감시와_운영_진단_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/28장.성능_감시와_운영_진단_ASCII_확장본.md",
+      "title": "제28장. 성능 감시와 운영 진단",
+      "summary": "> 도입 전 안내말",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--28장-성능_감시와_운영_진단_ASCII_확장본_상세목차--1-",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/28장.성능_감시와_운영_진단_ASCII_확장본_상세목차 (1).md",
+      "title": "제28장. 성능 감시와 운영 진단 — ASCII 확장본 상세목차",
+      "summary": "> 현재 핵심 판정: 로그+단일 JVM Snapshot 중심이며, `slowTransactions/slowSql=[]`는 미수집, Tomcat `estimated`는 추정, 504는 Worker 종료가 아니다. Actuator/Micrometer/Prometheus/분산 Trace는 current로 단정하지 않는다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--28장-성능_감시와_운영_진단_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/28장.성능_감시와_운영_진단_ASCII_확장본_상세목차.md",
+      "title": "제28장. 성능 감시와 운영 진단 — ASCII 확장본 상세목차",
+      "summary": "> 현재 핵심 판정: 로그+단일 JVM Snapshot 중심이며, `slowTransactions/slowSql=[]`는 미수집, Tomcat `estimated`는 추정, 504는 Worker 종료가 아니다. Actuator/Micrometer/Prometheus/분산 Trace는 current로 단정하지 않는다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--28장_SOURCE_검증_메모--1-",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/28장_SOURCE_검증_메모 (1).md",
+      "title": "제28장 SOURCE 검증 메모",
+      "summary": "1. `book/source/성능감시.md`",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--28장_SOURCE_검증_메모",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/28장_SOURCE_검증_메모.md",
+      "title": "제28장 SOURCE 검증 메모",
+      "summary": "1. `book/source/성능감시.md`",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--29장-Spring_환경구성_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/29장.Spring_환경구성_ASCII_확장본.md",
+      "title": "제29장. Spring 환경구성",
+      "summary": "> 도입 전 안내말",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--29장-Spring_환경구성_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/29장.Spring_환경구성_ASCII_확장본_상세목차.md",
+      "title": "제29장. Spring 환경구성 — ASCII 확장본 상세목차",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--29장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/29장_자체검증_보고서.md",
+      "title": "제29장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 412",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--30장-환경설정에서_소스까지_추적하기_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/30장.환경설정에서_소스까지_추적하기_ASCII_확장본.md",
+      "title": "제30장. 환경설정에서 소스까지 추적하기",
+      "summary": "> 도입 전 안내말",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--30장-환경설정에서_소스까지_추적하기_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/30장.환경설정에서_소스까지_추적하기_ASCII_확장본_상세목차.md",
+      "title": "제30장. 환경설정에서 소스까지 추적하기 — ASCII 확장본 상세목차",
+      "summary": "> 중심 추적 공식",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--30장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/30장_자체검증_보고서.md",
+      "title": "제30장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 494",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--31장-신규_프로그램_개발_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/31장.신규_프로그램_개발_ASCII_확장본.md",
+      "title": "제31장. 신규 프로그램 개발",
+      "summary": "> 도입 전 안내말",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--31장-신규_프로그램_개발_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/31장.신규_프로그램_개발_ASCII_확장본_상세목차.md",
+      "title": "제31장. 신규 프로그램 개발 — ASCII 확장본 상세목차",
+      "summary": "> 기준 예제: `mgcoa9001` 거래통제. AS-IS와 신규 STANDARD를 분리하며 제32장의 세부 CRUD 패턴은 과도하게 선점하지 않는다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--31장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/31장_자체검증_보고서.md",
+      "title": "제31장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 457",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--32장-CRUD_구현_패턴_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/32장.CRUD_구현_패턴_ASCII_확장본.md",
+      "title": "제32장. CRUD 구현 패턴",
+      "summary": "> 도입 전 안내말",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--32장-CRUD_구현_패턴_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/32장.CRUD_구현_패턴_ASCII_확장본_상세목차.md",
+      "title": "제32장. CRUD 구현 패턴 — ASCII 확장본 상세목차",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--32장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/32장_자체검증_보고서.md",
+      "title": "제32장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 412",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--33장-테스트와_품질_검증_ASCII_확장본",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/33장.테스트와_품질_검증_ASCII_확장본.md",
+      "title": "제33장. 테스트와 품질 검증",
+      "summary": "> 도입 전 안내말",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--33장-테스트와_품질_검증_ASCII_확장본_상세목차",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/33장.테스트와_품질_검증_ASCII_확장본_상세목차.md",
+      "title": "제33장. 테스트와 품질 검증 — ASCII 확장본 상세목차",
+      "summary": "> 집필 기준",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--33장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/33장_자체검증_보고서.md",
+      "title": "제33장 자체검증 보고서",
+      "summary": "- 상세목차 절 수: 593",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--새-폴더--09장_자체검증_보고서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/새 폴더/09장_자체검증_보고서.md",
+      "title": "제9장 자체 검증 보고서",
+      "summary": "- 상세 목차 절 수: 135",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter-확장본--프롬프트-PDMG_NSIGHT_장별_ASCII_확장본_작성_지시프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter-확장본/프롬프트-PDMG_NSIGHT_장별_ASCII_확장본_작성_지시프롬프트.md",
+      "title": "PDMG/NSIGHT 책 장별 ASCII 확장본 작성 지시 프롬프트",
+      "summary": "너는 지금부터 농협 상호금융 PDMG/NSIGHT/TCF 아키텍처를 실제 소스와 설계 문서를 기반으로 설명하는 수석 애플리케이션 아키텍트이자 IT 기술서 전문 작가다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--01장-PDMG-시스템-개요",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/01장.PDMG 시스템 개요.md",
+      "title": "1장. PDMG 시스템 개요",
+      "summary": "PDMG를 처음 접하면 화면, 업무 서비스, 공통 프레임워크, 인증 서버가 각각 별도의 프로젝트처럼 보인다. 그러나 실제 온라인 거래 한 건은 이 네 모듈의 책임이 이어져 완성된다. 사용자가 화면에서 조회 버튼을 누르면 UI가 요청 전문을 만들고, 서비스가 요청을 받아 거래를 식별하며, 프레임워크가 공통 처리와 업무 진입 경로를 제공한다. 인증이 필요한 환",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--02장-전체-온라인-거래-빅픽처",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/02장.전체 온라인 거래 빅픽처.md",
+      "title": "2장. 전체 온라인 거래 빅픽처",
+      "summary": "1장은 PDMG를 구성하는 모듈과 핵심 용어를 한 장의 지도처럼 펼쳐 보였다. 이제 그 지도 위에서 요청 한 건이 실제로 움직이는 과정을 따라갈 차례다. 이 장은 사용자가 화면에서 거래를 실행한 순간부터 업무 DB 처리와 HTTP 응답이 끝날 때까지를 시간순으로 추적한다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--03장-레이어드-아키텍처와-컴포넌트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/03장.레이어드 아키텍처와 컴포넌트.md",
+      "title": "3장. 레이어드 아키텍처와 컴포넌트",
+      "summary": "2장은 PDMG 온라인 요청 한 건을 시간순으로 추적했다. 같은 시스템을 이번에는 구조의 관점에서 바라본다. Handler, Facade, Service와 DAO가 단지 호출 순서대로 나뉜 클래스인지, 아니면 서로 다른 변경 이유와 의존 규칙을 가진 경계인지가 이 장의 주제다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--04장-애플리케이션-분류와-Service-ID",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/04장.애플리케이션 분류와 Service ID.md",
+      "title": "4장. 애플리케이션 분류와 Service ID",
+      "summary": "PDMG에서 `mgcoa5530S0`은 단순한 메서드 이름이 아니다. 이 문자열은 어느 애플리케이션 그룹의 어느 업무가 어떤 프로그램에서 무슨 거래를 수행하는지를 나타내는 식별자이며, 온라인 요청을 올바른 Handler로 보내는 런타임 라우팅 키다. 동시에 로그, 거래통제, 타임아웃, 화면과 전문을 연결하는 공통 언어이기도 하다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--05장-네이밍-규칙",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/05장.네이밍 규칙.md",
+      "title": "5장. 네이밍 규칙",
+      "summary": "PDMG의 이름은 소스에 붙이는 표찰이 아니다. `mgcoa9000S0`이라는 거래 식별자가 패키지, Handler, Facade, Service, DTO, DAO와 Mapper Statement까지 이어지면서 한 건의 요청을 끝까지 추적하게 만드는 구조적 연결 장치다. 이름이 규칙을 따르면 개발자는 URL 하나로 Java 진입점과 SQL을 찾을 수 있다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--06장-패키지와-프로젝트-구조",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/06장.패키지와 프로젝트 구조.md",
+      "title": "6장. 패키지와 프로젝트 구조",
+      "summary": "Service ID와 클래스 이름을 정했다. 그렇다면 Handler, Facade, Service와 DAO를 프로젝트의 어느 디렉터리에 만들어야 할까? Spring이 Bean만 찾아준다면 아무 패키지에 두어도 되는 것일까?",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--07장-도메인-정의와-호출-방식",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/07장.도메인 정의와 호출 방식.md",
+      "title": "7장. 도메인 정의와 호출 방식",
+      "summary": "PDMG에서 기능을 구현하는 일은 클래스를 어느 패키지에 넣을지 정하는 것으로 끝나지 않는다. 더 중요한 질문은 기능의 소유자가 누구인지, 다른 기능이 그것을 어떤 경계로 호출해야 하는지, 그 호출이 기존 거래의 컨텍스트와 트랜잭션을 어디까지 유지하는지 결정하는 일이다. 같은 JVM 안에 있는 Spring Bean은 기술적으로 서로 주입할 수 있지만, 주입",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--08장-HTTP-요청과-표준-전문",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/08장.HTTP 요청과 표준 전문.md",
+      "title": "제3부 온라인 요청과 TCF 프레임워크",
+      "summary": "사용자가 PDMG 화면에서 거래 파라미터 조회 버튼을 클릭했다고 가정하자. 사용자에게 보이는 것은 버튼 하나지만 서버가 업무를 실행하려면 어느 서버로 보낼지, 어떤 거래를 실행할지, 요청 한 건을 어떻게 추적할지, 누가 어떤 채널에서 요청했는지, 실제 조회 조건은 무엇인지가 하나의 HTTP 요청 안에 구분되어 전달되어야 한다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--09장-Filter와-Spring-MVC",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/09장.Filter와 Spring MVC.md",
+      "title": "제3부 온라인 요청과 TCF 프레임워크",
+      "summary": "8장에서는 클라이언트가 보내는 HTTP 요청과 `hdr_nhnis`, `dto`로 구성된 표준 전문을 살펴보았다. 하지만 네트워크로 전달된 JSON은 그 자체로 Controller의 Java DTO가 되지 않는다. Servlet Container가 요청을 받아 Filter Chain을 실행하고, PDMG의 `DefaultFilter`가 Body와 요청 Co",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--10장-Interceptor와-시스템-선처리",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/10장.Interceptor와 시스템 선처리.md",
+      "title": "제3부 온라인 요청과 TCF 프레임워크",
+      "summary": "Filter가 HTTP Body를 다시 읽을 수 있게 만들고 ServiceContext를 준비했다고 해서 업무 Controller를 바로 실행해도 되는 것은 아니다. Spring MVC가 요청에 맞는 Handler를 선택한 뒤에는 그 Handler를 호출하기 직전에 공통 요청 정보를 확정하고, 요청 전문과 감사 시작점을 남기며, 실행을 허용하거나 차단할 마",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--11장-ServiceContext와-GUID",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/11장.ServiceContext와 GUID.md",
+      "title": "제3부 온라인 요청과 TCF 프레임워크",
+      "summary": "온라인 거래 한 건은 여러 계층을 지난다. Filter는 HTTP 요청을 읽고, Interceptor는 공통 정보를 보완하며, Controller와 TCF는 거래를 식별하고, 업무 계층은 Service와 DAO를 실행한다. 응답이 만들어지면 시스템 후처리와 ImageLog가 거래를 마감한다. 이 구간마다 Header, 사용자, Service ID와 추적값을",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--12장-TCF-온라인-거래-프레임워크",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/12장.TCF 온라인 거래 프레임워크.md",
+      "title": "제3부 온라인 요청과 TCF 프레임워크",
+      "summary": "PDMG에서 온라인 거래가 늘어날 때마다 Controller가 Service ID를 해석하고, 업무 클래스를 찾아 호출하며, 제한시간과 오류 처리를 각각 구현한다면 거래 수만큼 실행 방식도 늘어난다. 새로운 거래 하나가 추가될 때 Framework 코드를 수정해야 한다면 공통 계층은 확장 지점이 아니라 변경 병목이 된다. TCF는 공통 HTTP 진입과 Se",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--13장-TCF-OFF-호환-구조",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/13장.TCF OFF 호환 구조.md",
+      "title": "제3부 온라인 요청과 TCF 프레임워크",
+      "summary": "TCF를 끈다는 말은 PDMG Framework 전체를 끈다는 뜻이 아니다. `nhnis.fw.tcf.enabled=false`는 공통 Online Controller, TcfFacade, Dispatcher와 Handler Registry를 사용하지 않고 업무별 Spring MVC Controller로 진입점을 바꾸는 선택이다. Filter, Servic",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--14장-Handler와-Controller",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/14장.Handler와 Controller.md",
+      "title": "제4부 업무 진입과 유스케이스 경계",
+      "summary": "온라인 요청이 업무 로직에 들어가는 첫 지점은 실행 모드에 따라 달라진다. TCF ON에서는 공통 Controller와 Dispatcher가 Service ID로 `TransactionHandler`를 선택한다. TCF OFF에서는 Spring MVC가 업무 URL과 Controller Method를 직접 연결한다. 두 컴포넌트는 기술적으로 다르지만 외부 ",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--15장-Business-Facade",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/15장.Business Facade.md",
+      "title": "제4부 업무 진입과 유스케이스 경계",
+      "summary": "Handler가 Service ID를 해석해 올바른 거래를 선택했다면, 그다음 질문은 “선택된 거래를 어떤 단위로 실행할 것인가”이다. 하나의 온라인 거래는 단순히 Service 메서드 하나를 호출하는 일로 끝나지 않는다. 느슨한 요청 본문을 업무 DTO로 바꾸고, 필요한 업무 단계를 순서대로 조정하며, 여러 변경을 하나의 원자적 결과로 묶어야 한다. PD",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--16장-업무-선후처리",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/16장.업무 선후처리.md",
+      "title": "제4부 업무 진입과 유스케이스 경계",
+      "summary": "업무 Service마다 동일한 시작·종료 로그를 직접 작성하면 형식이 빠르게 달라지고, 신규 메서드에서 누락되기 쉽다. 반대로 공통 처리를 너무 강하게 만들면 모든 Service 호출에 DB 변경이나 예외 변환이 숨어 들어가 업무 흐름을 이해하기 어려워진다. PDMG는 Service 메서드 전후에 AOP를 적용해 업무 처리 구간을 관찰한다. 그 구현이 `B",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--17장-Business-Service와-Rule",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/17장.Business Service와 Rule.md",
+      "title": "제4부 업무 진입과 유스케이스 경계",
+      "summary": "Business Facade가 입력 DTO와 트랜잭션 의도를 준비하면 실제 업무 순서는 Service에서 실행된다. Service는 DAO를 한 번 호출하는 얇은 포장지가 아니다. 입력을 업무 관점으로 확인하고, 필요한 규칙을 적용하며, 하나 이상의 데이터 접근이나 외부 호출을 순서대로 조정하고, 호출자가 사용할 결과를 조립하는 애플리케이션 핵심 계층이다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--18장-DTO와-데이터-계약",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/18장.DTO와 데이터 계약.md",
+      "title": "제4부 업무 진입과 유스케이스 경계",
+      "summary": "온라인 거래는 JSON, Java 객체, SQL 파라미터와 화면 상태 사이를 이동한다. 각 구간이 같은 `Map`을 공유하면 빠르게 만들 수 있지만 필드 오타와 타입 변화가 실행 중에야 드러나고, 시스템 공통값과 업무 입력의 신뢰 경계도 흐려진다. PDMG의 DTO는 단순 값 보관 객체가 아니라 Service ID별 요청·응답 계약을 Java 타입으로 고정",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--19장-DAO와-MyBatis-Mapper",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/19장.DAO와 MyBatis Mapper.md",
+      "title": "제5부 데이터 접근과 대용량 처리",
+      "summary": "Service가 업무 순서를 결정한 뒤 데이터베이스에 도달하려면 Java 메서드와 SQL 문장을 정확히 연결해야 한다. PDMG는 DAO 인터페이스와 MyBatis Mapper XML을 이 경계로 사용한다. 구현 클래스를 직접 작성하지 않고 MyBatis가 DAO Proxy를 생성하며, 호출된 인터페이스의 전체 이름과 메서드 이름으로 XML Statemen",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--20장-대용량-조회와-페이징",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/20장.대용량 조회와 페이징.md",
+      "title": "제5부 데이터 접근과 대용량 처리",
+      "summary": "목록 조회는 데이터가 적을 때는 단순해 보인다. 하지만 행 수가 수백만 건으로 늘어나면 전체 결과를 애플리케이션으로 읽은 뒤 일부만 자르는 방식은 DB, Heap, 네트워크와 응답 시간을 동시에 소모한다. PDMG는 요청받은 페이지 범위만 DB에서 잘라 반환하는 Offset 기반 페이징을 사용한다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--21장-Spring-트랜잭션-기초",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/21장.Spring 트랜잭션 기초.md",
+      "title": "제5부 트랜잭션과 타임아웃",
+      "summary": "여러 SQL을 하나의 업무 성공으로 묶으려면 동일한 JDBC Connection에서 BEGIN 이후의 변경을 모두 실행하고 마지막에 Commit 또는 Rollback해야 한다. PDMG는 이 저수준 절차를 업무 코드가 직접 다루지 않고 Spring `PlatformTransactionManager`, MyBatis `SqlSessionTemplate`과 `",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--22장-PDMG-트랜잭션-경계",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/22장.PDMG 트랜잭션 경계.md",
+      "title": "제5부 트랜잭션과 타임아웃",
+      "summary": "PDMG에서 “트랜잭션은 어디서 시작되는가”라는 질문에는 하나의 답이 없다. TCF와 Timeout 설정, 실제 호출한 Controller, 대상 Service의 Annotation에 따라 최외곽 경계가 달라진다. 특히 TCF ON + Timeout ON에서는 Facade보다 먼저 Worker Thread의 `TransactionTemplate`이 거래를 ",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--23장-타임아웃과-작업-취소",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/23장.타임아웃과 작업 취소.md",
+      "title": "제5부 트랜잭션과 타임아웃",
+      "summary": "타임아웃은 “일정 시간이 지나면 모든 처리가 즉시 사라진다”는 기능이 아니다. UI 타이머는 화면의 대기를 끝내고, HTTP Client timeout은 Socket 대기를 끝내며, 서버 Executor timeout은 Future 대기를 끝낸다. JDBC Statement와 DB 세션이 실제로 멈추는지는 Driver, Statement 설정과 SQL 상태",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--24장-JWT-인증-전체-구조",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/24장.JWT 인증 전체 구조.md",
+      "title": "24장. JWT 인증 전체 구조",
+      "summary": "PDMG의 JWT 인증은 단순히 로그인 응답에 문자열 하나를 추가하는 기능이 아니다. 사용자의 자격 증명을 확인하는 주체, 토큰에 업무 신원을 담는 주체, 전자서명을 만드는 주체, 업무 요청에서 그 서명을 검증하는 주체가 서로 다른 보안 경계를 이룬다. 이 장은 `pdmg-ui`의 로그인 한 건이 `pdmg-jwt`를 거쳐 Access Token과 Refr",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--25장-업무-요청의-JWT-검증",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/25장.업무 요청의 JWT 검증.md",
+      "title": "25장. 업무 요청의 JWT 검증",
+      "summary": "로그인으로 Access Token을 얻었다고 업무 요청이 자동으로 인증되는 것은 아니다. UI가 토큰을 HTTP Header에 실어 보내고, 서버가 업무 코드보다 앞에서 이를 꺼내 서명과 유효기간을 검사하며, 검증된 신원을 후속 처리에 전달해야 비로소 인증 경로가 닫힌다. PDMG에서는 이 진입점이 Spring Security Resource Server가",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--26장-예외처리와-표준-오류",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/26장.예외처리와 표준 오류.md",
+      "title": "26장. 예외처리와 표준 오류",
+      "summary": "PDMG의 예외처리는 오류 문구를 만드는 기능이 아니라 실패한 거래의 의미를 보존하는 구조다. 발생 계층은 Filter, Interceptor, Controller, TCF, 업무, DAO처럼 다양하지만 클라이언트는 일관된 HTTP 상태와 오류 전문을 받아야 하고, 변경 중이던 DB 작업은 rollback되어야 한다. 이를 위해 예외는 필요한 정보만 담아 ",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--27장-이미지로그와-GUID-추적",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/27장.이미지로그와 GUID 추적.md",
+      "title": "27장. 이미지로그와 GUID 추적",
+      "summary": "온라인 장애를 분석할 때 “오후에 오류가 났다”는 정보만으로는 부족하다. 요청을 받은 시점의 전문, 실행한 Service ID, 사용자와 단말, 최종 응답과 예외를 한 건으로 연결해야 한다. PDMG는 표준 Header의 `std_gbl_id`를 GUID로 사용하고 `TB_FW_IMAGE_LOG`에 요청과 응답의 스냅샷을 남긴다. 이 데이터는 업무 결과를 ",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--28장-성능-감시와-운영-진단",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/28장.성능 감시와 운영 진단.md",
+      "title": "28장. 성능 감시와 운영 진단",
+      "summary": "성능 장애는 “응답이 느리다”라는 한 문장으로 해결되지 않는다. HTTP 대기, Filter와 TCF, Worker Queue, 업무 Transaction, Service, SQL 가운데 시간이 어디에서 소비되었는지 나누고, GUID와 Service ID로 같은 요청의 증거를 연결해야 한다. PDMG에는 구간 로그, ImageLog 시각, timeout 로",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--29장-Spring-환경구성",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/29장.Spring 환경구성.md",
+      "title": "29장. Spring 환경구성",
+      "summary": "PDMG의 실행 구조는 코드만으로 결정되지 않는다. Spring Environment가 설정을 합성하고 바인딩과 조건부 Bean 평가를 거쳐 TCF, Filter, Timeout, DataSource와 JWT 경로를 선택한다. 이 장은 저장소에서 확인된 AS-IS와 운영 권고를 분리한다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--30장-환경설정에서-소스까지-추적하기",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/30장.환경설정에서 소스까지 추적하기.md",
+      "title": "30장. 환경설정에서 소스까지 추적하기",
+      "summary": "설정 변경의 영향도는 YAML의 한 줄만 보아서는 알 수 없다. 같은 키가 Java 객체의 숫자를 바꾸기도 하고, Bean 전체를 생성하거나 제거하기도 하며, 아무 코드도 읽지 않아 실제로는 아무 효과가 없을 수도 있다. 이 장은 설정 키에서 출발해 정의, 최종값, 주입, Bean, Caller, 실행 결과와 검증까지 이어지는 증거 사슬을 만드는 실전 방법",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--31장-신규-프로그램-개발",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/31장.신규 프로그램 개발.md",
+      "title": "31장. 신규 프로그램 개발",
+      "summary": "신규 프로그램 개발은 Controller와 SQL을 연결하는 작업이 아니다. 요구사항을 PDMG 식별 체계로 번역하고, TCF ON/OFF 진입점과 공통 업무 계층을 만들며, DTO·오류·UI·테스트까지 하나의 변경 단위로 완성하는 일이다. 이 장은 실제 거래통제 프로그램 `mgcoa9001`의 구조를 참조한다. 예제의 동작을 그대로 복제하는 것이 아니라 ",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--32장-CRUD-구현-패턴",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/32장.CRUD 구현 패턴.md",
+      "title": "32장. CRUD 구현 패턴",
+      "summary": "CRUD는 네 글자의 반복이지만 각 행위가 요구하는 계약은 다르다. 목록은 안정된 정렬과 count 정합성이 필요하고, 상세은 0건과 다건을 구분해야 한다. 등록은 중복 경쟁을 견뎌야 하며 수정·삭제는 처리 행 수와 동시 변경을 판정해야 한다. PDMG의 공통 호출선은 DTO → 진입점 → Facade → Service/Rule → DAO/Mapper지만,",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--chapter--33장-테스트와-품질-검증",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/chapter/33장.테스트와 품질 검증.md",
+      "title": "33장. 테스트와 품질 검증",
+      "summary": "테스트는 구현 뒤에 붙이는 확인 절차가 아니라 아키텍처의 경계를 실행 가능한 증거로 만드는 일이다. Service Mock 테스트가 통과해도 실제 Mapper SQL, Transaction rollback, Filter와 TCF 분기, Worker 취소 또는 UI 계약은 틀릴 수 있다. PDMG의 최종 품질 Gate는 작은 단위의 빠른 피드백에서 시작해 실",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--00-Big-Picture-Image",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/00.Big Picture Image.md",
+      "title": "Big Picture Image — PDMG Online TX",
+      "summary": "근거: [`00.BigPicture Tx 처리-1.md`](./00.BigPicture%20Tx%20처리-1.md)",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--00-BigPicture-Tx-처리-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/00.BigPicture Tx 처리-1.md",
+      "title": "00.BigPicture Tx 처리 1",
+      "summary": "`00.BigPicture TX 흐름`은 HTTP 요청 한 건이 들어와 응답될 때까지의 전체 흐름과 DB 트랜잭션 범위를 한눈에 보여주는 문서입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--00-BigPicture-Tx-흐름",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/00.BigPicture Tx 흐름.md",
+      "title": "00.BigPicture Tx 흐름",
+      "summary": "TCF ON 기준으로, 요청(온라인 거래) 흐름과 DB 트랜잭션을 겹쳐 보면 아래와 같습니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--00-MG-NAMING_CONVENTION",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/00.MG-NAMING_CONVENTION.md",
+      "title": "PDMG Naming Convention Guide",
+      "summary": "농협 상호금융 PDMG 명명 규칙. 코드 분류는 00.NSIGHT 애플리케이션 코드 분류표를 따르고, 컴포넌트 타입↔패키지↔네이밍·Handler/Facade/Controller/Service/DAO/DTO·MyBatis SQL ID 규칙을 정의한다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--00-NSIGHT-애플리케이션-코드-분류표",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/00.NSIGHT 애플리케이션 코드 분류표.md",
+      "title": "00.NSIGHT 애플리케이션 코드 분류표",
+      "summary": "",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--01-트랜잭션처리-변경-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/01.트랜잭션처리 변경-1.md",
+      "title": "01.트랜잭션처리 변경 1",
+      "summary": "처음부터 소스와 설정을 기준으로 다시 분석한 결론은 다음과 같습니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--01-트랜잭션처리-변경",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/01.트랜잭션처리 변경.md",
+      "title": "01. 트랜잭션처리 변경 (PDMG)",
+      "summary": "기준일: 2026-08-09 (패키지 구조 반영 갱신)",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--02-어플리케이션-컴포넌트-구조-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/02.어플리케이션 컴포넌트 구조-1.md",
+      "title": "02.어플리케이션 컴포넌트 구조 1",
+      "summary": "다만 “현재 구현 설명”과 “PDMG 권장 아키텍처”가 섞여 있습니다. 특히 Controller/Facade 패키지 위치, 트랜잭션 책임, TCF 라우팅 책임은 수정이 필요합니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--02-어플리케이션-컴포넌트-구조",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/02.어플리케이션 컴포넌트 구조.md",
+      "title": "02. 애플리케이션 컴포넌트 구조 (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--03-어플리케이션-레이어드-아키텍처-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/03.어플리케이션 레이어드 아키텍처-1.md",
+      "title": "03.어플리케이션 레이어드 아키텍처 1",
+      "summary": "레이어 구분의 기본 방향은 이해하기 쉽지만, 현재 `pdmg-service`와 `pdmg-fw` 구현 기준으로는 트랜잭션 설명에 중대한 오류가 있습니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--03-어플리케이션-레이어드-아키텍처",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/03.어플리케이션 레이어드 아키텍처.md",
+      "title": "03. 애플리케이션 레이어드 아키텍처 (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--04-패키지구조-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/04.패키지구조-1.md",
+      "title": "04.패키지구조 1",
+      "summary": "이전 점검 시점에는 구 패키지(`nhnis.mg.application.*` 등)와 신규 `co.a`가 공존해 AS-IS 문서로는 어긋났지만, 현재 소스에서는 구 패키지가 제거되었고 업무 코드는 `nhnis.mg.co.a.*`로 통합되어 있습니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--04-패키지구조",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/04.패키지구조.md",
+      "title": "04. 패키지 구조 (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--05-전체-빅픽처-흐름-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/05.전체 빅픽처 흐름-1.md",
+      "title": "05.전체 빅픽처 흐름 1",
+      "summary": "특히 다음 내용은 정확합니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--05-전체-빅픽처-흐름",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/05.전체 빅픽처 흐름.md",
+      "title": "05. 전체 빅픽처 흐름 (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--06-네이밍-형식-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/06.네이밍 형식-1.md",
+      "title": "06.네이밍 형식 1",
+      "summary": "다만 다음과 같은 중요한 오류와 실제 소스 불일치가 있습니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--06-네이밍-형식",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/06.네이밍 형식.md",
+      "title": "06. 네이밍 형식 (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--07-도메인-정의-및-호출방식-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/07.도메인 정의 및 호출방식-1.md",
+      "title": "07.도메인 정의 및 호출방식 1",
+      "summary": "현재 등록된 프로그램과 UI Catalog, Handler의 `serviceIds()` 매핑도 대부분 정확합니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--07-도메인-정의-및-호출방식",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/07.도메인 정의 및 호출방식.md",
+      "title": "07. 도메인 정의 및 호출방식 (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--08-대용량-페이징-처리방식-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/08.대용량 페이징 처리방식-1.md",
+      "title": "08.대용량 페이징 처리방식 1",
+      "summary": "현재 구현의 기본 구조는 다음과 같습니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--08-대용량-페이징-처리방식",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/08.대용량 페이징 처리방식.md",
+      "title": "08. 대용량 페이징 처리방식 (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--09-서비스ID-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/09.서비스ID-1.md",
+      "title": "09.서비스ID 1",
+      "summary": "PDMG에서 서비스 ID는 요청받은 거래를 어떤 `TransactionHandler`로 전달할지 결정하는 라우팅 키입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--09-서비스ID",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/09.서비스ID.md",
+      "title": "09. 서비스 ID (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--10-전문-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/10.전문-1.md",
+      "title": "10.전문 1",
+      "summary": "PDMG 온라인 전문은 다음 구조입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--10-전문",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/10.전문.md",
+      "title": "10. 전문 (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--11-Http-CORS적용-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/11.Http CORS적용-1.md",
+      "title": "11.Http CORS적용 1",
+      "summary": "브라우저가 `pdmg-ui:8090`에서 `pdmg-service:8080`으로 직접 요청하므로 CORS가 필요하고, OPTIONS 요청도 `DefaultFilter`에서 정상적으로 제외합니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--11-Http-CORS적용",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/11.Http CORS적용.md",
+      "title": "11. Http CORS 적용 (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--11-예외처리-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/11.예외처리-1.md",
+      "title": "11.예외처리 1",
+      "summary": "다만 일반 시스템 예외가 표준화되지 않은 점, 두 개의 `@ControllerAdvice`가 겹치는 점, 업무 오류 메시지 사전이 실제 응답에 적용되지 않는 점을 보완해야 합니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--11-예외처리",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/11.예외처리.md",
+      "title": "11. 예외처리 (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--12-http요청-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/12.http요청-1.md",
+      "title": "12.http요청 1",
+      "summary": "또한 non-local JWT 요청, `/{businessCode}/online`, 서비스 ID 불일치 검증에 중요한 제약이 있습니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--12-http요청",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/12.http요청.md",
+      "title": "12. HTTP 요청 (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--13-Filter-DefaultFilter-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/13.Filter-DefaultFilter-1.md",
+      "title": "13.Filter DefaultFilter 1",
+      "summary": "`DefaultFilter`는 PDMG 요청이 Controller에 도착하기 전에 실행되는 공통 진입 필터입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--13-Filter-DefaultFilter",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/13.Filter-DefaultFilter.md",
+      "title": "13. Filter — DefaultFilter (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--14-Spring-MVC-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/14.Spring MVC-1.md",
+      "title": "14.Spring MVC 1",
+      "summary": "현재 PDMG의 Spring MVC는 다음 역할을 담당합니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--14-Spring-MVC",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/14.Spring MVC.md",
+      "title": "14. Spring MVC (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--14-시스템-선후처리-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/14.시스템 선후처리-1.md",
+      "title": "14.시스템 선후처리 1",
+      "summary": "현재 PDMG의 Spring MVC는 다음 역할을 담당합니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--14-시스템-선후처리",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/14.시스템 선후처리.md",
+      "title": "14. 시스템 선후처리 (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--15-Interceptor-ServicePrevention-preHandle-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/15.Interceptor-ServicePrevention.preHandle-1.md",
+      "title": "15.Interceptor ServicePrevention.preHandle 1",
+      "summary": "`ServicePreventionInterceptor.preHandle()`은 Controller가 실행되기 직전에 호출되는 시스템 선처리입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--15-Interceptor-ServicePrevention-preHandle",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/15.Interceptor-ServicePrevention.preHandle.md",
+      "title": "15. Interceptor — ServicePrevention.preHandle (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--16-Service-Context-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/16.Service Context-1.md",
+      "title": "16.Service Context 1",
+      "summary": "`ServiceContext`는 HTTP 요청 한 건에서 공통으로 사용하는 요청 단위 저장소입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--16-Service-Context",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/16.Service Context.md",
+      "title": "16. ServiceContext (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--16-TCF-OnlineTransactionController-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/16.TCF-OnlineTransactionController-1.md",
+      "title": "16.TCF OnlineTransactionController 1",
+      "summary": "`OnlineTransactionController`는 TCF가 활성화된 상태에서 PDMG 온라인 거래를 하나의 HTTP Controller로 받는 공통 진입점입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--16-TCF-OnlineTransactionController",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/16.TCF-OnlineTransactionController.md",
+      "title": "16. TCF — OnlineTransactionController (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--17-TCF-TcfFace-Dispatcher-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/17.TCF-TcfFace-Dispatcher-1.md",
+      "title": "2. 전체 실행 흐름",
+      "summary": "먼저 명칭부터 정리하면 문서 파일명의 `TcfFace`는 오타입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--17-TCF-TcfFace-Dispatcher",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/17.TCF-TcfFace-Dispatcher.md",
+      "title": "17. TCF — TcfFacade · TransactionDispatcher (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--18-Business-Handler-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/18.Business-Handler-1.md",
+      "title": "18.Business Handler 1",
+      "summary": "Business Handler는 TCF가 선택한 serviceId를 해당 업무 Facade 메서드에 연결하는 업무 진입 라우터입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--18-Business-Handler",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/18.Business-Handler.md",
+      "title": "18. Business Handler (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--19-Business-Facade-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/19.Business-Facade-1.md",
+      "title": "1. 현재 Facade 구성",
+      "summary": "Business Facade는 Handler와 Service 사이에서 다음 역할을 담당합니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--19-Business-Facade",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/19.Business-Facade.md",
+      "title": "19. Business Facade (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--20-Tranaactional-rdwTransactionManager-Begin-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/20.Tranaactional-rdwTransactionManager-Begin-1.md",
+      "title": "1. 트랜잭션 구성 요소",
+      "summary": "먼저 파일명의 `Tranaactional`은 오타이고 정확한 표기는 다음입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--20-Tranaactional-rdwTransactionManager-Begin",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/20.Tranaactional-rdwTransactionManager-Begin.md",
+      "title": "20. `@Transactional` · `rdwTransactionManager` · BEGIN (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--20-타임아웃-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/20.타임아웃-1.md",
+      "title": "20.타임아웃 1",
+      "summary": "현재 PDMG 타임아웃은 다음과 같이 동작합니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--20-타임아웃",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/20.타임아웃.md",
+      "title": "20. 타임아웃 (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--2026-08-09-pdmg-online-timeout-executor-design",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/2026-08-09-pdmg-online-timeout-executor-design.md",
+      "title": "PDMG 온라인 거래 TimeoutExecutor 설계",
+      "summary": "`pdmg-fw`의 온라인 거래 실행 전체에 공통 제한시간을 적용한다. 제한시간을 초과한 요청에는 타임아웃 응답을 반환하고, Worker가 늦게 종료되더라도 해당 업무 트랜잭션이 커밋되지 않도록 롤백한다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--21-업무선처리-BizPrePostAspect-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/21.업무선처리-BizPrePostAspect-1.md",
+      "title": "21. 업무선처리 `BizPrePostAspect` 분석",
+      "summary": "현재 `BizPrePostAspect`는 업무 검증이나 데이터 변경을 수행하는 선처리기가 아니라, Service 호출 전후에 거래 진행 정보를 기록하는 로깅 Aspect입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--21-업무선처리-BizPrePostAspect",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/21.업무선처리-BizPrePostAspect.md",
+      "title": "21. 업무 선·후처리 — BizPrePostAspect (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--22-Business-Service-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/22.Business-Service-1.md",
+      "title": "22. Business Service 분석",
+      "summary": "현재 PDMG Business Service는 전체적으로 다음 역할을 수행합니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--22-Business-Service",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/22.Business-Service.md",
+      "title": "22. Business Service (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--22-exceptionCode처리-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/22.exceptionCode처리-1.md",
+      "title": "22. `exceptionCode.yml` 처리 분석",
+      "summary": "현재 `exceptionCode.yml`은 Spring 환경에 정상적으로 로딩되고 `ExceptionCodeProperties`에도 바인딩됩니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--22-exceptionCode처리",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/22.exceptionCode처리.md",
+      "title": "22.exceptionCode처리",
+      "summary": "`exceptionCode.yml`은 오류 코드와 사용자 표시 메시지를 분리해서 관리하는 메시지 사전입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--23-DAO-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/23.DAO-1.md",
+      "title": "23. DAO 분석",
+      "summary": "현재 PDMG DAO는 MyBatis Mapper 인터페이스 방식으로 구현되어 있으며, Java 구현 클래스 없이 Mapper XML과 연결됩니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--23-DAO",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/23.DAO.md",
+      "title": "23. DAO (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--24-DAO-Mapper-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/24.DAO-Mapper-1.md",
+      "title": "24. DAO-Mapper 분석",
+      "summary": "현재 PDMG Mapper XML은 DAO 인터페이스와 정상적으로 연결되어 있습니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--24-DAO-Mapper",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/24.DAO-Mapper.md",
+      "title": "24. DAO Mapper XML (PDMG) — 완결",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--24-DAO-Namespace-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/24.DAO-Namespace-1.md",
+      "title": "24.DAO Namespace 1",
+      "summary": "현재 `pdmg-service`의 DAO Namespace 구성은 정상입니다. 4개 DAO 인터페이스의 전체 클래스명과 Mapper XML의 `namespace`가 정확하게 일치합니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--24-DAO-Namespace",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/24.DAO-Namespace.md",
+      "title": "24. DAO Namespace (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--25-업무후처리-BizPrePostAspect-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/25.업무후처리-BizPrePostAspect-1.md",
+      "title": "25.업무후처리 BizPrePostAspect 1",
+      "summary": "현재 업무 후처리는 Service 메서드가 정상 반환했을 때 결과 DTO를 로그로 출력하는 AOP입니다. 포인트컷이 Service 계층으로 변경되어 Facade 트랜잭션 안에서 실행됩니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--25-업무후처리-BizPrePostAspect",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/25.업무후처리-BizPrePostAspect.md",
+      "title": "25. 업무 후처리 — BizPrePostAspect (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--26-시스템후처리-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/26.시스템후처리-1.md",
+      "title": "26.시스템후처리 1",
+      "summary": "현재 시스템 후처리는 다음 두 단계로 구성됩니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--26-시스템후처리",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/26.시스템후처리.md",
+      "title": "26. 시스템 후처리 (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--27-전문-DTO-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/27.전문 DTO-1.md",
+      "title": "27.전문 DTO 1",
+      "summary": "현재 PDMG 전문 DTO 구조는 다음 원칙으로 구현되어 있습니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--27-전문-DTO",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/27.전문 DTO.md",
+      "title": "27. 전문 DTO (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--28-Spring-환경구성정보-1",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/28.Spring 환경구성정보-1.md",
+      "title": "28.Spring 환경구성정보 1",
+      "summary": "현재 실행 설정의 중심은 [application.yml](<C:/Programming(23-08-15)/nsight-tcf-framework-codex/pdmg-service/src/main/resources/application.yml>)입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--28-Spring-환경구성정보",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/28.Spring 환경구성정보.md",
+      "title": "28. Spring 환경구성정보 (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--29-환경구성정보와-소스-연관성-이미지순서",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/29.환경구성정보와 소스 연관성-이미지순서.md",
+      "title": "PDMG 환경 구성정보와 소스 연관성",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--30-왜-Filter와-Interceptor을-합치면-안되는가",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/30.왜 Filter와 Interceptor을 합치면 안되는가.md",
+      "title": "30. 왜 Filter와 Interceptor를 합치면 안 되는가 (PDMG)",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--31-Spring-환경파일-중심-소스연관성",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/31.Spring-환경파일-중심-소스연관성.md",
+      "title": "PDMG Spring 환경 파일 중심 소스 연관성",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--32-범용CRUD프롬프트-사용법",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/32.범용CRUD프롬프트 사용법.md",
+      "title": "32.범용CRUD프롬프트 사용법",
+      "summary": "`32.범용CRUD프롬프트`는 AI에게 CRUD 구현을 시킬 때 쓰는 템플릿입니다. 사용 순서는 문서 §1과 같습니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--32-범용CRUD프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/32.범용CRUD프롬프트.md",
+      "title": "PDMG 범용 CRUD 프롬프트",
+      "summary": "이 문서는 AI에게 `pdmg-service`의 CRUD 기능을 정확하고 안전하게 설계·구현하도록 요청하기 위한 재사용 프롬프트다. 단순히 “CRUD를 만들어 달라”고 요청하는 대신 업무 규칙, DB 계약, 서비스 ID, 트랜잭션, 오류 처리와 검증 기준을 명시하여 추정 구현을 방지한다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--33-요청쓰레드와-Work쓰레드-분리아키텍처",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/33.요청쓰레드와 Work쓰레드 분리아키텍처.md",
+      "title": "33.요청쓰레드와 Work쓰레드 분리아키텍처",
+      "summary": "맞습니다. `nhnis.fw.timeout.enabled=true` 일 때 그렇게 나뉩니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--34-서비스ID별-타임아웃조정-방법",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/34.서비스ID별 타임아웃조정 방법.md",
+      "title": "34.서비스ID별 타임아웃조정 방법",
+      "summary": "serviceId별 `overrides`에 ms를 넣으면 됩니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--35-에러코드-설정방법",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/35.에러코드 설정방법.md",
+      "title": "35.에러코드 설정방법",
+      "summary": "",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--36-프로그램-예외-처리-방법",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/36.프로그램 예외 처리 방법.md",
+      "title": "프로그램 예외 처리 방법",
+      "summary": "PDMG 업무 프로그램(`Service` 등)의 표준 예외는 `BizException`이다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--37-TCF-프레임워크-적용하지-않는-방법",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/37.TCF 프레임워크 적용하지 않는 방법.md",
+      "title": "TCF 프레임워크 적용하지 않는 방법",
+      "summary": "TCF(단일 `/online` · Handler · TcfFacade · OnlineTimeoutExecutor)를 끄려면 설정만 바꾸면 된다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--38-TCF-off-이면-트랜잭션-시작은-어디인가",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/38.TCF off 이면 트랜잭션 시작은 어디인가.md",
+      "title": "38.TCF off 이면 트랜잭션 시작은 어디인가",
+      "summary": "",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--39-TCF-on-이면-트랜잭션-시작은-어디인가",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/39.TCF on 이면 트랜잭션 시작은 어디인가.md",
+      "title": "TCF ON 이면 트랜잭션 시작은 어디인가",
+      "summary": "`nhnis.fw.tcf.enabled=true` 일 때 진입은",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--40-시스템-선처리에서-어떤-필터를-처리하는가",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/40.시스템 선처리에서 어떤 필터를 처리하는가.md",
+      "title": "40.시스템 선처리에서 어떤 필터를 처리하는가",
+      "summary": "로그의 `[시스템 선처리]`는 Servlet Filter가 아니라 `ServicePreventionInterceptor.preHandle`입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--41-시스템-컨텍스트-정보는-어디서-생성되는가",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/41.시스템 컨텍스트 정보는 어디서 생성되는가.md",
+      "title": "시스템 컨텍스트(ServiceContext) 정보는 어디서 생성되는가",
+      "summary": "생성 위치: `pdmg-fw`의 `DefaultFilter`",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--42-토큰을-생성해서-pdmg-service로-요청시-전달하는-방법",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/42.토큰을 생성해서 pdmg-service로 요청시 전달하는 방법.md",
+      "title": "토큰을 생성해서 pdmg-service로 요청 시 전달하는 방법",
+      "summary": "1. pdmg-jwt에서 Access Token 발급 (`mgjwa1000C0`)",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--43-pdmg-service에서-JWT-토큰을-받으면-누가-검증하는가",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/43.pdmg-service에서 JWT 토큰을 받으면 누가 검증하는가.md",
+      "title": "pdmg-service에서 JWT 토큰을 받으면 누가 검증하는가",
+      "summary": "검증 주체: `pdmg-fw`의 `DefaultFilter` → `JwtProvider`",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--44-pdmg-ui는-JWT를-pdmg-service로-보내고-시스템-선처리에서-검증하는가",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/44.pdmg-ui는 JWT를 pdmg-service로 보내고 시스템 선처리에서 검증하는가.md",
+      "title": "pdmg-ui는 JWT를 pdmg-service로 보내고 시스템 선처리에서 검증하는가",
+      "summary": "---",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--45-pdmg-ui-로그인-JWT-service-선처리-검증-확인",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/45.pdmg-ui-로그인-JWT-service-선처리-검증-확인.md",
+      "title": "pdmg-ui 로그인 JWT → pdmg-service 선처리 검증 확인",
+      "summary": "즉, “올려주면 선처리에서 검증한다”는 현재 코드 기준으로 성립하지 않는다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--45-시스템선처리에서-JWT의-무엇을-점검하는가",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/45.시스템선처리에서 JWT의 무엇을 점검하는가.md",
+      "title": "45.시스템선처리에서 JWT의 무엇을 점검하는가",
+      "summary": "`jwt.enabled=true`일 때 `ServicePreventionInterceptor`가 점검하는 항목은 다음과 같습니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--46-전체-아키텍처-구조",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/46.전체 아키텍처 구조.md",
+      "title": "46.전체 아키텍처 구조",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--46-토큰",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/46.토큰.md",
+      "title": "46.토큰",
+      "summary": "RSA 개인키(비대칭) 로 서명합니다. 공유 `jwt.secret`(HS256)이 아닙니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--47-pdmg-jwt-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/47.pdmg-jwt 아키텍처 다이어그램.md",
+      "title": "47.pdmg jwt 아키텍처 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--48-pdmg-fw-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/48.pdmg-fw 아키텍처 다이어그램.md",
+      "title": "48.pdmg fw 아키텍처 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--49-pdmg-service-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/49.pdmg-service 아키텍처 다이어그램.md",
+      "title": "49.pdmg service 아키텍처 다이어그램",
+      "summary": "",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--50-기술스택-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/50.기술스택 다이어그램.md",
+      "title": "50.기술스택 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--51-pdmg-ui-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/51.pdmg-ui 아키텍처 다이어그램.md",
+      "title": "51.pdmg ui 아키텍처 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--52-jwt-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/52.jwt 아키텍처 다이어그램.md",
+      "title": "JWT 관련 전체 흐름 텍스트 아키텍처 다이어그램",
+      "summary": "┌──────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--53-네이밍-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/53.네이밍 아키텍처 다이어그램.md",
+      "title": "PDMG Naming 텍스트 다이어그램",
+      "summary": "기준 문서는 [MG-NAMING_CONVENTION.md](</C:/Programming(23-08-15)/nsight-tcf-framework-codex/pdmg-service/docs/MG-NAMING_CONVENTION.md>)입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--54-http호출-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/54.http호출 다이어그램.md",
+      "title": "PDMG HTTP 호출 텍스트 다이어그램",
+      "summary": "┌──────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--55-시스템선후처리다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/55.시스템선후처리다이어그램.md",
+      "title": "시스템 선·후처리 텍스트 다이어그램",
+      "summary": "┌───────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--56-TCF-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/56.TCF 아키텍처 다이어그램.md",
+      "title": "TCF 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--57-Controller-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/57.Controller 다이어그램.md",
+      "title": "Controller 아키텍처 텍스트 다이어그램",
+      "summary": "PDMG에는 두 가지 Controller 진입 방식이 있습니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--58-업무선후처리-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/58.업무선후처리 다이어그램.md",
+      "title": "업무 선·후처리 아키텍처 텍스트 다이어그램",
+      "summary": "현재 기준으로 `BizPrePostAspect`의 포인트컷은 Business Service 메서드입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--59--Service-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/59. Service 다이어그램.md",
+      "title": "Business Service 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--60-DAO-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/60.DAO 다이어그램.md",
+      "title": "DAO 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--61-Service-ID-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/61.Service ID 아키텍처 다이어그램.md",
+      "title": "Service ID 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────┬──────────┬──────────┬────────────┬──────────┬──────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--62-화면번호-serviceid-controller-service-관계-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/62.화면번호-serviceid-controller-service 관계 다이어그램.md",
+      "title": "화면번호–Service ID–Controller–Service–DAO–Mapper 관계 다이어그램",
+      "summary": "화면번호 / 프로그램 ID",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--63-DTO-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/63.DTO 다이어그램.md",
+      "title": "DTO 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--64-Exception-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/64.Exception 다이어그램.md",
+      "title": "예외처리 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--65-트랜잭션-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/65.트랜잭션 다이어그램.md",
+      "title": "트랜잭션 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--66-TCF-OFF-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/66.TCF OFF 다이어그램.md",
+      "title": "TCF OFF 아키텍처 텍스트 다이어그램",
+      "summary": "설정:",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--67-로그인-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/67.로그인 아키텍처 다이어그램.md",
+      "title": "로그인 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--68-트랜잭션-이미지로그-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/68.트랜잭션 이미지로그 다이어그램.md",
+      "title": "트랜잭션 이미지로그 아키텍처 텍스트 다이어그램",
+      "summary": "이미지로그는 화면 이미지 파일을 저장하는 기능이라기보다, 온라인 거래의 요청·응답 전문과 처리 결과를 `TB_FW_IMAGE_LOG`에 기록하고 관리하는 기능입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--69-GUID-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/69.GUID 아키텍처 다이어그램.md",
+      "title": "GUID 아키텍처 텍스트 다이어그램",
+      "summary": "┌────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--70-Service-Context-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/70.Service Context 다이어그램.md",
+      "title": "Service Context 아키텍처 텍스트 다이어그램",
+      "summary": "┌────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--71-Transaction-Manager",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/71.Transaction Manager.md",
+      "title": "Transaction Manager 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--72-Spring-환경-구성-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/72.Spring 환경 구성 다이어그램.md",
+      "title": "72.Spring 환경 구성 다이어그램",
+      "summary": "",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--73-pdmg--패키지-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/73.pdmg  패키지 다이어그램.md",
+      "title": "PDMG 패키지 아키텍처 텍스트 다이어그램",
+      "summary": "nsight-tcf-framework-codex",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--74-PDMG-클린-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/74.PDMG 클린 아키텍처 다이어그램.md",
+      "title": "PDMG 클린 아키텍처 텍스트 다이어그램",
+      "summary": "현재 PDMG는 완전한 정통 Clean Architecture라기보다는 `TCF + Layered Architecture + Clean Architecture 원칙`을 결합한 구조입니다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--75-PDMG-컴포넌트-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/75.PDMG 컴포넌트 다이어그램.md",
+      "title": "PDMG 컴포넌트 아키텍처 텍스트 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--76-페이징-아키텍처-다이어그램",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/76.페이징 아키텍처 다이어그램.md",
+      "title": "76.페이징 아키텍처 다이어그램",
+      "summary": "┌──────────────────────────────────────────────────────────────────────┐",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--CRUD서비스프롬프트가이드",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/CRUD서비스프롬프트가이드.md",
+      "title": "PDMG Service CRUD 프롬프트 가이드",
+      "summary": "이 문서는 AI에게 `pdmg-service`의 CRUD 기능을 정확하고 안전하게 요청하기 위한 실전 가이드다. 단순히 “CRUD를 만들어줘”라고 요청하지 않고, 업무 규칙·DB 계약·TCF 전문·트랜잭션·오류·테스트까지 명확하게 전달하는 것을 목표로 한다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--MG-NAMING_CONVENTION-원본-",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/MG-NAMING_CONVENTION(원본).md",
+      "title": "PDMG Naming Convention Guide",
+      "summary": "농협 상호금융 PDMG 명명 규칙. 애플리케이션 컴포넌트 타입↔패키지↔네이밍 매핑, Handler/Facade/Controller/Service/DAO/DTO, MyBatis SQL ID 규칙을 정의한다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--MG-NAMING_CONVENTION",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/MG-NAMING_CONVENTION.md",
+      "title": "PDMG Naming Convention Guide",
+      "summary": "농협 상호금융 PDMG 명명 규칙. 애플리케이션 컴포넌트 타입↔패키지↔네이밍 매핑, Handler/Facade/Controller/Service/DAO/DTO, MyBatis SQL ID 규칙을 정의한다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--README",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/README.md",
+      "title": "PDMG AS-IS 문서 안내",
+      "summary": "기준일: 2026-08-09",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--pdmg-service-트랜잭션흐름",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/pdmg-service 트랜잭션흐름.md",
+      "title": "pdmg-service 트랜잭션 흐름",
+      "summary": "기준: TCF ON (`nhnis.fw.tcf.enabled=true`)",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--tcf",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/tcf.md",
+      "title": "TCF / 온라인 거래 흐름 (PDMG)",
+      "summary": "이 문서는 현재 `pdmg-service` + `pdmg-fw` 동작을 기준으로 한다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--네이밍원칙",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/네이밍원칙.md",
+      "title": "PDMG Service 네이밍 원칙",
+      "summary": "이 문서는 `pdmg-service`의 Java 코드와 아키텍처 구성요소에 적용하는 단일 네이밍 기준이다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--롤백아키텍처-4초지나면롤백되나",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/롤백아키텍처 4초지나면롤백되나.md",
+      "title": "롤백아키텍처 4초지나면롤백되나",
+      "summary": "> 현행 1차 정책: 공통 온라인 타임아웃은 Facade `timeout`이 아니라",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--범용CRUD프롬프트",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/범용CRUD프롬프트.md",
+      "title": "PDMG 범용 CRUD 프롬프트",
+      "summary": "이 문서는 AI에게 `pdmg-service`의 CRUD 기능을 정확하고 안전하게 설계·구현하도록 요청하기 위한 재사용 프롬프트다. 단순히 “CRUD를 만들어 달라”고 요청하는 대신 업무 규칙, DB 계약, 서비스 ID, 트랜잭션, 오류 처리와 검증 기준을 명시하여 추정 구현을 방지한다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--범용crudservice프롬프팅",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/범용crudservice프롬프팅.md",
+      "title": "범용 CRUD Service 프롬프트",
+      "summary": "이 문서는 `pdmg-service` CRUD를 가장 간단하게 요청하는 단일 프롬프트다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--성능감시",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/성능감시.md",
+      "title": "성능 감시 (PDMG)",
+      "summary": "현재 성능 감시는 로그 기반이며, 구간을 나눠 추적한다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--에러처리",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/에러처리.md",
+      "title": "에러 처리 (PDMG)",
+      "summary": "기준: TCF ON (`nhnis.fw.tcf.enabled=true`), `pdmg-fw` + `pdmg-service`",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--book--source--트랜잭션처리",
+      "corpus": "root",
+      "source": "pdmg-service/docs/book/source/트랜잭션처리.md",
+      "title": "트랜잭션처리 (PDMG)",
+      "summary": "PDMG 온라인 거래에서 말하는 「트랜잭션」은 두 층이다.",
       "module": "pdmg-service",
       "audience": [
         "developer"
@@ -2181,6 +7473,20 @@
       "source": "pdmg-service/docs/tcf.md",
       "title": "TCF / 온라인 거래 흐름 (PDMG)",
       "summary": "이 문서는 현재 `pdmg-service` + `pdmg-fw` 동작을 기준으로 한다.",
+      "module": "pdmg-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "pdmg-service--docs--zz-PDMG-애플리케이션-아키텍처와-개발-가이드-목차-md",
+      "corpus": "root",
+      "source": "pdmg-service/docs/zz.PDMG 애플리케이션 아키텍처와 개발 가이드 목차.md.md",
+      "title": "제안 도서명",
+      "summary": "PDMG 애플리케이션 아키텍처와 개발 가이드",
       "module": "pdmg-service",
       "audience": [
         "developer"
@@ -10714,6 +16020,20 @@
       "title": "WAR Deployment Acceptance Report",
       "summary": "- 작성일: 2026-08-10",
       "module": "tcf-ontology-service",
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "tcf-project-agent--프로젝트-마스터",
+      "corpus": "root",
+      "source": "tcf-project-agent/프로젝트 마스터.md",
+      "title": "농협 상호금융 NSIGHT",
+      "summary": "너는 지금부터 농협 상호금융 NSIGHT 정보계 Architecture Master Agent다.",
+      "module": "tcf-project-agent",
       "audience": [
         "developer"
       ],
@@ -41193,6 +46513,48 @@
       "source": "ztcf-다이어리/2026-08-07-네이밍/네이밍.md",
       "title": "PDMP NAMING CONVENTION — 1~17페이지 원문 정리본",
       "summary": "> 기준: 사용자가 제공한 이미지 1~17페이지를 페이지 순서대로 텍스트화한 자료입니다.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-08-12-jwt-토큰-사용방식--pdmg-jwt--토큰관리",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-08-12-jwt 토큰 사용방식/pdmg-jwt  토큰관리.md",
+      "title": "pdmg jwt  토큰관리",
+      "summary": "현재 구현을 기준으로 보면, `pdmg-jwt`의 RS256 토큰 발급과 `pdmg-service`의 토큰 검증은 아직 연결되지 않았습니다.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-08-12-jwt-토큰-사용방식--토큰사용방식",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-08-12-jwt 토큰 사용방식/토큰사용방식.md",
+      "title": "토큰사용방식",
+      "summary": "토큰을 쓰는 이유는 매 요청마다 사용자의 아이디와 비밀번호를 다시 확인하지 않고, “이 사용자는 이미 인증되었다”는 사실을 안전하게 전달하기 위해서입니다.",
+      "module": null,
+      "audience": [
+        "developer"
+      ],
+      "tags": [],
+      "featured": false,
+      "priority": 0
+    },
+    {
+      "id": "ztcf-다이어리--2026-08-12-jwt-토큰-사용방식--토큰위변조검증",
+      "corpus": "root",
+      "source": "ztcf-다이어리/2026-08-12-jwt 토큰 사용방식/토큰위변조검증.md",
+      "title": "토큰위변조검증",
+      "summary": "정확히는 `sv-service`가 Public Key로 JWT의 서명(Signature)을 검증하기 때문에 위·변조 여부를 알 수 있습니다. Public Key로 토큰 내용을 “복호화”하는 것이 아닙니다.",
       "module": null,
       "audience": [
         "developer"

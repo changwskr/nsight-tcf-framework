@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <property name="LOG_PATH">logs</property>
+        <property name="PATTERN">[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5p] [%t] %c{1.} - %m%n</property>
+        <!--
+          Console charset must match the terminal code page.
+          - run.bat / IDE UTF-8 terminal: UTF-8 (default)
+          - CP949 터미널만 쓰는 경우: -Dpdmg.log.console.charset=MS949
+        -->
+        <property name="CONSOLE_CHARSET">${sys:pdmg.log.console.charset:-UTF-8}</property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${PATTERN}" charset="${CONSOLE_CHARSET}"/>
+        </Console>
+        <RollingFile name="File"
+                     fileName="${LOG_PATH}/pdmg-infra.log"
+                     filePattern="${LOG_PATH}/pdmg-infra-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${PATTERN}" charset="UTF-8"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="20 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="14"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="nhnis" level="INFO"/>
+        <!-- log4jdbc: Connection.isValid keepalive 로그 과다 방지 (SQL timing만 유지) -->
+        <Logger name="jdbc.audit" level="WARN" additivity="false"/>
+        <Logger name="jdbc.connection" level="WARN" additivity="false"/>
+        <Logger name="jdbc.resultset" level="OFF" additivity="false"/>
+        <Logger name="jdbc.resultsettable" level="OFF" additivity="false"/>
+        <Logger name="jdbc.sqlonly" level="OFF" additivity="false"/>
+        <Logger name="jdbc.sqltiming" level="INFO" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Logger>
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>

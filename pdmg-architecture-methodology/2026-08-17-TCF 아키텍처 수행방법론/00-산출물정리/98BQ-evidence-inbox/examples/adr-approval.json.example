@@ -1,0 +1,7 @@
+{
+  "adr_id": "ADR-SEC-001",
+  "decision": "APPROVE",
+  "approver": "Security Architect / Platform Owner",
+  "decision_date": "2026-08-19",
+  "evidence_ref": "CAB-CHANGE-XXXX"
+}

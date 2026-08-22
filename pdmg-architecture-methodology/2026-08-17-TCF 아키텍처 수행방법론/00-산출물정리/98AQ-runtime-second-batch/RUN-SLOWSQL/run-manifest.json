@@ -1,0 +1,27 @@
+{
+  "run_id": "RUN-SLOWSQL",
+  "environment": "REPLACE",
+  "evidence_class": "PRODUCTION_RUNTIME",
+  "synthetic": false,
+  "build_commit": "REPLACE",
+  "config_version": "REPLACE",
+  "started_at": "REPLACE",
+  "ended_at": "REPLACE",
+  "production_status": "OPEN",
+  "required_evidence": [
+    "metrics/slow-sql.json",
+    "logs/transaction.json",
+    "metrics/pool.json",
+    "db/before-after.json"
+  ],
+  "machine_gates": [
+    "db_query_timeout < tx_timeout",
+    "transaction_rollback = true",
+    "late_commit = 0",
+    "connection_return = true"
+  ],
+  "human_gates": [
+    "Approve ServiceId-specific timeout chain",
+    "Review Oracle cancellation semantics and SQL state"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "rolled_back": null,
+  "late_commit_count": null,
+  "tx_result": null,
+  "client_result": null,
+  "pending_after": null,
+  "active_before": null,
+  "active_after": null,
+  "worker_returned": null,
+  "context_leak_count": null,
+  "human_approvals_complete": false
+}

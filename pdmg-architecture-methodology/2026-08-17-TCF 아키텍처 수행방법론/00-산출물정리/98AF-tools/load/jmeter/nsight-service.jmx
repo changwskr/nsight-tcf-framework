@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="NSIGHT Service Load Plan">
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="TARGET_TPS" elementType="Argument"><stringProp name="Argument.name">TARGET_TPS</stringProp><stringProp name="Argument.value">${__P(TARGET_TPS,600)}</stringProp></elementProp>
+          <elementProp name="BASE_URL" elementType="Argument"><stringProp name="Argument.name">BASE_URL</stringProp><stringProp name="Argument.value">${__P(BASE_URL,http://127.0.0.1:8080)}</stringProp></elementProp>
+        </collectionProp>
+      </elementProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="NSIGHT Load">
+        <stringProp name="ThreadGroup.num_threads">${__P(THREADS,500)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(RAMP_SEC,30)}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.duration">${__P(DURATION_SEC,300)}</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <stringProp name="LoopController.loops">-1</stringProp>
+        </elementProp>
+      </ThreadGroup>
+      <hashTree>
+        <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Target TPS">
+          <doubleProp><name>throughput</name><value>${__groovy((props.get('TARGET_TPS') ?: '600').toDouble() * 60.0)}</value><savedValue>0.0</savedValue></doubleProp>
+          <intProp name="calcMode">1</intProp>
+        </ConstantThroughputTimer>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="NSIGHT Service Request">
+          <stringProp name="HTTPSampler.domain">${__groovy(new URI(props.get('BASE_URL') ?: 'http://127.0.0.1:8080').host)}</stringProp>
+          <stringProp name="HTTPSampler.port">${__groovy(new URI(props.get('BASE_URL') ?: 'http://127.0.0.1:8080').port == -1 ? '' : new URI(props.get('BASE_URL') ?: 'http://127.0.0.1:8080').port)}</stringProp>
+          <stringProp name="HTTPSampler.protocol">${__groovy(new URI(props.get('BASE_URL') ?: 'http://127.0.0.1:8080').scheme)}</stringProp>
+          <stringProp name="HTTPSampler.path">${__P(PATH,/api/service)}</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">${__FileToString(${__P(REQUEST_BODY_FILE,request.json)},UTF-8,)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Headers">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Content-Type" elementType="Header"><stringProp name="Header.name">Content-Type</stringProp><stringProp name="Header.value">application/json</stringProp></elementProp>
+              <elementProp name="ServiceId" elementType="Header"><stringProp name="Header.name">ServiceId</stringProp><stringProp name="Header.value">${__P(SERVICE_ID,MG.TEST.sample)}</stringProp></elementProp>
+              <elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">Bearer ${__P(AUTH_BEARER,)}</stringProp></elementProp>
+              <elementProp name="X-NSIGHT-GUID" elementType="Header"><stringProp name="Header.name">X-NSIGHT-GUID</stringProp><stringProp name="Header.value">${__UUID()}</stringProp></elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>

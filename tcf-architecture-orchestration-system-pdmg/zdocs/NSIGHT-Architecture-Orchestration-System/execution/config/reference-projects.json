@@ -1,0 +1,15 @@
+{
+  "referenceSetId": "PDMG-REFERENCE-SET-V1",
+  "projects": ["pdmg-ui", "pdmg-fw", "pdmg-service", "pdmg-jwt"],
+  "sourcePriority": [
+    "verified-runtime-evidence",
+    "verified-source",
+    "applied-configuration",
+    "reference-model",
+    "approved-adr",
+    "reference-standard",
+    "guide",
+    "legacy-reference"
+  ],
+  "excludeDirectories": ["build", "bin", ".gradle", "target", "logs", "generated", "history", "duplicate"]
+}

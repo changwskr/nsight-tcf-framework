@@ -1,0 +1,44 @@
+package nhnis.infra.in.a.persistence.dao;
+import java.util.List; import java.util.Map;
+import nhnis.infra.in.a.config.RDWMapper;
+@RDWMapper
+public interface ifina2100DAO {
+    List<Map<String, Object>> ifina2100S0_S0(Map<String, Object> input) throws Exception;
+    int ifina2100S0_S0_count(Map<String, Object> input) throws Exception;
+    int ifina2100S0_S0_exists(Map<String, Object> input) throws Exception;
+    int ifina2100C0_C0(Map<String, Object> input) throws Exception;
+    int ifina2100U0_U0(Map<String, Object> input) throws Exception;
+    int ifina2100U0_renameSystem(Map<String, Object> input) throws Exception;
+    int ifina2100U0_cascadeSystemId(Map<String, Object> input) throws Exception;
+    int ifina2100U0_cascadeGroup(Map<String, Object> input) throws Exception;
+    int ifina2100U0_cascadeAsset(Map<String, Object> input) throws Exception;
+    int ifina2100U0_cascadeApp(Map<String, Object> input) throws Exception;
+    int ifina2100U0_cascadeDb(Map<String, Object> input) throws Exception;
+    int ifina2100U0_cascadeMapSession(Map<String, Object> input) throws Exception;
+    int ifina2100U0_cascadeTargetChecklist(Map<String, Object> input) throws Exception;
+    int ifina2100U0_cascadeTargetChangeLog(Map<String, Object> input) throws Exception;
+    int ifina2100U0_cascadeTargetEvidence(Map<String, Object> input) throws Exception;
+    int ifina2100U0_cascadeTargetGate(Map<String, Object> input) throws Exception;
+    int ifina2100U0_cascadeTargetAvail(Map<String, Object> input) throws Exception;
+    int ifina2100U0_cascadeTargetCapacity(Map<String, Object> input) throws Exception;
+    int ifina2100U0_cascadeTargetSecurity(Map<String, Object> input) throws Exception;
+    int ifina2100U0_cascadeTargetCost(Map<String, Object> input) throws Exception;
+    int ifina2100U0_cascadeTargetMigration(Map<String, Object> input) throws Exception;
+    int ifina2100D0_appMaps(Map<String, Object> input) throws Exception;
+    int ifina2100D0_apps(Map<String, Object> input) throws Exception;
+    int ifina2100D0_mapSessions(Map<String, Object> input) throws Exception;
+    int ifina2100D0_details(Map<String, Object> input) throws Exception;
+    int ifina2100D0_units(Map<String, Object> input) throws Exception;
+    int ifina2100D0_domains(Map<String, Object> input) throws Exception;
+    int ifina2100D0_unlinkGroup(Map<String, Object> input) throws Exception;
+    int ifina2100D0_unlinkAsset(Map<String, Object> input) throws Exception;
+    int ifina2100D0_unlinkDb(Map<String, Object> input) throws Exception;
+    int ifina2100D0_targetChecklist(Map<String, Object> input) throws Exception;
+    int ifina2100D0_targetGate(Map<String, Object> input) throws Exception;
+    int ifina2100D0_targetCost(Map<String, Object> input) throws Exception;
+    int ifina2100D0_targetMigration(Map<String, Object> input) throws Exception;
+    int ifina2100D0_targetAvail(Map<String, Object> input) throws Exception;
+    int ifina2100D0_targetCapacity(Map<String, Object> input) throws Exception;
+    int ifina2100D0_targetSecurity(Map<String, Object> input) throws Exception;
+    int ifina2100D0_D0(Map<String, Object> input) throws Exception;
+}
