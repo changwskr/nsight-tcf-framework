@@ -166,13 +166,6 @@ class DefaultOnlineTimeoutExecutorTest {
     }
 
     @Test
-    void toConservativeTimeoutSecondsUsesFloorDivision() {
-        assertThat(DefaultOnlineTimeoutExecutor.toConservativeTimeoutSeconds(5000)).isEqualTo(5);
-        assertThat(DefaultOnlineTimeoutExecutor.toConservativeTimeoutSeconds(1500)).isEqualTo(1);
-        assertThat(DefaultOnlineTimeoutExecutor.toConservativeTimeoutSeconds(999)).isEqualTo(1);
-    }
-
-    @Test
     void rejectsWhenWorkerStartsWithInsufficientRemainingBudget() throws Exception {
         properties.setMilliseconds(400);
         properties.setMinStartBudgetMs(250);

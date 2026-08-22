@@ -18,6 +18,7 @@ import jakarta.annotation.PostConstruct;
  * nhnis.fw.timeout.pool-size=20
  * nhnis.fw.timeout.queue-capacity=100
  * nhnis.fw.timeout.min-start-budget-ms=1000
+ * nhnis.fw.timeout.sql-safety-timeout-seconds=10
  * nhnis.fw.timeout.overrides.mgcoa5530S0=10000
  * </pre>
  */
@@ -35,6 +36,9 @@ public class OnlineTimeoutProperties {
     /** Worker 시작 시 TX를 열기 위한 최소 남은 시간(ms). */
     private long minStartBudgetMs = 1000L;
 
+    /** Mapper 기본 SQL safety ceiling(초). deadline 미바인딩 경로 fallback. */
+    private int sqlSafetyTimeoutSeconds = 10;
+
     /** serviceId → timeout(ms). 미등록 시 {@link #milliseconds} 사용. */
     private Map<String, Long> overrides = new LinkedHashMap<>();
 
@@ -51,6 +55,9 @@ public class OnlineTimeoutProperties {
         }
         if (minStartBudgetMs < 1) {
             throw new IllegalStateException("nhnis.fw.timeout.min-start-budget-ms must be >= 1");
+        }
+        if (sqlSafetyTimeoutSeconds < 1) {
+            throw new IllegalStateException("nhnis.fw.timeout.sql-safety-timeout-seconds must be >= 1");
         }
         if (overrides != null) {
             for (Map.Entry<String, Long> entry : overrides.entrySet()) {
@@ -117,6 +124,14 @@ public class OnlineTimeoutProperties {
 
     public void setMinStartBudgetMs(long minStartBudgetMs) {
         this.minStartBudgetMs = minStartBudgetMs;
+    }
+
+    public int getSqlSafetyTimeoutSeconds() {
+        return sqlSafetyTimeoutSeconds;
+    }
+
+    public void setSqlSafetyTimeoutSeconds(int sqlSafetyTimeoutSeconds) {
+        this.sqlSafetyTimeoutSeconds = sqlSafetyTimeoutSeconds;
     }
 
     public Map<String, Long> getOverrides() {

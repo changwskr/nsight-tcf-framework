@@ -40,4 +40,14 @@ class OnlineTimeoutPropertiesTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("min-start-budget-ms");
     }
+
+    @Test
+    void validateRejectsInvalidSqlSafetyTimeout() {
+        OnlineTimeoutProperties properties = new OnlineTimeoutProperties();
+        properties.setSqlSafetyTimeoutSeconds(0);
+
+        assertThatThrownBy(properties::validate)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("sql-safety-timeout-seconds");
+    }
 }

@@ -17,6 +17,8 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import nhnis.fw.tcf.execution.ExecutionDeadline;
+import nhnis.fw.tcf.execution.ExecutionDeadlineContext;
+import nhnis.fw.mybatis.StatementTimeoutResolver;
 
 /**
  * Worker Pool + TransactionTemplate + Future.get(timeout) 기반 온라인 타임아웃 실행기.
@@ -118,7 +120,7 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
                         workerContext.getGuid());
             }
 
-            int transactionTimeoutSeconds = toConservativeTimeoutSeconds(remainingMs);
+            int transactionTimeoutSeconds = StatementTimeoutResolver.toConservativeTimeoutSeconds(remainingMs);
             TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
             transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
             transactionTemplate.setTimeout(transactionTimeoutSeconds);
@@ -132,6 +134,7 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
             }
 
             return transactionTemplate.execute(status -> {
+                ExecutionDeadlineContext.bind(deadline);
                 try {
                     T result = action.call();
                     if (deadline.expired() || Thread.currentThread().isInterrupted()) {
@@ -160,15 +163,13 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
                 } catch (Exception ex) {
                     status.setRollbackOnly();
                     throw new OnlineTimeoutExecutionException(ex);
+                } finally {
+                    ExecutionDeadlineContext.clear();
                 }
             });
         } finally {
             workerContext.clear();
         }
-    }
-
-    static int toConservativeTimeoutSeconds(long remainingMs) {
-        return Math.max(1, (int) (remainingMs / 1000L));
     }
 
     private OnlineOverloadException overload(OnlineTimeoutWorkerContext workerContext) {

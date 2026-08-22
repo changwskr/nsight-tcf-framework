@@ -59,6 +59,8 @@ nhnis:
         mgcoa5530S0: 10000
       pool-size: 20
       queue-capacity: 100
+      min-start-budget-ms: 1000
+      sql-safety-timeout-seconds: 10
     commons:
       legacy-web:
         enabled: true
