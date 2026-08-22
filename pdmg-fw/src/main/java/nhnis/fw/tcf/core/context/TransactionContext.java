@@ -20,6 +20,7 @@ public class TransactionContext {
     private final String serviceId;
     private final ServiceContext serviceContext;
     private final long startedAtNanos;
+    private String evidenceKey;
 
     public TransactionContext(String serviceId, ServiceContext serviceContext) {
         log.info("========================= [TransactionContext.<init>] 시작");
@@ -93,5 +94,14 @@ public class TransactionContext {
 
     public long getStartedAtNanos() {
         return startedAtNanos;
+    }
+
+    /** {@link nhnis.fw.tcf.execution.ExecutionEvidenceKey#assign(TransactionContext)} 로 고정된 Evidence 키. */
+    public String getEvidenceKey() {
+        return evidenceKey;
+    }
+
+    public void bindEvidenceKey(String evidenceKey) {
+        this.evidenceKey = evidenceKey;
     }
 }

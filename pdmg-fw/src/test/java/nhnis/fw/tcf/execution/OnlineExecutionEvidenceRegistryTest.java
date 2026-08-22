@@ -56,6 +56,27 @@ class OnlineExecutionEvidenceRegistryTest {
     }
 
     @Test
+    void tracksWorkerStatesWithFallbackKeyWhenGuidMissing() {
+        ServiceContextHolder.setInstance(new ServiceContext(null, null, null, null, null, null, null));
+        TransactionContext context = TransactionContext.fromCurrent("mgcoa5530S0");
+        registry.begin(context, 200L);
+        String evidenceKey = ExecutionEvidenceKey.keyOf(context);
+
+        registry.markQueued(evidenceKey);
+        registry.markWorkerStarted(evidenceKey, 42L);
+        registry.markCancelRequested(evidenceKey);
+        registry.markClientTimeout(context, 210L);
+        registry.finishClient(context);
+
+        assertThat(evidenceKey).isNotBlank();
+        assertThat(registry.snapshotActive(10)).singleElement()
+                .satisfies(row -> {
+                    assertThat(row.get("workerState")).isEqualTo(WorkerExecutionState.CANCEL_REQUESTED.name());
+                    assertThat(row.get("workerThreadId")).isEqualTo(42L);
+                });
+    }
+
+    @Test
     void archivesAfterSuccessfulClientAndWorkerCompletion() {
         ServiceContextHolder.setInstance(new ServiceContext(null, "svc-guid", null, null, null, null, null));
         TransactionContext context = TransactionContext.fromCurrent("mgcoa8888S0");

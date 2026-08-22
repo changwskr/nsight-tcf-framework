@@ -72,7 +72,7 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
         } catch (RejectedExecutionException ex) {
             throw overload(workerContext);
         }
-        evidenceRegistry.markQueued(workerContext.getGuid());
+        evidenceRegistry.markQueued(workerContext.getEvidenceKey());
 
         long waitMs = Math.max(1L, deadline.remainingMillis());
         try {
@@ -88,7 +88,7 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
         } catch (TimeoutException ex) {
             boolean cancelled = future.cancel(true);
             long elapsed = deadline.elapsedMillis();
-            evidenceRegistry.markCancelRequested(workerContext.getGuid());
+            evidenceRegistry.markCancelRequested(workerContext.getEvidenceKey());
             log.warn("[ONLINE-TIMEOUT] guid={} serviceId={} timeoutMs={} elapsedMs={} cancelRequested={}",
                     workerContext.getGuid(),
                     workerContext.getServiceId(),
@@ -117,8 +117,8 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
 
     private <T> T runInWorker(OnlineTimeoutWorkerContext workerContext, long timeoutMs,
             ExecutionDeadline deadline, Callable<T> action) throws Exception {
-        String guid = workerContext.getGuid();
-        evidenceRegistry.markWorkerStarted(guid, Thread.currentThread().threadId());
+        String evidenceKey = workerContext.getEvidenceKey();
+        evidenceRegistry.markWorkerStarted(evidenceKey, Thread.currentThread().threadId());
         workerContext.install();
         boolean workerCommitted = false;
         try {
@@ -156,7 +156,7 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
             PlatformTransactionManager transactionManager =
                     transactionManagerRegistry.require(policy.transactionManagerBean());
             int transactionTimeoutSeconds = StatementTimeoutResolver.toConservativeTimeoutSeconds(remainingMs);
-            evidenceRegistry.markTxStarted(guid, policy.mode(), transactionTimeoutSeconds);
+            evidenceRegistry.markTxStarted(evidenceKey, policy.mode(), transactionTimeoutSeconds);
             TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
             transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
             transactionTemplate.setTimeout(transactionTimeoutSeconds);
@@ -210,13 +210,13 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
             workerCommitted = true;
             return txResult;
         } finally {
-            if (guid != null && !guid.isBlank()) {
+            if (evidenceKey != null && !evidenceKey.isBlank()) {
                 if (workerCommitted) {
-                    evidenceRegistry.markWorkerCommitted(guid);
+                    evidenceRegistry.markWorkerCommitted(evidenceKey);
                 } else {
-                    evidenceRegistry.markWorkerRolledBack(guid);
+                    evidenceRegistry.markWorkerRolledBack(evidenceKey);
                 }
-                evidenceRegistry.markWorkerTerminated(guid);
+                evidenceRegistry.markWorkerTerminated(evidenceKey);
             }
             workerContext.clear();
         }

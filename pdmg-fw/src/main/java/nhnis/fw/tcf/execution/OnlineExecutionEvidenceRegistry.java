@@ -27,7 +27,10 @@ public class OnlineExecutionEvidenceRegistry {
         if (context == null || !StringUtils.hasText(context.getServiceId())) {
             return;
         }
-        String key = keyOf(context);
+        String key = ExecutionEvidenceKey.assign(context);
+        if (key == null) {
+            return;
+        }
         active.put(key, new EvidenceEntry(
                 context.getServiceId().trim(),
                 nhnis.fw.commons.runtime.MgActiveTransactionRegistry.resolveBusinessCode(context.getServiceId()),
@@ -38,29 +41,29 @@ public class OnlineExecutionEvidenceRegistry {
                 WorkerExecutionState.SUBMITTED));
     }
 
-    public void markQueued(String guid) {
-        updateWorker(guid, WorkerExecutionState.QUEUED, entry -> {
+    public void markQueued(String evidenceKey) {
+        updateWorker(evidenceKey, WorkerExecutionState.QUEUED, entry -> {
             entry.queuedAtMs = System.currentTimeMillis();
         });
     }
 
-    public void markWorkerStarted(String guid, long workerThreadId) {
-        updateWorker(guid, WorkerExecutionState.WORKER_STARTED, entry -> {
+    public void markWorkerStarted(String evidenceKey, long workerThreadId) {
+        updateWorker(evidenceKey, WorkerExecutionState.WORKER_STARTED, entry -> {
             entry.workerThreadId = workerThreadId;
             entry.workerStartedAtMs = System.currentTimeMillis();
         });
     }
 
-    public void markTxStarted(String guid, TransactionMode txMode, int txTimeoutSeconds) {
-        updateWorker(guid, WorkerExecutionState.TX_STARTED, entry -> {
+    public void markTxStarted(String evidenceKey, TransactionMode txMode, int txTimeoutSeconds) {
+        updateWorker(evidenceKey, WorkerExecutionState.TX_STARTED, entry -> {
             entry.txMode = txMode == null ? null : txMode.name();
             entry.txTimeoutSeconds = txTimeoutSeconds;
             entry.txStartedAtMs = System.currentTimeMillis();
         });
     }
 
-    public void markCancelRequested(String guid) {
-        updateWorker(guid, WorkerExecutionState.CANCEL_REQUESTED, entry -> {
+    public void markCancelRequested(String evidenceKey) {
+        updateWorker(evidenceKey, WorkerExecutionState.CANCEL_REQUESTED, entry -> {
             entry.cancelRequested = true;
             entry.cancelRequestedAtMs = System.currentTimeMillis();
         });
@@ -82,7 +85,7 @@ public class OnlineExecutionEvidenceRegistry {
         if (context == null) {
             return;
         }
-        String key = keyOf(context);
+        String key = ExecutionEvidenceKey.keyOf(context);
         EvidenceEntry entry = active.get(key);
         if (entry == null) {
             return;
@@ -93,19 +96,19 @@ public class OnlineExecutionEvidenceRegistry {
         }
     }
 
-    public void markWorkerCommitted(String guid) {
-        updateWorker(guid, WorkerExecutionState.COMMITTED, entry -> entry.workerCommittedAtMs = System.currentTimeMillis());
+    public void markWorkerCommitted(String evidenceKey) {
+        updateWorker(evidenceKey, WorkerExecutionState.COMMITTED, entry -> entry.workerCommittedAtMs = System.currentTimeMillis());
     }
 
-    public void markWorkerRolledBack(String guid) {
-        updateWorker(guid, WorkerExecutionState.ROLLED_BACK, entry -> entry.workerRolledBackAtMs = System.currentTimeMillis());
+    public void markWorkerRolledBack(String evidenceKey) {
+        updateWorker(evidenceKey, WorkerExecutionState.ROLLED_BACK, entry -> entry.workerRolledBackAtMs = System.currentTimeMillis());
     }
 
-    public void markWorkerTerminated(String guid) {
-        if (!StringUtils.hasText(guid)) {
+    public void markWorkerTerminated(String evidenceKey) {
+        if (!StringUtils.hasText(evidenceKey)) {
             return;
         }
-        String key = guid.trim();
+        String key = evidenceKey.trim();
         EvidenceEntry entry = active.get(key);
         if (entry == null) {
             return;
@@ -167,7 +170,7 @@ public class OnlineExecutionEvidenceRegistry {
         if (context == null) {
             return;
         }
-        String key = keyOf(context);
+        String key = ExecutionEvidenceKey.keyOf(context);
         EvidenceEntry entry = active.get(key);
         if (entry == null) {
             return;
@@ -176,12 +179,12 @@ public class OnlineExecutionEvidenceRegistry {
         customizer.accept(entry);
     }
 
-    private void updateWorker(String guid, WorkerExecutionState workerState,
+    private void updateWorker(String evidenceKey, WorkerExecutionState workerState,
             java.util.function.Consumer<EvidenceEntry> customizer) {
-        if (!StringUtils.hasText(guid)) {
+        if (!StringUtils.hasText(evidenceKey)) {
             return;
         }
-        EvidenceEntry entry = active.get(guid.trim());
+        EvidenceEntry entry = active.get(evidenceKey.trim());
         if (entry == null) {
             return;
         }
@@ -221,15 +224,6 @@ public class OnlineExecutionEvidenceRegistry {
                 && entry.workerState != WorkerExecutionState.TERMINATED);
         row.put("currentStep", entry.workerState.name());
         return row;
-    }
-
-    private static String keyOf(TransactionContext context) {
-        String guid = context.getGuid();
-        if (StringUtils.hasText(guid)) {
-            return guid.trim();
-        }
-        return context.getServiceId() + "@" + Thread.currentThread().threadId() + "@"
-                + System.identityHashCode(context);
     }
 
     static final class EvidenceEntry {
