@@ -1,0 +1,23 @@
+{
+  "adr_id": "ADR-DATA-001",
+  "title": "RDW/ADW Ownership / Read-Write Boundary",
+  "decision": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "conditions": [],
+  "comment": null,
+  "approval_state": "DRAFT_NOT_APPROVED",
+  "recommended_decision": "APPROVE",
+  "readiness": "READY_FOR_HUMAN_DECISION",
+  "required_approver": "Data Architect + Domain Owners",
+  "runtime_dependency": [],
+  "recommendation": "RDW는 온라인/Near Real-time, ADW는 분석/대량조회 책임을 기본으로 하고 Domain/Table/View Owner 및 Read/Write Matrix를 SoT로 관리한다.",
+  "prerequisites": [
+    "Data Catalog"
+  ],
+  "closure": [
+    "Domain/Table/View owner catalog complete",
+    "read-write matrix approved"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "phase": "P0 Closure Wave 6 — Human Decision Board & Evidence Submission Package",
+  "verified_at": "2026-08-19T10:11:00+09:00",
+  "template_counts": {
+    "adr": 16,
+    "runtime": 12,
+    "p0_closure": 10
+  },
+  "json_files_checked": 46,
+  "json_parse_errors": [],
+  "draft_intake": {
+    "adr_approval_files": 16,
+    "accepted_adr_approvals": 0,
+    "runtime_bundles": 12,
+    "runtime_result_files": 12,
+    "production_config_manifests": 0,
+    "accepted_production_config_manifests": 0,
+    "closure_files": 10,
+    "accepted_closure_records": 0
+  },
+  "regate": {
+    "g80": "HOLD",
+    "hg90": "HOLD",
+    "hard_blocker_count": 38
+  },
+  "safety_assertions": {
+    "accepted_adr_approvals_zero": true,
+    "accepted_closure_zero": true,
+    "g80_hold": true,
+    "hg90_hold": true,
+    "hard_blocker_38": true,
+    "counts_16_12_10": true
+  },
+  "overall": "PASS"
+}

@@ -1,0 +1,29 @@
+{
+  "phase": "P0 Closure Wave 2A Change Specification",
+  "status": "PASS_SPEC_VERIFICATION",
+  "checks": {
+    "jwt_ephemeral_generator": true,
+    "jwt_fixed_kid": true,
+    "eb_facade_tx": true,
+    "eb_service_tx": true,
+    "ep_facade_tx": true,
+    "ep_service_tx": true,
+    "eb_direct_callers": [
+      "eb-service/src/main/java/com/nh/nsight/marketing/eb/entry/facade/EbUserFacade.java"
+    ],
+    "ep_direct_callers": [
+      "ep-service/src/main/java/com/nh/nsight/marketing/ep/entry/facade/EpUserEventFacade.java"
+    ],
+    "timeout_defaults_5_5_3": true,
+    "json_parse_errors": [],
+    "wave2a_files": [
+      "98-P0-WAVE2A-CHANGE-SPEC.md",
+      "98A-JWT-KEY-PROVIDER-CHANGE-SPEC.md",
+      "98B-JWT-KID-ROTATION-CHANGE-SPEC.md",
+      "98C-TX-BOUNDARY-CLEANUP-SPEC.md",
+      "98D-TIMEOUT-SAFETY-HARNESS-SPEC.md",
+      "98E-WAVE2A-CHANGE-MANIFEST.json"
+    ],
+    "all_wave2a_exist": true
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "counts": {
+    "adr": 16,
+    "runtime": 12,
+    "p0_closure": 10
+  },
+  "adr_ids": [
+    "ADR-SEC-001",
+    "ADR-SEC-002",
+    "ADR-SES-001",
+    "ADR-TX-001",
+    "ADR-TMO-001",
+    "ADR-HA-001",
+    "ADR-DR-001",
+    "ADR-DR-002",
+    "ADR-INFRA-001",
+    "ADR-PERF-001",
+    "ADR-DATA-001",
+    "ADR-INT-001",
+    "ADR-OPS-001",
+    "ADR-OBS-001",
+    "ADR-GOV-001",
+    "ADR-DEP-001"
+  ],
+  "runtime_run_ids": [
+    "RUN-TIMEOUT",
+    "RUN-P600",
+    "RUN-P1200",
+    "RUN-S1800",
+    "RUN-HIKARI",
+    "RUN-SLOWSQL",
+    "RUN-N1",
+    "RUN-SESSION",
+    "RUN-CF",
+    "RUN-TRACE",
+    "RUN-ROLLING",
+    "RUN-JWT-ROTATE"
+  ],
+  "p0_closure_ids": [
+    "P0-SEC-001",
+    "P0-SEC-002",
+    "P0-TX-001",
+    "P0-TMO-003",
+    "P0-PHY-001",
+    "P0-PERF-001",
+    "P0-HA-001",
+    "P0-OBS-001",
+    "P0-DEP-001",
+    "P0-MIG-001"
+  ],
+  "board_summary": {
+    "total": 16,
+    "ready_for_human_decision": 11,
+    "needs_owner_input": 1,
+    "needs_owner_input_and_runtime": 2,
+    "runtime_dependent": 2,
+    "approved": 0
+  }
+}

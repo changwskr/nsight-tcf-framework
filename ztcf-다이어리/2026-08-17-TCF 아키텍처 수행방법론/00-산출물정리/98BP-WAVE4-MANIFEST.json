@@ -1,0 +1,181 @@
+{
+  "phase": "Wave4",
+  "generated_date": "2026-08-19",
+  "files": [
+    {
+      "path": "98BH-P0-WAVE4-ADR-FINALIZATION.md",
+      "sha256": "117177e4ab0318e663dd273e5a1141db78c7eb89d79c575f7a685f870fd2cb03",
+      "bytes": 1956
+    },
+    {
+      "path": "98BI-ADR-APPROVAL-REGISTER.json",
+      "sha256": "499e8c98db193cf82049456d43f6fcd456fdb05864db9236bcb1d0ce0915c614",
+      "bytes": 20171
+    },
+    {
+      "path": "98BJ-HUMAN-DECISION-CHECKLIST.md",
+      "sha256": "6b5cd102b1b953a2ceb8db38bb857597693174d79b2f24c78c2ec971685d3986",
+      "bytes": 2201
+    },
+    {
+      "path": "98BK-REGATE-CRITERIA.json",
+      "sha256": "f3472f90c14e6e1f7b1910b0a550571a5e15a69ba7856e9937638d768f51af02",
+      "bytes": 958
+    },
+    {
+      "path": "98BL-RUNTIME-EVIDENCE-INTAKE-GUIDE.md",
+      "sha256": "f31b298ba9366eafc53342e50d434d2dbc816ede06efca38d7d1d083145f0285",
+      "bytes": 1453
+    },
+    {
+      "path": "98BM-REGATE-CURRENT-STATE.json",
+      "sha256": "ed682314af0c9928e31e11c0e4a7398438f1503f9b471ebaeab668c9b35334bc",
+      "bytes": 6350
+    },
+    {
+      "path": "98BN-REGATE-PREFLIGHT.json",
+      "sha256": "6ca3becd5c5120d9f8f6e7fc7acfdaab94e60eeff997a899e4b7756f56201995",
+      "bytes": 1056
+    },
+    {
+      "path": "98BO-WAVE4-VERIFICATION-RESULT.json",
+      "sha256": "6ab3b523b3ac3d65f402744fad9521a3fc08ab38f45f795d1a6d774b7db33158",
+      "bytes": 1576
+    },
+    {
+      "path": "35-ADR-REGISTER.md",
+      "sha256": "15ea714bff95b2f6aa118ac0ffc42b3363e77f67019ecf535f1105f12b8a7f51",
+      "bytes": 2151
+    },
+    {
+      "path": "37-ARCHITECTURE-GATE.md",
+      "sha256": "3d202095d08e6c785c9537ca43e47234ad7f458e974609cc10b59b9408bb2ad7",
+      "bytes": 17281
+    },
+    {
+      "path": "92-P0-CLOSURE-MASTER.md",
+      "sha256": "2fa8bf64b3b681b497bf5f96e90d3e0ccf0f44fdb55137fa73d3746d17cd5d28",
+      "bytes": 6682
+    },
+    {
+      "path": "96-P0-CLOSURE-MATRIX.json",
+      "sha256": "ed179fe4f82a33e31bc868c967eab96066b395fb14d76ddf89bfd1314969e122",
+      "bytes": 9297
+    },
+    {
+      "path": "98BH-adr-sheets/ADR-DATA-001.md",
+      "sha256": "d0a37483f7bce5e2aa87bc27f512d04a15399aa818078b0152284ebcc0d6d0b3",
+      "bytes": 1197
+    },
+    {
+      "path": "98BH-adr-sheets/ADR-DEP-001.md",
+      "sha256": "14ce174b4ed45e40e6cb6908a28fb6f41df41c46107542ba4ee4af3aaf40b344",
+      "bytes": 1203
+    },
+    {
+      "path": "98BH-adr-sheets/ADR-DR-001.md",
+      "sha256": "da923eed6c3f254850c7cb13aa412e9bd80b013686fc1b59579005bfe21a2869",
+      "bytes": 1283
+    },
+    {
+      "path": "98BH-adr-sheets/ADR-DR-002.md",
+      "sha256": "21eebb870cff399121b208780fbf807980196bbf7b1e691037307181c4f3729e",
+      "bytes": 1170
+    },
+    {
+      "path": "98BH-adr-sheets/ADR-GOV-001.md",
+      "sha256": "290ad630e83c88019e83553af625d0302f027a33d98039f4b7c0085df198e9dd",
+      "bytes": 1268
+    },
+    {
+      "path": "98BH-adr-sheets/ADR-HA-001.md",
+      "sha256": "11dfced464ebc3e40e9eb89868669f80b86c78ba54a8596739d664a6ddca149c",
+      "bytes": 1159
+    },
+    {
+      "path": "98BH-adr-sheets/ADR-INFRA-001.md",
+      "sha256": "5fdae227021d499f2293047da4f1494ca421fbfa2458dc5c932b7a49f15dabfe",
+      "bytes": 1315
+    },
+    {
+      "path": "98BH-adr-sheets/ADR-INT-001.md",
+      "sha256": "c99781f700bf6204d6747fbc62975b1eff0abd45322582ba88c455cff75c823a",
+      "bytes": 1247
+    },
+    {
+      "path": "98BH-adr-sheets/ADR-OBS-001.md",
+      "sha256": "c07fffce2cfaf0763c5b89ee256ad96e828c652f7ec9e8538888ed86e82f5882",
+      "bytes": 1149
+    },
+    {
+      "path": "98BH-adr-sheets/ADR-OPS-001.md",
+      "sha256": "e0ac9e7619c2176f59dc51ca7b23bcb080ef4ff4edb2f5627a50e6402dd577ef",
+      "bytes": 1135
+    },
+    {
+      "path": "98BH-adr-sheets/ADR-PERF-001.md",
+      "sha256": "05c931c8d1075cdb65bec1abc5f23c24d87b84d759c3f9cde45ffd0080a486f3",
+      "bytes": 1246
+    },
+    {
+      "path": "98BH-adr-sheets/ADR-SEC-001.md",
+      "sha256": "323943b019b2836a1f49ff254c07c94b8b90f7bea7092792149b64d5c2304385",
+      "bytes": 1349
+    },
+    {
+      "path": "98BH-adr-sheets/ADR-SEC-002.md",
+      "sha256": "d1b88bf8bd134afb8500a6bf88b7844db78a71a9ac91226687a3cceee8915e22",
+      "bytes": 1265
+    },
+    {
+      "path": "98BH-adr-sheets/ADR-SES-001.md",
+      "sha256": "e1900493fb6209ed694f4fb80491d18036a0db5cd16d2ff2f9d6a8ca03029627",
+      "bytes": 1409
+    },
+    {
+      "path": "98BH-adr-sheets/ADR-TMO-001.md",
+      "sha256": "f2830082ff84c5f5396bdb7c451ff9f92c78fc044044fae852a1e8e49bbc8e8f",
+      "bytes": 1356
+    },
+    {
+      "path": "98BH-adr-sheets/ADR-TX-001.md",
+      "sha256": "fec6dd5efe7b562c5829415cf1beeb2335ac5ed84b8f7973bda347a019b7df8b",
+      "bytes": 1280
+    },
+    {
+      "path": "98BH-tools/.pytest_cache/.gitignore",
+      "sha256": "3ed731b65d06150c138e2dadb0be0697550888a6b47eb8c45ecc9adba8b8e9bd",
+      "bytes": 37
+    },
+    {
+      "path": "98BH-tools/.pytest_cache/CACHEDIR.TAG",
+      "sha256": "37dc88ef9a0abeddbe81053a6dd8fdfb13afb613045ea1eb4a5c815a74a3bde4",
+      "bytes": 191
+    },
+    {
+      "path": "98BH-tools/.pytest_cache/README.md",
+      "sha256": "73fd6fccdd802c419a6b2d983d6c3173b7da97558ac4b589edec2dfe443db9ad",
+      "bytes": 302
+    },
+    {
+      "path": "98BH-tools/.pytest_cache/v/cache/lastfailed",
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "bytes": 2
+    },
+    {
+      "path": "98BH-tools/.pytest_cache/v/cache/nodeids",
+      "sha256": "f59c323526a3dcced8ff5d833dd43447b871f226a110b0e19fdeb08a534783f6",
+      "bytes": 586
+    },
+    {
+      "path": "98BH-tools/nsight_regate.py",
+      "sha256": "9a7a624f0bb85e4723d609e90e388fa18efbc69c46047012f99fb8383bdaf590",
+      "bytes": 3010
+    },
+    {
+      "path": "98BH-tools/test_regate.py",
+      "sha256": "b33727e5cf45344ceb4d112b920fe8ebeea1f0f62383c74ac25e3f6824f9e92a",
+      "bytes": 3648
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0",
+  "policy": {
+    "runtime_approval_requires": [
+      "evidence_class == PRODUCTION_RUNTIME",
+      "synthetic == false",
+      "required evidence complete",
+      "machine hard gates pass",
+      "human gates approved"
+    ],
+    "working_review_thresholds": {
+      "cpu_pct_max": 70,
+      "busy_thread_pct_max": 70,
+      "hikari_active_pct_max": 80
+    },
+    "open_human_thresholds": [
+      "error_rate_pct_max",
+      "timeout_rate_pct_max",
+      "final resource ceilings"
+    ]
+  },
+  "runs": {
+    "RUN-TIMEOUT": {
+      "go_candidate": [
+        "rolled_back == true",
+        "late_commit_count == 0",
+        "tx_result == ROLLBACK",
+        "client_result == TIMEOUT",
+        "pending_after == 0",
+        "active_after == active_before",
+        "worker_returned == true",
+        "context_leak_count == 0",
+        "human_approvals_complete == true"
+      ],
+      "no_go": [
+        "any rollback/late-commit/pool/worker/context hard gate fails"
+      ],
+      "formal_acceptance_precondition": "dbQueryTimeout < txTimeout < onlineTimeout < clientTimeout"
+    },
+    "RUN-P600": {
+      "go_candidate": [
+        "tps >= 600",
+        "p95_seconds <= 3.0",
+        "human_approvals_complete == true"
+      ],
+      "conditional_review": [
+        "machine hard gates pass but human threshold approval is pending",
+        "working resource threshold warning exists"
+      ],
+      "no_go": [
+        "tps < 600",
+        "p95_seconds > 3.0"
+      ]
+    },
+    "RUN-P1200": {
+      "go_candidate": [
+        "RUN-P600 progression approved",
+        "tps >= 1200",
+        "p95_seconds <= 3.0",
+        "human_approvals_complete == true"
+      ],
+      "conditional_review": [
+        "machine hard gates pass but human threshold approval is pending",
+        "working resource threshold warning exists"
+      ],
+      "no_go": [
+        "tps < 1200",
+        "p95_seconds > 3.0",
+        "critical regression from P600"
+      ]
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "adr_id": "ADR-TX-001",
+  "title": "NSIGHT Transaction Owner",
+  "decision": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "conditions": [],
+  "comment": null,
+  "approval_state": "DRAFT_NOT_APPROVED",
+  "recommended_decision": "APPROVE",
+  "readiness": "READY_FOR_HUMAN_DECISION",
+  "required_approver": "Application Architect + Framework Owner",
+  "runtime_dependency": [
+    "RUN-TIMEOUT",
+    "RUN-SLOWSQL"
+  ],
+  "recommendation": "표준 온라인 업무의 기본 Transaction Owner는 Facade/Use Case Boundary로 한다. Service TX는 명시적 예외만 허용한다.",
+  "prerequisites": [
+    "Wave2A candidate canonical integration"
+  ],
+  "closure": [
+    "canonical build pass",
+    "rollback integration evidence"
+  ]
+}

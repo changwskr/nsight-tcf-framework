@@ -1,0 +1,29 @@
+{
+  "run_id": "RUN-TRACE",
+  "environment": "REPLACE",
+  "evidence_class": "PRODUCTION_RUNTIME",
+  "synthetic": false,
+  "build_commit": "REPLACE",
+  "config_version": "REPLACE",
+  "started_at": "REPLACE",
+  "ended_at": "REPLACE",
+  "production_status": "OPEN",
+  "required_evidence": [
+    "logs/GUID-trace.json",
+    "logs/ServiceId-trace.json",
+    "logs/apache.log",
+    "logs/tomcat.log",
+    "logs/tcf.log",
+    "logs/sql-or-external.json"
+  ],
+  "machine_gates": [
+    "same_guid_across_required_hops = true",
+    "same_serviceid_across_required_hops = true",
+    "reverse_trace_to_ingress = true",
+    "worker_context_leak = 0"
+  ],
+  "human_gates": [
+    "Approve required hop coverage for the selected ServiceId",
+    "Confirm masking/security policy compliance"
+  ]
+}

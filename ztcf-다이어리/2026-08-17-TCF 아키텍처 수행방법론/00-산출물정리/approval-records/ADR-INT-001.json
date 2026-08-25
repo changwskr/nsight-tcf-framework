@@ -1,0 +1,15 @@
+{
+  "adr_id": "ADR-INT-001",
+  "title": "Cross-Domain Integration Contract",
+  "recommended_decision": "APPROVE",
+  "decision": null,
+  "approver": null,
+  "approver_role": "Integration Architect + Security Architect",
+  "decision_date": null,
+  "condition": null,
+  "evidence_ref": [],
+  "runtime_dependency": [
+    "RUN-TRACE"
+  ],
+  "approval_state": "DRAFT_NOT_APPROVED"
+}

@@ -1,0 +1,55 @@
+{
+  "g80": "HOLD",
+  "hg90": "HOLD",
+  "blocking_adrs": [
+    "ADR-DATA-001",
+    "ADR-DEP-001",
+    "ADR-DR-001",
+    "ADR-DR-002",
+    "ADR-GOV-001",
+    "ADR-HA-001",
+    "ADR-INFRA-001",
+    "ADR-INT-001",
+    "ADR-OBS-001",
+    "ADR-OPS-001",
+    "ADR-PERF-001",
+    "ADR-SEC-001",
+    "ADR-SEC-002",
+    "ADR-SES-001",
+    "ADR-TMO-001",
+    "ADR-TX-001"
+  ],
+  "blocking_runtime_runs": [
+    "RUN-CF",
+    "RUN-HIKARI",
+    "RUN-JWT-ROTATE",
+    "RUN-N1",
+    "RUN-P1200",
+    "RUN-P600",
+    "RUN-ROLLING",
+    "RUN-S1800",
+    "RUN-SESSION",
+    "RUN-SLOWSQL",
+    "RUN-TIMEOUT",
+    "RUN-TRACE"
+  ],
+  "blocking_p0_items": [
+    "P0-DEP-001",
+    "P0-HA-001",
+    "P0-MIG-001",
+    "P0-OBS-001",
+    "P0-PERF-001",
+    "P0-PHY-001",
+    "P0-SEC-001",
+    "P0-SEC-002",
+    "P0-TMO-003",
+    "P0-TX-001"
+  ],
+  "non_p0_open": [
+    "G40-C08 HTTP error status policy",
+    "G40-C09 console trace control",
+    "G60-C12 L4 idle/sticky/keepalive alignment",
+    "G60-C13 official error/timeout acceptance threshold"
+  ],
+  "hard_blocker_count": 38
+}

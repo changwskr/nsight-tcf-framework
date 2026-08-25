@@ -1,0 +1,3 @@
+logs/jwt-rotation.json
+logs/jwks.json
+logs/key-audit.log

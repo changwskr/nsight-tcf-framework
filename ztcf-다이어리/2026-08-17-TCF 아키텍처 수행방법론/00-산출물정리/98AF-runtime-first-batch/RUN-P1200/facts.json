@@ -1,0 +1,10 @@
+{
+  "tps": null,
+  "p95_seconds": null,
+  "error_rate_pct": null,
+  "timeout_rate_pct": null,
+  "cpu_pct": null,
+  "busy_thread_pct": null,
+  "hikari_active_pct": null,
+  "human_approvals_complete": false
+}

@@ -1,0 +1,81 @@
+{
+  "phase": "Wave 6",
+  "generated_date": "2026-08-19",
+  "files": [
+    {
+      "path": "98BZ-P0-WAVE6-HUMAN-DECISION-EVIDENCE-SUBMISSION.md",
+      "sha256": "1e18f1beb35af74656288e70c9df27cccc6eaa4f8cb0791533ad959b818c89fc",
+      "bytes": 1818
+    },
+    {
+      "path": "98CA-ARCHITECTURE-BOARD-DECISION-PACK.md",
+      "sha256": "dd44e89bfea759f2426804eccf23144492e5680e4c047642e2a5b576d391db34",
+      "bytes": 5479
+    },
+    {
+      "path": "98CB-EVIDENCE-SUBMISSION-INDEX.json",
+      "sha256": "25690f213ed8680d73927b586434310dfa308ff82a2a27b854260499c07fa0be",
+      "bytes": 1195
+    },
+    {
+      "path": "98CC-RUNTIME-EVIDENCE-SUBMISSION-CHECKLIST.md",
+      "sha256": "edea5397a3b7cb796f5e7af523f96d0397658490ada4bbbf58d10385990a5616",
+      "bytes": 1803
+    },
+    {
+      "path": "98CD-P0-CLOSURE-SUBMISSION-CHECKLIST.md",
+      "sha256": "4bb7c0a9ea34d60a4e567229cc74d5af262470e73be4a3349829f1b062619fbd",
+      "bytes": 2218
+    },
+    {
+      "path": "98CE-WAVE6-DRAFT-INTAKE-RESULT.json",
+      "sha256": "44853750ccabed688b8987644f7764e9c84fa42e054eed59f598753854d03f6c",
+      "bytes": 35952
+    },
+    {
+      "path": "98CF-WAVE6-DRAFT-REGATE-RESULT.json",
+      "sha256": "6ca3becd5c5120d9f8f6e7fc7acfdaab94e60eeff997a899e4b7756f56201995",
+      "bytes": 1056
+    },
+    {
+      "path": "98CG-WAVE6-DRAFT-REGATE-STATE.json",
+      "sha256": "12eec60265a552aebb219e656e5a0338213f2ee5e1f391991d5aeac0536b1f35",
+      "bytes": 36636
+    },
+    {
+      "path": "98CH-ADR-APPROVAL-RECORD.schema.json",
+      "sha256": "c5c10f8647fd8a3c16b9dc6c51b23a997018f95b0480e06f302ddcc293e1b369",
+      "bytes": 903
+    },
+    {
+      "path": "98CI-RUNTIME-EVALUATION-SUBMISSION.schema.json",
+      "sha256": "023e5c55ea5c466a775497e5c2c3e72ef8544677d610bda9a62c96f5ef130f25",
+      "bytes": 1180
+    },
+    {
+      "path": "98CJ-P0-CLOSURE-RECORD.schema.json",
+      "sha256": "ba241d8edf24d0fc02113598886b0abc2272d3c2029790dabea462f7c53c9d04",
+      "bytes": 805
+    },
+    {
+      "path": "98CK-WAVE6-VERIFICATION-RESULT.json",
+      "sha256": "0d5d758614761dac63725cb560eb0d975a6f93f562732c4e417bafde16a637ef",
+      "bytes": 881
+    },
+    {
+      "path": "37-ARCHITECTURE-GATE.md",
+      "sha256": "645f55e4b14b911864e56c816425bd948024e49ea59c6f3bfdbe2fa54d4572c6",
+      "bytes": 18205
+    },
+    {
+      "path": "92-P0-CLOSURE-MASTER.md",
+      "sha256": "58d51369d3c0396487aca4c125093c24dd949a06d892ee7382b2837291944503",
+      "bytes": 7422
+    }
+  ],
+  "template_counts": {
+    "adr": 16,
+    "runtime": 12,
+    "p0_closure": 10
+  }
+}

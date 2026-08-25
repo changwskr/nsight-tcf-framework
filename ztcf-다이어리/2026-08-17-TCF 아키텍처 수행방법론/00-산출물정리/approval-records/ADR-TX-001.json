@@ -1,0 +1,16 @@
+{
+  "adr_id": "ADR-TX-001",
+  "title": "NSIGHT Transaction Owner",
+  "recommended_decision": "APPROVE",
+  "decision": null,
+  "approver": null,
+  "approver_role": "Application Architect + Framework Owner",
+  "decision_date": null,
+  "condition": null,
+  "evidence_ref": [],
+  "runtime_dependency": [
+    "RUN-TIMEOUT",
+    "RUN-SLOWSQL"
+  ],
+  "approval_state": "DRAFT_NOT_APPROVED"
+}

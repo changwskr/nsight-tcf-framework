@@ -1,0 +1,6 @@
+logs/failover.log
+logs/failback.log
+metrics/rto-rpo.json
+logs/gslb-l4.log
+db/consistency.json
+logs/business-validation.log

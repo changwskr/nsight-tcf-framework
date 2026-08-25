@@ -1,0 +1,125 @@
+{
+  "schema_version": "1.0",
+  "batch_id": "WAVE3C-FIRST-BATCH",
+  "runs": {
+    "RUN-TIMEOUT": {
+      "purpose": "Timeout rollback / late commit / connection & worker/context cleanup",
+      "target": {
+        "timeout_order": "dbQuery < tx < online < client",
+        "late_commit_count": 0,
+        "context_leak_count": 0
+      },
+      "preconditions": [
+        "Approved test-only ServiceId that performs a DB change and intentionally exceeds online timeout",
+        "Concrete runtime identity: environment, git commit, artifact/config version, host, Tomcat JVM, DB target",
+        "DB before/after query or DBA-approved equivalent",
+        "Transaction log access keyed by GUID + ServiceId",
+        "Hikari active/pending metrics and worker/context metrics",
+        "Formal acceptance run requires strict timeout ordering; non-strict ordering is diagnostic-only"
+      ],
+      "required_evidence": [
+        "db/before-after.json",
+        "logs/transaction.json",
+        "metrics/pool.json",
+        "metrics/thread.json"
+      ],
+      "commands": {
+        "preflight": "python3 tools/nsight_runbook_validate.py validate-catalog runbooks/first-batch-run-catalog.json && python3 tools/nsight_run_automation.py prepare-bundle --root ./evidence --run-id RUN-TIMEOUT --identity ./identity.json",
+        "execute": "TIMEOUT_URL=... SERVICE_ID=... REQUEST_BODY_FILE=... CLIENT_TIMEOUT_SEC=... timeout/run-timeout-probe.sh ./evidence/RUN-TIMEOUT/logs",
+        "evaluate": "python3 tools/nsight_runtime_evidence.py evaluate-bundle ./evidence/RUN-TIMEOUT"
+      },
+      "hard_gates": [
+        "rolled_back == true",
+        "late_commit_count == 0",
+        "tx_result == ROLLBACK",
+        "client_result == TIMEOUT",
+        "pending_after == 0",
+        "active_after == active_before",
+        "worker_returned == true",
+        "context_leak_count == 0"
+      ],
+      "human_gates": [
+        "Approved change/test ticket",
+        "DBA confirms before/after query semantics",
+        "Application owner confirms test-only ServiceId/data",
+        "Human approval.md signed after machine facts pass"
+      ]
+    },
+    "RUN-P600": {
+      "purpose": "General operating peak at 600 TPS",
+      "target": {
+        "tps": 600,
+        "p95_seconds": 3.0
+      },
+      "preconditions": [
+        "RUN-TIMEOUT has no P0 safety failure; formal sequence approval recorded",
+        "Approved performance or production-like environment; no synthetic evidence",
+        "Concrete runtime identity and stable config snapshot",
+        "JMeter or approved equivalent load generator installed",
+        "Representative request body, ServiceId and authentication token",
+        "OS/JVM/Tomcat/Hikari metrics collected under the same RunId",
+        "Final error/timeout acceptance threshold remains a human/open gate until approved"
+      ],
+      "required_evidence": [
+        "metrics/summary.json",
+        "logs/run.log"
+      ],
+      "commands": {
+        "preflight": "python3 tools/nsight_run_automation.py prepare-bundle --root ./evidence --run-id RUN-P600 --identity ./identity.json",
+        "execute": "TARGET_TPS=600 DURATION_SEC=300 RAMP_SEC=30 BASE_URL=... SERVICE_ID=... REQUEST_BODY_FILE=... load/jmeter/run-jmeter.sh",
+        "evaluate": "python3 tools/nsight_run_automation.py ingest-jmeter --bundle ./evidence/RUN-P600 --jtl ./result.jtl --resource-metrics ./resource-metrics.json && python3 tools/nsight_runtime_evidence.py evaluate-bundle ./evidence/RUN-P600"
+      },
+      "hard_gates": [
+        "tps >= 600",
+        "p95_seconds <= 3.0",
+        "required evidence complete",
+        "evidence_class == PRODUCTION_RUNTIME",
+        "synthetic == false"
+      ],
+      "human_gates": [
+        "Error-rate ceiling approved",
+        "Timeout-rate ceiling approved",
+        "CPU/BusyThread/Hikari working thresholds reviewed",
+        "Human approval.md signed"
+      ]
+    },
+    "RUN-P1200": {
+      "purpose": "Design peak at 1,200 TPS",
+      "target": {
+        "tps": 1200,
+        "p95_seconds": 3.0
+      },
+      "preconditions": [
+        "RUN-P600 is accepted for progression and no unresolved P0 bottleneck remains",
+        "Same or explicitly versioned artifact/config baseline as P600",
+        "Approved performance or production-like environment; no synthetic evidence",
+        "JMeter or approved equivalent load generator installed and sized for 1,200 TPS",
+        "OS/JVM/Tomcat/Hikari metrics collected under the same RunId",
+        "Final error/timeout acceptance threshold remains a human/open gate until approved"
+      ],
+      "required_evidence": [
+        "metrics/summary.json",
+        "logs/run.log"
+      ],
+      "commands": {
+        "preflight": "python3 tools/nsight_run_automation.py prepare-bundle --root ./evidence --run-id RUN-P1200 --identity ./identity.json",
+        "execute": "TARGET_TPS=1200 DURATION_SEC=300 RAMP_SEC=30 BASE_URL=... SERVICE_ID=... REQUEST_BODY_FILE=... load/jmeter/run-jmeter.sh",
+        "evaluate": "python3 tools/nsight_run_automation.py ingest-jmeter --bundle ./evidence/RUN-P1200 --jtl ./result.jtl --resource-metrics ./resource-metrics.json && python3 tools/nsight_runtime_evidence.py evaluate-bundle ./evidence/RUN-P1200"
+      },
+      "hard_gates": [
+        "tps >= 1200",
+        "p95_seconds <= 3.0",
+        "required evidence complete",
+        "evidence_class == PRODUCTION_RUNTIME",
+        "synthetic == false"
+      ],
+      "human_gates": [
+        "Error-rate ceiling approved",
+        "Timeout-rate ceiling approved",
+        "CPU/BusyThread/Hikari working thresholds reviewed",
+        "No critical regression from P600",
+        "Human approval.md signed"
+      ]
+    }
+  }
+}

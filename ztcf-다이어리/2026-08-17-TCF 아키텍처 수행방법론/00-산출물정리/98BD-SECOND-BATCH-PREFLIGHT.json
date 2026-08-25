@@ -1,0 +1,23 @@
+{
+  "timestamp": "2026-08-19T09:25:00+09:00",
+  "phase": "Wave 3D",
+  "tools": {
+    "python": "/opt/pyvenv/bin/python",
+    "java": "/usr/bin/java",
+    "jcmd": "/usr/bin/jcmd",
+    "curl": "/usr/local/bin/curl",
+    "jmeter": null,
+    "gatling": null,
+    "sqlplus": null
+  },
+  "production_runtime_connected": false,
+  "production_runtime_executed": 0,
+  "production_runtime_approved": 0,
+  "operator_hook_dry_runs": {
+    "RUN-N1": "DRY_RUN",
+    "RUN-SESSION": "DRY_RUN",
+    "RUN-CF": "DRY_RUN",
+    "RUN-ROLLING": "DRY_RUN",
+    "RUN-JWT-ROTATE": "DRY_RUN"
+  }
+}

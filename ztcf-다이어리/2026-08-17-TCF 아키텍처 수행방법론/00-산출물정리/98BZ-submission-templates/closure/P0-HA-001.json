@@ -1,0 +1,11 @@
+{
+  "item_id": "P0-HA-001",
+  "area": "Session / HA / DR",
+  "current_status": "HARNESS_READY_BLOCKED_PRODUCTION_RUNTIME_HUMAN",
+  "status": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "closure_comment": null,
+  "required_next": "ADR-SES-001/ADR-HA-001/ADR-DR-* + RUN-SESSION/RUN-CF"
+}

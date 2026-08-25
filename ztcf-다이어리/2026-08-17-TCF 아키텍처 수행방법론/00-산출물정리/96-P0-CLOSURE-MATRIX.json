@@ -1,0 +1,122 @@
+{
+  "candidate": "NSIGHT-ARCH-CANDIDATE-2026-08-19",
+  "phase": "P0 Closure Wave 2A Change Specification",
+  "items": [
+    {
+      "id": "P0-SEC-001",
+      "area": "JWT Signing Key SoT",
+      "status": "CHANGE_SPEC_READY",
+      "staticEvidence": "tcf-jwt JwtKeyConfiguration generates RSA 2048 key at process start; fixed kid nsight-jwt-rs256",
+      "requiredNext": "Implement provider SPI + approved external adapter/config; build/test; RUN-JWT-ROTATE",
+      "gate": "G80/HG90",
+      "changeSpec": "98A-JWT-KEY-PROVIDER-CHANGE-SPEC.md"
+    },
+    {
+      "id": "P0-SEC-002",
+      "area": "kid / Rotation / JWKS Grace",
+      "status": "CHANGE_SPEC_READY",
+      "staticEvidence": "JwtTokenIssuer uses fixed JwtKeyConfiguration.KEY_ID; JWKSet exposes only current generated public key",
+      "requiredNext": "Implement versioned kid/active+previous JWKS; build/test; RUN-JWT-ROTATE",
+      "gate": "G80/HG90",
+      "changeSpec": "98B-JWT-KID-ROTATION-CHANGE-SPEC.md"
+    },
+    {
+      "id": "P0-TX-001",
+      "area": "Facade Transaction Owner",
+      "status": "CHANGE_SPEC_READY",
+      "staticEvidence": "Standard *-service target scope has Facade @Transactional pattern, but EbUserService.create and EpUserEventService.receive also declare @Transactional(timeout=5)",
+      "requiredNext": "Remove two redundant Service TX declarations; add conformance rule; integration rollback tests",
+      "gate": "G40/G80",
+      "changeSpec": "98C-TX-BOUNDARY-CLEANUP-SPEC.md"
+    },
+    {
+      "id": "P0-TMO-001",
+      "area": "Policy-driven TX timeout",
+      "status": "CLOSED_STATIC",
+      "staticEvidence": "PolicyDrivenTransactionAttributeSource overrides @Transactional timeout from TimeoutContextHolder while preserving readOnly/propagation/rollback rules",
+      "requiredNext": "Runtime confirmation in RUN-TIMEOUT/RUN-SLOWSQL",
+      "gate": "G80"
+    },
+    {
+      "id": "P0-TMO-002",
+      "area": "DB Query timeout propagation",
+      "status": "CLOSED_STATIC",
+      "staticEvidence": "PolicyDrivenQueryTimeoutInterceptor copies MappedStatement with policy dbQueryTimeoutSec for query/update",
+      "requiredNext": "Slow SQL runtime proof",
+      "gate": "G80"
+    },
+    {
+      "id": "P0-TMO-003",
+      "area": "Timeout worker cancel semantics",
+      "status": "HARNESS_SPEC_READY",
+      "staticEvidence": "OnlineTransactionTimeoutExecutor uses Future.get(timeout) and future.cancel(true); interrupt is best effort only",
+      "requiredNext": "Implement policy audit/enforcement guard + timeout integration harness; RUN-TIMEOUT/RUN-SLOWSQL",
+      "gate": "G80/HG90",
+      "changeSpec": "98D-TIMEOUT-SAFETY-HARNESS-SPEC.md"
+    },
+    {
+      "id": "P0-CTX-001",
+      "area": "Worker context propagation/cleanup",
+      "status": "CLOSED_STATIC",
+      "staticEvidence": "TimeoutThreadContext captures TimeoutPolicy, TransactionContext, MDC, RequestAttributes and clears all in finally",
+      "requiredNext": "Concurrency/leak runtime test",
+      "gate": "G80"
+    },
+    {
+      "id": "P0-GOV-001",
+      "area": "Architecture Model JSON Schema",
+      "status": "CLOSED_STATIC",
+      "staticEvidence": "29-ARCHITECTURE-MODEL.schema.json created; validator PASS: 380 nodes/380 edges, no duplicate ids, dangling edges, undeclared node/relation types",
+      "requiredNext": "Expand model edges for requirement/screen/server/runtime evidence",
+      "gate": "G80"
+    },
+    {
+      "id": "P0-PHY-001",
+      "area": "71 Server -> JVM -> WAR -> Route",
+      "status": "BLOCKED_EVIDENCE",
+      "staticEvidence": "Source contains dev integration ztomcat with 16 app webapps + ROOT, but this is not production server mapping evidence",
+      "requiredNext": "Production CATALINA_BASE/server.xml/setenv.sh/httpd/L4 inventory per hostname",
+      "gate": "G30/G80/HG90"
+    },
+    {
+      "id": "P0-PERF-001",
+      "area": "Runtime approved capacity",
+      "status": "BLOCKED_RUNTIME",
+      "staticEvidence": "500 TPS legacy vs 855 TPS working remains versioned design values",
+      "requiredNext": "RUN-P600/P1200/S1800/N1/HIKARI and approve final VM/JVM/Tomcat/Hikari baseline",
+      "gate": "G60/G80/HG90"
+    },
+    {
+      "id": "P0-HA-001",
+      "area": "Session / HA / DR",
+      "status": "BLOCKED_RUNTIME_HUMAN",
+      "staticEvidence": "Working candidates exist, but no failover/failback runtime evidence or approved RTO/RPO/session ADR",
+      "requiredNext": "ADR-SES-001/ADR-HA-001/ADR-DR-* + RUN-SESSION/RUN-CF",
+      "gate": "G70/G80/HG90"
+    },
+    {
+      "id": "P0-OBS-001",
+      "area": "GUID + ServiceId E2E",
+      "status": "BLOCKED_RUNTIME",
+      "staticEvidence": "Logging/context model exists, no mandatory RUN-TRACE raw evidence attached",
+      "requiredNext": "Run end-to-end trace and attach Apache/Tomcat/TCF/SQL/external evidence",
+      "gate": "G70/G80/HG90"
+    },
+    {
+      "id": "P0-DEP-001",
+      "area": "Rolling/Rollback safety",
+      "status": "BLOCKED_RUNTIME",
+      "staticEvidence": "CI/CD architecture exists but no production-like rolling/rollback evidence",
+      "requiredNext": "RUN-ROLLING + rollback + DB/config backward compatibility",
+      "gate": "G70/G80/HG90"
+    },
+    {
+      "id": "P0-MIG-001",
+      "area": "Migration cutover readiness",
+      "status": "BLOCKED_RUNTIME_HUMAN",
+      "staticEvidence": "Source->Stage->Target architecture defined; no reconciliation/go-no-go/rollback rehearsal evidence",
+      "requiredNext": "Migration reconciliation result, go/no-go criteria, rollback rehearsal",
+      "gate": "G70/G80/HG90"
+    }
+  ]
+}

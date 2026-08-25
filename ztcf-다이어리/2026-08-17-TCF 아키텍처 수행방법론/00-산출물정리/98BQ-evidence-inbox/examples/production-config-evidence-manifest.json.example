@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "environment": "PROD",
+  "hostname": "sbmpcolows01",
+  "captured_at": "2026-08-19T09:30:00+09:00",
+  "evidence_class": "PRODUCTION_RUNTIME",
+  "collector": "ops-user",
+  "files": [
+    {
+      "path": "tomcat/JVM01/conf/server.xml",
+      "source_path_on_host": "/app/tomcat/JVM01/conf/server.xml",
+      "sha256": "REPLACE_WITH_64_HEX",
+      "component": "TOMCAT",
+      "instance_id": "JVM01"
+    }
+  ]
+}

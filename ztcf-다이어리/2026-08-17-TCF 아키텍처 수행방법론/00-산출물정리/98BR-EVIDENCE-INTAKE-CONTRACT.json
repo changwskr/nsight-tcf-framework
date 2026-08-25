@@ -1,0 +1,25 @@
+{
+  "phase": "P0 Closure Wave 5 — Actual Evidence Intake & Re-Gate Execution",
+  "adr_approval": {
+    "required": ["adr_id", "decision", "approver", "decision_date", "evidence_ref"],
+    "decision_enum": ["APPROVE", "REJECT", "DEFER"],
+    "approval_rule": "Only APPROVE promotes ADR status to APPROVED"
+  },
+  "runtime_approval": {
+    "required_contract": {
+      "status": "PASS",
+      "evidence_class": "PRODUCTION_RUNTIME",
+      "runtime_approved": true
+    },
+    "guard": "Synthetic/reference/dry-run results never close a runtime gate"
+  },
+  "production_config": {
+    "required": ["schema_version", "environment", "hostname", "captured_at", "evidence_class", "files"],
+    "environment_for_closure": ["PROD", "DR"],
+    "evidence_class": "PRODUCTION_RUNTIME"
+  },
+  "p0_closure": {
+    "required": ["item_id", "status", "approver", "decision_date", "evidence_ref"],
+    "allowed_status": ["CLOSED_RUNTIME", "CLOSED_APPROVED"]
+  }
+}

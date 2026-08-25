@@ -1,0 +1,550 @@
+{
+  "candidate": "NSIGHT-ARCH-CANDIDATE-2026-08-19",
+  "phase": "P0 Closure Wave 4 — ADR Finalization & Re-Gate Preparation",
+  "generated_date": "2026-08-19",
+  "status_policy": {
+    "DRAFT": "decision package not yet sufficient for approval",
+    "PROPOSED": "approval-ready recommendation; not approved until approver/date are recorded",
+    "APPROVED": "human decision recorded with approver and decision_date"
+  },
+  "adrs": [
+    {
+      "id": "ADR-SEC-001",
+      "title": "JWT Signing Key Source of Truth",
+      "status": "PROPOSED",
+      "readiness": "READY_FOR_HUMAN_DECISION",
+      "priority": "P0",
+      "owner": "Security / Platform",
+      "approver_role": "Security Architect + Platform Owner",
+      "recommendation": "Production signing key의 Source of Truth는 KMS/HSM 또는 승인된 중앙 Key Store로 한다. Process-local RSA 생성은 DEV/LOCAL에만 허용한다.",
+      "alternatives": [
+        "A. KMS/HSM centralized signer (recommended)",
+        "B. Exportable central keystore",
+        "C. Process-local ephemeral RSA (DEV only)"
+      ],
+      "rationale": "다중 Issuer, 재기동, 감사, 폐기, 회전 시 동일하고 추적 가능한 Key SoT가 필요하다.",
+      "consequences": [
+        "Private key export를 최소화한다.",
+        "Key provider adapter와 운영 권한/감사 정책이 필요하다."
+      ],
+      "prerequisites": [
+        "승인된 Key Platform/KMS-HSM 규격",
+        "Canonical build integration"
+      ],
+      "runtime": [
+        "RUN-JWT-ROTATE"
+      ],
+      "closure": [
+        "KMS/HSM adapter integrated",
+        "multi-node/restart/rotation evidence"
+      ],
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null,
+      "decision": null
+    },
+    {
+      "id": "ADR-SEC-002",
+      "title": "kid / Rotation / JWKS Grace Lifecycle",
+      "status": "PROPOSED",
+      "readiness": "READY_FOR_HUMAN_DECISION",
+      "priority": "P0",
+      "owner": "Security / Platform",
+      "approver_role": "Security Architect + Platform Owner",
+      "recommendation": "Versioned kid를 사용하고 JWKS는 Active + Previous public key를 grace 기간 동안 동시 제공한다.",
+      "alternatives": [
+        "A. Active+Previous grace (recommended)",
+        "B. Immediate cutover without grace"
+      ],
+      "rationale": "회전 직후 기존 Access Token의 정상 검증과 운영 롤백 가능성을 보장해야 한다.",
+      "consequences": [
+        "Grace 기간과 retirement 정책을 명시해야 한다.",
+        "Previous private key를 신규 signing에 사용하지 않는다."
+      ],
+      "prerequisites": [
+        "ADR-SEC-001",
+        "Access token 최대수명/운영여유 입력"
+      ],
+      "runtime": [
+        "RUN-JWT-ROTATE"
+      ],
+      "closure": [
+        "rotation grace observed",
+        "restart does not create unplanned key"
+      ],
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null,
+      "decision": null
+    },
+    {
+      "id": "ADR-SES-001",
+      "title": "Session Strategy",
+      "status": "DRAFT",
+      "readiness": "NEEDS_OWNER_INPUT_AND_RUNTIME",
+      "priority": "P0",
+      "owner": "Architecture / Ops",
+      "approver_role": "Application Architect + Ops Owner + Security",
+      "recommendation": "현재 자료만으로 최종안을 확정하지 않는다. 센터내 Sticky+DeltaManager와 외부 Session Store를 동일 기준으로 비교하고, 센터장애 시 재로그인 허용정책을 먼저 승인한다.",
+      "alternatives": [
+        "A. Sticky + DeltaManager (same-center HA)",
+        "B. Spring Session JDBC/external store",
+        "C. Re-login centric continuity"
+      ],
+      "rationale": "60/90분 세션, 복제비용, 센터 전환정책이 혼재하며 failover 증적이 없다.",
+      "consequences": [
+        "Session object serialization/메모리/DB 부하 영향이 달라진다.",
+        "센터 장애 UX가 정책에 따라 달라진다."
+      ],
+      "prerequisites": [
+        "Session idle 정책 60/90분 승인",
+        "센터장애 재로그인 허용정책"
+      ],
+      "runtime": [
+        "RUN-SESSION",
+        "RUN-CF"
+      ],
+      "closure": [
+        "approved session policy",
+        "failover behavior matches ADR"
+      ],
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null,
+      "decision": null
+    },
+    {
+      "id": "ADR-TX-001",
+      "title": "NSIGHT Transaction Owner",
+      "status": "PROPOSED",
+      "readiness": "READY_FOR_HUMAN_DECISION",
+      "priority": "P0",
+      "owner": "Application / Framework",
+      "approver_role": "Application Architect + Framework Owner",
+      "recommendation": "표준 온라인 업무의 기본 Transaction Owner는 Facade/Use Case Boundary로 한다. Service TX는 명시적 예외만 허용한다.",
+      "alternatives": [
+        "A. Facade owner (recommended)",
+        "B. Service owner",
+        "C. Outer worker/transaction template owner"
+      ],
+      "rationale": "Handler→Facade→Service 구조에서 업무 유스케이스 경계와 rollback/timeout 책임을 일치시킨다.",
+      "consequences": [
+        "EbUserService/EpUserEventService 중복 TX 정리 필요",
+        "REQUIRES_NEW 등은 Exception Registry 필요"
+      ],
+      "prerequisites": [
+        "Wave2A candidate canonical integration"
+      ],
+      "runtime": [
+        "RUN-TIMEOUT",
+        "RUN-SLOWSQL"
+      ],
+      "closure": [
+        "canonical build pass",
+        "rollback integration evidence"
+      ],
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null,
+      "decision": null
+    },
+    {
+      "id": "ADR-TMO-001",
+      "title": "Timeout Execution / Cancellation Model",
+      "status": "PROPOSED",
+      "readiness": "READY_FOR_HUMAN_DECISION",
+      "priority": "P0",
+      "owner": "Framework / DB",
+      "approver_role": "Framework Owner + DBA + Application Architect",
+      "recommendation": "Online Timeout은 Deadline/응답통제 Owner로 두고 Thread.interrupt를 DB rollback 보장수단으로 간주하지 않는다. DB Query < TX < Online < Client 순서를 강제한다.",
+      "alternatives": [
+        "A. Strict layered deadline (recommended)",
+        "B. Equal TX/Online timeout",
+        "C. Client-only timeout"
+      ],
+      "rationale": "현재 기본 3/5/5는 TX와 Online 경계가 동일하여 race window가 존재한다.",
+      "consequences": [
+        "ServiceId별 timeout metadata가 필요하다.",
+        "Fault injection으로 late commit/connection return을 증명해야 한다."
+      ],
+      "prerequisites": [
+        "Timeout policy approval",
+        "controlled slow SQL/fault fixture"
+      ],
+      "runtime": [
+        "RUN-TIMEOUT",
+        "RUN-SLOWSQL"
+      ],
+      "closure": [
+        "late_commit=0",
+        "connection_return=true",
+        "context leak=0"
+      ],
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null,
+      "decision": null
+    },
+    {
+      "id": "ADR-HA-001",
+      "title": "AP HA Topology",
+      "status": "DRAFT",
+      "readiness": "RUNTIME_DEPENDENT",
+      "priority": "P0",
+      "owner": "Infra / Performance",
+      "approver_role": "Infra Architect + Performance Lead + Ops Owner",
+      "recommendation": "2+2, 3+3, 8Core Scale-Out 중 최종 토폴로지는 Runtime Approved Capacity와 N-1/Center Failure 결과 후 결정한다.",
+      "alternatives": [
+        "A. 2+2",
+        "B. 3+3",
+        "C. 8Core scale-out"
+      ],
+      "rationale": "500/855 TPS 기준이 확정되지 않아 잔여용량을 설계값만으로 최종 승인할 수 없다.",
+      "consequences": [
+        "서버수/비용/장애단위/rolling 여유가 달라진다."
+      ],
+      "prerequisites": [
+        "ADR-PERF-001 runtime value"
+      ],
+      "runtime": [
+        "RUN-P1200",
+        "RUN-N1",
+        "RUN-CF",
+        "RUN-ROLLING"
+      ],
+      "closure": [
+        "residual capacity approved",
+        "center failure and rolling evidence"
+      ],
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null,
+      "decision": null
+    },
+    {
+      "id": "ADR-DR-001",
+      "title": "Center Failure Session/Data Continuity",
+      "status": "DRAFT",
+      "readiness": "NEEDS_OWNER_INPUT_AND_RUNTIME",
+      "priority": "P0",
+      "owner": "Ops / Business / Architecture",
+      "approver_role": "Business Owner + Ops Owner + Architecture",
+      "recommendation": "센터 장애 시 세션 유지 여부와 재로그인 허용정책을 업무정책으로 먼저 결정하고, 데이터 일관성/복구 방식과 분리해 승인한다.",
+      "alternatives": [
+        "A. Session preserved",
+        "B. Re-login after center failover",
+        "C. Service-class differentiated"
+      ],
+      "rationale": "현재 자료에는 same-center 복제 후보와 center-failure 재로그인 후보가 공존한다.",
+      "consequences": [
+        "사용자 경험, 복제비용, 장애 복잡도가 달라진다."
+      ],
+      "prerequisites": [
+        "ADR-SES-001",
+        "service continuity policy"
+      ],
+      "runtime": [
+        "RUN-SESSION",
+        "RUN-CF"
+      ],
+      "closure": [
+        "observed behavior matches policy",
+        "data consistency approved"
+      ],
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null,
+      "decision": null
+    },
+    {
+      "id": "ADR-DR-002",
+      "title": "Service RTO/RPO Classes",
+      "status": "DRAFT",
+      "readiness": "NEEDS_OWNER_INPUT",
+      "priority": "P0",
+      "owner": "Business / Ops / Data",
+      "approver_role": "Business Owner + Ops Owner + Data Owner",
+      "recommendation": "전사 전략의 RTO 참조값을 시스템 승인값으로 자동 승격하지 않고 서비스 등급별 RTO/RPO를 명시 승인한다.",
+      "alternatives": [
+        "A. Service-class based RTO/RPO (recommended)",
+        "B. Single global RTO/RPO"
+      ],
+      "rationale": "현재 30분 RTO는 전략 수준 참조이고 개별 시스템 RPO 승인값은 부족하다.",
+      "consequences": [
+        "DR 투자/복구 우선순위/데이터 보호 방식이 결정된다."
+      ],
+      "prerequisites": [
+        "business criticality classes"
+      ],
+      "runtime": [
+        "RUN-CF"
+      ],
+      "closure": [
+        "approved RTO/RPO inputs",
+        "observed RTO/RPO within approved class"
+      ],
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null,
+      "decision": null
+    },
+    {
+      "id": "ADR-INFRA-001",
+      "title": "Tomcat JVM : Application Deployment Unit",
+      "status": "PROPOSED",
+      "readiness": "READY_FOR_HUMAN_DECISION",
+      "priority": "P0",
+      "owner": "Infra / Application",
+      "approver_role": "Infra Architect + Application Architect",
+      "recommendation": "운영 기준은 WAS Server/VM, Tomcat JVM, Application/WAR을 별도 Entity로 관리하고 장애격리가 필요한 업무는 독립 JVM을 기본으로 한다. Multi-WAR은 명시적 예외로 관리한다.",
+      "alternatives": [
+        "A. Independent JVM per application/failure domain (recommended)",
+        "B. Multi-WAR consolidated JVM"
+      ],
+      "rationale": "개발 snapshot의 통합 Tomcat과 운영 물리모델을 혼동하면 장애/배포 영향도가 왜곡된다.",
+      "consequences": [
+        "운영 인벤토리에 CATALINA_BASE/JVM/WAR 관계가 필요하다."
+      ],
+      "prerequisites": [
+        "production config evidence"
+      ],
+      "runtime": [
+        "RUN-N1",
+        "RUN-ROLLING"
+      ],
+      "closure": [
+        "71 server runtime mapping",
+        "deployment/failure evidence"
+      ],
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null,
+      "decision": null
+    },
+    {
+      "id": "ADR-PERF-001",
+      "title": "Runtime Approved VM Capacity",
+      "status": "DRAFT",
+      "readiness": "RUNTIME_DEPENDENT",
+      "priority": "P0",
+      "owner": "Performance / Infra",
+      "approver_role": "Performance Lead + Infra Architect + DBA",
+      "recommendation": "500 TPS는 Legacy/Conservative, 855 TPS는 Working으로 유지하고 실제 승인값은 P600/P1200/S1800/N1/Hikari 결과로 확정한다.",
+      "alternatives": [
+        "A. Runtime-measured capacity (recommended)",
+        "B. 500 fixed",
+        "C. 855 fixed"
+      ],
+      "rationale": "서로 다른 산정 문서의 숫자를 시험 없이 하나로 합치면 HA/DB/Thread 설계가 왜곡된다.",
+      "consequences": [
+        "VM 수량, thread, Hikari, N-1 여유가 최종값에 따라 변경된다."
+      ],
+      "prerequisites": [
+        "performance environment identity"
+      ],
+      "runtime": [
+        "RUN-P600",
+        "RUN-P1200",
+        "RUN-S1800",
+        "RUN-HIKARI",
+        "RUN-N1"
+      ],
+      "closure": [
+        "runtime capacity approved",
+        "config baseline frozen"
+      ],
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null,
+      "decision": null
+    },
+    {
+      "id": "ADR-DATA-001",
+      "title": "RDW/ADW Ownership / Read-Write Boundary",
+      "status": "PROPOSED",
+      "readiness": "READY_FOR_HUMAN_DECISION",
+      "priority": "P0",
+      "owner": "Data Architecture",
+      "approver_role": "Data Architect + Domain Owners",
+      "recommendation": "RDW는 온라인/Near Real-time, ADW는 분석/대량조회 책임을 기본으로 하고 Domain/Table/View Owner 및 Read/Write Matrix를 SoT로 관리한다.",
+      "alternatives": [
+        "A. Explicit ownership matrix (recommended)",
+        "B. Shared/unowned data access"
+      ],
+      "rationale": "논리 원칙은 존재하지만 전수 Owner/Read-Write Matrix가 부족하다.",
+      "consequences": [
+        "직접 cross-domain update/DB link를 통제할 수 있다."
+      ],
+      "prerequisites": [
+        "Data Catalog"
+      ],
+      "runtime": [],
+      "closure": [
+        "Domain/Table/View owner catalog complete",
+        "read-write matrix approved"
+      ],
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null,
+      "decision": null
+    },
+    {
+      "id": "ADR-INT-001",
+      "title": "Cross-Domain Integration Contract",
+      "status": "PROPOSED",
+      "readiness": "READY_FOR_HUMAN_DECISION",
+      "priority": "P0",
+      "owner": "Integration / Security",
+      "approver_role": "Integration Architect + Security Architect",
+      "recommendation": "Cross-Domain 연계는 공개 ServiceId + 표준전문 + HTTP/EAI 계약을 사용하고 상대 Domain DAO/Mapper/Table 직접 접근을 금지한다. S2S Auth와 Remaining Deadline을 계약에 포함한다.",
+      "alternatives": [
+        "A. Service contract via ServiceId (recommended)",
+        "B. Direct code/DB coupling"
+      ],
+      "rationale": "MG↔MK 규칙 및 tcf-eai 구조와 정합하며 장애/보안 경계를 유지한다.",
+      "consequences": [
+        "Route Registry, S2S Auth, deadline metadata가 필요하다."
+      ],
+      "prerequisites": [
+        "integration contract registry"
+      ],
+      "runtime": [
+        "RUN-TRACE"
+      ],
+      "closure": [
+        "route/auth/deadline evidence",
+        "reverse trace available"
+      ],
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null,
+      "decision": null
+    },
+    {
+      "id": "ADR-OPS-001",
+      "title": "OM Control Plane Scope",
+      "status": "PROPOSED",
+      "readiness": "READY_FOR_HUMAN_DECISION",
+      "priority": "P0",
+      "owner": "Ops / Architecture",
+      "approver_role": "Ops Owner + Architecture",
+      "recommendation": "OM은 Control Plane으로 Catalog/Policy/Runtime/Deploy/Audit 관점을 제공하고 Runtime Plane의 TCF/STF가 정책을 집행한다.",
+      "alternatives": [
+        "A. Separate control/runtime responsibilities (recommended)",
+        "B. Embedded ad-hoc operations"
+      ],
+      "rationale": "운영통제 변경과 거래실행 책임을 분리해야 감사/복구가 가능하다.",
+      "consequences": [
+        "OM Runtime Catalog와 policy audit가 필요하다."
+      ],
+      "prerequisites": [
+        "OM catalog"
+      ],
+      "runtime": [
+        "RUN-TRACE",
+        "RUN-ROLLING"
+      ],
+      "closure": [
+        "catalog/metric/alert/runbook loop connected"
+      ],
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null,
+      "decision": null
+    },
+    {
+      "id": "ADR-OBS-001",
+      "title": "GUID + ServiceId Runtime Evidence Standard",
+      "status": "PROPOSED",
+      "readiness": "READY_FOR_HUMAN_DECISION",
+      "priority": "P0",
+      "owner": "Observability / Application",
+      "approver_role": "Ops/Observability Owner + Application Architect",
+      "recommendation": "GUID + ServiceId를 System/Transaction/Business/Image/Error/Runtime Evidence의 공통 추적키로 사용한다.",
+      "alternatives": [
+        "A. GUID+ServiceId standard (recommended)",
+        "B. component-local ids"
+      ],
+      "rationale": "요청부터 SQL/외부연계까지 정·역방향 추적을 가능하게 한다.",
+      "consequences": [
+        "MDC/Context 전파와 마스킹 정책이 필요하다."
+      ],
+      "prerequisites": [
+        "logging field standard"
+      ],
+      "runtime": [
+        "RUN-TRACE"
+      ],
+      "closure": [
+        "same GUID/ServiceId across required hops",
+        "reverse trace pass"
+      ],
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null,
+      "decision": null
+    },
+    {
+      "id": "ADR-GOV-001",
+      "title": "Architecture Model Source of Truth",
+      "status": "PROPOSED",
+      "readiness": "READY_FOR_HUMAN_DECISION",
+      "priority": "P0",
+      "owner": "Enterprise/Application Architecture",
+      "approver_role": "Architecture Board",
+      "recommendation": "Machine-readable JSON Model + JSON Schema + Validator + Baseline Manifest를 Architecture SoT로 사용하고 Markdown은 Human-readable View로 관리한다.",
+      "alternatives": [
+        "A. Machine-readable SoT + Markdown view (recommended)",
+        "B. Markdown-only"
+      ],
+      "rationale": "현재 Model Schema/Validator가 정적 PASS했으며 drift 자동검증을 위해 machine-readable 기준이 필요하다.",
+      "consequences": [
+        "Requirement/Screen/Table/Server/Runtime Evidence edge 확장이 필요하다."
+      ],
+      "prerequisites": [
+        "model ownership/change process"
+      ],
+      "runtime": [],
+      "closure": [
+        "full critical trace edges complete",
+        "manifest/signoff integrated"
+      ],
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null,
+      "decision": null
+    },
+    {
+      "id": "ADR-DEP-001",
+      "title": "Production Deployment Pipeline",
+      "status": "PROPOSED",
+      "readiness": "READY_FOR_HUMAN_DECISION",
+      "priority": "P0",
+      "owner": "DevOps / Ops",
+      "approver_role": "DevOps Owner + Ops Change Manager",
+      "recommendation": "GitLab→Runner→Artifact Repository→eCAMS/승인→Production의 재현가능한 Pipeline을 기준으로 하고 Rolling/rollback evidence를 의무화한다.",
+      "alternatives": [
+        "A. Controlled pipeline with artifact/config trace (recommended)",
+        "B. manual production deployment"
+      ],
+      "rationale": "형상/설정/DB 변경 이력과 rollback 재현성이 필요하다.",
+      "consequences": [
+        "artifact hash, config version, DB compatibility evidence가 필요하다."
+      ],
+      "prerequisites": [
+        "actual pipeline evidence"
+      ],
+      "runtime": [
+        "RUN-ROLLING"
+      ],
+      "closure": [
+        "rolling/rollback pass",
+        "artifact/config/db version trace complete"
+      ],
+      "requires_human_approval": true,
+      "approver": null,
+      "decision_date": null,
+      "decision": null
+    }
+  ]
+}

@@ -1,0 +1,4199 @@
+{
+  "baseline": "G80-DRAFT",
+  "generatedAt": "2026-08-18 15:34",
+  "status": "PARTIAL",
+  "source": "80-STATIC-SOURCE-SCAN.json",
+  "scopeNotes": [
+    "Source-extracted model covers com.nh.nsight main source only.",
+    "Server/JVM/WAR, Table ownership, Requirement/Screen and Runtime Evidence edges remain incomplete."
+  ],
+  "nodeTypes": [
+    "System",
+    "Application",
+    "BusinessDomain",
+    "ServiceId",
+    "Handler",
+    "Facade",
+    "Service",
+    "DAO",
+    "Mapper",
+    "SQL",
+    "Table",
+    "IntegrationClient",
+    "SecurityPolicy",
+    "TimeoutPolicy",
+    "TomcatJVM",
+    "Server",
+    "RuntimeEvidence"
+  ],
+  "relationTypes": [
+    "contains",
+    "owns",
+    "routesTo",
+    "invokes",
+    "accesses",
+    "uses",
+    "calls",
+    "maps",
+    "touches",
+    "deployedOn",
+    "runsOn",
+    "hostedBy",
+    "governedBy",
+    "evidencedBy"
+  ],
+  "sourceExtracted": {
+    "nodes": [
+      {
+        "id": "class:com.nh.nsight.marketing.av.entry.handler.AvAssetValuationHandler",
+        "type": "Handler",
+        "module": "av-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/av-service/src/main/java/com/nh/nsight/marketing/av/entry/handler/AvAssetValuationHandler.java"
+      },
+      {
+        "id": "serviceId:av-service:AV.AssetValuation.selectList",
+        "type": "ServiceId",
+        "module": "av-service",
+        "value": "AV.AssetValuation.selectList"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.av.entry.facade.AvAssetValuationFacade",
+        "type": "Facade",
+        "module": "av-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/av-service/src/main/java/com/nh/nsight/marketing/av/entry/facade/AvAssetValuationFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.av.entry.handler.AvCustomerContactHandler",
+        "type": "Handler",
+        "module": "av-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/av-service/src/main/java/com/nh/nsight/marketing/av/entry/handler/AvCustomerContactHandler.java"
+      },
+      {
+        "id": "serviceId:av-service:AV.CustomerContact.selectList",
+        "type": "ServiceId",
+        "module": "av-service",
+        "value": "AV.CustomerContact.selectList"
+      },
+      {
+        "id": "serviceId:av-service:AV.CustomerContact.selectDetail",
+        "type": "ServiceId",
+        "module": "av-service",
+        "value": "AV.CustomerContact.selectDetail"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.av.entry.facade.AvCustomerContactFacade",
+        "type": "Facade",
+        "module": "av-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/av-service/src/main/java/com/nh/nsight/marketing/av/entry/facade/AvCustomerContactFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.av.entry.handler.AvSampleHandler",
+        "type": "Handler",
+        "module": "av-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/av-service/src/main/java/com/nh/nsight/marketing/av/entry/handler/AvSampleHandler.java"
+      },
+      {
+        "id": "serviceId:av-service:AV.Sample.inquiry",
+        "type": "ServiceId",
+        "module": "av-service",
+        "value": "AV.Sample.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.av.entry.facade.AvSampleFacade",
+        "type": "Facade",
+        "module": "av-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/av-service/src/main/java/com/nh/nsight/marketing/av/entry/facade/AvSampleFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.entry.handler.EbBatchHandler",
+        "type": "Handler",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/entry/handler/EbBatchHandler.java"
+      },
+      {
+        "id": "serviceId:eb-service:EB.Batch.inquiry",
+        "type": "ServiceId",
+        "module": "eb-service",
+        "value": "EB.Batch.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.entry.facade.EbBatchFacade",
+        "type": "Facade",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/entry/facade/EbBatchFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.entry.handler.EbEventHandler",
+        "type": "Handler",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/entry/handler/EbEventHandler.java"
+      },
+      {
+        "id": "serviceId:eb-service:EB.Event.inquiry",
+        "type": "ServiceId",
+        "module": "eb-service",
+        "value": "EB.Event.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.entry.facade.EbEventFacade",
+        "type": "Facade",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/entry/facade/EbEventFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.entry.handler.EbSampleHandler",
+        "type": "Handler",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/entry/handler/EbSampleHandler.java"
+      },
+      {
+        "id": "serviceId:eb-service:EB.Sample.inquiry",
+        "type": "ServiceId",
+        "module": "eb-service",
+        "value": "EB.Sample.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.entry.facade.EbSampleFacade",
+        "type": "Facade",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/entry/facade/EbSampleFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.entry.handler.EbSystemTxHandler",
+        "type": "Handler",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/entry/handler/EbSystemTxHandler.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.entry.facade.EbSystemTxFacade",
+        "type": "Facade",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/entry/facade/EbSystemTxFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.entry.handler.EbUserHandler",
+        "type": "Handler",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/entry/handler/EbUserHandler.java"
+      },
+      {
+        "id": "serviceId:eb-service:EB.User.create",
+        "type": "ServiceId",
+        "module": "eb-service",
+        "value": "EB.User.create"
+      },
+      {
+        "id": "serviceId:eb-service:EB.User.inquiry",
+        "type": "ServiceId",
+        "module": "eb-service",
+        "value": "EB.User.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.entry.facade.EbUserFacade",
+        "type": "Facade",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/entry/facade/EbUserFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ep.entry.handler.EpSampleHandler",
+        "type": "Handler",
+        "module": "ep-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ep-service/src/main/java/com/nh/nsight/marketing/ep/entry/handler/EpSampleHandler.java"
+      },
+      {
+        "id": "serviceId:ep-service:EP.Sample.inquiry",
+        "type": "ServiceId",
+        "module": "ep-service",
+        "value": "EP.Sample.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ep.entry.facade.EpSampleFacade",
+        "type": "Facade",
+        "module": "ep-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ep-service/src/main/java/com/nh/nsight/marketing/ep/entry/facade/EpSampleFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ep.entry.handler.EpUserEventHandler",
+        "type": "Handler",
+        "module": "ep-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ep-service/src/main/java/com/nh/nsight/marketing/ep/entry/handler/EpUserEventHandler.java"
+      },
+      {
+        "id": "serviceId:ep-service:EP.UserEvent.inquiry",
+        "type": "ServiceId",
+        "module": "ep-service",
+        "value": "EP.UserEvent.inquiry"
+      },
+      {
+        "id": "serviceId:ep-service:EP.UserEvent.receive",
+        "type": "ServiceId",
+        "module": "ep-service",
+        "value": "EP.UserEvent.receive"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ep.entry.facade.EpUserEventFacade",
+        "type": "Facade",
+        "module": "ep-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ep-service/src/main/java/com/nh/nsight/marketing/ep/entry/facade/EpUserEventFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ic.entry.handler.IcCustomerHandler",
+        "type": "Handler",
+        "module": "ic-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ic-service/src/main/java/com/nh/nsight/marketing/ic/entry/handler/IcCustomerHandler.java"
+      },
+      {
+        "id": "serviceId:ic-service:IC.Customer.inquiry",
+        "type": "ServiceId",
+        "module": "ic-service",
+        "value": "IC.Customer.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ic.entry.facade.IcCustomerFacade",
+        "type": "Facade",
+        "module": "ic-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ic-service/src/main/java/com/nh/nsight/marketing/ic/entry/facade/IcCustomerFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ic.entry.handler.IcSampleHandler",
+        "type": "Handler",
+        "module": "ic-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ic-service/src/main/java/com/nh/nsight/marketing/ic/entry/handler/IcSampleHandler.java"
+      },
+      {
+        "id": "serviceId:ic-service:IC.Sample.inquiry",
+        "type": "ServiceId",
+        "module": "ic-service",
+        "value": "IC.Sample.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ic.entry.facade.IcSampleFacade",
+        "type": "Facade",
+        "module": "ic-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ic-service/src/main/java/com/nh/nsight/marketing/ic/entry/facade/IcSampleFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ln.entry.handler.LnCustomerContactHandler",
+        "type": "Handler",
+        "module": "ln-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ln-service/src/main/java/com/nh/nsight/marketing/ln/entry/handler/LnCustomerContactHandler.java"
+      },
+      {
+        "id": "serviceId:ln-service:LN.CustomerContact.selectList",
+        "type": "ServiceId",
+        "module": "ln-service",
+        "value": "LN.CustomerContact.selectList"
+      },
+      {
+        "id": "serviceId:ln-service:LN.CustomerContact.selectDetail",
+        "type": "ServiceId",
+        "module": "ln-service",
+        "value": "LN.CustomerContact.selectDetail"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ln.entry.facade.LnCustomerContactFacade",
+        "type": "Facade",
+        "module": "ln-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ln-service/src/main/java/com/nh/nsight/marketing/ln/entry/facade/LnCustomerContactFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.mg.entry.handler.MgSampleHandler",
+        "type": "Handler",
+        "module": "mg-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/mg-service/src/main/java/com/nh/nsight/marketing/mg/entry/handler/MgSampleHandler.java"
+      },
+      {
+        "id": "serviceId:mg-service:MG.Sample.inquiry",
+        "type": "ServiceId",
+        "module": "mg-service",
+        "value": "MG.Sample.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.mg.entry.facade.MgSampleFacade",
+        "type": "Facade",
+        "module": "mg-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/mg-service/src/main/java/com/nh/nsight/marketing/mg/entry/facade/MgSampleFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ms.entry.handler.MsSampleHandler",
+        "type": "Handler",
+        "module": "ms-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ms-service/src/main/java/com/nh/nsight/marketing/ms/entry/handler/MsSampleHandler.java"
+      },
+      {
+        "id": "serviceId:ms-service:MS.Sample.inquiry",
+        "type": "ServiceId",
+        "module": "ms-service",
+        "value": "MS.Sample.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ms.entry.facade.MsSampleFacade",
+        "type": "Facade",
+        "module": "ms-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ms-service/src/main/java/com/nh/nsight/marketing/ms/entry/facade/MsSampleFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmSampleHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmSampleHandler.java"
+      },
+      {
+        "id": "serviceId:om-service:OM.Sample.inquiry",
+        "type": "ServiceId",
+        "module": "om-service",
+        "value": "OM.Sample.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmSampleFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmSampleFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.pc.entry.handler.PcSampleHandler",
+        "type": "Handler",
+        "module": "pc-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/pc-service/src/main/java/com/nh/nsight/marketing/pc/entry/handler/PcSampleHandler.java"
+      },
+      {
+        "id": "serviceId:pc-service:PC.Sample.inquiry",
+        "type": "ServiceId",
+        "module": "pc-service",
+        "value": "PC.Sample.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.pc.entry.facade.PcSampleFacade",
+        "type": "Facade",
+        "module": "pc-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/pc-service/src/main/java/com/nh/nsight/marketing/pc/entry/facade/PcSampleFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.pd.entry.handler.PdSampleHandler",
+        "type": "Handler",
+        "module": "pd-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/pd-service/src/main/java/com/nh/nsight/marketing/pd/entry/handler/PdSampleHandler.java"
+      },
+      {
+        "id": "serviceId:pd-service:PD.Sample.inquiry",
+        "type": "ServiceId",
+        "module": "pd-service",
+        "value": "PD.Sample.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.pd.entry.facade.PdSampleFacade",
+        "type": "Facade",
+        "module": "pd-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/pd-service/src/main/java/com/nh/nsight/marketing/pd/entry/facade/PdSampleFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ss.entry.handler.SsSampleHandler",
+        "type": "Handler",
+        "module": "ss-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ss-service/src/main/java/com/nh/nsight/marketing/ss/entry/handler/SsSampleHandler.java"
+      },
+      {
+        "id": "serviceId:ss-service:SS.Sample.inquiry",
+        "type": "ServiceId",
+        "module": "ss-service",
+        "value": "SS.Sample.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ss.entry.facade.SsSampleFacade",
+        "type": "Facade",
+        "module": "ss-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ss-service/src/main/java/com/nh/nsight/marketing/ss/entry/facade/SsSampleFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.sv.entry.handler.SvCustomerHandler",
+        "type": "Handler",
+        "module": "sv-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/sv-service/src/main/java/com/nh/nsight/marketing/sv/entry/handler/SvCustomerHandler.java"
+      },
+      {
+        "id": "serviceId:sv-service:SV.Customer.selectSummary",
+        "type": "ServiceId",
+        "module": "sv-service",
+        "value": "SV.Customer.selectSummary"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.sv.entry.facade.SvCustomerFacade",
+        "type": "Facade",
+        "module": "sv-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/sv-service/src/main/java/com/nh/nsight/marketing/sv/entry/facade/SvCustomerFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.sv.entry.handler.SvIntegrationHandler",
+        "type": "Handler",
+        "module": "sv-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/sv-service/src/main/java/com/nh/nsight/marketing/sv/entry/handler/SvIntegrationHandler.java"
+      },
+      {
+        "id": "serviceId:sv-service:SV.Integration.icSample",
+        "type": "ServiceId",
+        "module": "sv-service",
+        "value": "SV.Integration.icSample"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.sv.entry.facade.SvIntegrationFacade",
+        "type": "Facade",
+        "module": "sv-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/sv-service/src/main/java/com/nh/nsight/marketing/sv/entry/facade/SvIntegrationFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.sv.entry.handler.SvSampleHandler",
+        "type": "Handler",
+        "module": "sv-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/sv-service/src/main/java/com/nh/nsight/marketing/sv/entry/handler/SvSampleHandler.java"
+      },
+      {
+        "id": "serviceId:sv-service:SV.Sample.inquiry",
+        "type": "ServiceId",
+        "module": "sv-service",
+        "value": "SV.Sample.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.sv.entry.facade.SvSampleFacade",
+        "type": "Facade",
+        "module": "sv-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/sv-service/src/main/java/com/nh/nsight/marketing/sv/entry/facade/SvSampleFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.auth.jwt.entry.handler.JwtAuthLoginHandler",
+        "type": "Handler",
+        "module": "tcf-jwt",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-jwt/src/main/java/com/nh/nsight/auth/jwt/entry/handler/JwtAuthLoginHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-jwt:JWT.Auth.login",
+        "type": "ServiceId",
+        "module": "tcf-jwt",
+        "value": "JWT.Auth.login"
+      },
+      {
+        "id": "class:com.nh.nsight.auth.jwt.entry.facade.JwtAuthFacade",
+        "type": "Facade",
+        "module": "tcf-jwt",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-jwt/src/main/java/com/nh/nsight/auth/jwt/entry/facade/JwtAuthFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.auth.jwt.entry.handler.JwtAuthLogoutHandler",
+        "type": "Handler",
+        "module": "tcf-jwt",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-jwt/src/main/java/com/nh/nsight/auth/jwt/entry/handler/JwtAuthLogoutHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-jwt:JWT.Auth.logout",
+        "type": "ServiceId",
+        "module": "tcf-jwt",
+        "value": "JWT.Auth.logout"
+      },
+      {
+        "id": "class:com.nh.nsight.auth.jwt.entry.handler.JwtAuthRefreshHandler",
+        "type": "Handler",
+        "module": "tcf-jwt",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-jwt/src/main/java/com/nh/nsight/auth/jwt/entry/handler/JwtAuthRefreshHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-jwt:JWT.Auth.refresh",
+        "type": "ServiceId",
+        "module": "tcf-jwt",
+        "value": "JWT.Auth.refresh"
+      },
+      {
+        "id": "class:com.nh.nsight.auth.jwt.entry.handler.JwtAuthRevokeHandler",
+        "type": "Handler",
+        "module": "tcf-jwt",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-jwt/src/main/java/com/nh/nsight/auth/jwt/entry/handler/JwtAuthRevokeHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-jwt:JWT.Auth.revoke",
+        "type": "ServiceId",
+        "module": "tcf-jwt",
+        "value": "JWT.Auth.revoke"
+      },
+      {
+        "id": "class:com.nh.nsight.auth.jwt.entry.handler.JwtAuthSsoIssueHandler",
+        "type": "Handler",
+        "module": "tcf-jwt",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-jwt/src/main/java/com/nh/nsight/auth/jwt/entry/handler/JwtAuthSsoIssueHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-jwt:JWT.Auth.ssoIssue",
+        "type": "ServiceId",
+        "module": "tcf-jwt",
+        "value": "JWT.Auth.ssoIssue"
+      },
+      {
+        "id": "class:com.nh.nsight.auth.jwt.entry.handler.JwtLoginHistoryInquiryHandler",
+        "type": "Handler",
+        "module": "tcf-jwt",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-jwt/src/main/java/com/nh/nsight/auth/jwt/entry/handler/JwtLoginHistoryInquiryHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-jwt:JWT.LoginHistory.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-jwt",
+        "value": "JWT.LoginHistory.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.auth.jwt.entry.facade.JwtAdminFacade",
+        "type": "Facade",
+        "module": "tcf-jwt",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-jwt/src/main/java/com/nh/nsight/auth/jwt/entry/facade/JwtAdminFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.auth.jwt.entry.handler.JwtRefreshTokenInquiryHandler",
+        "type": "Handler",
+        "module": "tcf-jwt",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-jwt/src/main/java/com/nh/nsight/auth/jwt/entry/handler/JwtRefreshTokenInquiryHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-jwt:JWT.RefreshToken.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-jwt",
+        "value": "JWT.RefreshToken.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.auth.jwt.entry.handler.JwtSecurityPolicyInquiryHandler",
+        "type": "Handler",
+        "module": "tcf-jwt",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-jwt/src/main/java/com/nh/nsight/auth/jwt/entry/handler/JwtSecurityPolicyInquiryHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-jwt:JWT.SecurityPolicy.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-jwt",
+        "value": "JWT.SecurityPolicy.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.auth.jwt.entry.handler.JwtSecurityPolicyUpdateHandler",
+        "type": "Handler",
+        "module": "tcf-jwt",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-jwt/src/main/java/com/nh/nsight/auth/jwt/entry/handler/JwtSecurityPolicyUpdateHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-jwt:JWT.SecurityPolicy.update",
+        "type": "ServiceId",
+        "module": "tcf-jwt",
+        "value": "JWT.SecurityPolicy.update"
+      },
+      {
+        "id": "class:com.nh.nsight.auth.jwt.entry.handler.JwtTokenInquiryHandler",
+        "type": "Handler",
+        "module": "tcf-jwt",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-jwt/src/main/java/com/nh/nsight/auth/jwt/entry/handler/JwtTokenInquiryHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-jwt:JWT.Token.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-jwt",
+        "value": "JWT.Token.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.auth.jwt.entry.handler.JwtTokenRevokeHandler",
+        "type": "Handler",
+        "module": "tcf-jwt",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-jwt/src/main/java/com/nh/nsight/auth/jwt/entry/handler/JwtTokenRevokeHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-jwt:JWT.Token.revoke",
+        "type": "ServiceId",
+        "module": "tcf-jwt",
+        "value": "JWT.Token.revoke"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.entry.handler.OcHelloHandler",
+        "type": "Handler",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/entry/handler/OcHelloHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-oc:OC.Hello.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-oc",
+        "value": "OC.Hello.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.entry.facade.OcHelloFacade",
+        "type": "Facade",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/entry/facade/OcHelloFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmAuditLogHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmAuditLogHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.AuditLog.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.AuditLog.inquiry"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.AuditLog.deleteAll",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.AuditLog.deleteAll"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmAuditLogFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmAuditLogFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmAuthGroupHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmAuthGroupHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.AuthGroup.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.AuthGroup.inquiry"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.AuthGroup.detail",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.AuthGroup.detail"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.AuthGroup.save",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.AuthGroup.save"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.AuthGroup.update",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.AuthGroup.update"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.AuthGroup.delete",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.AuthGroup.delete"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmAuthGroupFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmAuthGroupFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmAuthHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmAuthHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Auth.login",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Auth.login"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Auth.ssoLogin",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Auth.ssoLogin"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Auth.logout",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Auth.logout"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Auth.session",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Auth.session"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmAuthFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmAuthFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmAuthHistoryHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmAuthHistoryHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.AuthHistory.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.AuthHistory.inquiry"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.AuthHistory.deleteAll",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.AuthHistory.deleteAll"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmAuthHistoryFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmAuthHistoryFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmBatchHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmBatchHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Batch.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Batch.inquiry"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Batch.execute",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Batch.execute"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Batch.deleteAll",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Batch.deleteAll"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmBatchFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmBatchFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmCacheHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmCacheHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Cache.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Cache.inquiry"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Cache.delete",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Cache.delete"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmCacheFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmCacheFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmCommonCodeHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmCommonCodeHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.CommonCode.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.CommonCode.inquiry"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.CommonCode.detail",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.CommonCode.detail"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.CommonCode.save",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.CommonCode.save"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.CommonCode.update",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.CommonCode.update"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.CommonCode.delete",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.CommonCode.delete"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmCommonCodeFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmCommonCodeFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmDashboardHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmDashboardHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Dashboard.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Dashboard.inquiry"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Dashboard.reset",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Dashboard.reset"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmDashboardFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmDashboardFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmDataAuthHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmDataAuthHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.DataAuth.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.DataAuth.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmDataAuthFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmDataAuthFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmDeployHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmDeployHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Deploy.history",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Deploy.history"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Deploy.buildStatus",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Deploy.buildStatus"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Deploy.logInquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Deploy.logInquiry"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Deploy.healthCheck",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Deploy.healthCheck"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Deploy.deleteAll",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Deploy.deleteAll"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Deploy.execute",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Deploy.execute"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Deploy.buildRequest",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Deploy.buildRequest"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Deploy.deployRequest",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Deploy.deployRequest"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Deploy.rollbackRequest",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Deploy.rollbackRequest"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Deploy.approve",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Deploy.approve"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmDeployFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmDeployFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmErrorCodeHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmErrorCodeHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.ErrorCode.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.ErrorCode.inquiry"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.ErrorCode.detail",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.ErrorCode.detail"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.ErrorCode.save",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.ErrorCode.save"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.ErrorCode.update",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.ErrorCode.update"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.ErrorCode.delete",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.ErrorCode.delete"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmErrorCodeFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmErrorCodeFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmFileDownloadHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmFileDownloadHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.FileDownload.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.FileDownload.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmFileDownloadFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmFileDownloadFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmFunctionAuthHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmFunctionAuthHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.FunctionAuth.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.FunctionAuth.inquiry"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.FunctionAuth.detail",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.FunctionAuth.detail"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.FunctionAuth.save",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.FunctionAuth.save"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.FunctionAuth.update",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.FunctionAuth.update"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.FunctionAuth.delete",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.FunctionAuth.delete"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmFunctionAuthFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmFunctionAuthFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmHealthCheckHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmHealthCheckHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.HealthCheck.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.HealthCheck.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmHealthCheckFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmHealthCheckFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmMenuHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmMenuHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Menu.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Menu.inquiry"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Menu.detail",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Menu.detail"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Menu.save",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Menu.save"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Menu.update",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Menu.update"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Menu.delete",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Menu.delete"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmMenuFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmMenuFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmMessageStructureHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmMessageStructureHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.MessageStructure.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.MessageStructure.inquiry"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.MessageStructure.frameworkInquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.MessageStructure.frameworkInquiry"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.MessageStructure.detail",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.MessageStructure.detail"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.MessageStructure.save",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.MessageStructure.save"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.MessageStructure.update",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.MessageStructure.update"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.MessageStructure.delete",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.MessageStructure.delete"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmMessageStructureFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmMessageStructureFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmRuntimeHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmRuntimeHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Runtime.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Runtime.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmRuntimeFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmRuntimeFacade.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Sample.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Sample.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmServiceCatalogHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmServiceCatalogHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.ServiceCatalog.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.ServiceCatalog.inquiry"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.ServiceCatalog.detail",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.ServiceCatalog.detail"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.ServiceCatalog.save",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.ServiceCatalog.save"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.ServiceCatalog.update",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.ServiceCatalog.update"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.ServiceCatalog.delete",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.ServiceCatalog.delete"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmServiceCatalogFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmServiceCatalogFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmSessionHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmSessionHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Session.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Session.inquiry"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.Session.delete",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.Session.delete"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmSessionFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmSessionFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmSystemConfigHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmSystemConfigHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.SystemConfig.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.SystemConfig.inquiry"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmSystemConfigFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmSystemConfigFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmTimeoutPolicyHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmTimeoutPolicyHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.TimeoutPolicy.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.TimeoutPolicy.inquiry"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.TimeoutPolicy.save",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.TimeoutPolicy.save"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.TimeoutPolicy.update",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.TimeoutPolicy.update"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.TimeoutPolicy.delete",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.TimeoutPolicy.delete"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmTimeoutPolicyFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmTimeoutPolicyFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmTransactionControlHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmTransactionControlHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.TransactionControl.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.TransactionControl.inquiry"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.TransactionControl.save",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.TransactionControl.save"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.TransactionControl.update",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.TransactionControl.update"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.TransactionControl.delete",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.TransactionControl.delete"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmTransactionControlFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmTransactionControlFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmTransactionLogHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmTransactionLogHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.TransactionLog.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.TransactionLog.inquiry"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.TransactionLog.deleteAll",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.TransactionLog.deleteAll"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmTransactionLogFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmTransactionLogFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.handler.OmUserHandler",
+        "type": "Handler",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/handler/OmUserHandler.java"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.User.inquiry",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.User.inquiry"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.User.detail",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.User.detail"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.User.save",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.User.save"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.User.update",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.User.update"
+      },
+      {
+        "id": "serviceId:tcf-om:OM.User.delete",
+        "type": "ServiceId",
+        "module": "tcf-om",
+        "value": "OM.User.delete"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.entry.facade.OmUserFacade",
+        "type": "Facade",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/entry/facade/OmUserFacade.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.av.application.service.AvAssetValuationService",
+        "type": "Service",
+        "module": "av-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/av-service/src/main/java/com/nh/nsight/marketing/av/application/service/AvAssetValuationService.java"
+      },
+      {
+        "id": "class:org.springframework.stereotype.Service",
+        "type": "Service",
+        "module": "tcf-om"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.av.application.service.AvCustomerContactService",
+        "type": "Service",
+        "module": "av-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/av-service/src/main/java/com/nh/nsight/marketing/av/application/service/AvCustomerContactService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.av.application.service.AvSampleService",
+        "type": "Service",
+        "module": "av-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/av-service/src/main/java/com/nh/nsight/marketing/av/application/service/AvSampleService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.application.service.EbBatchService",
+        "type": "Service",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/application/service/EbBatchService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.application.service.EbEventService",
+        "type": "Service",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/application/service/EbEventService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.application.service.EbSampleService",
+        "type": "Service",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/application/service/EbSampleService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.application.service.EbSystemTxService",
+        "type": "Service",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/application/service/EbSystemTxService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.application.service.EbUserService",
+        "type": "Service",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/application/service/EbUserService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ep.application.service.EpSampleService",
+        "type": "Service",
+        "module": "ep-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ep-service/src/main/java/com/nh/nsight/marketing/ep/application/service/EpSampleService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ep.application.service.EpUserEventService",
+        "type": "Service",
+        "module": "ep-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ep-service/src/main/java/com/nh/nsight/marketing/ep/application/service/EpUserEventService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ic.application.service.IcCustomerService",
+        "type": "Service",
+        "module": "ic-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ic-service/src/main/java/com/nh/nsight/marketing/ic/application/service/IcCustomerService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ic.application.service.IcSampleService",
+        "type": "Service",
+        "module": "ic-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ic-service/src/main/java/com/nh/nsight/marketing/ic/application/service/IcSampleService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ln.application.service.LnCustomerContactService",
+        "type": "Service",
+        "module": "ln-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ln-service/src/main/java/com/nh/nsight/marketing/ln/application/service/LnCustomerContactService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.mg.application.service.MgSampleService",
+        "type": "Service",
+        "module": "mg-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/mg-service/src/main/java/com/nh/nsight/marketing/mg/application/service/MgSampleService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ms.application.service.MsSampleService",
+        "type": "Service",
+        "module": "ms-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ms-service/src/main/java/com/nh/nsight/marketing/ms/application/service/MsSampleService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmSampleService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmSampleService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.pc.application.service.PcSampleService",
+        "type": "Service",
+        "module": "pc-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/pc-service/src/main/java/com/nh/nsight/marketing/pc/application/service/PcSampleService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.pd.application.service.PdSampleService",
+        "type": "Service",
+        "module": "pd-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/pd-service/src/main/java/com/nh/nsight/marketing/pd/application/service/PdSampleService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ss.application.service.SsSampleService",
+        "type": "Service",
+        "module": "ss-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ss-service/src/main/java/com/nh/nsight/marketing/ss/application/service/SsSampleService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.sv.application.service.SvCustomerService",
+        "type": "Service",
+        "module": "sv-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/sv-service/src/main/java/com/nh/nsight/marketing/sv/application/service/SvCustomerService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.sv.application.service.SvIntegrationDemoService",
+        "type": "Service",
+        "module": "sv-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/sv-service/src/main/java/com/nh/nsight/marketing/sv/application/service/SvIntegrationDemoService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.sv.application.service.SvSampleService",
+        "type": "Service",
+        "module": "sv-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/sv-service/src/main/java/com/nh/nsight/marketing/sv/application/service/SvSampleService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.auth.jwt.application.service.JwtAdminService",
+        "type": "Service",
+        "module": "tcf-jwt",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-jwt/src/main/java/com/nh/nsight/auth/jwt/application/service/JwtAdminService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.auth.jwt.application.service.JwtAuthService",
+        "type": "Service",
+        "module": "tcf-jwt",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-jwt/src/main/java/com/nh/nsight/auth/jwt/application/service/JwtAuthService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.application.service.OcHelloService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/application/service/OcHelloService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmAuditLogService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmAuditLogService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmAuthService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmAuthService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmAuthGroupService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmAuthGroupService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmAuthHistoryService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmAuthHistoryService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmBatchService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmBatchService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmCacheService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmCacheService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmCommonCodeService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmCommonCodeService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmDashboardService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmDashboardService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmDataAuthService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmDataAuthService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmBuildService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmBuildService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmDeployService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmDeployService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmRollbackService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmRollbackService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmErrorCodeService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmErrorCodeService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmFileDownloadService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmFileDownloadService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmFunctionAuthService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmFunctionAuthService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmHealthCheckService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmHealthCheckService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmMenuService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmMenuService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmMessageStructureService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmMessageStructureService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmRuntimeService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmRuntimeService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmServiceCatalogService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmServiceCatalogService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmSessionService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmSessionService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmSystemConfigService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmSystemConfigService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmTimeoutPolicyService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmTimeoutPolicyService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmTransactionControlService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmTransactionControlService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmTransactionLogService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmTransactionLogService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmUserService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmUserService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.av.persistence.dao.AvAssetValuationDao",
+        "type": "DAO",
+        "module": "av-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/av-service/src/main/java/com/nh/nsight/marketing/av/persistence/dao/AvAssetValuationDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.av.persistence.dao.AvCustomerContactDao",
+        "type": "DAO",
+        "module": "av-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/av-service/src/main/java/com/nh/nsight/marketing/av/persistence/dao/AvCustomerContactDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.av.persistence.dao.AvSampleDao",
+        "type": "DAO",
+        "module": "av-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/av-service/src/main/java/com/nh/nsight/marketing/av/persistence/dao/AvSampleDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.persistence.dao.EbEventDao",
+        "type": "DAO",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/persistence/dao/EbEventDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.application.service.EbEventPublishService",
+        "type": "Service",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/application/service/EbEventPublishService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.client.EpOnlineClient",
+        "type": "IntegrationClient",
+        "module": "eb-service"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.persistence.dao.EbSampleDao",
+        "type": "DAO",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/persistence/dao/EbSampleDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.persistence.dao.EbSystemTxDao",
+        "type": "DAO",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/persistence/dao/EbSystemTxDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.persistence.dao.EbUserDao",
+        "type": "DAO",
+        "module": "eb-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/eb-service/src/main/java/com/nh/nsight/marketing/eb/persistence/dao/EbUserDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ep.persistence.dao.EpSampleDao",
+        "type": "DAO",
+        "module": "ep-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ep-service/src/main/java/com/nh/nsight/marketing/ep/persistence/dao/EpSampleDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ep.persistence.dao.EpUserEventDao",
+        "type": "DAO",
+        "module": "ep-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ep-service/src/main/java/com/nh/nsight/marketing/ep/persistence/dao/EpUserEventDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ic.client.SvIntegrationClient",
+        "type": "IntegrationClient",
+        "module": "ic-service"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ic.persistence.dao.IcSampleDao",
+        "type": "DAO",
+        "module": "ic-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ic-service/src/main/java/com/nh/nsight/marketing/ic/persistence/dao/IcSampleDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ln.persistence.dao.LnCustomerContactDao",
+        "type": "DAO",
+        "module": "ln-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ln-service/src/main/java/com/nh/nsight/marketing/ln/persistence/dao/LnCustomerContactDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.mg.persistence.dao.MgSampleDao",
+        "type": "DAO",
+        "module": "mg-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/mg-service/src/main/java/com/nh/nsight/marketing/mg/persistence/dao/MgSampleDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ms.persistence.dao.MsSampleDao",
+        "type": "DAO",
+        "module": "ms-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ms-service/src/main/java/com/nh/nsight/marketing/ms/persistence/dao/MsSampleDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.persistence.dao.OmSampleDao",
+        "type": "DAO",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/persistence/dao/OmSampleDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.pc.persistence.dao.PcSampleDao",
+        "type": "DAO",
+        "module": "pc-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/pc-service/src/main/java/com/nh/nsight/marketing/pc/persistence/dao/PcSampleDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.pd.persistence.dao.PdSampleDao",
+        "type": "DAO",
+        "module": "pd-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/pd-service/src/main/java/com/nh/nsight/marketing/pd/persistence/dao/PdSampleDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ss.persistence.dao.SsSampleDao",
+        "type": "DAO",
+        "module": "ss-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/ss-service/src/main/java/com/nh/nsight/marketing/ss/persistence/dao/SsSampleDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.sv.persistence.dao.SvCustomerDao",
+        "type": "DAO",
+        "module": "sv-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/sv-service/src/main/java/com/nh/nsight/marketing/sv/persistence/dao/SvCustomerDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.sv.client.IcIntegrationClient",
+        "type": "IntegrationClient",
+        "module": "sv-service"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.sv.persistence.dao.SvSampleDao",
+        "type": "DAO",
+        "module": "sv-service",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/sv-service/src/main/java/com/nh/nsight/marketing/sv/persistence/dao/SvSampleDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.tcf.batch.application.service.ApStatusCollectService",
+        "type": "Service",
+        "module": "tcf-batch",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-batch/src/main/java/com/nh/nsight/tcf/batch/application/service/ApStatusCollectService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.tcf.batch.client.ApMetricsClient",
+        "type": "IntegrationClient",
+        "module": "tcf-batch"
+      },
+      {
+        "id": "class:com.nh.nsight.tcf.batch.application.service.DbStatusCollectService",
+        "type": "Service",
+        "module": "tcf-batch",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-batch/src/main/java/com/nh/nsight/tcf/batch/application/service/DbStatusCollectService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.tcf.batch.client.DbMetricsClient",
+        "type": "IntegrationClient",
+        "module": "tcf-batch"
+      },
+      {
+        "id": "class:com.nh.nsight.tcf.batch.application.service.DeployStatusCollectService",
+        "type": "Service",
+        "module": "tcf-batch",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-batch/src/main/java/com/nh/nsight/tcf/batch/application/service/DeployStatusCollectService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.tcf.batch.client.DeployMetricsClient",
+        "type": "IntegrationClient",
+        "module": "tcf-batch"
+      },
+      {
+        "id": "class:com.nh.nsight.tcf.batch.application.service.SessionStatusCollectService",
+        "type": "Service",
+        "module": "tcf-batch",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-batch/src/main/java/com/nh/nsight/tcf/batch/application/service/SessionStatusCollectService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.tcf.batch.client.SessionMetricsClient",
+        "type": "IntegrationClient",
+        "module": "tcf-batch"
+      },
+      {
+        "id": "class:com.nh.nsight.tcf.cache.sample.application.service.CommonCodeCacheSampleService",
+        "type": "Service",
+        "module": "tcf-cache",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-cache/src/main/java/com/nh/nsight/tcf/cache/sample/application/service/CommonCodeCacheSampleService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.gateway.application.service.GatewayAuthenticationService",
+        "type": "Service",
+        "module": "tcf-gateway",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-gateway/src/main/java/com/nh/nsight/gateway/application/service/GatewayAuthenticationService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.gateway.application.service.GatewayRouteAdminService",
+        "type": "Service",
+        "module": "tcf-gateway",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-gateway/src/main/java/com/nh/nsight/gateway/application/service/GatewayRouteAdminService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.gateway.persistence.dao.GatewayRouteDao",
+        "type": "DAO",
+        "module": "tcf-gateway",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-gateway/src/main/java/com/nh/nsight/gateway/persistence/dao/GatewayRouteDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.gateway.application.service.GatewaySessionValidationService",
+        "type": "Service",
+        "module": "tcf-gateway",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-gateway/src/main/java/com/nh/nsight/gateway/application/service/GatewaySessionValidationService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.gateway.persistence.dao.SpringSessionDao",
+        "type": "DAO",
+        "module": "tcf-gateway",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-gateway/src/main/java/com/nh/nsight/gateway/persistence/dao/SpringSessionDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.gateway.application.service.GatewayTransactionLogService",
+        "type": "Service",
+        "module": "tcf-gateway",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-gateway/src/main/java/com/nh/nsight/gateway/application/service/GatewayTransactionLogService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.gateway.persistence.dao.GatewayTransactionLogDao",
+        "type": "DAO",
+        "module": "tcf-gateway",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-gateway/src/main/java/com/nh/nsight/gateway/persistence/dao/GatewayTransactionLogDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.gateway.application.service.GatewayUserSessionAdminService",
+        "type": "Service",
+        "module": "tcf-gateway",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-gateway/src/main/java/com/nh/nsight/gateway/application/service/GatewayUserSessionAdminService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.gateway.persistence.dao.UserSessionDao",
+        "type": "DAO",
+        "module": "tcf-gateway",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-gateway/src/main/java/com/nh/nsight/gateway/persistence/dao/UserSessionDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.gateway.application.service.GatewayUserSessionSyncService",
+        "type": "Service",
+        "module": "tcf-gateway",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-gateway/src/main/java/com/nh/nsight/gateway/application/service/GatewayUserSessionSyncService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.gateway.application.service.UserSessionService",
+        "type": "Service",
+        "module": "tcf-gateway",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-gateway/src/main/java/com/nh/nsight/gateway/application/service/UserSessionService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.auth.jwt.persistence.dao.JwtAdminDao",
+        "type": "DAO",
+        "module": "tcf-jwt",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-jwt/src/main/java/com/nh/nsight/auth/jwt/persistence/dao/JwtAdminDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.auth.jwt.persistence.dao.JwtTokenDao",
+        "type": "DAO",
+        "module": "tcf-jwt",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-jwt/src/main/java/com/nh/nsight/auth/jwt/persistence/dao/JwtTokenDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.application.service.env.CapacityDesignService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/application/service/env/CapacityDesignService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.application.service.env.CapacityPlannerService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/application/service/env/CapacityPlannerService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.application.service.env.ConcurrentFlowMapService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/application/service/env/ConcurrentFlowMapService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.application.service.env.ConfigImportService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/application/service/env/ConfigImportService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.application.service.env.ConfigParserService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/application/service/env/ConfigParserService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.application.service.env.EnvironmentAssessmentService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/application/service/env/EnvironmentAssessmentService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.application.service.env.EnvironmentRuleEngineService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/application/service/env/EnvironmentRuleEngineService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.application.service.env.ProjectBaselineService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/application/service/env/ProjectBaselineService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.application.service.env.StackInspectionService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/application/service/env/StackInspectionService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.application.service.env.TraceEnvironmentExcelExportService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/application/service/env/TraceEnvironmentExcelExportService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.application.service.env.TraceEnvironmentService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/application/service/env/TraceEnvironmentService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.persistence.dao.OcHelloDao",
+        "type": "DAO",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/persistence/dao/OcHelloDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.capnew.application.service.CapNewApprovalService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/capnew/application/service/CapNewApprovalService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.capnew.persistence.dao.CapNewApprovalDao",
+        "type": "DAO",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/capnew/persistence/dao/CapNewApprovalDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.capnew.persistence.dao.CapNewScenarioDao",
+        "type": "DAO",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/capnew/persistence/dao/CapNewScenarioDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.capnew.application.service.CapNewCompareService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/capnew/application/service/CapNewCompareService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.capnew.application.service.CapNewDefaultsService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/capnew/application/service/CapNewDefaultsService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.capnew.application.service.CapNewDerivationService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/capnew/application/service/CapNewDerivationService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.capnew.application.service.CapNewEnvBridgeService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/capnew/application/service/CapNewEnvBridgeService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.capnew.application.service.CapNewExcelExportService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/capnew/application/service/CapNewExcelExportService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.capnew.application.service.CapNewLegacyCompareService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/capnew/application/service/CapNewLegacyCompareService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.capnew.application.service.CapNewScenarioTemplateService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/capnew/application/service/CapNewScenarioTemplateService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.capnew.persistence.dao.CapNewScenarioTemplateDao",
+        "type": "DAO",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/capnew/persistence/dao/CapNewScenarioTemplateDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.capnew.application.service.CapNewVmCompareService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/capnew/application/service/CapNewVmCompareService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.capnew.application.service.CapNewWizardService",
+        "type": "Service",
+        "module": "tcf-oc",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-oc/src/main/java/com/nh/nsight/marketing/oc/capnew/application/service/CapNewWizardService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao",
+        "type": "DAO",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/persistence/dao/OmOperationDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.client.OmJwtSsoClient",
+        "type": "IntegrationClient",
+        "module": "tcf-om"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.client.OmBatchRemoteClient",
+        "type": "IntegrationClient",
+        "module": "tcf-om"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.persistence.dao.OmDeployDao",
+        "type": "DAO",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/persistence/dao/OmDeployDao.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmCommonCodeCacheService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmCommonCodeCacheService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmFileStorageService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmFileStorageService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmSessionCleanupService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmSessionCleanupService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.application.service.OmUpdownloadService",
+        "type": "Service",
+        "module": "tcf-om",
+        "path": "nsight-tcf-framework/nsight-tcf-framework/tcf-om/src/main/java/com/nh/nsight/marketing/om/application/service/OmUpdownloadService.java"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.av.persistence.mapper.AvAssetValuationMapper",
+        "type": "Mapper",
+        "module": "av-service"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.av.persistence.mapper.AvCustomerContactMapper",
+        "type": "Mapper",
+        "module": "av-service"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.av.persistence.mapper.AvSampleMapper",
+        "type": "Mapper",
+        "module": "av-service"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.persistence.mapper.EbEventMapper",
+        "type": "Mapper",
+        "module": "eb-service"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.persistence.mapper.EbSystemTxMapper",
+        "type": "Mapper",
+        "module": "eb-service"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.eb.persistence.mapper.EbUserMapper",
+        "type": "Mapper",
+        "module": "eb-service"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ep.persistence.mapper.EpUserEventMapper",
+        "type": "Mapper",
+        "module": "ep-service"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.ln.persistence.mapper.LnCustomerContactMapper",
+        "type": "Mapper",
+        "module": "ln-service"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.sv.persistence.mapper.SvCustomerMapper",
+        "type": "Mapper",
+        "module": "sv-service"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.sv.persistence.mapper.SvSampleCountMapper",
+        "type": "Mapper",
+        "module": "sv-service"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.sv.persistence.mapper.SvSampleMapper",
+        "type": "Mapper",
+        "module": "sv-service"
+      },
+      {
+        "id": "class:org.springframework.jdbc.core.RowMapper",
+        "type": "Mapper",
+        "module": "tcf-gateway"
+      },
+      {
+        "id": "class:com.nh.nsight.gateway.support.GatewayTransactionLogRowMapper",
+        "type": "Mapper",
+        "module": "tcf-gateway"
+      },
+      {
+        "id": "class:com.nh.nsight.gateway.support.GatewayTransactionLogSummaryMapper",
+        "type": "Mapper",
+        "module": "tcf-gateway"
+      },
+      {
+        "id": "class:com.nh.nsight.gateway.support.UserSessionViewMapper",
+        "type": "Mapper",
+        "module": "tcf-gateway"
+      },
+      {
+        "id": "class:com.nh.nsight.auth.jwt.persistence.mapper.JwtAdminMapper",
+        "type": "Mapper",
+        "module": "tcf-jwt"
+      },
+      {
+        "id": "class:com.nh.nsight.auth.jwt.persistence.mapper.JwtTokenMapper",
+        "type": "Mapper",
+        "module": "tcf-jwt"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.capnew.persistence.mapper.CapNewApprovalMapper",
+        "type": "Mapper",
+        "module": "tcf-oc"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.capnew.persistence.mapper.CapNewScenarioMapper",
+        "type": "Mapper",
+        "module": "tcf-oc"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.oc.capnew.persistence.mapper.CapNewScenarioTemplateMapper",
+        "type": "Mapper",
+        "module": "tcf-oc"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.persistence.mapper.OmDeployMapper",
+        "type": "Mapper",
+        "module": "tcf-om"
+      },
+      {
+        "id": "class:com.nh.nsight.marketing.om.persistence.mapper.OmOperationMapper",
+        "type": "Mapper",
+        "module": "tcf-om"
+      }
+    ],
+    "edges": [
+      {
+        "from": "serviceId:av-service:AV.AssetValuation.selectList",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.av.entry.handler.AvAssetValuationHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.av.entry.handler.AvAssetValuationHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.av.entry.facade.AvAssetValuationFacade"
+      },
+      {
+        "from": "serviceId:av-service:AV.CustomerContact.selectList",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.av.entry.handler.AvCustomerContactHandler"
+      },
+      {
+        "from": "serviceId:av-service:AV.CustomerContact.selectDetail",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.av.entry.handler.AvCustomerContactHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.av.entry.handler.AvCustomerContactHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.av.entry.facade.AvCustomerContactFacade"
+      },
+      {
+        "from": "serviceId:av-service:AV.Sample.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.av.entry.handler.AvSampleHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.av.entry.handler.AvSampleHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.av.entry.facade.AvSampleFacade"
+      },
+      {
+        "from": "serviceId:eb-service:EB.Batch.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.eb.entry.handler.EbBatchHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.entry.handler.EbBatchHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.eb.entry.facade.EbBatchFacade"
+      },
+      {
+        "from": "serviceId:eb-service:EB.Event.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.eb.entry.handler.EbEventHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.entry.handler.EbEventHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.eb.entry.facade.EbEventFacade"
+      },
+      {
+        "from": "serviceId:eb-service:EB.Sample.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.eb.entry.handler.EbSampleHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.entry.handler.EbSampleHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.eb.entry.facade.EbSampleFacade"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.entry.handler.EbSystemTxHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.eb.entry.facade.EbSystemTxFacade"
+      },
+      {
+        "from": "serviceId:eb-service:EB.User.create",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.eb.entry.handler.EbUserHandler"
+      },
+      {
+        "from": "serviceId:eb-service:EB.User.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.eb.entry.handler.EbUserHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.entry.handler.EbUserHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.eb.entry.facade.EbUserFacade"
+      },
+      {
+        "from": "serviceId:ep-service:EP.Sample.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.ep.entry.handler.EpSampleHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ep.entry.handler.EpSampleHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.ep.entry.facade.EpSampleFacade"
+      },
+      {
+        "from": "serviceId:ep-service:EP.UserEvent.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.ep.entry.handler.EpUserEventHandler"
+      },
+      {
+        "from": "serviceId:ep-service:EP.UserEvent.receive",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.ep.entry.handler.EpUserEventHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ep.entry.handler.EpUserEventHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.ep.entry.facade.EpUserEventFacade"
+      },
+      {
+        "from": "serviceId:ic-service:IC.Customer.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.ic.entry.handler.IcCustomerHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ic.entry.handler.IcCustomerHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.ic.entry.facade.IcCustomerFacade"
+      },
+      {
+        "from": "serviceId:ic-service:IC.Sample.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.ic.entry.handler.IcSampleHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ic.entry.handler.IcSampleHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.ic.entry.facade.IcSampleFacade"
+      },
+      {
+        "from": "serviceId:ln-service:LN.CustomerContact.selectList",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.ln.entry.handler.LnCustomerContactHandler"
+      },
+      {
+        "from": "serviceId:ln-service:LN.CustomerContact.selectDetail",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.ln.entry.handler.LnCustomerContactHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ln.entry.handler.LnCustomerContactHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.ln.entry.facade.LnCustomerContactFacade"
+      },
+      {
+        "from": "serviceId:mg-service:MG.Sample.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.mg.entry.handler.MgSampleHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.mg.entry.handler.MgSampleHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.mg.entry.facade.MgSampleFacade"
+      },
+      {
+        "from": "serviceId:ms-service:MS.Sample.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.ms.entry.handler.MsSampleHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ms.entry.handler.MsSampleHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.ms.entry.facade.MsSampleFacade"
+      },
+      {
+        "from": "serviceId:om-service:OM.Sample.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmSampleHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmSampleHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmSampleFacade"
+      },
+      {
+        "from": "serviceId:pc-service:PC.Sample.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.pc.entry.handler.PcSampleHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.pc.entry.handler.PcSampleHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.pc.entry.facade.PcSampleFacade"
+      },
+      {
+        "from": "serviceId:pd-service:PD.Sample.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.pd.entry.handler.PdSampleHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.pd.entry.handler.PdSampleHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.pd.entry.facade.PdSampleFacade"
+      },
+      {
+        "from": "serviceId:ss-service:SS.Sample.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.ss.entry.handler.SsSampleHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ss.entry.handler.SsSampleHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.ss.entry.facade.SsSampleFacade"
+      },
+      {
+        "from": "serviceId:sv-service:SV.Customer.selectSummary",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.sv.entry.handler.SvCustomerHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.sv.entry.handler.SvCustomerHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.sv.entry.facade.SvCustomerFacade"
+      },
+      {
+        "from": "serviceId:sv-service:SV.Integration.icSample",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.sv.entry.handler.SvIntegrationHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.sv.entry.handler.SvIntegrationHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.sv.entry.facade.SvIntegrationFacade"
+      },
+      {
+        "from": "serviceId:sv-service:SV.Sample.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.sv.entry.handler.SvSampleHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.sv.entry.handler.SvSampleHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.sv.entry.facade.SvSampleFacade"
+      },
+      {
+        "from": "serviceId:tcf-jwt:JWT.Auth.login",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.auth.jwt.entry.handler.JwtAuthLoginHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.auth.jwt.entry.handler.JwtAuthLoginHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.auth.jwt.entry.facade.JwtAuthFacade"
+      },
+      {
+        "from": "serviceId:tcf-jwt:JWT.Auth.logout",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.auth.jwt.entry.handler.JwtAuthLogoutHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.auth.jwt.entry.handler.JwtAuthLogoutHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.auth.jwt.entry.facade.JwtAuthFacade"
+      },
+      {
+        "from": "serviceId:tcf-jwt:JWT.Auth.refresh",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.auth.jwt.entry.handler.JwtAuthRefreshHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.auth.jwt.entry.handler.JwtAuthRefreshHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.auth.jwt.entry.facade.JwtAuthFacade"
+      },
+      {
+        "from": "serviceId:tcf-jwt:JWT.Auth.revoke",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.auth.jwt.entry.handler.JwtAuthRevokeHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.auth.jwt.entry.handler.JwtAuthRevokeHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.auth.jwt.entry.facade.JwtAuthFacade"
+      },
+      {
+        "from": "serviceId:tcf-jwt:JWT.Auth.ssoIssue",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.auth.jwt.entry.handler.JwtAuthSsoIssueHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.auth.jwt.entry.handler.JwtAuthSsoIssueHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.auth.jwt.entry.facade.JwtAuthFacade"
+      },
+      {
+        "from": "serviceId:tcf-jwt:JWT.LoginHistory.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.auth.jwt.entry.handler.JwtLoginHistoryInquiryHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.auth.jwt.entry.handler.JwtLoginHistoryInquiryHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.auth.jwt.entry.facade.JwtAdminFacade"
+      },
+      {
+        "from": "serviceId:tcf-jwt:JWT.RefreshToken.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.auth.jwt.entry.handler.JwtRefreshTokenInquiryHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.auth.jwt.entry.handler.JwtRefreshTokenInquiryHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.auth.jwt.entry.facade.JwtAdminFacade"
+      },
+      {
+        "from": "serviceId:tcf-jwt:JWT.SecurityPolicy.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.auth.jwt.entry.handler.JwtSecurityPolicyInquiryHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.auth.jwt.entry.handler.JwtSecurityPolicyInquiryHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.auth.jwt.entry.facade.JwtAdminFacade"
+      },
+      {
+        "from": "serviceId:tcf-jwt:JWT.SecurityPolicy.update",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.auth.jwt.entry.handler.JwtSecurityPolicyUpdateHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.auth.jwt.entry.handler.JwtSecurityPolicyUpdateHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.auth.jwt.entry.facade.JwtAdminFacade"
+      },
+      {
+        "from": "serviceId:tcf-jwt:JWT.Token.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.auth.jwt.entry.handler.JwtTokenInquiryHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.auth.jwt.entry.handler.JwtTokenInquiryHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.auth.jwt.entry.facade.JwtAdminFacade"
+      },
+      {
+        "from": "serviceId:tcf-jwt:JWT.Token.revoke",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.auth.jwt.entry.handler.JwtTokenRevokeHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.auth.jwt.entry.handler.JwtTokenRevokeHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.auth.jwt.entry.facade.JwtAdminFacade"
+      },
+      {
+        "from": "serviceId:tcf-oc:OC.Hello.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.oc.entry.handler.OcHelloHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.oc.entry.handler.OcHelloHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.oc.entry.facade.OcHelloFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.AuditLog.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmAuditLogHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.AuditLog.deleteAll",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmAuditLogHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmAuditLogHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmAuditLogFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.AuthGroup.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmAuthGroupHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.AuthGroup.detail",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmAuthGroupHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.AuthGroup.save",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmAuthGroupHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.AuthGroup.update",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmAuthGroupHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.AuthGroup.delete",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmAuthGroupHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmAuthGroupHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmAuthGroupFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Auth.login",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmAuthHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Auth.ssoLogin",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmAuthHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Auth.logout",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmAuthHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Auth.session",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmAuthHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmAuthHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmAuthFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.AuthHistory.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmAuthHistoryHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.AuthHistory.deleteAll",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmAuthHistoryHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmAuthHistoryHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmAuthHistoryFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Batch.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmBatchHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Batch.execute",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmBatchHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Batch.deleteAll",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmBatchHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmBatchHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmBatchFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Cache.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmCacheHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Cache.delete",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmCacheHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmCacheHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmCacheFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.CommonCode.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmCommonCodeHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.CommonCode.detail",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmCommonCodeHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.CommonCode.save",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmCommonCodeHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.CommonCode.update",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmCommonCodeHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.CommonCode.delete",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmCommonCodeHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmCommonCodeHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmCommonCodeFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Dashboard.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmDashboardHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Dashboard.reset",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmDashboardHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmDashboardHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmDashboardFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.DataAuth.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmDataAuthHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmDataAuthHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmDataAuthFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Deploy.history",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmDeployHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Deploy.buildStatus",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmDeployHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Deploy.logInquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmDeployHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Deploy.healthCheck",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmDeployHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Deploy.deleteAll",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmDeployHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Deploy.execute",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmDeployHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Deploy.buildRequest",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmDeployHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Deploy.deployRequest",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmDeployHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Deploy.rollbackRequest",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmDeployHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Deploy.approve",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmDeployHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmDeployHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmDeployFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.ErrorCode.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmErrorCodeHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.ErrorCode.detail",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmErrorCodeHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.ErrorCode.save",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmErrorCodeHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.ErrorCode.update",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmErrorCodeHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.ErrorCode.delete",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmErrorCodeHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmErrorCodeHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmErrorCodeFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.FileDownload.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmFileDownloadHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmFileDownloadHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmFileDownloadFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.FunctionAuth.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmFunctionAuthHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.FunctionAuth.detail",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmFunctionAuthHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.FunctionAuth.save",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmFunctionAuthHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.FunctionAuth.update",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmFunctionAuthHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.FunctionAuth.delete",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmFunctionAuthHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmFunctionAuthHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmFunctionAuthFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.HealthCheck.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmHealthCheckHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmHealthCheckHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmHealthCheckFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Menu.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmMenuHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Menu.detail",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmMenuHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Menu.save",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmMenuHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Menu.update",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmMenuHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Menu.delete",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmMenuHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmMenuHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmMenuFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.MessageStructure.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmMessageStructureHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.MessageStructure.frameworkInquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmMessageStructureHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.MessageStructure.detail",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmMessageStructureHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.MessageStructure.save",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmMessageStructureHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.MessageStructure.update",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmMessageStructureHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.MessageStructure.delete",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmMessageStructureHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmMessageStructureHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmMessageStructureFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Runtime.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmRuntimeHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmRuntimeHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmRuntimeFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Sample.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmSampleHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmSampleHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmSampleFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.ServiceCatalog.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmServiceCatalogHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.ServiceCatalog.detail",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmServiceCatalogHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.ServiceCatalog.save",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmServiceCatalogHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.ServiceCatalog.update",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmServiceCatalogHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.ServiceCatalog.delete",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmServiceCatalogHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmServiceCatalogHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmServiceCatalogFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Session.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmSessionHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.Session.delete",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmSessionHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmSessionHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmSessionFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.SystemConfig.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmSystemConfigHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmSystemConfigHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmSystemConfigFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.TimeoutPolicy.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmTimeoutPolicyHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.TimeoutPolicy.save",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmTimeoutPolicyHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.TimeoutPolicy.update",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmTimeoutPolicyHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.TimeoutPolicy.delete",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmTimeoutPolicyHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmTimeoutPolicyHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmTimeoutPolicyFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.TransactionControl.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmTransactionControlHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.TransactionControl.save",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmTransactionControlHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.TransactionControl.update",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmTransactionControlHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.TransactionControl.delete",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmTransactionControlHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmTransactionControlHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmTransactionControlFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.TransactionLog.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmTransactionLogHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.TransactionLog.deleteAll",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmTransactionLogHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmTransactionLogHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmTransactionLogFacade"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.User.inquiry",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmUserHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.User.detail",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmUserHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.User.save",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmUserHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.User.update",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmUserHandler"
+      },
+      {
+        "from": "serviceId:tcf-om:OM.User.delete",
+        "relation": "routesTo",
+        "to": "class:com.nh.nsight.marketing.om.entry.handler.OmUserHandler"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.handler.OmUserHandler",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.entry.facade.OmUserFacade"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.av.entry.facade.AvAssetValuationFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.av.application.service.AvAssetValuationService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.av.entry.facade.AvAssetValuationFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.av.entry.facade.AvCustomerContactFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.av.application.service.AvCustomerContactService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.av.entry.facade.AvCustomerContactFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.av.entry.facade.AvSampleFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.av.application.service.AvSampleService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.av.entry.facade.AvSampleFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.entry.facade.EbBatchFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.eb.application.service.EbBatchService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.entry.facade.EbBatchFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.entry.facade.EbEventFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.eb.application.service.EbEventService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.entry.facade.EbEventFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.entry.facade.EbSampleFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.eb.application.service.EbSampleService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.entry.facade.EbSampleFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.entry.facade.EbSystemTxFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.eb.application.service.EbSystemTxService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.entry.facade.EbSystemTxFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.entry.facade.EbUserFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.eb.application.service.EbUserService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.entry.facade.EbUserFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ep.entry.facade.EpSampleFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.ep.application.service.EpSampleService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ep.entry.facade.EpSampleFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ep.entry.facade.EpUserEventFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.ep.application.service.EpUserEventService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ep.entry.facade.EpUserEventFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ic.entry.facade.IcCustomerFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.ic.application.service.IcCustomerService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ic.entry.facade.IcCustomerFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ic.entry.facade.IcSampleFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.ic.application.service.IcSampleService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ic.entry.facade.IcSampleFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ln.entry.facade.LnCustomerContactFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.ln.application.service.LnCustomerContactService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ln.entry.facade.LnCustomerContactFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.mg.entry.facade.MgSampleFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.mg.application.service.MgSampleService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.mg.entry.facade.MgSampleFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ms.entry.facade.MsSampleFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.ms.application.service.MsSampleService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ms.entry.facade.MsSampleFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmSampleFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmSampleService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmSampleFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.pc.entry.facade.PcSampleFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.pc.application.service.PcSampleService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.pc.entry.facade.PcSampleFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.pd.entry.facade.PdSampleFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.pd.application.service.PdSampleService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.pd.entry.facade.PdSampleFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ss.entry.facade.SsSampleFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.ss.application.service.SsSampleService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ss.entry.facade.SsSampleFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.sv.entry.facade.SvCustomerFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.sv.application.service.SvCustomerService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.sv.entry.facade.SvCustomerFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.sv.entry.facade.SvIntegrationFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.sv.application.service.SvIntegrationDemoService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.sv.entry.facade.SvIntegrationFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.sv.entry.facade.SvSampleFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.sv.application.service.SvSampleService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.sv.entry.facade.SvSampleFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.auth.jwt.entry.facade.JwtAdminFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.auth.jwt.application.service.JwtAdminService"
+      },
+      {
+        "from": "class:com.nh.nsight.auth.jwt.entry.facade.JwtAdminFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.auth.jwt.entry.facade.JwtAuthFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.auth.jwt.application.service.JwtAuthService"
+      },
+      {
+        "from": "class:com.nh.nsight.auth.jwt.entry.facade.JwtAuthFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.oc.entry.facade.OcHelloFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.oc.application.service.OcHelloService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.oc.entry.facade.OcHelloFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmAuditLogFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmAuditLogService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmAuditLogFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmAuthFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmAuthService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmAuthFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmAuthGroupFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmAuthGroupService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmAuthGroupFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmAuthHistoryFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmAuthHistoryService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmAuthHistoryFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmBatchFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmBatchService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmBatchFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmCacheFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmCacheService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmCacheFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmCommonCodeFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmCommonCodeService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmCommonCodeFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmDashboardFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmDashboardService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmDashboardFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmDataAuthFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmDataAuthService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmDataAuthFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmDeployFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmBuildService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmDeployFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmDeployService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmDeployFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmRollbackService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmDeployFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmErrorCodeFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmErrorCodeService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmErrorCodeFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmFileDownloadFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmFileDownloadService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmFileDownloadFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmFunctionAuthFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmFunctionAuthService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmFunctionAuthFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmHealthCheckFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmHealthCheckService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmHealthCheckFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmMenuFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmMenuService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmMenuFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmMessageStructureFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmMessageStructureService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmMessageStructureFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmRuntimeFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmRuntimeService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmRuntimeFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmSampleFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmSampleService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmSampleFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmServiceCatalogFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmServiceCatalogService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmServiceCatalogFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmSessionFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmSessionService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmSessionFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmSystemConfigFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmSystemConfigService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmSystemConfigFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmTimeoutPolicyFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmTimeoutPolicyService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmTimeoutPolicyFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmTransactionControlFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmTransactionControlService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmTransactionControlFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmTransactionLogFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmTransactionLogService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmTransactionLogFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmUserFacade",
+        "relation": "invokes",
+        "to": "class:com.nh.nsight.marketing.om.application.service.OmUserService"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.entry.facade.OmUserFacade",
+        "relation": "invokes",
+        "to": "class:org.springframework.stereotype.Service"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.av.application.service.AvAssetValuationService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.av.persistence.dao.AvAssetValuationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.av.application.service.AvCustomerContactService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.av.persistence.dao.AvCustomerContactDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.av.application.service.AvSampleService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.av.persistence.dao.AvSampleDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.application.service.EbBatchService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.eb.persistence.dao.EbEventDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.application.service.EbEventPublishService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.eb.persistence.dao.EbEventDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.application.service.EbEventPublishService",
+        "relation": "calls",
+        "to": "class:com.nh.nsight.marketing.eb.client.EpOnlineClient"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.application.service.EbEventService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.eb.persistence.dao.EbEventDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.application.service.EbSampleService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.eb.persistence.dao.EbSampleDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.application.service.EbSystemTxService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.eb.persistence.dao.EbSystemTxDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.application.service.EbUserService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.eb.persistence.dao.EbEventDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.application.service.EbUserService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.eb.persistence.dao.EbUserDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ep.application.service.EpSampleService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.ep.persistence.dao.EpSampleDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ep.application.service.EpUserEventService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.ep.persistence.dao.EpUserEventDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ic.application.service.IcCustomerService",
+        "relation": "calls",
+        "to": "class:com.nh.nsight.marketing.ic.client.SvIntegrationClient"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ic.application.service.IcSampleService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.ic.persistence.dao.IcSampleDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ln.application.service.LnCustomerContactService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.ln.persistence.dao.LnCustomerContactDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.mg.application.service.MgSampleService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.mg.persistence.dao.MgSampleDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ms.application.service.MsSampleService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.ms.persistence.dao.MsSampleDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmSampleService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmSampleDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.pc.application.service.PcSampleService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.pc.persistence.dao.PcSampleDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.pd.application.service.PdSampleService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.pd.persistence.dao.PdSampleDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ss.application.service.SsSampleService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.ss.persistence.dao.SsSampleDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.sv.application.service.SvCustomerService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.sv.persistence.dao.SvCustomerDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.sv.application.service.SvIntegrationDemoService",
+        "relation": "calls",
+        "to": "class:com.nh.nsight.marketing.sv.client.IcIntegrationClient"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.sv.application.service.SvSampleService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.sv.persistence.dao.SvSampleDao"
+      },
+      {
+        "from": "class:com.nh.nsight.tcf.batch.application.service.ApStatusCollectService",
+        "relation": "calls",
+        "to": "class:com.nh.nsight.tcf.batch.client.ApMetricsClient"
+      },
+      {
+        "from": "class:com.nh.nsight.tcf.batch.application.service.DbStatusCollectService",
+        "relation": "calls",
+        "to": "class:com.nh.nsight.tcf.batch.client.DbMetricsClient"
+      },
+      {
+        "from": "class:com.nh.nsight.tcf.batch.application.service.DeployStatusCollectService",
+        "relation": "calls",
+        "to": "class:com.nh.nsight.tcf.batch.client.DeployMetricsClient"
+      },
+      {
+        "from": "class:com.nh.nsight.tcf.batch.application.service.SessionStatusCollectService",
+        "relation": "calls",
+        "to": "class:com.nh.nsight.tcf.batch.client.SessionMetricsClient"
+      },
+      {
+        "from": "class:com.nh.nsight.gateway.application.service.GatewayRouteAdminService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.gateway.persistence.dao.GatewayRouteDao"
+      },
+      {
+        "from": "class:com.nh.nsight.gateway.application.service.GatewaySessionValidationService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.gateway.persistence.dao.SpringSessionDao"
+      },
+      {
+        "from": "class:com.nh.nsight.gateway.application.service.GatewayTransactionLogService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.gateway.persistence.dao.GatewayTransactionLogDao"
+      },
+      {
+        "from": "class:com.nh.nsight.gateway.application.service.GatewayUserSessionAdminService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.gateway.persistence.dao.UserSessionDao"
+      },
+      {
+        "from": "class:com.nh.nsight.gateway.application.service.GatewayUserSessionSyncService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.gateway.persistence.dao.SpringSessionDao"
+      },
+      {
+        "from": "class:com.nh.nsight.gateway.application.service.GatewayUserSessionSyncService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.gateway.persistence.dao.UserSessionDao"
+      },
+      {
+        "from": "class:com.nh.nsight.gateway.application.service.UserSessionService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.gateway.persistence.dao.SpringSessionDao"
+      },
+      {
+        "from": "class:com.nh.nsight.gateway.application.service.UserSessionService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.gateway.persistence.dao.UserSessionDao"
+      },
+      {
+        "from": "class:com.nh.nsight.auth.jwt.application.service.JwtAdminService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.auth.jwt.persistence.dao.JwtAdminDao"
+      },
+      {
+        "from": "class:com.nh.nsight.auth.jwt.application.service.JwtAuthService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.auth.jwt.persistence.dao.JwtTokenDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.oc.application.service.OcHelloService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.oc.persistence.dao.OcHelloDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.oc.capnew.application.service.CapNewApprovalService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.oc.capnew.persistence.dao.CapNewApprovalDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.oc.capnew.application.service.CapNewApprovalService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.oc.capnew.persistence.dao.CapNewScenarioDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.oc.capnew.application.service.CapNewScenarioTemplateService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.oc.capnew.persistence.dao.CapNewScenarioTemplateDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.oc.capnew.application.service.CapNewWizardService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.oc.capnew.persistence.dao.CapNewScenarioDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmAuditLogService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmAuthGroupService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmAuthHistoryService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmAuthService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmAuthService",
+        "relation": "calls",
+        "to": "class:com.nh.nsight.marketing.om.client.OmJwtSsoClient"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmBatchService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmBatchService",
+        "relation": "calls",
+        "to": "class:com.nh.nsight.marketing.om.client.OmBatchRemoteClient"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmBuildService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmDeployDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmCacheService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmCommonCodeCacheService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmCommonCodeService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmDashboardService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmDashboardService",
+        "relation": "calls",
+        "to": "class:com.nh.nsight.marketing.om.client.OmBatchRemoteClient"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmDataAuthService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmDeployService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmDeployDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmErrorCodeService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmFileDownloadService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmFunctionAuthService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmHealthCheckService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmMenuService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmMessageStructureService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmRollbackService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmDeployDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmSampleService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmSampleDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmServiceCatalogService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmSessionCleanupService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmSessionService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmSystemConfigService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmTimeoutPolicyService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmTransactionControlService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmTransactionLogService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.application.service.OmUserService",
+        "relation": "accesses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.av.persistence.dao.AvAssetValuationDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.marketing.av.persistence.mapper.AvAssetValuationMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.av.persistence.dao.AvCustomerContactDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.marketing.av.persistence.mapper.AvCustomerContactMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.av.persistence.dao.AvSampleDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.marketing.av.persistence.mapper.AvSampleMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.persistence.dao.EbEventDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.marketing.eb.persistence.mapper.EbEventMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.persistence.dao.EbSystemTxDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.marketing.eb.persistence.mapper.EbSystemTxMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.eb.persistence.dao.EbUserDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.marketing.eb.persistence.mapper.EbUserMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ep.persistence.dao.EpUserEventDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.marketing.ep.persistence.mapper.EpUserEventMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.ln.persistence.dao.LnCustomerContactDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.marketing.ln.persistence.mapper.LnCustomerContactMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.sv.persistence.dao.SvCustomerDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.marketing.sv.persistence.mapper.SvCustomerMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.sv.persistence.dao.SvSampleDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.marketing.sv.persistence.mapper.SvSampleCountMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.sv.persistence.dao.SvSampleDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.marketing.sv.persistence.mapper.SvSampleMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.gateway.persistence.dao.GatewayRouteDao",
+        "relation": "uses",
+        "to": "class:org.springframework.jdbc.core.RowMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.gateway.persistence.dao.GatewayTransactionLogDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.gateway.support.GatewayTransactionLogRowMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.gateway.persistence.dao.GatewayTransactionLogDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.gateway.support.GatewayTransactionLogSummaryMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.gateway.persistence.dao.UserSessionDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.gateway.support.UserSessionViewMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.gateway.persistence.dao.UserSessionDao",
+        "relation": "uses",
+        "to": "class:org.springframework.jdbc.core.RowMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.auth.jwt.persistence.dao.JwtAdminDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.auth.jwt.persistence.mapper.JwtAdminMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.auth.jwt.persistence.dao.JwtTokenDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.auth.jwt.persistence.mapper.JwtTokenMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.oc.capnew.persistence.dao.CapNewApprovalDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.marketing.oc.capnew.persistence.mapper.CapNewApprovalMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.oc.capnew.persistence.dao.CapNewScenarioDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.marketing.oc.capnew.persistence.mapper.CapNewScenarioMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.oc.capnew.persistence.dao.CapNewScenarioTemplateDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.marketing.oc.capnew.persistence.mapper.CapNewScenarioTemplateMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.persistence.dao.OmDeployDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.mapper.OmDeployMapper"
+      },
+      {
+        "from": "class:com.nh.nsight.marketing.om.persistence.dao.OmOperationDao",
+        "relation": "uses",
+        "to": "class:com.nh.nsight.marketing.om.persistence.mapper.OmOperationMapper"
+      }
+    ]
+  }
+}

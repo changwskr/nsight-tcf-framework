@@ -1,0 +1,25 @@
+{
+  "adr_id": "ADR-OBS-001",
+  "title": "GUID + ServiceId Runtime Evidence Standard",
+  "decision": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "conditions": [],
+  "comment": null,
+  "approval_state": "DRAFT_NOT_APPROVED",
+  "recommended_decision": "APPROVE",
+  "readiness": "READY_FOR_HUMAN_DECISION",
+  "required_approver": "Ops/Observability Owner + Application Architect",
+  "runtime_dependency": [
+    "RUN-TRACE"
+  ],
+  "recommendation": "GUID + ServiceId를 System/Transaction/Business/Image/Error/Runtime Evidence의 공통 추적키로 사용한다.",
+  "prerequisites": [
+    "logging field standard"
+  ],
+  "closure": [
+    "same GUID/ServiceId across required hops",
+    "reverse trace pass"
+  ]
+}

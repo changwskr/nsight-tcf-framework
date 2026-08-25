@@ -1,0 +1,11 @@
+{
+  "item_id": "P0-PERF-001",
+  "area": "Runtime approved capacity",
+  "current_status": "HARNESS_READY_BLOCKED_PRODUCTION_RUNTIME",
+  "status": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "closure_comment": null,
+  "required_next": "RUN-P600/P1200/S1800/N1/HIKARI and approve final VM/JVM/Tomcat/Hikari baseline"
+}

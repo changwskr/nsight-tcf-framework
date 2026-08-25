@@ -1,0 +1,25 @@
+{
+  "adr_id": "ADR-OPS-001",
+  "title": "OM Control Plane Scope",
+  "decision": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "conditions": [],
+  "comment": null,
+  "approval_state": "DRAFT_NOT_APPROVED",
+  "recommended_decision": "APPROVE",
+  "readiness": "READY_FOR_HUMAN_DECISION",
+  "required_approver": "Ops Owner + Architecture",
+  "runtime_dependency": [
+    "RUN-TRACE",
+    "RUN-ROLLING"
+  ],
+  "recommendation": "OM은 Control Plane으로 Catalog/Policy/Runtime/Deploy/Audit 관점을 제공하고 Runtime Plane의 TCF/STF가 정책을 집행한다.",
+  "prerequisites": [
+    "OM catalog"
+  ],
+  "closure": [
+    "catalog/metric/alert/runbook loop connected"
+  ]
+}

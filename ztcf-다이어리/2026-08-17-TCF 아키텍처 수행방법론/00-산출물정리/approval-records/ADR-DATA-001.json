@@ -1,0 +1,13 @@
+{
+  "adr_id": "ADR-DATA-001",
+  "title": "RDW/ADW Ownership / Read-Write Boundary",
+  "recommended_decision": "APPROVE",
+  "decision": null,
+  "approver": null,
+  "approver_role": "Data Architect + Domain Owners",
+  "decision_date": null,
+  "condition": null,
+  "evidence_ref": [],
+  "runtime_dependency": [],
+  "approval_state": "DRAFT_NOT_APPROVED"
+}

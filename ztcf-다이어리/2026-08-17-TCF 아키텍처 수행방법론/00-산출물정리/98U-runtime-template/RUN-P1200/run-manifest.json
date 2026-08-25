@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "run_id": "RUN-P1200",
+  "timestamp": "UNKNOWN",
+  "environment": "UNKNOWN",
+  "evidence_class": "PRODUCTION_RUNTIME",
+  "synthetic": false,
+  "git_commit": "UNKNOWN",
+  "artifact_version": "UNKNOWN",
+  "config_version": "UNKNOWN",
+  "service_id": "UNKNOWN",
+  "guid": "UNKNOWN",
+  "hostname": "UNKNOWN",
+  "tomcat_jvm_instance": "UNKNOWN",
+  "db_target": "UNKNOWN",
+  "purpose": "Design peak 1,200 TPS"
+}

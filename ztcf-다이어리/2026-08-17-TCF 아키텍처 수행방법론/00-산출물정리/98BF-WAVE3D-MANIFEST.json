@@ -1,0 +1,295 @@
+{
+  "phase": "Wave 3D",
+  "files": [
+    {
+      "path": "98AQ-P0-WAVE3D-SECOND-BATCH.md",
+      "sha256": "5e5c470011456e9a0d87dd987002f3d8fa18548523fc01ff90580e1fd3ee5024",
+      "bytes": 1380
+    },
+    {
+      "path": "98AR-RUN-S1800-RUNBOOK.md",
+      "sha256": "28a16091caee6caed5de2fb81d27c051ffadb8dc9403e4adff036a18ab1eb71a",
+      "bytes": 2196
+    },
+    {
+      "path": "98AS-RUN-HIKARI-RUNBOOK.md",
+      "sha256": "769fb63977616a4d13daff6126f88c4f2e0b02bb37e29ddb78bc80e6c2b074e5",
+      "bytes": 2199
+    },
+    {
+      "path": "98AT-RUN-SLOWSQL-RUNBOOK.md",
+      "sha256": "793102b5e5738adb877d1f0bdc19628c4c2c90ffb4868667b2ad08f37b3b322d",
+      "bytes": 2032
+    },
+    {
+      "path": "98AU-RUN-N1-RUNBOOK.md",
+      "sha256": "432cb178356ad816b9a48dc6074afa4cdf0c122742edda4e30649724d33855bb",
+      "bytes": 2136
+    },
+    {
+      "path": "98AV-RUN-SESSION-RUNBOOK.md",
+      "sha256": "9d4ed37aa97f6c13cd0e91894064d9ca0a6e6586e4a1239ba2aa407ef4f5750e",
+      "bytes": 2246
+    },
+    {
+      "path": "98AW-RUN-CF-RUNBOOK.md",
+      "sha256": "f53c7e87f67c969968832da8e81adf901894c4d5d1fc03b86c5f83bd32a408ba",
+      "bytes": 2260
+    },
+    {
+      "path": "98AX-RUN-TRACE-RUNBOOK.md",
+      "sha256": "106783bd47298c6434f250efb1737020169af37996edc9b82d82edcaac07a3ab",
+      "bytes": 2168
+    },
+    {
+      "path": "98AY-RUN-ROLLING-RUNBOOK.md",
+      "sha256": "de07de058277b3505a54719a9fd42524b0e395948e94e4ba3b3af3da19fddfc5",
+      "bytes": 2312
+    },
+    {
+      "path": "98AZ-RUN-JWT-ROTATE-RUNBOOK.md",
+      "sha256": "4257f6977573978f1c99e000e37882f08636c49f4d608ccdaf0467de6ae3e881",
+      "bytes": 2390
+    },
+    {
+      "path": "98BA-SECOND-BATCH-RUN-CATALOG.json",
+      "sha256": "0e80763e266e5c378c054344ba8289c4c52afb02f02e18d56d4f27e6cb85c7a2",
+      "bytes": 10386
+    },
+    {
+      "path": "98BB-SECOND-BATCH-GO-NOGO-MATRIX.json",
+      "sha256": "4d2d97f32d62483b2a2caf32dcee9d4578cfc082faab59508ef557a1512c02a2",
+      "bytes": 5698
+    },
+    {
+      "path": "98BC-SECOND-BATCH-OPERATOR-CHECKLIST.md",
+      "sha256": "f43cfe32a0affb736305ca4c5dccdec9143bf8d1e28ef52bf237a744872ce23c",
+      "bytes": 828
+    },
+    {
+      "path": "98BD-SECOND-BATCH-PREFLIGHT.json",
+      "sha256": "f48b25a56d0e8965e371f6bd7249e2e479603a1fd721bf00d016bdbbcce10544",
+      "bytes": 571
+    },
+    {
+      "path": "98BE-WAVE3D-VERIFICATION-RESULT.json",
+      "sha256": "ce617c407659d6b4a634bad0bafd2d0152604555ca0292794fa4fc85de899cf2",
+      "bytes": 464
+    },
+    {
+      "path": "31-RUNTIME-EVIDENCE.md",
+      "sha256": "325771505bb0274498d497fd178ae5590f9f2684c61280815daa92a3b0cadcbb",
+      "bytes": 3526
+    },
+    {
+      "path": "37-ARCHITECTURE-GATE.md",
+      "sha256": "ab7df4da10a25362a649ba8004b9bed81705f2f97e004836a33801fde6438e1c",
+      "bytes": 16890
+    },
+    {
+      "path": "92-P0-CLOSURE-MASTER.md",
+      "sha256": "1c2e18aef2a15000d75517357733ad68ec0cd9f5b50426008bba06d8ce36c8c2",
+      "bytes": 6044
+    },
+    {
+      "path": "96-P0-CLOSURE-MATRIX.json",
+      "sha256": "0f29021358f676ecaf23bc5249d67c3da8221dd93b768ca495f128628147c875",
+      "bytes": 8804
+    },
+    {
+      "path": "98AQ-tools-nsight_second_batch_validate.py",
+      "sha256": "824bce4f548f0573ec34148b00468a351d6f72d3ec6a7fd66bed611ddbb2947e",
+      "bytes": 1818
+    },
+    {
+      "path": "98AQ-tools-test_second_batch_validate.py",
+      "sha256": "b08acaeab662bd25b1c2edd586bb52895ed570db23eb550b48fd35221bb5af45",
+      "bytes": 2579
+    },
+    {
+      "path": "98AQ-runtime-second-batch/README.md",
+      "sha256": "e6a8aef5be7eeaf825e0bdc841f17286548b287ef444780c41e855ae64fbcfb8",
+      "bytes": 124
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-CF/REQUIRED-EVIDENCE.txt",
+      "sha256": "674e73bf68bc0082e0aac78b7051c46b296d387d5fe518bfc83003bd3e79dc0b",
+      "bytes": 123
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-CF/approval.md",
+      "sha256": "0f33680f04be920497fb38908262a6435daeb1f41582aee527476ac4fe279be4",
+      "bytes": 38
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-CF/result.md",
+      "sha256": "95012ab56fe62b46081836e69a7899acb1d352695a354db82a41049f6d5379ae",
+      "bytes": 30
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-CF/run-manifest.json",
+      "sha256": "f1893bc4cc95c04726e7b162aa6b37e985e90234456a1c819932faafb7293bc0",
+      "bytes": 778
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-HIKARI/REQUIRED-EVIDENCE.txt",
+      "sha256": "79f7c7a0af4c6286b8be53548b8ea982035244ad4bde9dfed1bf697ad2e4ea36",
+      "bytes": 87
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-HIKARI/approval.md",
+      "sha256": "b183caf7c4a2c3eecf1e69b1136646a3d12afe858342500b66c2ac042c17c12a",
+      "bytes": 42
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-HIKARI/result.md",
+      "sha256": "0956fafb86613639207ca98629bd8a3b460af292a1ef7d0ffd7b38aa6972e41d",
+      "bytes": 34
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-HIKARI/run-manifest.json",
+      "sha256": "9087ef5252f2971e0a7e85288651dfe1d46e19f5c7d482af7bad4c7b8bd70fe5",
+      "bytes": 769
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-JWT-ROTATE/REQUIRED-EVIDENCE.txt",
+      "sha256": "2c2da904b1a2207d05a44cba938a3d9ea785bb023426d5e0f166ba957b341cb3",
+      "bytes": 117
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-JWT-ROTATE/approval.md",
+      "sha256": "d07f1edaa0e8d44955a5bc9315a0f6675896f138dc4a9b13c8216027acc2e575",
+      "bytes": 46
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-JWT-ROTATE/result.md",
+      "sha256": "57adaef72929098cc5db46e4c7f3a36874472013522fd0e3c2016e9bbf132e2f",
+      "bytes": 38
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-JWT-ROTATE/run-manifest.json",
+      "sha256": "46365d6541a7b52e869297058e05b02eb95487d933394f33b4426ae3cbcc8452",
+      "bytes": 889
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-N1/REQUIRED-EVIDENCE.txt",
+      "sha256": "af9f329ded48d2586e2e7d1d566953caa9300581cf748797ad9e5762e4e4349d",
+      "bytes": 96
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-N1/approval.md",
+      "sha256": "a9bcc0b4f5c2cd7e332bf7dc447b21db855d86eda1de7c2ca85a4c3bd17e489f",
+      "bytes": 38
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-N1/result.md",
+      "sha256": "682d9a6f55039af946a25225b9cf2dd0da4554b73f0cb16f05e57a7027d35bc4",
+      "bytes": 30
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-N1/run-manifest.json",
+      "sha256": "b130f43bd00582d8ce61df561d9d99cc1e1a5c7ee08cf8de3b8d6abf32104f96",
+      "bytes": 741
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-ROLLING/REQUIRED-EVIDENCE.txt",
+      "sha256": "31228283005e9b9c5b32e2198b80cd5ace4a750f7f5e445889b7f9fd087a1a84",
+      "bytes": 122
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-ROLLING/approval.md",
+      "sha256": "530c6a6651ca7d0044edd796766756ca4d5fd2b19c2dfea7f571a82a94d28e7c",
+      "bytes": 43
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-ROLLING/result.md",
+      "sha256": "43d4dc7b7969e35578ab07a08883a83e3036f629ee64d5cde5ada30b6be9a60b",
+      "bytes": 35
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-ROLLING/run-manifest.json",
+      "sha256": "0c67ccb89abbeee451a3be07206ceb7f3e6fd575d4877ae788d18afd943be06e",
+      "bytes": 885
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-S1800/REQUIRED-EVIDENCE.txt",
+      "sha256": "6067edd5449a23e2afe9a12699c7ff0e3855e7aab1b7504f0acb8692f61852bd",
+      "bytes": 107
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-S1800/approval.md",
+      "sha256": "168e61f9f5416bbf85cabc3100809f72a1fcbe938253ccd9ed7696e2fd77c170",
+      "bytes": 41
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-S1800/result.md",
+      "sha256": "bc68a548d3e59c31d04af93105ebf5bcee40fa54f7efb92eef76daa24bed03cf",
+      "bytes": 33
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-S1800/run-manifest.json",
+      "sha256": "e91c0592d72444d8f5566a4e1d1649b37eb775fe4e1446b87b36c8cbf0f9cc7a",
+      "bytes": 783
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-SESSION/REQUIRED-EVIDENCE.txt",
+      "sha256": "2654d89fb443f817627b34e137fc05d399c2bf8cd10d74c48e2c4a3fc053a0ad",
+      "bytes": 92
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-SESSION/approval.md",
+      "sha256": "d8b0b43679dc6771f4d1be52eaa05af311ea6673eecc646b87fad80d71e1ec93",
+      "bytes": 43
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-SESSION/result.md",
+      "sha256": "c7c9a0b47923978b20e311b43772a9b64ff964cfdb50fa5224f1650c5566c1af",
+      "bytes": 35
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-SESSION/run-manifest.json",
+      "sha256": "056363b4d3ef9ae322bc127ac1f6948971cf44e3c6498135c72464578983d444",
+      "bytes": 752
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-SLOWSQL/REQUIRED-EVIDENCE.txt",
+      "sha256": "a5d8c4faef67c2b47040ac83582f79080a9b0deaaba0ad242de22412e5350f7f",
+      "bytes": 83
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-SLOWSQL/approval.md",
+      "sha256": "b75382c627372dc2052dafb15cba0ddc6c53c21da2f1cec0bead6baf7d97dc42",
+      "bytes": 43
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-SLOWSQL/result.md",
+      "sha256": "a50318eb795ec148ca7580c2913a09318808803a299ad87acc5ace9791489a25",
+      "bytes": 35
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-SLOWSQL/run-manifest.json",
+      "sha256": "ea312a01859c1fb95a3c8be1d51ac7d4f471c2b676a671e2061dd8b2f1f78047",
+      "bytes": 686
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-TRACE/REQUIRED-EVIDENCE.txt",
+      "sha256": "a84374a9be6f901c6195b1a13f2bb152e43dba69b839519e123fffea8d25d754",
+      "bytes": 118
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-TRACE/approval.md",
+      "sha256": "65f2fb24767b0e0a8655540475d8a48d4b9f3e2861496fed467c014ea9f626e5",
+      "bytes": 41
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-TRACE/result.md",
+      "sha256": "84c8120576de8ed4dd30a4c5ae68121c5ac7620489e96aed958cd46fe501f52b",
+      "bytes": 33
+    },
+    {
+      "path": "98AQ-runtime-second-batch/RUN-TRACE/run-manifest.json",
+      "sha256": "c2588920811ac47cacb76e6d74277af4874d1c40495e828665897b246a70ee06",
+      "bytes": 779
+    }
+  ]
+}

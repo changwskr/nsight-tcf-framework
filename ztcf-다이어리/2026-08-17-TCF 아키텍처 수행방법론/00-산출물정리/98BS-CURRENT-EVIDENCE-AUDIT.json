@@ -1,0 +1,502 @@
+{
+  "phase": "P0 Closure Wave 5 — Actual Evidence Intake & Re-Gate Execution",
+  "as_of": "2026-08-19T09:38:00+09:00",
+  "adr_evidence": {
+    "total_p0_adrs": 16,
+    "approved": 0,
+    "pending": 16
+  },
+  "runtime_evidence": {
+    "manifest_or_template_bundles_found": 25,
+    "status_counts": {
+      "SYNTHETIC_ONLY": 1,
+      "INVALID": 24
+    },
+    "production_runtime_approved": 0,
+    "bundles": [
+      {
+        "bundle": "98AA-tools/preflight/evidence/RUN-P600",
+        "status": "SYNTHETIC_ONLY",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "tps<600"
+        ]
+      },
+      {
+        "bundle": "98AF-runtime-first-batch/RUN-P1200",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "invalid_git_commit",
+          "invalid_guid",
+          "identity:artifact_version",
+          "identity:config_version",
+          "identity:db_target",
+          "identity:environment",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98AF-runtime-first-batch/RUN-P600",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "invalid_git_commit",
+          "invalid_guid",
+          "identity:artifact_version",
+          "identity:config_version",
+          "identity:db_target",
+          "identity:environment",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98AF-runtime-first-batch/RUN-TIMEOUT",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "invalid_git_commit",
+          "invalid_guid",
+          "identity:artifact_version",
+          "identity:config_version",
+          "identity:db_target",
+          "identity:environment",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98AQ-runtime-second-batch/RUN-CF",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "identity:artifact_version",
+          "identity:db_target",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:schema_version",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98AQ-runtime-second-batch/RUN-HIKARI",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "identity:artifact_version",
+          "identity:db_target",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:schema_version",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98AQ-runtime-second-batch/RUN-JWT-ROTATE",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "identity:artifact_version",
+          "identity:db_target",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:schema_version",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98AQ-runtime-second-batch/RUN-N1",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "identity:artifact_version",
+          "identity:db_target",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:schema_version",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98AQ-runtime-second-batch/RUN-ROLLING",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "identity:artifact_version",
+          "identity:db_target",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:schema_version",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98AQ-runtime-second-batch/RUN-S1800",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "identity:artifact_version",
+          "identity:db_target",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:schema_version",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98AQ-runtime-second-batch/RUN-SESSION",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "identity:artifact_version",
+          "identity:db_target",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:schema_version",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98AQ-runtime-second-batch/RUN-SLOWSQL",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "identity:artifact_version",
+          "identity:db_target",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:schema_version",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98AQ-runtime-second-batch/RUN-TRACE",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "identity:artifact_version",
+          "identity:db_target",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:schema_version",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98U-runtime-template/RUN-CF",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "invalid_git_commit",
+          "invalid_guid",
+          "identity:artifact_version",
+          "identity:config_version",
+          "identity:db_target",
+          "identity:environment",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98U-runtime-template/RUN-HIKARI",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "invalid_git_commit",
+          "invalid_guid",
+          "identity:artifact_version",
+          "identity:config_version",
+          "identity:db_target",
+          "identity:environment",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98U-runtime-template/RUN-JWT-ROTATE",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "invalid_git_commit",
+          "invalid_guid",
+          "identity:artifact_version",
+          "identity:config_version",
+          "identity:db_target",
+          "identity:environment",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98U-runtime-template/RUN-N1",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "invalid_git_commit",
+          "invalid_guid",
+          "identity:artifact_version",
+          "identity:config_version",
+          "identity:db_target",
+          "identity:environment",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98U-runtime-template/RUN-P1200",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "invalid_git_commit",
+          "invalid_guid",
+          "identity:artifact_version",
+          "identity:config_version",
+          "identity:db_target",
+          "identity:environment",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98U-runtime-template/RUN-P600",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "invalid_git_commit",
+          "invalid_guid",
+          "identity:artifact_version",
+          "identity:config_version",
+          "identity:db_target",
+          "identity:environment",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98U-runtime-template/RUN-ROLLING",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "invalid_git_commit",
+          "invalid_guid",
+          "identity:artifact_version",
+          "identity:config_version",
+          "identity:db_target",
+          "identity:environment",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98U-runtime-template/RUN-S1800",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "invalid_git_commit",
+          "invalid_guid",
+          "identity:artifact_version",
+          "identity:config_version",
+          "identity:db_target",
+          "identity:environment",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98U-runtime-template/RUN-SESSION",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "invalid_git_commit",
+          "invalid_guid",
+          "identity:artifact_version",
+          "identity:config_version",
+          "identity:db_target",
+          "identity:environment",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98U-runtime-template/RUN-SLOWSQL",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "invalid_git_commit",
+          "invalid_guid",
+          "identity:artifact_version",
+          "identity:config_version",
+          "identity:db_target",
+          "identity:environment",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98U-runtime-template/RUN-TIMEOUT",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "invalid_git_commit",
+          "invalid_guid",
+          "identity:artifact_version",
+          "identity:config_version",
+          "identity:db_target",
+          "identity:environment",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      },
+      {
+        "bundle": "98U-runtime-template/RUN-TRACE",
+        "status": "INVALID",
+        "runtime_approved": false,
+        "missing_evidence": [],
+        "failures": [
+          "invalid_git_commit",
+          "invalid_guid",
+          "identity:artifact_version",
+          "identity:config_version",
+          "identity:db_target",
+          "identity:environment",
+          "identity:git_commit",
+          "identity:guid",
+          "identity:hostname",
+          "identity:service_id",
+          "identity:timestamp",
+          "identity:tomcat_jvm_instance"
+        ]
+      }
+    ],
+    "interpretation": "INVALID entries are templates/incomplete identities, not production test failures; SYNTHETIC_ONLY is preflight only."
+  },
+  "production_config_evidence": {
+    "inventory_entries": 122,
+    "production_accepted": 0,
+    "reference_or_unaccepted": 122
+  },
+  "p0_closure": {
+    "items": 20,
+    "closed": 10,
+    "blocking": 10,
+    "status_counts": {
+      "IMPLEMENTED_CANDIDATE_BUILD_BLOCKED": 2,
+      "IMPLEMENTED_CANDIDATE_STATIC_PASS": 1,
+      "CLOSED_STATIC": 10,
+      "HARNESS_READY_BLOCKED_PRODUCTION_RUNTIME": 4,
+      "INGESTION_READY_BLOCKED_PRODUCTION_EVIDENCE": 1,
+      "HARNESS_READY_BLOCKED_PRODUCTION_RUNTIME_HUMAN": 1,
+      "BLOCKED_RUNTIME_HUMAN": 1
+    }
+  },
+  "conclusion": "No new production-grade approval/runtime/config evidence is present in the current baseline; re-gate must remain HOLD."
+}

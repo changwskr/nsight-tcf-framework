@@ -1,0 +1,28 @@
+{
+  "run_id": "RUN-S1800",
+  "environment": "REPLACE",
+  "evidence_class": "PRODUCTION_RUNTIME",
+  "synthetic": false,
+  "build_commit": "REPLACE",
+  "config_version": "REPLACE",
+  "started_at": "REPLACE",
+  "ended_at": "REPLACE",
+  "production_status": "OPEN",
+  "required_evidence": [
+    "metrics/summary.json",
+    "metrics/resource.json",
+    "logs/run.log",
+    "db/integrity.json",
+    "screenshots/saturation-chart.png"
+  ],
+  "machine_gates": [
+    "actual_tps >= 1800 target attempt",
+    "data_integrity = true",
+    "post_test_recovery = true"
+  ],
+  "human_gates": [
+    "Confirm whether p95<=3s is a hard stress acceptance or observation-only NFR",
+    "Approve saturation point and degradation pattern",
+    "Approve error/timeout tolerance (currently UNKNOWN)"
+  ]
+}

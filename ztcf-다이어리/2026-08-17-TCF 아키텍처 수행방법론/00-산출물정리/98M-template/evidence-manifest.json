@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "environment": "PROD",
+  "hostname": "REPLACE_WITH_HOSTNAME",
+  "captured_at": "2026-08-19T09:00:00+09:00",
+  "evidence_class": "PRODUCTION_RUNTIME",
+  "collector": "REPLACE_WITH_COLLECTOR_OR_TEAM",
+  "source_version": "REPLACE_WITH_CONFIG_VERSION_OR_CHANGE_ID",
+  "notes": "Do not include plaintext credentials or private keys.",
+  "files": [
+    {
+      "path": "apache/httpd.conf",
+      "sha256": "REPLACE_WITH_64_HEX_SHA256",
+      "component": "APACHE",
+      "source_path_on_host": "/etc/httpd/conf/httpd.conf"
+    },
+    {
+      "path": "tomcat/JVM01/conf/server.xml",
+      "sha256": "REPLACE_WITH_64_HEX_SHA256",
+      "component": "TOMCAT",
+      "instance_id": "JVM01",
+      "source_path_on_host": "/app/tomcat/JVM01/conf/server.xml"
+    },
+    {
+      "path": "tomcat/JVM01/bin/setenv.sh",
+      "sha256": "REPLACE_WITH_64_HEX_SHA256",
+      "component": "TOMCAT",
+      "instance_id": "JVM01",
+      "source_path_on_host": "/app/tomcat/JVM01/bin/setenv.sh"
+    },
+    {
+      "path": "app/sample/application-prod.yml",
+      "sha256": "REPLACE_WITH_64_HEX_SHA256",
+      "component": "SPRING",
+      "instance_id": "JVM01",
+      "application_id": "REPLACE_WITH_APPLICATION"
+    }
+  ]
+}

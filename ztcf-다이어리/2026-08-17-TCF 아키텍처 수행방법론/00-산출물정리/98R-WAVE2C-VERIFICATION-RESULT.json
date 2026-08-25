@@ -1,0 +1,37 @@
+{
+  "phase": "P0 Closure Wave 2C — Production Config Evidence Ingestion",
+  "verified_at": "2026-08-19T08:46:00+09:00",
+  "tests": {
+    "framework": "pytest",
+    "passed": 11,
+    "failed": 0,
+    "status": "PASS"
+  },
+  "source_scan": {
+    "total": 122,
+    "parse_pass": 122,
+    "parse_error": 0,
+    "production_accepted": 0,
+    "by_kind": {
+      "APACHE": 40,
+      "SPRING": 66,
+      "TOMCAT_SETENV": 8,
+      "TOMCAT_SERVER": 8
+    },
+    "unique_sha256": 102
+  },
+  "positive_control": {
+    "synthetic_test_bundle_accepted": true,
+    "files": 1
+  },
+  "security": {
+    "secret_value_exposure_check": "PASS",
+    "notes": "secret-like parsed keys are redacted in generated inventory"
+  },
+  "gate": {
+    "G80": "HOLD",
+    "HG90": "HOLD",
+    "P0-PHY-001": "INGESTION_READY_BLOCKED_PRODUCTION_EVIDENCE"
+  },
+  "overall": "PASS_TOOLING_NOT_PRODUCTION_CLOSURE"
+}

@@ -1,0 +1,11 @@
+{
+  "item_id": "P0-SEC-002",
+  "area": "kid / Rotation / JWKS Grace",
+  "current_status": "IMPLEMENTED_CANDIDATE_BUILD_BLOCKED",
+  "status": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "closure_comment": null,
+  "required_next": "Canonical build + active/previous JWKS grace validation + RUN-JWT-ROTATE"
+}

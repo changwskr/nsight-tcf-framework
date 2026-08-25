@@ -1,0 +1,5 @@
+logs/jwt-rotation.json
+logs/jwks.json
+logs/key-audit.log
+logs/multinode-validation.json
+logs/restart-validation.json

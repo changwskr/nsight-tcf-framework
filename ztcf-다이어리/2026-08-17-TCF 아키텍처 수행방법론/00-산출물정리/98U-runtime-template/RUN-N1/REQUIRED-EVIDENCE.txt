@@ -1,0 +1,3 @@
+metrics/summary.json
+logs/routing.log
+logs/failover.log

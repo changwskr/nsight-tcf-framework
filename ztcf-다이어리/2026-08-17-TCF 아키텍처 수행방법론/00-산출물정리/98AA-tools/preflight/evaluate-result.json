@@ -1,0 +1,8 @@
+{
+  "status": "SYNTHETIC_ONLY",
+  "runtime_approved": false,
+  "missing_evidence": [],
+  "failures": [
+    "tps<600"
+  ]
+}

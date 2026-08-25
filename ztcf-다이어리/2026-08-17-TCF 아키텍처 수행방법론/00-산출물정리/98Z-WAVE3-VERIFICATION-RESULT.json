@@ -1,0 +1,47 @@
+{
+  "phase": "P0 Closure Wave 3 — Runtime Evidence Harness & Local Preflight",
+  "verified_at": "2026-08-19T09:01:00+09:00",
+  "checks": [
+    {
+      "name": "pytest",
+      "status": "PASS",
+      "detail": "11 passed"
+    },
+    {
+      "name": "python_compile",
+      "status": "PASS",
+      "detail": "nsight_runtime_evidence.py"
+    },
+    {
+      "name": "json_parse_all_baseline",
+      "status": "PASS"
+    },
+    {
+      "name": "run_manifest_schema",
+      "status": "PASS"
+    },
+    {
+      "name": "mandatory_run_templates",
+      "status": "PASS",
+      "detail": "12/12"
+    },
+    {
+      "name": "synthetic_non_promotion",
+      "status": "PASS",
+      "detail": "P600/TIMEOUT => SYNTHETIC_ONLY, runtime_approved=false"
+    },
+    {
+      "name": "java_timeout_policy_preflight",
+      "status": "PASS",
+      "detail": "current 3/5/5 => TX_NOT_LT_ONLINE; target 3/5/7 => valid"
+    },
+    {
+      "name": "production_runtime_runs",
+      "status": "BLOCKED",
+      "detail": "0/12 executed in production/performance runtime"
+    }
+  ],
+  "overall": "HARNESS_READY_PRODUCTION_RUNTIME_BLOCKED",
+  "g80": "HOLD",
+  "hg90": "HOLD"
+}

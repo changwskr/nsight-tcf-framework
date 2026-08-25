@@ -1,0 +1,44 @@
+{
+  "files": [
+    {
+      "file": "98G-P0-WAVE2B-PRODUCTION-MAPPING.md",
+      "bytes": 5233,
+      "sha256": "31b572442a9f171ceb3ce1dda897d4fc4938ba018719f58b882e7ac1fe382ea4"
+    },
+    {
+      "file": "98H-PRODUCTION-SERVER-MAPPING.csv",
+      "bytes": 20139,
+      "sha256": "32b83405651a18fc5918c1c863f2257558530f0938b5bdbc95df571254b87e7f"
+    },
+    {
+      "file": "98I-PRODUCTION-MAPPING.json",
+      "bytes": 90229,
+      "sha256": "dae9b59bbd5e1c020cd25a79f8506f606712798c4ea6714990749d10054d8bbd"
+    },
+    {
+      "file": "98J-PRODUCTION-EVIDENCE-GAPS.md",
+      "bytes": 1458,
+      "sha256": "ef0e1b3c1cd7117f46c9287e8b73fc82251a875d16c8efe2cffb227c84ee2f0b"
+    },
+    {
+      "file": "98K-WAVE2B-VERIFICATION-RESULT.json",
+      "bytes": 902,
+      "sha256": "cea757f5283049807d1f7247db12993b3531e822f2de4267613f5eab820a3dd8"
+    },
+    {
+      "file": "96-P0-CLOSURE-MATRIX.json",
+      "bytes": 6166,
+      "sha256": "2b767e6a1c3a83841ca560170956f325ae0a78914f70d097437987567b8a2c9d"
+    },
+    {
+      "file": "92-P0-CLOSURE-MASTER.md",
+      "bytes": 4089,
+      "sha256": "2bab96a23f9a48051ebed4a4f02e4be07844c43be4eca664d546b0067ff6e80e"
+    },
+    {
+      "file": "37-ARCHITECTURE-GATE.md",
+      "bytes": 14548,
+      "sha256": "07c2a17b666b66a1b7a6c70730e1dd0ecc1c42f6379a36f67444a9cc74373f03"
+    }
+  ]
+}

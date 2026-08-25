@@ -1,0 +1,27 @@
+{
+  "adr_id": "ADR-DR-001",
+  "title": "Center Failure Session/Data Continuity",
+  "decision": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "conditions": [],
+  "comment": null,
+  "approval_state": "DRAFT_NOT_APPROVED",
+  "recommended_decision": "DEFER_UNTIL_PREREQUISITES",
+  "readiness": "NEEDS_OWNER_INPUT_AND_RUNTIME",
+  "required_approver": "Business Owner + Ops Owner + Architecture",
+  "runtime_dependency": [
+    "RUN-SESSION",
+    "RUN-CF"
+  ],
+  "recommendation": "센터 장애 시 세션 유지 여부와 재로그인 허용정책을 업무정책으로 먼저 결정하고, 데이터 일관성/복구 방식과 분리해 승인한다.",
+  "prerequisites": [
+    "ADR-SES-001",
+    "service continuity policy"
+  ],
+  "closure": [
+    "observed behavior matches policy",
+    "data consistency approved"
+  ]
+}

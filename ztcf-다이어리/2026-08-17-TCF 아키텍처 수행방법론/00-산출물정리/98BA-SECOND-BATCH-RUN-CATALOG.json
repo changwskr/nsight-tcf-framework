@@ -1,0 +1,276 @@
+{
+  "schema_version": "1.0",
+  "phase": "P0 Closure Wave 3D — Remaining Runtime Batch Operationalization",
+  "generated_at": "2026-08-19T09:25:00+09:00",
+  "runs": {
+    "RUN-S1800": {
+      "purpose": "Stress 1,800 TPS and saturation/recovery characterization",
+      "prerequisites": [
+        "RUN-P1200 completed",
+        "approved performance environment",
+        "runtime identity fixed",
+        "data reset/reconciliation plan",
+        "JMeter or approved load tool"
+      ],
+      "required_evidence": [
+        "metrics/summary.json",
+        "metrics/resource.json",
+        "logs/run.log",
+        "db/integrity.json",
+        "screenshots/saturation-chart.png"
+      ],
+      "machine_gates": [
+        "actual_tps >= 1800 target attempt",
+        "data_integrity = true",
+        "post_test_recovery = true"
+      ],
+      "human_gates": [
+        "Confirm whether p95<=3s is a hard stress acceptance or observation-only NFR",
+        "Approve saturation point and degradation pattern",
+        "Approve error/timeout tolerance (currently UNKNOWN)"
+      ],
+      "notes": "Source defines 1,800 TPS as Stress and asks for saturation/degradation characterization. p95<=3s exists as general NFR, but Wave3D does not silently convert it into a hard stress gate.",
+      "production_status": "OPEN"
+    },
+    "RUN-HIKARI": {
+      "purpose": "Hikari pool pressure / DB session ceiling / backpressure and recovery",
+      "prerequisites": [
+        "approved DB session ceiling supplied",
+        "actual Hikari maximumPoolSize captured",
+        "runtime identity fixed",
+        "Oracle metric access",
+        "approved pressure scenario"
+      ],
+      "required_evidence": [
+        "metrics/pool.json",
+        "metrics/db-session.json",
+        "metrics/connection-acquire.json",
+        "logs/run.log"
+      ],
+      "machine_gates": [
+        "connection_leak = 0",
+        "pool_active returns to baseline after pressure",
+        "persistent_pending_after_recovery = 0",
+        "db_session <= approved_db_session_ceiling"
+      ],
+      "human_gates": [
+        "Approve final Hikari pool size",
+        "Approve Pending/connection acquire operating threshold",
+        "Confirm DB DBA session ceiling"
+      ],
+      "notes": "70~80% is a working management range, not a final approved hard limit. Pressure test may intentionally create Pending; acceptance focuses on controlled backpressure and recovery.",
+      "production_status": "OPEN"
+    },
+    "RUN-SLOWSQL": {
+      "purpose": "Slow SQL timeout ordering, rollback and connection return",
+      "prerequisites": [
+        "Timeout policy captured per ServiceId",
+        "dbQueryTimeout < txTimeout configured",
+        "controlled slow SQL fixture",
+        "DB before/after query",
+        "Hikari metric access"
+      ],
+      "required_evidence": [
+        "metrics/slow-sql.json",
+        "logs/transaction.json",
+        "metrics/pool.json",
+        "db/before-after.json"
+      ],
+      "machine_gates": [
+        "db_query_timeout < tx_timeout",
+        "transaction_rollback = true",
+        "late_commit = 0",
+        "connection_return = true"
+      ],
+      "human_gates": [
+        "Approve ServiceId-specific timeout chain",
+        "Review Oracle cancellation semantics and SQL state"
+      ],
+      "notes": "This run closes runtime proof for query-timeout propagation and interaction with transaction timeout.",
+      "production_status": "OPEN"
+    },
+    "RUN-N1": {
+      "purpose": "AP node/JVM N-1 at design peak 1,200 TPS",
+      "prerequisites": [
+        "RUN-P1200 completed",
+        "approved node-removal command/change ticket",
+        "peer routing verified",
+        "residual capacity topology known",
+        "rollback/rejoin command prepared"
+      ],
+      "required_evidence": [
+        "metrics/summary.json",
+        "logs/routing.log",
+        "logs/failover.log",
+        "metrics/node-state.json",
+        "logs/health.log"
+      ],
+      "machine_gates": [
+        "actual_tps >= 1200",
+        "p95_sec <= 3",
+        "failed_node_receives_traffic = false",
+        "peer_health = healthy"
+      ],
+      "human_gates": [
+        "Approve error/timeout tolerance (currently UNKNOWN)",
+        "Confirm residual capacity and 2+2/3+3 topology decision",
+        "Approve rejoin stability"
+      ],
+      "notes": "N-1 is a production-like failure test; execution must use the Wave3B approval-token operator hook.",
+      "production_status": "OPEN"
+    },
+    "RUN-SESSION": {
+      "purpose": "Session failover / re-authentication behavior according to approved Session ADR",
+      "prerequisites": [
+        "Session ADR approved",
+        "actual session mode/config captured",
+        "test users/session ids prepared",
+        "L4 sticky and jvmRoute evidence",
+        "approved JVM/VM failover command"
+      ],
+      "required_evidence": [
+        "logs/session.log",
+        "logs/l4.log",
+        "logs/idp-auth.log",
+        "metrics/session-count.json",
+        "logs/failover.log"
+      ],
+      "machine_gates": [
+        "observed_behavior matches approved_session_policy",
+        "no_cross_user_session_leak = true",
+        "post_failover_login_path works"
+      ],
+      "human_gates": [
+        "Session ADR approved",
+        "Approve center-failure re-login vs preservation policy",
+        "Review session object serialization/memory impact"
+      ],
+      "notes": "No universal survival rule is imposed. Same-center DeltaManager survival and center-failure re-login are working candidates only until ADR approval.",
+      "production_status": "OPEN"
+    },
+    "RUN-CF": {
+      "purpose": "Center failover/failback and observed RTO/RPO",
+      "prerequisites": [
+        "RUN-N1 completed",
+        "DR pair catalog approved",
+        "GSLB/L4/DB failover runbook approved",
+        "approved RTO and RPO inputs",
+        "business validation team ready",
+        "failback plan approved"
+      ],
+      "required_evidence": [
+        "logs/failover.log",
+        "logs/failback.log",
+        "metrics/rto-rpo.json",
+        "logs/gslb-l4.log",
+        "db/consistency.json",
+        "logs/business-validation.log"
+      ],
+      "machine_gates": [
+        "observed_rto <= approved_rto",
+        "observed_rpo <= approved_rpo",
+        "business_validation = pass",
+        "failback_validation = pass"
+      ],
+      "human_gates": [
+        "RTO/RPO approved before pass",
+        "Approve traffic reroute and failback timeline",
+        "Approve data/session consistency result"
+      ],
+      "notes": "30 minutes is a strategy-level RTO reference for Online AP, not silently treated as the final system-specific approved RTO. RPO remains UNKNOWN until approved.",
+      "production_status": "OPEN"
+    },
+    "RUN-TRACE": {
+      "purpose": "GUID + ServiceId end-to-end and reverse traceability",
+      "prerequisites": [
+        "logging/trace collection enabled",
+        "test ServiceId selected",
+        "GUID injection/capture ready",
+        "Apache/Tomcat/TCF/SQL/external log access"
+      ],
+      "required_evidence": [
+        "logs/GUID-trace.json",
+        "logs/ServiceId-trace.json",
+        "logs/apache.log",
+        "logs/tomcat.log",
+        "logs/tcf.log",
+        "logs/sql-or-external.json"
+      ],
+      "machine_gates": [
+        "same_guid_across_required_hops = true",
+        "same_serviceid_across_required_hops = true",
+        "reverse_trace_to_ingress = true",
+        "worker_context_leak = 0"
+      ],
+      "human_gates": [
+        "Approve required hop coverage for the selected ServiceId",
+        "Confirm masking/security policy compliance"
+      ],
+      "notes": "At least one DB-backed and one external-integration ServiceId should be sampled when available; this is a proposed coverage expansion, not a claim that evidence already exists.",
+      "production_status": "OPEN"
+    },
+    "RUN-ROLLING": {
+      "purpose": "Rolling deployment residual capacity / health / rollback safety",
+      "prerequisites": [
+        "RUN-N1 completed",
+        "artifact/config/db versions fixed",
+        "rollback artifact available",
+        "approved drain/deploy/rejoin commands",
+        "ServiceId smoke test list prepared"
+      ],
+      "required_evidence": [
+        "logs/deploy.log",
+        "logs/health.log",
+        "metrics/summary.json",
+        "logs/smoke-test.json",
+        "logs/version-trace.json",
+        "logs/rollback-test.json"
+      ],
+      "machine_gates": [
+        "actual_tps >= 1200 during planned peak test",
+        "p95_sec <= 3 during planned peak test",
+        "drained_node_receives_new_traffic = false",
+        "serviceid_smoke_test = pass",
+        "rejoined_node_health = healthy"
+      ],
+      "human_gates": [
+        "Approve residual-capacity safety factor (currently OPEN)",
+        "Approve DB/config backward compatibility",
+        "Approve rollback or roll-forward strategy"
+      ],
+      "notes": "If the run is executed below design peak, it is diagnostic only and cannot close residual-capacity approval.",
+      "production_status": "OPEN"
+    },
+    "RUN-JWT-ROTATE": {
+      "purpose": "JWT active/previous kid grace, multi-node and restart verification",
+      "prerequisites": [
+        "Key Provider deployed in canonical build",
+        "versioned kid enabled",
+        "JWKS active+previous supported",
+        "approved rotation/grace policy",
+        "at least two issuer/validator nodes or equivalent HA topology"
+      ],
+      "required_evidence": [
+        "logs/jwt-rotation.json",
+        "logs/jwks.json",
+        "logs/key-audit.log",
+        "logs/multinode-validation.json",
+        "logs/restart-validation.json"
+      ],
+      "machine_gates": [
+        "new_token_kid = active_kid",
+        "old_token_valid_during_grace = true",
+        "all_nodes_publish_consistent_jwks = true",
+        "restart_does_not_create_unplanned_key = true",
+        "post_grace_behavior matches approved_policy"
+      ],
+      "human_gates": [
+        "Approve Key Provider/KMS-HSM implementation",
+        "Approve grace period and retirement policy",
+        "Approve audit evidence and emergency rollback procedure"
+      ],
+      "notes": "This run is BLOCKED until the Wave2A Key Provider candidate is integrated into the canonical build and an approved KMS/HSM adapter exists.",
+      "production_status": "OPEN"
+    }
+  }
+}

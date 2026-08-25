@@ -1,0 +1,22 @@
+{
+  "run_id": "RUN-CF",
+  "status": "OPEN",
+  "evidence_class": "UNSET",
+  "runtime_approved": false,
+  "synthetic": false,
+  "environment": null,
+  "hostname": null,
+  "git_commit": null,
+  "artifact_version": null,
+  "config_version": null,
+  "started_at": null,
+  "ended_at": null,
+  "approver": null,
+  "approval_date": null,
+  "required_evidence": [
+    "logs/failover.log",
+    "metrics/rto-rpo.json"
+  ],
+  "evidence_ref": [],
+  "purpose": "Center failover/failback RTO/RPO"
+}

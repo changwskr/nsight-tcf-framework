@@ -1,0 +1,20 @@
+{
+  "phase": "P0 Closure Wave 3 — Runtime Evidence Harness & Local Preflight",
+  "production_runtime_runs_executed": 0,
+  "production_runtime_runs_approved": 0,
+  "mandatory_runs": 12,
+  "local_preflight": {
+    "pytest": "11 passed",
+    "timeout_policy_java": "PASS",
+    "synthetic_p600_status": "SYNTHETIC_ONLY",
+    "synthetic_timeout_status": "SYNTHETIC_ONLY",
+    "template_status_counts": {
+      "INVALID": 12
+    }
+  },
+  "gate": {
+    "G80": "HOLD",
+    "HG90": "HOLD"
+  },
+  "note": "Synthetic/local checks prove the harness only; they are not Production Runtime Evidence."
+}

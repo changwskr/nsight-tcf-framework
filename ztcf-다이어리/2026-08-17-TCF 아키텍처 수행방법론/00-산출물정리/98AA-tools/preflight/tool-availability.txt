@@ -1,0 +1,8 @@
+python=/opt/pyvenv/bin/python3
+pytest=/opt/pyvenv/bin/pytest
+java=/usr/bin/java
+jcmd=/usr/bin/jcmd
+jmeter=
+gatling=
+sqlplus=
+curl=/usr/local/bin/curl

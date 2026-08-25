@@ -1,0 +1,23 @@
+{
+  "run_id": "RUN-S1800",
+  "status": "OPEN",
+  "evidence_class": "UNSET",
+  "runtime_approved": false,
+  "synthetic": false,
+  "environment": null,
+  "hostname": null,
+  "git_commit": null,
+  "artifact_version": null,
+  "config_version": null,
+  "started_at": null,
+  "ended_at": null,
+  "approver": null,
+  "approval_date": null,
+  "required_evidence": [
+    "metrics/summary.json",
+    "logs/run.log",
+    "db/integrity.json"
+  ],
+  "evidence_ref": [],
+  "purpose": "Stress 1,800 TPS and saturation characterization"
+}

@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "schemaErrors": [],
+  "semanticChecks": {
+    "nodeCount": 380,
+    "edgeCount": 380,
+    "duplicateNodeIds": [],
+    "danglingEdgeCount": 0,
+    "danglingEdges": [],
+    "undeclaredRelationTypes": [],
+    "undeclaredNodeTypes": []
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "adr_id": "ADR-OBS-001",
+  "title": "GUID + ServiceId Runtime Evidence Standard",
+  "recommended_decision": "APPROVE",
+  "decision": null,
+  "approver": null,
+  "approver_role": "Ops/Observability Owner + Application Architect",
+  "decision_date": null,
+  "condition": null,
+  "evidence_ref": [],
+  "runtime_dependency": [
+    "RUN-TRACE"
+  ],
+  "approval_state": "DRAFT_NOT_APPROVED"
+}

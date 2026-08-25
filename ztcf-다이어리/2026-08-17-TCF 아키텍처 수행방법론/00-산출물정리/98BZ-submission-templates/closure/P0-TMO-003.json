@@ -1,0 +1,11 @@
+{
+  "item_id": "P0-TMO-003",
+  "area": "Timeout worker cancel semantics",
+  "current_status": "HARNESS_READY_BLOCKED_PRODUCTION_RUNTIME",
+  "status": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "closure_comment": null,
+  "required_next": "Fault test proving rollback, no late commit, connection return, thread cleanup"
+}

@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NSIGHT Runtime Evaluation Submission",
+  "type": "object",
+  "required": [
+    "run_id",
+    "status",
+    "evidence_class",
+    "runtime_approved",
+    "synthetic",
+    "environment",
+    "hostname",
+    "git_commit",
+    "evidence_ref"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "pattern": "^RUN-"
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "INCOMPLETE",
+        "INVALID",
+        "OPEN"
+      ]
+    },
+    "evidence_class": {
+      "enum": [
+        "PRODUCTION_RUNTIME",
+        "TEST_RUNTIME",
+        "SYNTHETIC_ONLY",
+        "REFERENCE",
+        "UNSET"
+      ]
+    },
+    "runtime_approved": {
+      "type": "boolean"
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "environment": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "hostname": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "git_commit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "evidence_ref": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

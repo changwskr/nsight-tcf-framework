@@ -1,0 +1,26 @@
+{
+  "adr_id": "ADR-SEC-002",
+  "title": "kid / Rotation / JWKS Grace Lifecycle",
+  "decision": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "conditions": [],
+  "comment": null,
+  "approval_state": "DRAFT_NOT_APPROVED",
+  "recommended_decision": "APPROVE",
+  "readiness": "READY_FOR_HUMAN_DECISION",
+  "required_approver": "Security Architect + Platform Owner",
+  "runtime_dependency": [
+    "RUN-JWT-ROTATE"
+  ],
+  "recommendation": "Versioned kid를 사용하고 JWKS는 Active + Previous public key를 grace 기간 동안 동시 제공한다.",
+  "prerequisites": [
+    "ADR-SEC-001",
+    "Access token 최대수명/운영여유 입력"
+  ],
+  "closure": [
+    "rotation grace observed",
+    "restart does not create unplanned key"
+  ]
+}

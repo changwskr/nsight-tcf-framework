@@ -1,0 +1,29 @@
+{
+  "environment": "PERF",
+  "identity": {
+    "git_commit": "0000000000000000000000000000000000000000",
+    "artifact_version": "REPLACE_ME",
+    "config_version": "REPLACE_ME",
+    "service_id": "MG.TEST.sample",
+    "hostname": "REPLACE_ME",
+    "tomcat_jvm_instance": "REPLACE_ME",
+    "db_target": "RDW"
+  },
+  "load": {
+    "base_url": "https://REPLACE_ME",
+    "path": "/api/service",
+    "request_body_file": "request.json",
+    "threads": 500,
+    "duration_sec": 300
+  },
+  "metrics": {
+    "actuator_base_url": "http://127.0.0.1:8080/actuator",
+    "java_pid": "REPLACE_ME"
+  },
+  "actions": {
+    "n1_disable": "REPLACE_WITH_APPROVED_COMMAND",
+    "n1_enable": "REPLACE_WITH_APPROVED_COMMAND",
+    "center_failover": "REPLACE_WITH_APPROVED_COMMAND",
+    "center_failback": "REPLACE_WITH_APPROVED_COMMAND"
+  }
+}

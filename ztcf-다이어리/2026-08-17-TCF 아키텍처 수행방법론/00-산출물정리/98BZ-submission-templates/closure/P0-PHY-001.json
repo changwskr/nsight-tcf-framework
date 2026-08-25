@@ -1,0 +1,11 @@
+{
+  "item_id": "P0-PHY-001",
+  "area": "71 Server -> JVM -> WAR -> Route",
+  "current_status": "INGESTION_READY_BLOCKED_PRODUCTION_EVIDENCE",
+  "status": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "closure_comment": null,
+  "required_next": "Collect per-host evidence bundle: httpd.conf/includes, server.xml, setenv.sh/CATALINA_BASE, deployment manifest, application config, L4/GSLB and bind by env+hostname+path+hash+timestamp"
+}

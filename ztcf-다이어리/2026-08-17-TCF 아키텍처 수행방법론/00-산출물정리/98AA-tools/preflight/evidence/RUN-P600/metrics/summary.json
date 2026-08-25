@@ -1,0 +1,14 @@
+{
+  "sample_count": 4,
+  "success_count": 4,
+  "failure_count": 0,
+  "tps": 4.0,
+  "p95_seconds": 0.1,
+  "p99_seconds": 0.1,
+  "error_rate_pct": 0.0,
+  "timeout_rate_pct": 0.0,
+  "duration_seconds": 1.0,
+  "cpu_pct": 10.0,
+  "busy_thread_pct": 5.0,
+  "hikari_active_pct": 5.0
+}

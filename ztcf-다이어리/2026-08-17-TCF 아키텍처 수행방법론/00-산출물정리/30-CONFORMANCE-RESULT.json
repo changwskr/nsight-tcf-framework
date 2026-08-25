@@ -1,0 +1,126 @@
+{
+  "baseline": "G80",
+  "generatedAt": "2026-08-18 15:34",
+  "overall": "HOLD",
+  "tests": [
+    {
+      "testId": "CT-R1-001",
+      "title": "ServiceId Unique per Module Runtime Scope",
+      "evidenceType": "STATIC",
+      "result": "PASS",
+      "evidence": "121 mappings / duplicate module 0"
+    },
+    {
+      "testId": "CT-R1-003",
+      "title": "Handler direct DAO import prohibition",
+      "evidenceType": "STATIC",
+      "result": "PASS",
+      "evidence": "direct DAO import 0"
+    },
+    {
+      "testId": "CT-R1-003B",
+      "title": "Handler direct Mapper import prohibition",
+      "evidenceType": "STATIC",
+      "result": "PASS",
+      "evidence": "direct Mapper import 0"
+    },
+    {
+      "testId": "CT-DOMAIN-001",
+      "title": "Cross-domain Handler import",
+      "evidenceType": "STATIC",
+      "result": "PASS",
+      "evidence": "candidate 0"
+    },
+    {
+      "testId": "CT-R2-005",
+      "title": "Facade Transaction Boundary adoption",
+      "evidenceType": "STATIC",
+      "result": "PASS_WITH_EXCEPTION",
+      "evidence": "Facade 50 중 @Transactional 50; Service TX 4: eb-service:EbUserService, ep-service:EpUserEventService, tcf-oc:CapNewApprovalService, tcf-oc:CapNewWizardService"
+    },
+    {
+      "testId": "CT-R2-008",
+      "title": "Dispatcher duplicate fail-fast",
+      "evidenceType": "SOURCE",
+      "result": "PASS",
+      "evidence": "TransactionDispatcher가 put 이전값 존재 시 IllegalStateException 발생"
+    },
+    {
+      "testId": "CT-R3-001",
+      "title": "JWT Signing Key external SoT",
+      "evidenceType": "SOURCE",
+      "result": "FAIL",
+      "evidence": "JwtKeyConfiguration이 RSAKeyGenerator(2048)로 process-local key 생성; KMS/HSM 참조 없음"
+    },
+    {
+      "testId": "CT-R3-002",
+      "title": "JWT kid rotation",
+      "evidenceType": "SOURCE",
+      "result": "FAIL",
+      "evidence": "고정 KEY_ID 사용; version/rotation evidence 없음"
+    },
+    {
+      "testId": "CT-R4-001",
+      "title": "GUID+ServiceId E2E Runtime Trace",
+      "evidenceType": "RUNTIME",
+      "result": "NOT_RUN",
+      "evidence": "Runtime trace bundle 없음"
+    },
+    {
+      "testId": "CT-R4-003",
+      "title": "Timeout cancel/rollback/connection return",
+      "evidenceType": "RUNTIME",
+      "result": "NOT_RUN",
+      "evidence": "Fault injection evidence 없음"
+    },
+    {
+      "testId": "CT-R4-004",
+      "title": "Peak/Stress runtime metrics",
+      "evidenceType": "RUNTIME",
+      "result": "NOT_RUN",
+      "evidence": "600/1200/1800 TPS 원본 결과 없음"
+    },
+    {
+      "testId": "CT-R4-008",
+      "title": "N-1/Center Failover",
+      "evidenceType": "RUNTIME",
+      "result": "NOT_RUN",
+      "evidence": "Failover/Failback evidence 없음"
+    },
+    {
+      "testId": "CT-INFRA-002",
+      "title": "71 Server→JVM→WAR mapping",
+      "evidenceType": "EVIDENCE",
+      "result": "OPEN",
+      "evidence": "전수 runtime/deployment mapping 미완료"
+    },
+    {
+      "testId": "CT-INFRA-003",
+      "title": "Apache→Tomcat actual routing",
+      "evidenceType": "CONFIG",
+      "result": "OPEN",
+      "evidence": "httpd.conf/server.xml 실설정 원본 연결 미완료"
+    },
+    {
+      "testId": "CT-GOV-002",
+      "title": "Architecture Model schema validation",
+      "evidenceType": "MODEL",
+      "result": "PARTIAL",
+      "evidence": "Draft model 380 nodes / 380 edges; full schema gate 미완료"
+    },
+    {
+      "testId": "CT-GOV-003",
+      "title": "Runtime Evidence required",
+      "evidenceType": "GATE",
+      "result": "PASS_POLICY",
+      "evidence": "Runtime 미확보 항목에 PASS를 부여하지 않도록 G80 HOLD 적용"
+    },
+    {
+      "testId": "CT-OBS-LOG",
+      "title": "TCF console output policy",
+      "evidenceType": "STATIC",
+      "result": "FAIL_CANDIDATE",
+      "evidence": "tcf-core System.out 포함 파일 5: TransactionDispatcher.java, ETF.java, STF.java, TCF.java, AuthenticationContextValidator.java"
+    }
+  ]
+}

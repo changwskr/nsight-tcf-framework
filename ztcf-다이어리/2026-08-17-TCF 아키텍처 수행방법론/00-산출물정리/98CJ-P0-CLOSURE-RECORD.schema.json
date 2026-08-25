@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NSIGHT P0 Closure Record",
+  "type": "object",
+  "required": [
+    "item_id",
+    "status",
+    "approver",
+    "decision_date",
+    "evidence_ref"
+  ],
+  "properties": {
+    "item_id": {
+      "type": "string",
+      "pattern": "^P0-"
+    },
+    "status": {
+      "enum": [
+        "CLOSED_RUNTIME",
+        "CLOSED_APPROVED"
+      ]
+    },
+    "approver": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decision_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "evidence_ref": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "closure_comment": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

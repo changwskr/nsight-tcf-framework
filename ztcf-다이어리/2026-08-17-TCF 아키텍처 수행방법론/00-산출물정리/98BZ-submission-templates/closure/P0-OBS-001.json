@@ -1,0 +1,11 @@
+{
+  "item_id": "P0-OBS-001",
+  "area": "GUID + ServiceId E2E",
+  "current_status": "HARNESS_READY_BLOCKED_PRODUCTION_RUNTIME",
+  "status": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "closure_comment": null,
+  "required_next": "Run end-to-end trace and attach Apache/Tomcat/TCF/SQL/external evidence"
+}

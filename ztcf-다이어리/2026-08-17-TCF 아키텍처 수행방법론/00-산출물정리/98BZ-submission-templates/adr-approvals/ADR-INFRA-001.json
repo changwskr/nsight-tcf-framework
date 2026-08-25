@@ -1,0 +1,26 @@
+{
+  "adr_id": "ADR-INFRA-001",
+  "title": "Tomcat JVM : Application Deployment Unit",
+  "decision": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "conditions": [],
+  "comment": null,
+  "approval_state": "DRAFT_NOT_APPROVED",
+  "recommended_decision": "APPROVE",
+  "readiness": "READY_FOR_HUMAN_DECISION",
+  "required_approver": "Infra Architect + Application Architect",
+  "runtime_dependency": [
+    "RUN-N1",
+    "RUN-ROLLING"
+  ],
+  "recommendation": "운영 기준은 WAS Server/VM, Tomcat JVM, Application/WAR을 별도 Entity로 관리하고 장애격리가 필요한 업무는 독립 JVM을 기본으로 한다. Multi-WAR은 명시적 예외로 관리한다.",
+  "prerequisites": [
+    "production config evidence"
+  ],
+  "closure": [
+    "71 server runtime mapping",
+    "deployment/failure evidence"
+  ]
+}

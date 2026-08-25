@@ -1,0 +1,23 @@
+{
+  "adr_id": "ADR-GOV-001",
+  "title": "Architecture Model Source of Truth",
+  "decision": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "conditions": [],
+  "comment": null,
+  "approval_state": "DRAFT_NOT_APPROVED",
+  "recommended_decision": "APPROVE",
+  "readiness": "READY_FOR_HUMAN_DECISION",
+  "required_approver": "Architecture Board",
+  "runtime_dependency": [],
+  "recommendation": "Machine-readable JSON Model + JSON Schema + Validator + Baseline Manifest를 Architecture SoT로 사용하고 Markdown은 Human-readable View로 관리한다.",
+  "prerequisites": [
+    "model ownership/change process"
+  ],
+  "closure": [
+    "full critical trace edges complete",
+    "manifest/signoff integrated"
+  ]
+}

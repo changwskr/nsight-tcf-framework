@@ -1,0 +1,120 @@
+{
+  "phase": "Wave2C",
+  "files": [
+    {
+      "path": "98M-P0-WAVE2C-CONFIG-EVIDENCE-INGESTION.md",
+      "sha256": "ae596575ceba641e765a91a72dff35e7b42eb9ed25ae0539ead0590a34af2285",
+      "size": 5367
+    },
+    {
+      "path": "98N-PRODUCTION-CONFIG-EVIDENCE-MANIFEST.schema.json",
+      "sha256": "fa59801b3dcf17b314ba58b38810e554e414f018c45b16f18691439e5918727c",
+      "size": 1407
+    },
+    {
+      "path": "98O-CONFIG-EVIDENCE-INVENTORY.csv",
+      "sha256": "83da262afcdcf7634412de9d327dffc1b0b4dd9b3445a55ea18b3e6729e4a210",
+      "size": 40020
+    },
+    {
+      "path": "98P-CONFIG-EVIDENCE-INVENTORY.json",
+      "sha256": "36c9e886b03570e2b1ed57ca28986ea156a901c686ece942a66db63163b32a01",
+      "size": 245422
+    },
+    {
+      "path": "98Q-CONFIG-EVIDENCE-VALIDATION.md",
+      "sha256": "d3de4085d449e673da943f7eac24a1632fbfef42c2e508737132c4f27e7a827f",
+      "size": 1338
+    },
+    {
+      "path": "98R-WAVE2C-VERIFICATION-RESULT.json",
+      "sha256": "bb64ecea3c2fb997e369aa1108b7cd670a33af59e24801687f18fab71b37e3d8",
+      "size": 879
+    },
+    {
+      "path": "98S-REFERENCE-CONFIG-CONFLICTS.md",
+      "sha256": "8e0623f5e8cd45aaaeb4f593c7dc6898a07f6b7e6346985c37fe172171f1cf0d",
+      "size": 1313
+    },
+    {
+      "path": "96-P0-CLOSURE-MATRIX.json",
+      "sha256": "d822deedbe2a8f62ea5895d9633bbc0444aeabf9117850b66ebf4a3fd59385ab",
+      "size": 6178
+    },
+    {
+      "path": "92-P0-CLOSURE-MASTER.md",
+      "sha256": "fcdca9da67d3d5198a23c375b11c16ce4d54c487b328a4cf2c3fa46e323839b4",
+      "size": 3352
+    },
+    {
+      "path": "91-HG90-APPROVAL-CHECKLIST.md",
+      "sha256": "2f472a45c2ba13b2336fef6ba7f551c6a69edf479ef251cb4ce688b76534de99",
+      "size": 3187
+    },
+    {
+      "path": "37-ARCHITECTURE-GATE.md",
+      "sha256": "162807311c0949d838814b6404ba92ebb52f5e916f5a80fd36d327965a5f0340",
+      "size": 14327
+    },
+    {
+      "path": "98M-tools/.pytest_cache/.gitignore",
+      "sha256": "3ed731b65d06150c138e2dadb0be0697550888a6b47eb8c45ecc9adba8b8e9bd",
+      "size": 37
+    },
+    {
+      "path": "98M-tools/.pytest_cache/CACHEDIR.TAG",
+      "sha256": "37dc88ef9a0abeddbe81053a6dd8fdfb13afb613045ea1eb4a5c815a74a3bde4",
+      "size": 191
+    },
+    {
+      "path": "98M-tools/.pytest_cache/README.md",
+      "sha256": "73fd6fccdd802c419a6b2d983d6c3173b7da97558ac4b589edec2dfe443db9ad",
+      "size": 302
+    },
+    {
+      "path": "98M-tools/.pytest_cache/v/cache/nodeids",
+      "sha256": "b35f51eb42b469441f7f4170d210e438a7518a35e474eb9fbf974d417a0f6ec6",
+      "size": 960
+    },
+    {
+      "path": "98M-tools/TDD-GREEN.txt",
+      "sha256": "9563844f1ab94a8576ea90f91858b495ab67195a2d5c45e15c5e44340d3e35f2",
+      "size": 99
+    },
+    {
+      "path": "98M-tools/TDD-RED.txt",
+      "sha256": "dc557224bb1dfc39d61a905dd1579080d904910aa7147f232e91a1ede2a72f71",
+      "size": 909
+    },
+    {
+      "path": "98M-tools/tests/__pycache__/test_nsight_config_ingest.cpython-313-pytest-9.0.2.pyc",
+      "sha256": "8b4d4b9e6237112c18399dff66e42f6e186954a3c355a7353a7a9790e57f3159",
+      "size": 33349
+    },
+    {
+      "path": "98M-tools/tests/test_nsight_config_ingest.py",
+      "sha256": "1ca705276b5f7bdf49bd93089ebfe4f4e74824591ca7b4efb0ea1cad09369ac8",
+      "size": 9236
+    },
+    {
+      "path": "98M-tools/tools/__pycache__/nsight_config_ingest.cpython-313.pyc",
+      "sha256": "cfe8044d4a8d32fba0ef05fe9f13cbe778327f1ed3a85f57e52b6bb39b349d79",
+      "size": 29644
+    },
+    {
+      "path": "98M-tools/tools/nsight_config_ingest.py",
+      "sha256": "21356d11788e47d317abc465200d064859e052697fbe28f778789f60e7211dd1",
+      "size": 17645
+    },
+    {
+      "path": "98M-template/README.md",
+      "sha256": "5b63de543085125a0015d16e6bf3e8474767a5b020c8c293c81ae10510960bc0",
+      "size": 1281
+    },
+    {
+      "path": "98M-template/evidence-manifest.json",
+      "sha256": "0d940852fcb1a850bd4bbc17e61957c8eaa6897a2179f4c7e1640b06746bd966",
+      "size": 1233
+    }
+  ]
+}

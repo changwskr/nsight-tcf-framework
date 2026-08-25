@@ -1,0 +1,25 @@
+{
+  "adr_id": "ADR-DEP-001",
+  "title": "Production Deployment Pipeline",
+  "decision": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "conditions": [],
+  "comment": null,
+  "approval_state": "DRAFT_NOT_APPROVED",
+  "recommended_decision": "APPROVE",
+  "readiness": "READY_FOR_HUMAN_DECISION",
+  "required_approver": "DevOps Owner + Ops Change Manager",
+  "runtime_dependency": [
+    "RUN-ROLLING"
+  ],
+  "recommendation": "GitLab→Runner→Artifact Repository→eCAMS/승인→Production의 재현가능한 Pipeline을 기준으로 하고 Rolling/rollback evidence를 의무화한다.",
+  "prerequisites": [
+    "actual pipeline evidence"
+  ],
+  "closure": [
+    "rolling/rollback pass",
+    "artifact/config/db version trace complete"
+  ]
+}

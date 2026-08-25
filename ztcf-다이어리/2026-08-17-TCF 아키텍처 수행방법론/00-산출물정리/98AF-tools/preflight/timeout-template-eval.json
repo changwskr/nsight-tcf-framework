@@ -1,0 +1,16 @@
+{
+  "decision": "INCOMPLETE",
+  "failures": [],
+  "missing": [
+    "rolled_back",
+    "late_commit_count",
+    "tx_result",
+    "client_result",
+    "pending_after",
+    "active_before",
+    "active_after",
+    "worker_returned",
+    "context_leak_count"
+  ],
+  "warnings": []
+}

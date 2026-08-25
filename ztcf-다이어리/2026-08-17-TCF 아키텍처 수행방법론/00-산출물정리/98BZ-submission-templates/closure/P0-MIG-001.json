@@ -1,0 +1,11 @@
+{
+  "item_id": "P0-MIG-001",
+  "area": "Migration cutover readiness",
+  "current_status": "BLOCKED_RUNTIME_HUMAN",
+  "status": null,
+  "approver": null,
+  "decision_date": null,
+  "evidence_ref": [],
+  "closure_comment": null,
+  "required_next": "Migration reconciliation result, go/no-go criteria, rollback rehearsal"
+}

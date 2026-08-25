@@ -1,0 +1,181 @@
+{
+  "baseline": "G80",
+  "drifts": [
+    {
+      "driftId": "DRIFT-001",
+      "type": "REFERENCE_DOCUMENT_DRIFT",
+      "domain": "OM",
+      "sourceA": "문서 Handler 24",
+      "sourceB": "tcf-om Source Handler 25",
+      "difference": "OmMessageStructureHandler 포함 수량 차이",
+      "impact": "OM Catalog/문서 신뢰성",
+      "severity": "P1",
+      "action": "Source 기반 Catalog 재생성"
+    },
+    {
+      "driftId": "DRIFT-002",
+      "type": "TARGET_CONFORMANCE_DRIFT",
+      "domain": "Security",
+      "sourceA": "KMS/HSM Signing Key 설계",
+      "sourceB": "JwtKeyConfiguration RSAKeyGenerator(2048)",
+      "difference": "외부 Key SoT 대신 process-local key 생성",
+      "impact": "재기동/다중 Issuer 검증 위험",
+      "severity": "P0",
+      "action": "ADR-SEC-001 + 구현 변경"
+    },
+    {
+      "driftId": "DRIFT-003",
+      "type": "TARGET_CONFORMANCE_DRIFT",
+      "domain": "Security",
+      "sourceA": "Key Version/Rotation 필요",
+      "sourceB": "고정 kid nsight-jwt-rs256",
+      "difference": "Version/Grace Period 없음",
+      "impact": "무중단 Key Rotation 불가",
+      "severity": "P0",
+      "action": "ADR-SEC-002"
+    },
+    {
+      "driftId": "DRIFT-004",
+      "type": "REFERENCE_DOCUMENT_DRIFT",
+      "domain": "Runtime",
+      "sourceA": "Java 17 표기 문서",
+      "sourceB": "Current PDMG/Target 일부 Java 21",
+      "difference": "Toolchain 기준 혼재",
+      "impact": "Build/CI 재현성",
+      "severity": "P1",
+      "action": "Build Baseline 확정"
+    },
+    {
+      "driftId": "DRIFT-005",
+      "type": "REFERENCE_INTERNAL_DRIFT",
+      "domain": "Capacity",
+      "sourceA": "16Core 500 TPS 보수 기준",
+      "sourceB": "16Core 855 TPS Working 산정",
+      "difference": "동일 VM 처리량 버전 혼재",
+      "impact": "AP 수량/HA 잔여용량",
+      "severity": "P0",
+      "action": "Runtime Approved TPS로 승격"
+    },
+    {
+      "driftId": "DRIFT-006",
+      "type": "REFERENCE_INTERNAL_DRIFT",
+      "domain": "Session",
+      "sourceA": "Session 60m 문서",
+      "sourceB": "Session 90m Working 문서",
+      "difference": "Idle timeout 기준 혼재",
+      "impact": "세션 메모리/운영정책",
+      "severity": "P0",
+      "action": "ADR-SES-001"
+    },
+    {
+      "driftId": "DRIFT-007",
+      "type": "REFERENCE_INTERNAL_DRIFT",
+      "domain": "Tomcat",
+      "sourceA": "maxThreads 1,552 산정 버전",
+      "sourceB": "800~1,000 Working",
+      "difference": "Thread 상한 혼재",
+      "impact": "Native memory/DB 압력",
+      "severity": "P0",
+      "action": "Runtime 승인"
+    },
+    {
+      "driftId": "DRIFT-008",
+      "type": "REFERENCE_INTERNAL_DRIFT",
+      "domain": "DB Pool",
+      "sourceA": "Hikari 80~120 기준",
+      "sourceB": "120~150 / 150~180 Working",
+      "difference": "Pool 기준 혼재",
+      "impact": "DB Session/Wait",
+      "severity": "P0",
+      "action": "Hold-Time 기반 Runtime 검증"
+    },
+    {
+      "driftId": "DRIFT-009",
+      "type": "TARGET_CONFORMANCE_DRIFT",
+      "domain": "Transaction",
+      "sourceA": "Facade = TX Owner Target",
+      "sourceB": "4 Service에도 @Transactional",
+      "difference": "중첩/예외 Transaction 후보",
+      "impact": "Rollback/Timeout 경계",
+      "severity": "P0",
+      "action": "예외 승인 또는 제거"
+    },
+    {
+      "driftId": "DRIFT-010",
+      "type": "TARGET_CONFORMANCE_DRIFT",
+      "domain": "Observability",
+      "sourceA": "SLF4J/통합 Runtime Evidence 원칙",
+      "sourceB": "tcf-core 5개 파일 System.out 사용",
+      "difference": "운영 로그 통제 우회",
+      "impact": "상관관계/로그 품질",
+      "severity": "P1",
+      "action": "Console trace 제거/프로파일 제어"
+    },
+    {
+      "driftId": "DRIFT-011",
+      "type": "ALLOWED_VARIANT",
+      "domain": "Reference/Target",
+      "sourceA": "PDMG outer TransactionTemplate",
+      "sourceB": "NSIGHT Facade TX Owner 방향",
+      "difference": "Reference와 Target 메커니즘 차이",
+      "impact": "오해 가능",
+      "severity": "P0",
+      "action": "두 Baseline 분리 + ADR"
+    },
+    {
+      "driftId": "DRIFT-012",
+      "type": "ALLOWED_VARIANT",
+      "domain": "Message",
+      "sourceA": "PDMG hdr_nhnis+dto/result",
+      "sourceB": "NSIGHT StandardRequest header+body/result",
+      "difference": "전문 모델 차이",
+      "impact": "연계 호환성",
+      "severity": "P0",
+      "action": "Mapping Contract 확정"
+    },
+    {
+      "driftId": "DRIFT-013",
+      "type": "REFERENCE_DOCUMENT_DRIFT",
+      "domain": "PDMG Scope",
+      "sourceA": "Expected pdmg-om",
+      "sourceB": "현재 Source Snapshot 독립 pdmg-om 미확인",
+      "difference": "Expected vs Snapshot 차이",
+      "impact": "운영모듈 책임 혼선",
+      "severity": "P1",
+      "action": "AS-IS/TO-BE Scope 명시"
+    },
+    {
+      "driftId": "DRIFT-014",
+      "type": "TARGET_CONFORMANCE_DRIFT",
+      "domain": "Rule Layer",
+      "sourceA": "독립 Rule Target",
+      "sourceB": "PDMG AS-IS Service 내부 Rule 성격 로직",
+      "difference": "계층 목표와 Reference 구현 차이",
+      "impact": "표준/교육 혼선",
+      "severity": "P1",
+      "action": "Target Rule 정책 ADR"
+    },
+    {
+      "driftId": "DRIFT-015",
+      "type": "GOVERNANCE_DRIFT",
+      "domain": "Closed Loop",
+      "sourceA": "Runtime Evidence Required",
+      "sourceB": "실제 Mandatory Run 원본 미연결",
+      "difference": "Document/Source까지만 닫힘",
+      "impact": "Architecture Gate 신뢰성",
+      "severity": "P0",
+      "action": "G80 HOLD 유지"
+    },
+    {
+      "driftId": "DRIFT-016",
+      "type": "INVENTORY_RUNTIME_DRIFT",
+      "domain": "Physical",
+      "sourceA": "71대 Master Inventory",
+      "sourceB": "Server→JVM→WAR 전수 Runtime mapping 미완료",
+      "difference": "논리/물리 추적성 단절",
+      "impact": "장애/배포 영향분석 불완전",
+      "severity": "P0",
+      "action": "Inventory Runtime Mapper"
+    }
+  ]
+}
