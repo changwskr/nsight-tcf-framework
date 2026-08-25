@@ -79,3 +79,7 @@ CREATE TABLE TB_MG_TX_CONTROL (
     )
 );
 CREATE INDEX IF NOT EXISTS IDX_MG_TX_CTRL_TYPE ON TB_MG_TX_CONTROL (CONTROL_TYPE, BLOCK_YN);
+
+-- Statement.cancel() E2E 데모용: CALL SLEEP(ms) 로 JDBC 블로킹 재현
+-- (Thread.sleep 직접 바인딩은 JDK Duration 오버로드와 H2가 충돌함)
+CREATE ALIAS IF NOT EXISTS SLEEP FOR "nhnis.mg.co.a.demo.H2SleepAlias.sleepMs";

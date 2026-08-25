@@ -643,21 +643,26 @@ pdmg-service
 
 # 12. 현재 구조에서 제가 보는 핵심 GAP
 
-현재 구조의 방향은 좋지만 세 가지는 명확히 관리할 필요가 있습니다.
+> **갱신 (2026-08-25):** GAP-1의 JDBC 즉시 중단 공백은  
+> `ActiveJdbcStatementRegistry` + `Statement.cancel()` + sub-second complement + MyBatis Tracking으로 **보완·검증됨**.  
+> (드라이버별 best-effort·운영 Oracle 재확인은 남음.)  
+> GAP-2/GAP-3은 `nhnis.fw.transaction` ServiceId별 Policy로 최외곽 TX 속성을 주는 방향으로 **적용됨** (예: `mgcoa5530S0` → `RDW_READ_ONLY`).
+
+현재 구조의 방향은 좋지만, 아래는 **지속 관리** 포인트다.
 
 ```text
-[GAP-1]
+[GAP-1]  (완화됨 · 잔여 OPEN)
 
 Application Timeout
         ≠
-DB Hard Timeout
+DB Hard Cancel 보장
 
-Future.cancel(true)가
-JDBC SQL 즉시 중단을 보장하지 않음
+현행: Future.cancel(true) + Statement.cancel() + QueryTimeout 병행
+잔여: Oracle 등 환경에서 cancel 실효·세션 정책 재확인
 ```
 
 ```text
-[GAP-2]
+[GAP-2]  (정책화됨 · 표준 문서화 지속)
 
 Outer TransactionTemplate
         +
@@ -665,30 +670,20 @@ Facade @Transactional
         +
 Service @Transactional
 
-Transaction 경계가 중복 표현됨
+Timeout ON: TransactionTemplate = 최외곽 Owner
+Facade/Service = REQUIRED 참여로 표준화
 ```
-
-특히 Timeout ON에서는 **TransactionTemplate이 이미 최외곽 TX Owner**이므로 Facade/Service의 `@Transactional` 역할을 명확하게 표준화할 필요가 있습니다.
-
-그리고 하나 더 중요한 것이 있습니다.
 
 ```text
-[GAP-3]
+[GAP-3]  (완화됨)
 
-Outer TransactionTemplate
-readOnly 설정 없음
+최외곽 Transaction Policy
+  nhnis.fw.transaction.services.<serviceId>.mode
+예: mgcoa5530S0 → RDW_READ_ONLY
 
-       ↓
-
-Facade
-@Transactional(readOnly=true)
-       ↓
-이미 외부 REQUIRED TX 존재
+Facade readOnly=true 만으로 물리 TX 속성이 바뀐다고 기대하지 말 것
+→ Policy를 최외곽 Template에 반영하는 현행 구조 유지
 ```
-
-이 경우 Facade의 `readOnly=true`가 **새 Physical Transaction을 만드는 경우와 동일한 방식으로 DB TX 속성을 설정한다고 기대하면 안 됩니다.**
-
-따라서 조회/변경별 `readOnly`, isolation, timeout 등을 실제 물리 TX에 반영하려면 **최외곽 TransactionTemplate 정책 자체가 ServiceId별 Transaction Policy를 받아야 하는 구조**가 더 일관됩니다.
 
 ---
 

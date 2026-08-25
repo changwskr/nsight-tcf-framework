@@ -1,6 +1,9 @@
 package nhnis.fw.tcf.timeout;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +32,7 @@ public class OnlineTimeoutConfiguration {
     private static final Logger log = LoggerFactory.getLogger(OnlineTimeoutConfiguration.class);
 
     private ThreadPoolTaskExecutor onlineTaskExecutor;
+    private ScheduledExecutorService deadlineCancelScheduler;
 
     @Bean
     public TransactionPolicyResolver transactionPolicyResolver(OnlineTransactionPolicyProperties properties) {
@@ -60,6 +64,21 @@ public class OnlineTimeoutConfiguration {
         return executor;
     }
 
+    /**
+     * remaining &lt; 1s 구간에서 QueryTimeout(초) 예산 초과를 Statement.cancel 로 보완하는 스케줄러.
+     */
+    @Bean(name = "pdmgDeadlineJdbcCancelScheduler")
+    @ConditionalOnProperty(name = "nhnis.fw.timeout.enabled", havingValue = "true")
+    public ScheduledExecutorService pdmgDeadlineJdbcCancelScheduler() {
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
+            Thread thread = new Thread(r, "pdmg-jdbc-deadline-cancel");
+            thread.setDaemon(true);
+            return thread;
+        });
+        this.deadlineCancelScheduler = scheduler;
+        return scheduler;
+    }
+
     @Bean
     @ConditionalOnProperty(name = "nhnis.fw.timeout.enabled", havingValue = "true")
     public OnlineTimeoutExecutor defaultOnlineTimeoutExecutor(
@@ -68,15 +87,32 @@ public class OnlineTimeoutConfiguration {
             ThreadPoolTaskExecutor taskExecutor,
             TransactionPolicyResolver policyResolver,
             TransactionManagerRegistry transactionManagerRegistry,
-            nhnis.fw.tcf.execution.OnlineExecutionEvidenceRegistry evidenceRegistry) {
+            nhnis.fw.tcf.execution.OnlineExecutionEvidenceRegistry evidenceRegistry,
+            ActiveJdbcStatementRegistry statementRegistry,
+            @org.springframework.beans.factory.annotation.Qualifier("pdmgDeadlineJdbcCancelScheduler")
+            ScheduledExecutorService deadlineCancelScheduler) {
         return new DefaultOnlineTimeoutExecutor(
-                properties, taskExecutor, policyResolver, transactionManagerRegistry, evidenceRegistry);
+                properties,
+                taskExecutor,
+                policyResolver,
+                transactionManagerRegistry,
+                evidenceRegistry,
+                statementRegistry,
+                deadlineCancelScheduler);
     }
 
     @PreDestroy
     void shutdown() {
         if (onlineTaskExecutor != null) {
             onlineTaskExecutor.shutdown();
+        }
+        if (deadlineCancelScheduler != null) {
+            deadlineCancelScheduler.shutdownNow();
+            try {
+                deadlineCancelScheduler.awaitTermination(5, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 }

@@ -46,6 +46,17 @@ class StatementTimeoutResolverTest {
     void toConservativeTimeoutSecondsUsesFloorDivision() {
         assertThat(StatementTimeoutResolver.toConservativeTimeoutSeconds(5000)).isEqualTo(5);
         assertThat(StatementTimeoutResolver.toConservativeTimeoutSeconds(1500)).isEqualTo(1);
+        assertThat(StatementTimeoutResolver.toConservativeTimeoutSeconds(999)).isEqualTo(1);
+    }
+
+    @Test
+    void needsJdbcCancelComplementWhenSecondFloorExceedsRemaining() {
+        assertThat(StatementTimeoutResolver.needsJdbcCancelComplement(999)).isTrue();
+        assertThat(StatementTimeoutResolver.needsJdbcCancelComplement(500)).isTrue();
+        assertThat(StatementTimeoutResolver.needsJdbcCancelComplement(1)).isTrue();
+        assertThat(StatementTimeoutResolver.needsJdbcCancelComplement(0)).isTrue();
+        assertThat(StatementTimeoutResolver.needsJdbcCancelComplement(1000)).isFalse();
+        assertThat(StatementTimeoutResolver.needsJdbcCancelComplement(1500)).isFalse();
     }
 
     private static MappedStatement mappedStatement(Integer timeout) {

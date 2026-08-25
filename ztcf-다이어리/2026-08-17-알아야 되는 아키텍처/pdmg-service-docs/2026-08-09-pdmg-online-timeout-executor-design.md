@@ -1,5 +1,22 @@
 # PDMG 온라인 거래 TimeoutExecutor 설계
 
+> **상태: IMPLEMENTED (핵심) — 2026-08-25 점검**  
+> 이 문서는 설계 시점(2026-08-09) 스냅샷이다. 아래 **「제외」 목록의 일부는 이후 구현됨**.  
+> **현행 정책·흐름은 아래를 우선한다.**  
+> - [20.타임아웃.md](./20.타임아웃.md)  
+> - [33.요청쓰레드와 Work쓰레드 분리아키텍처.md](./33.요청쓰레드와%20Work쓰레드%20분리아키텍처.md)  
+> - [../pdg-fw-docs/01.timeout.md](../pdg-fw-docs/01.timeout.md)  
+> 원본: [`2026-08-09-pdmg-online-timeout-executor-design - 원본.md`](./2026-08-09-pdmg-online-timeout-executor-design%20-%20원본.md)  
+>  
+> **이후 구현된 항목 (설계 당시 제외 → 현행 적용)**  
+> | 설계 당시 제외 | 현행 |  
+> | --- | --- |  
+> | serviceId별 개별 타임아웃 | `nhnis.fw.timeout.overrides` |  
+> | JDBC Statement/Query timeout | MyBatis `queryTimeout` + `TrackingStatement` |  
+> | 실행 중 JDBC 즉시 종료 보장 | `cancelAll` → `Statement.cancel()` (best-effort, 라이브 검증) |  
+> | (추가) min-start-budget / sql-safety | 적용 |  
+> | (추가) ServiceId TX Policy | `nhnis.fw.transaction.services` |  
+
 ## 1. 목적
 
 `pdmg-fw`의 온라인 거래 실행 전체에 공통 제한시간을 적용한다. 제한시간을 초과한 요청에는 타임아웃 응답을 반환하고, Worker가 늦게 종료되더라도 해당 업무 트랜잭션이 커밋되지 않도록 롤백한다.

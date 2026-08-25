@@ -17,10 +17,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import nhnis.fw.tcf.timeout.ActiveJdbcStatementRegistry;
 import nhnis.fw.tcf.timeout.OnlineTimeoutProperties;
 
 /**
- * JDBC {@link Statement#setQueryTimeout(int)} 를 Service deadline remaining 과 연계한다.
+ * JDBC {@link Statement#setQueryTimeout(int)} 를 Service deadline remaining 과 연계하고,
+ * 활성 Statement 를 {@link ActiveJdbcStatementRegistry} 에 등록한다.
  */
 @Component
 @ConditionalOnProperty(name = "nhnis.fw.timeout.enabled", havingValue = "true")
@@ -32,9 +34,12 @@ public class MybatisStatementTimeoutInterceptor implements Interceptor {
     private static final Logger log = LoggerFactory.getLogger(MybatisStatementTimeoutInterceptor.class);
 
     private final OnlineTimeoutProperties timeoutProperties;
+    private final ActiveJdbcStatementRegistry statementRegistry;
 
-    public MybatisStatementTimeoutInterceptor(OnlineTimeoutProperties timeoutProperties) {
+    public MybatisStatementTimeoutInterceptor(OnlineTimeoutProperties timeoutProperties,
+            ActiveJdbcStatementRegistry statementRegistry) {
         this.timeoutProperties = timeoutProperties;
+        this.statementRegistry = statementRegistry;
     }
 
     @Override
@@ -57,7 +62,7 @@ public class MybatisStatementTimeoutInterceptor implements Interceptor {
                         timeoutSeconds);
             }
         }
-        return statement;
+        return TrackingStatement.wrap(statement, statementRegistry);
     }
 
     private static MappedStatement mappedStatement(Object target) {

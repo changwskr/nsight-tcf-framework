@@ -1,5 +1,10 @@
 # `pdmg-fw`의 TCF 아키텍처 구조
 
+> **현행화 (2026-08-25):** Timeout 경로에 Registry/`Statement.cancel` · Worker 외곽 TX Policy ·  
+> `OnlineTimeoutException` 시 etf skip 반영.  
+> 상세: [01.timeout.md](./01.timeout.md) · [PDMG Transaction + Timeout 아키텍처 구조.md](./PDMG%20Transaction%20+%20Timeout%20아키텍처%20구조.md)  
+> 원본: [`pdmg-fw TCF 아키텍처 - 원본.md`](./pdmg-fw%20TCF%20아키텍처%20-%20원본.md)
+
 현재 PDMG 기준에서 `pdmg-fw`의 TCF는 단순 공통 라이브러리가 아니라 **온라인 거래 한 건의 실행 생명주기를 통제하는 Framework Runtime**입니다. 핵심 실행축은 `Controller → TCF → STF → Timeout/Transaction → Dispatcher → Handler → ETF`이며, 실제 업무 계층은 그 뒤의 `Facade → Service → DAO → Mapper`로 연결됩니다.
 
 ## 1. 전체 Big Picture
@@ -61,10 +66,10 @@
 │      └─ Timeout ON                                          │
 │             │                                               │
 │             ▼                                               │
-│        Worker Thread                                        │
-│             │                                               │
+│        Worker Thread (pdmg-online-*)                        │
+│             │ Registry.bind / TrackingStatement             │
 │             ▼                                               │
-│       TransactionTemplate                                   │
+│       TransactionTemplate (+ ServiceId Policy)              │
 │             │                                               │
 │             └────────────── TX BEGIN                         │
 │             │                                               │
@@ -73,6 +78,11 @@
 │             │ ServiceId                                     │
 │             ▼                                               │
 │       TransactionHandler                                    │
+│                                                             │
+│  Timeout 시(요청 Thread):                                   │
+│    cancelAll → Statement.cancel()                           │
+│    future.cancel(true) → interrupt                          │
+│    OnlineTimeoutException → 504 (etf skip)                  │
 └───────────────────────────┬─────────────────────────────────┘
                             │ Framework / Business 경계
                             ▼
@@ -286,18 +296,21 @@ Tomcat Request Thread
         ▼
 OnlineTimeoutExecutor
         │
-        │ submit()
+        │ submit() + Future.get(remaining)
+        │ Timeout 시: cancelAll → Statement.cancel()
+        │             + future.cancel(true) → 504 (etf skip)
         ▼
 ================================================
         Worker Thread
         pdmg-online-*
+        Registry.bind / TrackingStatement
 ================================================
         │
         ▼
-TransactionTemplate
+TransactionTemplate (+ ServiceId Policy)
         │
         ▼
-TX BEGIN
+TX BEGIN (min-start-budget 미달 시 TX 미개시)
         │
         ▼
 Dispatcher
@@ -308,12 +321,12 @@ Facade
         ↓
 Service
         ↓
-DAO / Mapper
+DAO / Mapper (queryTimeout + Statement 등록)
 ```
 
 여기가 PDMG TCF에서 특히 중요합니다.
 
-**Timeout ON일 때 DB Transaction의 최외곽 경계가 Worker Thread 안에 위치합니다.** `TransactionTemplate`은 `PROPAGATION_REQUIRED`로 동작하며 Dispatcher보다 먼저 Transaction을 시작합니다.
+**Timeout ON일 때 DB Transaction의 최외곽 경계가 Worker Thread 안에 위치합니다.** `TransactionTemplate`은 `PROPAGATION_REQUIRED`로 동작하며 Dispatcher보다 먼저 Transaction을 시작합니다. Timeout 시에는 등록된 JDBC에 `Statement.cancel()`을 시도한 뒤 interrupt하며, 늦은 커밋은 Deadline 재검사로 막습니다.
 
 ---
 

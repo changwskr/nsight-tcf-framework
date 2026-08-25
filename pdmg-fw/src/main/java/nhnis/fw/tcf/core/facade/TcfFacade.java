@@ -94,7 +94,13 @@ public class TcfFacade {
         } finally {
             RuntimeException etfFailure = null;
             try {
-                etf.postProcess(context);
+                // 이미 타임아웃으로 실패한 경우 etf 에서 동일 OnlineTimeoutException 을 재발생시키지 않는다.
+                if (!(primary instanceof OnlineTimeoutException)) {
+                    etf.postProcess(context);
+                } else {
+                    log.debug("[TcfFacade] skip etf timeout re-check after OnlineTimeoutException serviceId={}",
+                            serviceId);
+                }
             } catch (RuntimeException ex) {
                 etfFailure = ex;
             }

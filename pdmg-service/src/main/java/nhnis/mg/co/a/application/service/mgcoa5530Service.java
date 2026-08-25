@@ -1,15 +1,25 @@
 package nhnis.mg.co.a.application.service;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import nhnis.fw.tcf.timeout.ActiveJdbcStatementRegistry;
 import nhnis.mg.co.a.persistence.dao.mgcoa5530DAO;
 import nhnis.mg.co.a.dto.mgcoa5530S0DTOSub0;
 import nhnis.mg.co.a.dto.mgcoa5530S0DTOin;
@@ -28,6 +38,29 @@ public class mgcoa5530Service {
     @Autowired
     private mgcoa5530DAO mgcoa5530DAO;
 
+    @Autowired
+    @Qualifier("rdwDataSource")
+    private DataSource rdwDataSource;
+
+    @Autowired
+    private ObjectProvider<ActiveJdbcStatementRegistry> statementRegistryProvider;
+
+    /**
+     * 타임아웃 E2E용 인위 지연(ms). 기본 0(정상 경로).
+     * 예: --nhnis.demo.mgcoa5530-sleep-ms=12000 + overrides.mgcoa5530S0=10000 → FW_TIMEOUT
+     */
+    @Value("${nhnis.demo.mgcoa5530-sleep-ms:0}")
+    private long demoSleepMs;
+
+    /**
+     * Statement.cancel() E2E용 JDBC 블로킹. 기본 0.
+     * 값이 &gt;0 이면 H2 {@code SYSTEM_RANGE} 장시간 SQL 을 실행해 Registry.cancelAll → cancel 을 재현한다.
+     * (값 자체는 “켜짐” 플래그에 가깝고, 대략적인 부하 스케일에도 사용)
+     * 예: --nhnis.demo.mgcoa5530-jdbc-hold-ms=15000 + overrides.mgcoa5530S0=10000
+     */
+    @Value("${nhnis.demo.mgcoa5530-jdbc-hold-ms:0}")
+    private long demoJdbcHoldMs;
+
     /**
      * 마케팅희망고객 목록 조회 (페이징).
      */
@@ -35,31 +68,21 @@ public class mgcoa5530Service {
     public mgcoa5530S0DTOout mgcoa5530S0(mgcoa5530S0DTOin input) throws Exception {
         log.info("▶▶▶▶▶▶▶▶ mgcoa5530S0 Service Start!");
 
-        /*
-         * 타임아웃 검증용 sleep (기존 ~8초 + 4초 = 약 12초).
-         * mgcoa5530S0 override=10000ms 이면 FW_TIMEOUT 유도.
-         */
-        try {
-            Thread.sleep(1000);
-            System.out.println("1");
-            Thread.sleep(1000);
-            System.out.println("3");
-            Thread.sleep(1000);
-            System.out.println("4");
-            Thread.sleep(1000);
-            Thread.sleep(1000);
-            Thread.sleep(1000);
-            System.out.println("5");
-            Thread.sleep(1000);
-            Thread.sleep(1000);
-            System.out.println("6");
-            Thread.sleep(4000);
-            System.out.println("7 (+4s)");
-
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            log.warn("mgcoa5530S0 Service sleep interrupted", e);
+        if (demoSleepMs > 0) {
+            try {
+                log.info("mgcoa5530S0 demo sleep start ms={}", demoSleepMs);
+                Thread.sleep(demoSleepMs);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                log.warn("mgcoa5530S0 Service sleep interrupted — abort without DAO", e);
+                throw e;
+            }
+            if (Thread.currentThread().isInterrupted()) {
+                throw new InterruptedException("mgcoa5530S0 aborted: interrupt after demo sleep");
+            }
         }
+
+        demoJdbcHoldIfConfigured();
 
         Map<String, Object> param = new HashMap<>();
         if (input != null) {
@@ -131,5 +154,51 @@ public class mgcoa5530Service {
             }
         }
         return value == null ? null : String.valueOf(value);
+    }
+
+    /**
+     * H2 장시간 SQL + Registry 등록으로 {@link Statement#cancel()} 라이브 경로를 재현한다.
+     * (Java ALIAS sleep 은 H2 cancel 만으로 깨지지 않는 경우가 많아 SYSTEM_RANGE 사용)
+     */
+    private void demoJdbcHoldIfConfigured() throws SQLException, InterruptedException {
+        if (demoJdbcHoldMs <= 0) {
+            return;
+        }
+        ActiveJdbcStatementRegistry registry = statementRegistryProvider.getIfAvailable();
+        if (registry == null) {
+            log.warn("mgcoa5530S0 demo JDBC hold skipped: ActiveJdbcStatementRegistry unavailable");
+            return;
+        }
+        // hold-ms 를 대략적인 부하 스케일로 사용 (최소 2천만 row)
+        long rangeEnd = Math.max(20_000_000L, demoJdbcHoldMs * 2_000L);
+        String sql = "SELECT SUM(X) FROM SYSTEM_RANGE(1, " + rangeEnd + ")";
+        Connection connection = DataSourceUtils.getConnection(rdwDataSource);
+        Statement statement = connection.createStatement();
+        registry.register(statement);
+        try {
+            log.info("mgcoa5530S0 demo JDBC hold start rangeEnd={} (cancelable SQL)", rangeEnd);
+            statement.executeQuery(sql);
+            log.info("mgcoa5530S0 demo JDBC hold finished normally");
+        } catch (SQLException ex) {
+            if (Thread.currentThread().isInterrupted()) {
+                log.warn("mgcoa5530S0 demo JDBC hold cancelled (interrupt) — abort without DAO: {}",
+                        ex.getMessage());
+                throw new InterruptedException("mgcoa5530S0 aborted: JDBC cancel/interrupt");
+            }
+            log.warn("mgcoa5530S0 demo JDBC hold cancelled/failed — abort without DAO: {}",
+                    ex.getMessage());
+            throw ex;
+        } finally {
+            registry.unregister(statement);
+            try {
+                statement.close();
+            } catch (SQLException ignored) {
+                // ignore
+            }
+            DataSourceUtils.releaseConnection(connection, rdwDataSource);
+        }
+        if (Thread.currentThread().isInterrupted()) {
+            throw new InterruptedException("mgcoa5530S0 aborted: interrupt after demo JDBC hold");
+        }
     }
 }

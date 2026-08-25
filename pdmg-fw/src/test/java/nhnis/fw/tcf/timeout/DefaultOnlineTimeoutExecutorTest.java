@@ -3,8 +3,12 @@ package nhnis.fw.tcf.timeout;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.lang.reflect.Proxy;
+import java.sql.Statement;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -37,6 +41,8 @@ class DefaultOnlineTimeoutExecutorTest {
     private TransactionPolicyResolver policyResolver;
     private TransactionManagerRegistry transactionManagerRegistry;
     private OnlineExecutionEvidenceRegistry evidenceRegistry;
+    private ActiveJdbcStatementRegistry statementRegistry;
+    private ScheduledExecutorService deadlineCancelScheduler;
     private DefaultOnlineTimeoutExecutor executor;
 
     @BeforeEach
@@ -62,8 +68,24 @@ class DefaultOnlineTimeoutExecutorTest {
         transactionManagerRegistry = new TransactionManagerRegistry(
                 Map.of("rdwTransactionManager", transactionManager));
         evidenceRegistry = new OnlineExecutionEvidenceRegistry();
-        executor = new DefaultOnlineTimeoutExecutor(
-                properties, taskExecutor, policyResolver, transactionManagerRegistry, evidenceRegistry);
+        statementRegistry = new ActiveJdbcStatementRegistry();
+        deadlineCancelScheduler = Executors.newSingleThreadScheduledExecutor(r -> {
+            Thread t = new Thread(r, "pdmg-jdbc-deadline-cancel-test");
+            t.setDaemon(true);
+            return t;
+        });
+        executor = newExecutor();
+    }
+
+    private DefaultOnlineTimeoutExecutor newExecutor() {
+        return new DefaultOnlineTimeoutExecutor(
+                properties,
+                taskExecutor,
+                policyResolver,
+                transactionManagerRegistry,
+                evidenceRegistry,
+                statementRegistry,
+                deadlineCancelScheduler);
     }
 
     @AfterEach
@@ -71,6 +93,9 @@ class DefaultOnlineTimeoutExecutorTest {
         ExecutionDeadlineContext.clear();
         ThreadContext.clearAll();
         taskExecutor.shutdown();
+        if (deadlineCancelScheduler != null) {
+            deadlineCancelScheduler.shutdownNow();
+        }
     }
 
     @Test
@@ -149,8 +174,7 @@ class DefaultOnlineTimeoutExecutorTest {
         taskExecutor.setMaxPoolSize(1);
         taskExecutor.setQueueCapacity(0);
         taskExecutor.initialize();
-        executor = new DefaultOnlineTimeoutExecutor(
-                properties, taskExecutor, policyResolver, transactionManagerRegistry, evidenceRegistry);
+        executor = newExecutor();
 
         AtomicBoolean hold = new AtomicBoolean(true);
         Thread blocker = new Thread(() -> {
@@ -224,8 +248,7 @@ class DefaultOnlineTimeoutExecutorTest {
         taskExecutor.setMaxPoolSize(1);
         taskExecutor.setQueueCapacity(5);
         taskExecutor.initialize();
-        executor = new DefaultOnlineTimeoutExecutor(
-                properties, taskExecutor, policyResolver, transactionManagerRegistry, evidenceRegistry);
+        executor = newExecutor();
 
         CountDownLatch workerHoldingPool = new CountDownLatch(1);
         CountDownLatch releaseBlocker = new CountDownLatch(1);
@@ -318,6 +341,108 @@ class DefaultOnlineTimeoutExecutorTest {
 
         assertThatThrownBy(() -> executor.execute(() -> "never"))
                 .isInstanceOf(OnlineTimeoutException.class);
+    }
+
+    @Test
+    void cancelsRegisteredJdbcStatementOnTimeout() throws Exception {
+        properties.setMilliseconds(120);
+        properties.setMinStartBudgetMs(20);
+        ThreadContext.put("serviceId", "jdbcCancelS0");
+        ThreadContext.put("guid", "guid-jdbc-cancel");
+
+        AtomicInteger cancelCount = new AtomicInteger();
+        CountDownLatch registered = new CountDownLatch(1);
+        Statement statement = proxyStatement(cancelCount);
+
+        assertThatThrownBy(() -> executor.execute(() -> {
+            statementRegistry.register(statement);
+            registered.countDown();
+            long until = System.currentTimeMillis() + 3_000L;
+            while (System.currentTimeMillis() < until) {
+                if (cancelCount.get() > 0 || Thread.currentThread().isInterrupted()) {
+                    break;
+                }
+                Thread.sleep(10);
+            }
+            return "late";
+        })).isInstanceOf(OnlineTimeoutException.class);
+
+        assertThat(registered.await(2, TimeUnit.SECONDS)).isTrue();
+        awaitWorkerQuiet();
+        assertThat(cancelCount.get()).isGreaterThanOrEqualTo(1);
+    }
+
+    @Test
+    void subSecondRemainingTriggersJdbcCancelComplementBeforeQueryTimeoutFloor() throws Exception {
+        properties.setMilliseconds(80);
+        properties.setMinStartBudgetMs(10);
+        ThreadContext.put("serviceId", "subSecCancelS0");
+        ThreadContext.put("guid", "guid-subsec-cancel");
+
+        AtomicInteger cancelCount = new AtomicInteger();
+        CountDownLatch registered = new CountDownLatch(1);
+        CountDownLatch cancelled = new CountDownLatch(1);
+        Statement statement = proxyStatement(cancelCount, cancelled);
+
+        assertThatThrownBy(() -> executor.execute(() -> {
+            statementRegistry.register(statement);
+            registered.countDown();
+            long until = System.currentTimeMillis() + 3_000L;
+            while (System.currentTimeMillis() < until) {
+                if (cancelCount.get() > 0 || Thread.currentThread().isInterrupted()) {
+                    break;
+                }
+                Thread.sleep(5);
+            }
+            return "late";
+        })).isInstanceOf(OnlineTimeoutException.class);
+
+        assertThat(registered.await(2, TimeUnit.SECONDS)).isTrue();
+        assertThat(cancelled.await(2, TimeUnit.SECONDS)).isTrue();
+        assertThat(cancelCount.get()).isGreaterThanOrEqualTo(1);
+    }
+
+    private static Statement proxyStatement(AtomicInteger cancelCount) {
+        return proxyStatement(cancelCount, null);
+    }
+
+    private static Statement proxyStatement(AtomicInteger cancelCount, CountDownLatch cancelled) {
+        return (Statement) Proxy.newProxyInstance(
+                Statement.class.getClassLoader(),
+                new Class<?>[] {Statement.class},
+                (proxy, method, args) -> {
+                    String name = method.getName();
+                    if ("cancel".equals(name)) {
+                        cancelCount.incrementAndGet();
+                        if (cancelled != null) {
+                            cancelled.countDown();
+                        }
+                        return null;
+                    }
+                    if ("isClosed".equals(name)) {
+                        return false;
+                    }
+                    if ("equals".equals(name)) {
+                        return proxy == args[0];
+                    }
+                    if ("hashCode".equals(name)) {
+                        return System.identityHashCode(proxy);
+                    }
+                    if ("toString".equals(name)) {
+                        return "ProxyStatement";
+                    }
+                    Class<?> returnType = method.getReturnType();
+                    if (returnType == boolean.class) {
+                        return false;
+                    }
+                    if (returnType == int.class) {
+                        return 0;
+                    }
+                    if (returnType == long.class) {
+                        return 0L;
+                    }
+                    return null;
+                });
     }
 
     private void awaitWorkerQuiet() {

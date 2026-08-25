@@ -62,9 +62,11 @@ final class OnlineTimeoutWorkerContext {
         if (guid == null || guid.isBlank()) {
             guid = mdcCopy.get("guid");
         }
-        String evidenceKey = StringUtils.hasText(guid)
-                ? guid.trim()
-                : ExecutionEvidenceKey.fromServiceContext(ctx);
+        // begin()에서 assign 된 키를 우선해 cancel/evidence 와 일치시킨다.
+        String evidenceKey = ExecutionEvidenceKey.fromServiceContext(ctx);
+        if (!StringUtils.hasText(evidenceKey) && StringUtils.hasText(guid)) {
+            evidenceKey = guid.trim();
+        }
         return new OnlineTimeoutWorkerContext(ctx, mdcCopy, guid, evidenceKey, serviceId);
     }
 

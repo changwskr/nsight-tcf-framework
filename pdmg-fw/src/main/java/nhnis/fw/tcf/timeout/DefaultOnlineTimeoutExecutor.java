@@ -4,6 +4,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -32,6 +34,9 @@ import nhnis.fw.tcf.execution.TransactionPolicyResolver;
  *
  * <p>Transaction 경계는 {@link TransactionPolicyResolver} 가 결정하고,
  * {@link TransactionManagerRegistry} 로 Bean 이름을 해석한다.
+ *
+ * <p>JDBC/TX timeout 이 초 단위라 remaining &lt; 1s 에서 예산보다 길어질 수 있는 구간은
+ * deadline 시각의 {@link ActiveJdbcStatementRegistry#cancelAll(String)} 으로 보완한다.
  */
 public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
 
@@ -42,17 +47,23 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
     private final TransactionPolicyResolver policyResolver;
     private final TransactionManagerRegistry transactionManagerRegistry;
     private final OnlineExecutionEvidenceRegistry evidenceRegistry;
+    private final ActiveJdbcStatementRegistry statementRegistry;
+    private final ScheduledExecutorService deadlineCancelScheduler;
 
     public DefaultOnlineTimeoutExecutor(OnlineTimeoutProperties properties,
             ThreadPoolTaskExecutor taskExecutor,
             TransactionPolicyResolver policyResolver,
             TransactionManagerRegistry transactionManagerRegistry,
-            OnlineExecutionEvidenceRegistry evidenceRegistry) {
+            OnlineExecutionEvidenceRegistry evidenceRegistry,
+            ActiveJdbcStatementRegistry statementRegistry,
+            ScheduledExecutorService deadlineCancelScheduler) {
         this.properties = properties;
         this.taskExecutor = taskExecutor;
         this.policyResolver = policyResolver;
         this.transactionManagerRegistry = transactionManagerRegistry;
         this.evidenceRegistry = evidenceRegistry;
+        this.statementRegistry = statementRegistry;
+        this.deadlineCancelScheduler = deadlineCancelScheduler;
     }
 
     @Override
@@ -75,6 +86,7 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
         evidenceRegistry.markQueued(workerContext.getEvidenceKey());
 
         long waitMs = Math.max(1L, deadline.remainingMillis());
+        ScheduledFuture<?> earlyJdbcCancel = scheduleSubSecondJdbcCancel(workerContext, waitMs);
         try {
             T result = future.get(waitMs, TimeUnit.MILLISECONDS);
             if (log.isDebugEnabled()) {
@@ -86,22 +98,20 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
             }
             return result;
         } catch (TimeoutException ex) {
-            boolean cancelled = future.cancel(true);
+            requestWorkerCancel(workerContext, future);
             long elapsed = deadline.elapsedMillis();
-            evidenceRegistry.markCancelRequested(workerContext.getEvidenceKey());
-            log.warn("[ONLINE-TIMEOUT] guid={} serviceId={} timeoutMs={} elapsedMs={} cancelRequested={}",
+            log.warn("[ONLINE-TIMEOUT] guid={} serviceId={} timeoutMs={} elapsedMs={} cancelRequested=true",
                     workerContext.getGuid(),
                     workerContext.getServiceId(),
                     configuredTimeoutMs,
-                    elapsed,
-                    cancelled);
+                    elapsed);
             throw new OnlineTimeoutException(
                     configuredTimeoutMs,
                     elapsed,
                     workerContext.getServiceId(),
                     workerContext.getGuid());
         } catch (InterruptedException ex) {
-            future.cancel(true);
+            requestWorkerCancel(workerContext, future);
             Thread.currentThread().interrupt();
             throw new OnlineTimeoutException(
                     configuredTimeoutMs,
@@ -112,6 +122,57 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
             throw unwrap(ex.getCause());
         } catch (TaskRejectedException ex) {
             throw overload(workerContext);
+        } finally {
+            cancelScheduled(earlyJdbcCancel);
+        }
+    }
+
+    /**
+     * QueryTimeout/TX timeout 최소 1초 때문에 remaining &lt; 1s 이면 SQL이 예산을 넘길 수 있다.
+     * deadline 시각에 Statement.cancel 을 먼저 걸어 ms 정밀도로 보완한다.
+     */
+    private ScheduledFuture<?> scheduleSubSecondJdbcCancel(
+            OnlineTimeoutWorkerContext workerContext, long waitMs) {
+        if (deadlineCancelScheduler == null
+                || !StatementTimeoutResolver.needsJdbcCancelComplement(waitMs)) {
+            return null;
+        }
+        String evidenceKey = workerContext.getEvidenceKey();
+        log.debug("[ONLINE-TIMEOUT][JDBC-CANCEL] schedule sub-second complement guid={} "
+                        + "serviceId={} waitMs={} jdbcFloorSec={}",
+                workerContext.getGuid(),
+                workerContext.getServiceId(),
+                waitMs,
+                StatementTimeoutResolver.toConservativeTimeoutSeconds(waitMs));
+        return deadlineCancelScheduler.schedule(() -> {
+            int cancelled = statementRegistry.cancelAll(evidenceKey);
+            if (cancelled > 0 || log.isDebugEnabled()) {
+                log.warn("[ONLINE-TIMEOUT][JDBC-CANCEL] sub-second complement fired evidenceKey={} "
+                                + "cancelInvoked={}",
+                        evidenceKey, cancelled);
+            }
+        }, waitMs, TimeUnit.MILLISECONDS);
+    }
+
+    private static void cancelScheduled(ScheduledFuture<?> scheduled) {
+        if (scheduled != null) {
+            scheduled.cancel(false);
+        }
+    }
+
+    private void requestWorkerCancel(OnlineTimeoutWorkerContext workerContext, Future<?> future) {
+        String evidenceKey = workerContext.getEvidenceKey();
+        evidenceRegistry.markCancelRequested(evidenceKey);
+        int jdbcCancelled = statementRegistry.cancelAll(evidenceKey);
+        boolean futureCancelled = future.cancel(true);
+        if (log.isDebugEnabled() || jdbcCancelled > 0) {
+            log.warn("[ONLINE-TIMEOUT] cancel dispatched guid={} serviceId={} evidenceKey={} "
+                            + "jdbcCancelInvoked={} futureCancel={}",
+                    workerContext.getGuid(),
+                    workerContext.getServiceId(),
+                    evidenceKey,
+                    jdbcCancelled,
+                    futureCancelled);
         }
     }
 
@@ -119,8 +180,10 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
             ExecutionDeadline deadline, Callable<T> action) throws Exception {
         String evidenceKey = workerContext.getEvidenceKey();
         evidenceRegistry.markWorkerStarted(evidenceKey, Thread.currentThread().threadId());
+        statementRegistry.bind(evidenceKey);
         workerContext.install();
         boolean workerCommitted = false;
+        boolean transactionStarted = false;
         try {
             long remainingMs = deadline.remainingMillis();
             if (remainingMs < properties.getMinStartBudgetMs()) {
@@ -157,6 +220,7 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
                     transactionManagerRegistry.require(policy.transactionManagerBean());
             int transactionTimeoutSeconds = StatementTimeoutResolver.toConservativeTimeoutSeconds(remainingMs);
             evidenceRegistry.markTxStarted(evidenceKey, policy.mode(), transactionTimeoutSeconds);
+            transactionStarted = true;
             TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
             transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
             transactionTemplate.setTimeout(transactionTimeoutSeconds);
@@ -176,22 +240,21 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
             T txResult = transactionTemplate.execute(status -> {
                 ExecutionDeadlineContext.bind(deadline);
                 try {
+                    if (deadline.expired() || Thread.currentThread().isInterrupted()) {
+                        status.setRollbackOnly();
+                        throw newOnlineTimeout(workerContext, timeoutMs, deadline);
+                    }
                     T result = action.call();
                     if (deadline.expired() || Thread.currentThread().isInterrupted()) {
                         status.setRollbackOnly();
-                        long elapsed = deadline.elapsedMillis();
                         if (log.isDebugEnabled()) {
                             log.debug("[ONLINE-TIMEOUT] worker deadline exceeded guid={} serviceId={} timeoutMs={} elapsedMs={}",
                                     workerContext.getGuid(),
                                     workerContext.getServiceId(),
                                     timeoutMs,
-                                    elapsed);
+                                    deadline.elapsedMillis());
                         }
-                        throw new OnlineTimeoutException(
-                                timeoutMs,
-                                elapsed,
-                                workerContext.getServiceId(),
-                                workerContext.getGuid());
+                        throw newOnlineTimeout(workerContext, timeoutMs, deadline);
                     }
                     return result;
                 } catch (OnlineTimeoutException | OnlineOverloadException ex) {
@@ -213,26 +276,35 @@ public class DefaultOnlineTimeoutExecutor implements OnlineTimeoutExecutor {
             if (evidenceKey != null && !evidenceKey.isBlank()) {
                 if (workerCommitted) {
                     evidenceRegistry.markWorkerCommitted(evidenceKey);
-                } else {
+                } else if (transactionStarted) {
                     evidenceRegistry.markWorkerRolledBack(evidenceKey);
                 }
                 evidenceRegistry.markWorkerTerminated(evidenceKey);
             }
+            statementRegistry.unbind();
             workerContext.clear();
         }
+    }
+
+    private static OnlineTimeoutException newOnlineTimeout(
+            OnlineTimeoutWorkerContext workerContext, long timeoutMs, ExecutionDeadline deadline) {
+        return new OnlineTimeoutException(
+                timeoutMs,
+                deadline.elapsedMillis(),
+                workerContext.getServiceId(),
+                workerContext.getGuid());
     }
 
     private <T> T runWithoutTransaction(OnlineTimeoutWorkerContext workerContext, long timeoutMs,
             ExecutionDeadline deadline, Callable<T> action) throws Exception {
         ExecutionDeadlineContext.bind(deadline);
         try {
+            if (deadline.expired() || Thread.currentThread().isInterrupted()) {
+                throw newOnlineTimeout(workerContext, timeoutMs, deadline);
+            }
             T result = action.call();
             if (deadline.expired() || Thread.currentThread().isInterrupted()) {
-                throw new OnlineTimeoutException(
-                        timeoutMs,
-                        deadline.elapsedMillis(),
-                        workerContext.getServiceId(),
-                        workerContext.getGuid());
+                throw newOnlineTimeout(workerContext, timeoutMs, deadline);
             }
             return result;
         } finally {
