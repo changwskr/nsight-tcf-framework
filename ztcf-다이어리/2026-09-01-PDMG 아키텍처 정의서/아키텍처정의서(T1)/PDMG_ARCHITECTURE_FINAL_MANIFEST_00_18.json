@@ -1,0 +1,201 @@
+{
+  "project": "PDMG 전체 아키텍처 정의서",
+  "date": "2026-09-01",
+  "range": "00-18",
+  "status": "WORKING INTEGRATED BASELINE / CONDITIONAL PASS",
+  "final_hg90": "OPEN",
+  "chapter_count": 19,
+  "all_chapter_files_present": true,
+  "all_fences_balanced": true,
+  "total_chapter_lines": 18080,
+  "total_chapter_figures": 601,
+  "integrated_file": "PDMG_ARCHITECTURE_FINAL_INTEGRATED_00_18.md",
+  "integrated_lines": 18297,
+  "integrated_figures": 601,
+  "integrated_fences_balanced": true,
+  "final_index": "00_PDMG_ARCHITECTURE_MASTER_INDEX_완성본.md",
+  "chapters": [
+    {
+      "chapter": 0,
+      "exists": true,
+      "file": "00_PDMG_ARCHITECTURE_MASTER_INDEX.md",
+      "lines": 908,
+      "figures": 21,
+      "fences_balanced": true,
+      "sha256": "1d81984cef88db72da54f7b125e1ebffd076fdd0e1d4df6ac47bfbb44711c258"
+    },
+    {
+      "chapter": 1,
+      "exists": true,
+      "file": "01_PDMG_EXECUTIVE_ARCHITECTURE_상세정의서_v2.md",
+      "lines": 1607,
+      "figures": 36,
+      "fences_balanced": true,
+      "sha256": "b403c2d206035c869b4618b23feccf89b29c9d4553d217d83b22b88f9690a689"
+    },
+    {
+      "chapter": 2,
+      "exists": true,
+      "file": "02_PDMG_SYSTEM_CONTEXT_BOUNDARY_상세정의서_v1.md",
+      "lines": 2018,
+      "figures": 44,
+      "fences_balanced": true,
+      "sha256": "7e84293ad5e8a3722b89e58ed0e9889d933f01312b01c57fb90d7967b93e43a0"
+    },
+    {
+      "chapter": 3,
+      "exists": true,
+      "file": "03_PDMG_APPLICATION_MODULE_ARCHITECTURE_상세정의서_v1.md",
+      "lines": 2408,
+      "figures": 61,
+      "fences_balanced": true,
+      "sha256": "504bd74cca0335dc390881a393424d80f9022dc285a6d232a9fcbfc43aa1a266"
+    },
+    {
+      "chapter": 4,
+      "exists": true,
+      "file": "04_PDMG_LOGICAL_TECHNICAL_ARCHITECTURE_상세정의서_v1.md",
+      "lines": 2616,
+      "figures": 65,
+      "fences_balanced": true,
+      "sha256": "afa6ea69e18e6b90ad45594b939e562f1dc4a1aa58b5a9182e8f82c93f207072"
+    },
+    {
+      "chapter": 5,
+      "exists": true,
+      "file": "05_PDMG_PHYSICAL_INFRASTRUCTURE_상세정의서_v1.md",
+      "lines": 657,
+      "figures": 26,
+      "fences_balanced": true,
+      "sha256": "b66bab9a0ffa19b8e12336355c53903992cb2436640943622afe02788fa8e1a9"
+    },
+    {
+      "chapter": 6,
+      "exists": true,
+      "file": "06_PDMG_INTERFACE_상세정의서_v1.md",
+      "lines": 628,
+      "figures": 28,
+      "fences_balanced": true,
+      "sha256": "311a72b52b505972c32d0d9d8d94f5de5e3b5ccbd72f6399b97af28c644cfb83"
+    },
+    {
+      "chapter": 7,
+      "exists": true,
+      "file": "07_PDMG_DATA_상세정의서_v1.md",
+      "lines": 582,
+      "figures": 26,
+      "fences_balanced": true,
+      "sha256": "6e3e6fc87adf2f9f1fe44a600f748f8e7d6dbcdc723d3a13d626044ed71ed556"
+    },
+    {
+      "chapter": 8,
+      "exists": true,
+      "file": "08_PDMG_FRAMEWORK_MECHANISM_상세정의서_v1.md",
+      "lines": 585,
+      "figures": 26,
+      "fences_balanced": true,
+      "sha256": "17f11d253f0a117f38f89c34c610951094dbf835f9218fd28713e9d74ca07dd6"
+    },
+    {
+      "chapter": 9,
+      "exists": true,
+      "file": "09_PDMG_ONLINE_RUNTIME_상세정의서_v1.md",
+      "lines": 620,
+      "figures": 26,
+      "fences_balanced": true,
+      "sha256": "cbea79945fc874e6378ae7bd9ac709f5e93a82137a3179fec6b7988192444932"
+    },
+    {
+      "chapter": 10,
+      "exists": true,
+      "file": "10_PDMG_TRANSACTION_TIMEOUT_THREAD_DB_상세정의서_v1.md",
+      "lines": 552,
+      "figures": 26,
+      "fences_balanced": true,
+      "sha256": "2ed6c55382275129ddbbd32f9eead5be15f2b1e747290b63c6afbbe7cd083c42"
+    },
+    {
+      "chapter": 11,
+      "exists": true,
+      "file": "11_PDMG_SECURITY_SSO_JWT_SESSION_상세정의서_v1.md",
+      "lines": 589,
+      "figures": 27,
+      "fences_balanced": true,
+      "sha256": "2cebf03067ca5b12244081a92cb3910cc378f6f63918a0b3ee6e2fcfae4d1238"
+    },
+    {
+      "chapter": 12,
+      "exists": true,
+      "file": "12_PDMG_MESSAGE_CONTEXT_ERROR_LOGGING_상세정의서_v1.md",
+      "lines": 590,
+      "figures": 26,
+      "fences_balanced": true,
+      "sha256": "55a3cf8223bc6b9bb70c2794de5002bfd4859c0c94a2cd57ec964eb6bcf3c491"
+    },
+    {
+      "chapter": 13,
+      "exists": true,
+      "file": "13_PDMG_EVENT_CDC_ETL_BATCH_FILE_CACHE_상세정의서_v1.md",
+      "lines": 560,
+      "figures": 25,
+      "fences_balanced": true,
+      "sha256": "fae68f37fd8d62aa947ae1824e27514d9bb319b1ff416eb5c187c6a7b7878564"
+    },
+    {
+      "chapter": 14,
+      "exists": true,
+      "file": "14_PDMG_DEVOPS_OM_OBSERVABILITY_상세정의서_v1.md",
+      "lines": 617,
+      "figures": 27,
+      "fences_balanced": true,
+      "sha256": "6fc722890978cdca3eb26bbe22914c5208ae07d0bf63c61a37afefb19f9677b5"
+    },
+    {
+      "chapter": 15,
+      "exists": true,
+      "file": "15_PDMG_NAMING_CODE_DEVELOPMENT_STANDARD_상세정의서_v1.md",
+      "lines": 613,
+      "figures": 29,
+      "fences_balanced": true,
+      "sha256": "8b4e3c2fe9c6c76e631b0253d6c62b7be0b69a4b3777a8cc385ff65c90ac39e0"
+    },
+    {
+      "chapter": 16,
+      "exists": true,
+      "file": "16_PDMG_CAPACITY_PERFORMANCE_HA_DR_상세정의서_v1.md",
+      "lines": 655,
+      "figures": 29,
+      "fences_balanced": true,
+      "sha256": "4327a67f2d1005e4cdfb8a87f2db937c5d7f5fec50558aa398067c8f2a22aba1"
+    },
+    {
+      "chapter": 17,
+      "exists": true,
+      "file": "17_PDMG_TRACEABILITY_PASS_GAP_ADR_상세정의서_v1.md",
+      "lines": 630,
+      "figures": 27,
+      "fences_balanced": true,
+      "sha256": "a611e6569391e79885972798495c5f1ecf570f5594152b69c2820484a2fea314"
+    },
+    {
+      "chapter": 18,
+      "exists": true,
+      "file": "18_PDMG_INTEGRATED_ARCHITECTURE_BASELINE_상세정의서_v1.md",
+      "lines": 645,
+      "figures": 26,
+      "fences_balanced": true,
+      "sha256": "695c40f3f31a9f0ff66c900d829b8d2e647d3920a88c14c2a3dc40bb57ceef53"
+    }
+  ],
+  "overall_architecture_definition": "CONDITIONAL PASS",
+  "current_pdmg_conformance": "PARTIAL / GAP",
+  "runtime_evidence_coverage": "MEDIUM",
+  "critical_gaps": [
+    "JWT RS256 issuer vs HMAC verifier",
+    "JWT key lifecycle/multi-instance consistency",
+    "Trusted principal ↔ business identity binding",
+    "Artifact/deployment → Host/JVM/WAR mapping",
+    "Runtime evidence automation / HG90 gate",
+    "Capacity/RTO/RPO final runtime evidence"
+  ]
+}

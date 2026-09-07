@@ -1,0 +1,36 @@
+{
+  "edition": "FINAL V6",
+  "date": "2026-09-01",
+  "main_book": "NSIGHT_PDMG_ARCHITECTURE_BOOK_FINAL_V6.md",
+  "appendices": {
+    "A": "APPENDIX_A_DETAILED_FINAL_V6.md",
+    "B": "APPENDIX_B_DETAILED_FINAL_V6.md",
+    "C": "APPENDIX_C_DETAILED_FINAL_V6.md",
+    "D": "APPENDIX_D_DETAILED_FINAL_V6.md",
+    "E": "APPENDIX_E_DETAILED_FINAL_V6.md",
+    "F": "APPENDIX_F_DETAILED_FINAL_V6.md",
+    "G": "APPENDIX_G_DETAILED_FINAL_V6.md",
+    "H": "APPENDIX_H_DETAILED_FINAL_V6.md",
+    "I": "APPENDIX_I_DETAILED_FINAL_V6.md",
+    "J": "APPENDIX_J_DETAILED_FINAL_V6.md"
+  },
+  "registry_workbook": "NSIGHT_PDMG_ARCHITECTURE_REGISTRY_A-J_FINAL_V6.xlsx",
+  "record_counts": {
+    "serviceId": 13,
+    "applicationCode": 50,
+    "packageClass": 32,
+    "mapper": 4,
+    "representativeSqlId": 6,
+    "hw": 12,
+    "sw": 23,
+    "interface": 11,
+    "config": 18,
+    "adr": 40,
+    "gap": 99,
+    "evidence": 25
+  },
+  "architecture_definition": "CONDITIONAL PASS",
+  "current_pdmg": "PARTIAL / GAP",
+  "hg90": "OPEN",
+  "unknowns_not_fabricated": true
+}

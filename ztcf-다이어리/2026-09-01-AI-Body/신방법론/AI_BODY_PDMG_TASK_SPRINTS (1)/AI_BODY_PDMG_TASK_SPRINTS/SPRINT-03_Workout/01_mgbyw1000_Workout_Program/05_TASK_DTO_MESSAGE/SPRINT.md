@@ -1,0 +1,144 @@
+# DTO / 전문 / 인터페이스 계약 설계
+# mgbyw1000 Workout Program
+
+- 실행 순서: 05 / 12
+- 상태: READY
+- 원칙: 이 문서를 한 번에 하나씩 실행한다.
+
+## 대상 Program
+
+| 항목 | 값 |
+|---|---|
+| Program ID | `mgbyw1000` |
+| 업무 | Workout |
+| 기능 | Workout Program |
+| Java Package Root | `nhnis.mg.by.w` |
+| UI | `static/mgbyw1000/index.html` |
+| 선행 Program | mgbyu1100, mgbya1100 |
+
+### 대상 Service ID
+
+- `mgbyw1000S0` : Workout Program 조회
+- `mgbyw1000C0` : Workout Program 등록
+- `mgbyw1000U0` : Workout Program 수정
+- `mgbyw1000D0` : Workout Program 삭제/종료
+
+### 핵심 논리 Entity
+
+- `WorkoutProgram`
+- `WorkoutDay`
+- `WorkoutExercise`
+
+### Rule / Algorithm 후보
+
+- `WorkoutProgramValidationRule`
+
+
+## 기준 자료
+
+이 TASK는 다음 기준을 우선 적용한다.
+
+1. `00_전체설계_마스터_인덱스.md`
+2. `01_요구사항_기준선.md`
+3. `02_PDMG_적용_전체아키텍처.md`
+4. `03_BY_업무코드_및_네이밍_표준.md`
+5. `04_Backend_패키지_및_거래구조.md`
+6. `05_pdmg-ui_화면_아키텍처.md`
+7. `06_Program_Service_Registry_초안.md`
+8. `07_데이터_아키텍처.md`
+9. `08_Rule_Algorithm_설계.md`
+10. `09_AI_Coaching_아키텍처.md`
+11. `10_보안_비기능_운영_설계.md`
+12. `Java_네이밍_및_코딩_표준서.md`
+13. 실제 PDMG 소스 (`pdmg-fw`, `pdmg-service`, `pdmg-ui`, `pdmg-jwt`, `pdmg-om`)
+
+충돌 시 **실제 PDMG 소스와 승인된 PDMG AS-IS 표준을 우선**한다.
+
+
+## 고정 PDMG 구현 규칙
+
+```text
+pdmg-ui
+  → ServiceId + hdr_nhnis + dto
+  → pdmg-fw / TCF
+  → Handler
+  → Facade
+  → Service
+  → Rule / Algorithm
+  → DAO
+  → MyBatis Mapper
+  → DB
+```
+
+- Java 업무 Root: `nhnis.mg.by`
+- 업무 Program Type: Program ID를 그대로 접두로 사용하며 **소문자 시작**
+- Facade package: `application.facade`
+- Transaction Boundary: Facade
+- Transaction Manager: `rdwTransactionManager`
+- DAO: PDMG MyBatis Mapper Interface 패턴
+- Mapper: `[ProgramId]-ORA.xml`
+- `DAO FQCN = Mapper namespace`
+- `DAO Method = Mapper Statement ID`
+- UI: `static/{ProgramId}/index.html`
+- 공통 UI: `static/_shared/*` 우선 재사용
+- Protocol: `ServiceId + hdr_nhnis + dto`
+- 일반적인 REST/JPA/React 관례를 임의로 도입하지 않는다.
+
+
+## 목표
+
+Service ID별 입력/출력 DTO와 `hdr_nhnis + dto` 전문 계약을 확정한다.
+
+## 수행 TASK
+
+1. 각 Service ID의 DTOin / DTOout을 작성한다.
+2. 필드는 요구사항과 DB/Rule 입력을 기준으로 최소화한다.
+3. 인증 Context에서 얻을 값과 사용자가 보내야 할 값을 분리한다.
+4. 사용자 `userId`를 Client가 임의 조작하게 두지 않는 방식을 검토한다.
+5. Validation 규칙을 정의한다.
+6. 날짜/시간/단위/코드값을 명시한다.
+7. Null/Optional/빈 목록 규칙을 명시한다.
+8. 목록 응답이 있으면 DTOSub 구조를 정의한다.
+9. 요청/응답 샘플 JSON을 작성한다.
+
+## 산출물
+
+`artifacts/05_DTO_MESSAGE_SPEC.md`
+
+필수 항목:
+
+```text
+Service ID
+DTO Class
+Field
+Type
+Required
+Validation
+Source
+Description
+Sensitive
+Example
+```
+
+
+## 완료 시 반드시 남길 것
+
+- 결정사항
+- 미결사항(TBD)
+- 변경된 Registry
+- 생성/수정한 파일 목록
+- 테스트 결과
+- 다음 TASK가 알아야 할 입력값
+
+## 완료 게이트
+
+- [ ] 이 TASK의 산출물이 파일 또는 코드로 존재한다.
+- [ ] FACT / BASELINE / PROPOSED / TBD가 구분되어 있다.
+- [ ] PDMG 표준과 충돌하는 임의 설계를 하지 않았다.
+- [ ] 다음 TASK가 추가 질문 없이 착수할 정도로 입력이 정리되었다.
+
+## 다음 실행
+
+완료 후 다음 파일을 피딩한다.
+
+`06_TASK_BACKEND_DESIGN/SPRINT.md`

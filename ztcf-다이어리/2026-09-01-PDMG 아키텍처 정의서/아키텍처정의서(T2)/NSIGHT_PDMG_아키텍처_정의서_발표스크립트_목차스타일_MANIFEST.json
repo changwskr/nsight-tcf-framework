@@ -1,0 +1,15 @@
+{
+  "document": "NSIGHT_PDMG_아키텍처_정의서_발표스크립트_목차스타일_v1.md",
+  "date": "2026-09-01",
+  "source_toc": "상호금융_정보계_아키텍처_발표스크립트_15분_CHATGPT (최종본).docx",
+  "source_toc_chapters": 13,
+  "generated_chapters": 13,
+  "lines": 1020,
+  "figures": 13,
+  "fences_balanced": true,
+  "restructure_basis": "PDMG architecture definition 00-18",
+  "overall_architecture_definition": "CONDITIONAL PASS",
+  "current_pdmg_conformance": "PARTIAL / GAP",
+  "final_hg90": "OPEN",
+  "sha256": "4186e84a231f1a88d2d05a195b884411f9edcfd839fe1fe814090a4d76f1b2e3"
+}

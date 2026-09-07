@@ -1,0 +1,419 @@
+# NSIGHT PDMG 아키텍처 정의서
+# 제9장. 런타임 서비스
+## Story: “정적인 Architecture를 거래 한 건의 시간축으로 펼쳐본다”
+## STORY-FIRST / TEXT-ARCHITECTURE-FIRST / TOP-DOWN → DRILL-DOWN / EVIDENCE-FIRST
+
+> 최종 문서 Edition: `FINAL V3 — Architecture Story Book + Evidence Appendices`  
+> 기준일: `2026-09-01`  
+> PDMG = Current / Source / Config / Runtime  
+> NSIGHT = Target / Alignment / Strategy Reference  
+> 문서 상태: **FINAL DEFINITION** / Current Implementation 상태는 장별 PASS·GAP 판정을 따름
+
+---
+
+# 0. Opening Script
+
+8장에서 실행규칙을 봤다면, 9장에서는 그 규칙이 실제 거래 한 건에서 어떤 순서로 움직이는지 봅니다.
+
+이 장에서는 박스의 위치보다 **시간**이 중요합니다. Request Thread가 언제 Worker에게 일을 넘기고, Transaction이 언제 시작되고, DB가 늦어졌을 때 어떤 현상이 위로 전파되는지 시간축으로 펼칩니다.
+
+## FIG-09-01. 장 전체 Architecture
+
+```text
+════════ Request Thread ════════
+HTTP
+ ↓
+Filter
+ ↓
+Security
+ ↓
+MVC / Controller
+ ↓
+Future.get(timeout)
+        │ submit
+        ▼
+════════ Worker Thread ═════════
+Context Install
+ ↓
+Transaction BEGIN
+ ↓
+Dispatcher / Handler
+ ↓
+Facade / Service / DAO
+ ↓
+DB
+ ↓
+Deadline
+ ↓
+Commit / Rollback
+        │
+        ▼
+Response / Evidence
+```
+
+이제 이 전체 그림을 위에서 아래로 해부하겠습니다. 이번 버전에서는 그림의 박스와 화살표를 직접 설명하고, 반복적인 형식문장은 최소화합니다. 각 Drill-down은 상위 그림의 어느 부분을 확대하는지 명확하게 연결합니다.
+
+## FIG-09-02. Drill-down Route
+
+```text
+L0 전체 Story
+ ↓
+L1 책임 / Boundary
+ ↓
+L2 Logical / Application / Platform
+ ↓
+L3 Component / Contract
+ ↓
+L4 Runtime / Failure / Security
+ ↓
+L5 Source / Config / Deployment / Evidence
+```
+
+---
+
+# 1. Request Thread 역할
+
+## FIG-09-03. Request Thread 역할
+
+```text
+Request Thread
+├─ Filter/Security/MVC
+├─ Controller
+├─ Worker submit
+├─ Future wait
+└─ HTTP Response
+```
+
+Request Thread는 HTTP와 MVC 수명을 담당합니다.
+
+Business Transaction 전체를 직접 수행하지 않고 Worker에게 위임하고 완료를 기다립니다. 이 분리가 Timeout의 의미를 복잡하게 만드는 동시에 Request Thread 보호장치가 됩니다.
+
+그래서 Request Thread의 종료와 Business 작업 종료를 같은 것으로 보면 안 됩니다.
+
+여기까지가 `Request Thread 역할`의 역할입니다. 이제 이 구조를 더 내려가 **Worker Thread 역할**에서 다음 경계와 실행책임을 보겠습니다.
+
+---
+
+# 2. Worker Thread 역할
+
+## FIG-09-04. Worker Thread 역할
+
+```text
+pdmg-online-N
+├─ Context Install
+├─ Transaction BEGIN
+├─ Dispatch
+├─ Business
+├─ DB
+├─ Deadline
+└─ Commit/Rollback
+```
+
+Worker는 Business Execution의 실제 주체입니다.
+
+Request Thread에서 캡처한 Context/MDC를 설치하고 Transaction을 시작한 뒤, Handler/Facade/Service/DAO를 실행합니다.
+
+작업이 끝나면 반드시 Worker Context를 clear해야 합니다.
+
+여기까지가 `Worker Thread 역할`의 역할입니다. 이제 이 구조를 더 내려가 **ServiceId Runtime Routing**에서 다음 경계와 실행책임을 보겠습니다.
+
+---
+
+# 3. ServiceId Runtime Routing
+
+## FIG-09-05. ServiceId Runtime Routing
+
+```text
+Request
+ ↓
+ServiceId
+ ↓
+Registry
+ ↓
+Handler
+ ↓
+Facade Method
+ ↓
+Business Use Case
+```
+
+Runtime에서 ServiceId는 단순 Header가 아니라 Routing Key입니다.
+
+잘못된 ServiceId는 잘못된 Handler로 연결되므로 Registry uniqueness와 Context/Header/Path 일치검증이 중요합니다.
+
+이 흐름은 Naming/Traceability 장과 연결됩니다.
+
+여기까지가 `ServiceId Runtime Routing`의 역할입니다. 이제 이 구조를 더 내려가 **DB Runtime**에서 다음 경계와 실행책임을 보겠습니다.
+
+---
+
+# 4. DB Runtime
+
+## FIG-09-06. DB Runtime
+
+```text
+Worker
+ ↓
+Transaction
+ ↓
+Hikari Connection
+ ↓
+JDBC Statement
+ ↓
+DB Session
+ ↓
+SQL / Wait / Result
+```
+
+DB에 도달하기까지도 여러 Resource Boundary가 있습니다.
+
+Worker가 있다고 Connection이 있는 것은 아니며, Connection이 있다고 DB가 즉시 응답하는 것도 아닙니다.
+
+성능문제는 이 체인을 따라 역으로 전파됩니다.
+
+여기까지가 `DB Runtime`의 역할입니다. 이제 이 구조를 더 내려가 **Timeout 504**에서 다음 경계와 실행책임을 보겠습니다.
+
+---
+
+# 5. Timeout 504
+
+## FIG-09-07. Timeout 504
+
+```text
+Future.get(5000ms)
+ ├─ complete → success
+ └─ timeout
+      ↓
+   cancel(true)
+      ↓
+   HTTP 504
+
+Worker may continue
+```
+
+504는 Client에게 보이는 결과일 뿐 내부작업의 종료증명이 아닙니다.
+
+`cancel(true)`가 Interrupt를 전달해도 JDBC Driver나 DB가 즉시 취소되는지는 별도 Integration Test가 필요합니다.
+
+그래서 Query Timeout과 Transaction Deadline을 계층적으로 설계해야 합니다.
+
+여기까지가 `Timeout 504`의 역할입니다. 이제 이 구조를 더 내려가 **Overload 503**에서 다음 경계와 실행책임을 보겠습니다.
+
+---
+
+# 6. Overload 503
+
+## FIG-09-08. Overload 503
+
+```text
+Worker 20
+ ↓
+Queue 100
+ ↓
+Full
+ ↓
+Reject
+ ↓
+OnlineOverloadException
+ ↓
+HTTP 503
+```
+
+Overload는 느린 응답과 다르게 **수용할 수 없는 부하를 빠르게 거절하는 정책**입니다.
+
+Queue를 무한히 키우면 Timeout만 늘어납니다. 제한된 Worker/Queue와 503은 Backpressure의 일부입니다.
+
+Target Capacity는 부하시험으로 재산정해야 합니다.
+
+여기까지가 `Overload 503`의 역할입니다. 이제 이 구조를 더 내려가 **Saturation Cascade**에서 다음 경계와 실행책임을 보겠습니다.
+
+---
+
+# 7. Saturation Cascade
+
+## FIG-09-09. Saturation Cascade
+
+```text
+DB Slow
+ ↓
+Hikari Pending
+ ↓
+Worker Occupied
+ ↓
+Queue Increase
+ ↓
+Request Wait
+ ↓
+504 / 503
+```
+
+이 그림이 Runtime 장의 핵심 Failure Story입니다.
+
+DB가 느리면 DB만 느린 것이 아니라 Connection, Worker, Queue, Request Thread로 영향이 올라옵니다.
+
+따라서 Capacity는 Tomcat `maxThreads` 하나로 결정할 수 없습니다.
+
+여기까지가 `Saturation Cascade`의 역할입니다. 이제 이 구조를 더 내려가 **Runtime Evidence**에서 다음 경계와 실행책임을 보겠습니다.
+
+---
+
+# 8. Runtime Evidence
+
+## FIG-09-10. Runtime Evidence
+
+```text
+GUID
++ ServiceId
++ Thread
++ SqlId
++ ErrorCode
++ elapsed
++ deploymentId
++ host/jvm
+ ↓
+Evidence
+```
+
+Runtime을 설계했다면 마지막에는 증적이 남아야 합니다.
+
+현재 GUID/ServiceId/MDC/ImageLog는 강한 기반입니다. 여기에 DeploymentId, Host/JVM, SqlId를 연결하면 Source부터 Runtime까지 추적할 수 있습니다.
+
+이 연결이 자동화되어야 HG90 Gate가 실제로 동작합니다.
+
+---
+
+# 정상패턴과 금지패턴
+
+## FIG-09-11. Normal Pattern
+
+```text
+Request→Worker→TX→DB→Response/Evidence
+```
+
+정상패턴은 각 영역이 자신의 책임을 유지하면서 명확한 Contract와 Runtime Boundary를 통해 연결되는 구조입니다. 변경·장애·보안·운영 책임이 이 경계를 따라 추적될 수 있어야 합니다.
+
+## FIG-09-12. Forbidden Pattern
+
+```text
+504=Worker 종료 / Worker=DB Session
+```
+
+금지패턴은 기술적으로 불가능해서가 아니라 Architecture의 책임과 Evidence Chain을 무너뜨리기 때문에 제한합니다. 예외가 필요하면 묵시적으로 허용하지 않고 ADR와 Test Evidence로 승인합니다.
+
+---
+
+# Architecture Decision
+
+## FIG-09-13. 주안과 대안
+
+```text
+[주안]
+Request/Worker 분리 + 계층형 Timeout
+
+        VS
+
+[대안]
+Request Thread 단일 실행
+```
+
+이번 장의 주안은 **Request/Worker 분리 + 계층형 Timeout**입니다. 이 방향은 현재 확인된 PDMG 구조와 NSIGHT Target을 연결하면서 책임·운영·Evidence를 가장 일관되게 유지할 수 있는 선택입니다.
+
+대안인 **Request Thread 단일 실행**도 특정 조건에서는 사용할 수 있습니다. 다만 대안을 선택하려면 주안보다 나은 성능·가용성·비용 또는 운영효과가 PoC/Runtime Test로 확인되어야 하고, 그 결과를 ADR로 남겨야 합니다.
+
+| 평가축 | 주안 | 대안 |
+|---|---|---|
+| 책임/경계 | 명확 | 추가 보완 필요 |
+| Current PDMG 정합 | 높음 | 변경범위 가능 |
+| 운영/장애분석 | Trace 용이 | 복잡도 증가 가능 |
+| 승인조건 | 기본 Rule/Test | 별도 ADR + Evidence |
+
+---
+
+# Current GAP / PASS
+
+## FIG-09-14. Current GAP
+
+```text
+Current
+│
+├─ query timeout
+├─ jdbc cancel evidence
+├─ late worker
+├─ identity binding
+└─ deployment correlation
+```
+
+- `[GAP/OPEN]` query timeout
+- `[GAP/OPEN]` jdbc cancel evidence
+- `[GAP/OPEN]` late worker
+- `[GAP/OPEN]` identity binding
+- `[GAP/OPEN]` deployment correlation
+
+## FIG-09-15. Architecture Assessment
+
+```text
+Architecture Definition
+ ↓
+PASS
+
+Current PDMG Conformance
+ ↓
+PARTIAL / CONDITIONAL
+
+Runtime Evidence
+ ↓
+HIGH-MEDIUM
+
+Architecture PASS
+ ≠
+Implementation PASS
+```
+
+Architecture가 잘 정의되었다는 것과 현재 구현이 그 정의를 지킨다는 것은 별도 판단입니다. 이 문서는 둘을 분리해 평가하며, `[OPEN]`과 `[UNKNOWN]`을 임의로 채우지 않습니다.
+
+---
+
+# Evidence Card
+
+## FIG-09-16. Evidence Chain
+
+```text
+Architecture Rule
+ ↓
+Source / Config
+ ↓
+Build / Artifact
+ ↓
+Deployment
+ ↓
+ServiceId / GUID
+ ↓
+Metric / Log / Trace / Test
+ ↓
+Runtime Evidence
+ ↓
+PASS / GAP / ADR
+```
+
+본문에서는 Story와 Architecture 설명을 우선하고, Evidence는 이 카드에서 정리합니다. 앞으로 자동화 단계에서는 이 Chain을 Manifest/Registry로 기계적으로 생성하는 것이 목표입니다.
+
+---
+
+# Chapter Closing Script
+
+## FIG-09-17. 다음 장 Handoff
+
+```text
+런타임 서비스
+ ↓
+정적인 Architecture를 거래 한 건의 시간축으로 펼쳐본다
+ ↓
+남은 질문
+"RDW는 실시간을 지키고 ADW는 분석을 극대화한다"
+ ↓
+데이터플랫폼
+```
+
+여기까지가 **런타임 서비스**입니다. 이 장에서 중요한 것은 개별 기술을 많이 보여준 것이 아니라, 전체 그림을 시작점으로 책임과 Runtime을 하나씩 내려가며 설명했다는 점입니다.
+
+이제 자연스럽게 다음 질문이 생깁니다. **RDW는 실시간을 지키고 ADW는 분석을 극대화한다**. 그 질문이 다음 단계인 **데이터플랫폼**의 출발점입니다.

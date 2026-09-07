@@ -1,0 +1,40 @@
+{
+  "appendix": "F",
+  "title": "NAMING DEVELOPMENT STANDARD",
+  "date": "2026-08-31",
+  "file": "NSIGHT_PDMG_아키텍처_정의서_별첨_F_NAMING_DEVELOPMENT_STANDARD_VISUAL_FIRST.md",
+  "lines": 3641,
+  "figures_text_architecture": 118,
+  "diagramless_numbered_sections": 0,
+  "fences_balanced": true,
+  "sha256": "355882843bf46b69e4ad4f8d60fabf614507de8f43cb9bbf3532cd4587c825b4",
+  "as_is_reference": {
+    "program_id_example": "mgcoa9001",
+    "program_id_length": 9,
+    "service_id_example": "mgcoa9001S0",
+    "service_id_length": 11,
+    "java_package": "nhnis.mg.co.a",
+    "mapper_path": "rdw.mg.co.a/",
+    "handler_pattern": "<programId>Handler",
+    "facade_pattern": "<programId>Facade",
+    "service_pattern": "<programId>Service",
+    "dao_pattern": "<programId>DAO",
+    "dto_pattern": "<serviceId>DTOin/out"
+  },
+  "open_or_proposed": [
+    "Enterprise DB table/column naming",
+    "InterfaceId exact format",
+    "Event/topic exact format",
+    "File naming exact format",
+    "Artifact/DeploymentId exact format",
+    "Hostname/VM/JVM final enterprise format",
+    "Metric/Trace semantic field standard"
+  ],
+  "related_appendices": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "NSIGHT_PDMG_아키텍처정의서_STORY_TEXT_TOPDOWN_DRILLDOWN_마스터프롬프트_v1.md",
+  "toc": "NSIGHT_PDMG_아키텍처정의서_STORY_TEXT_TOPDOWN_DRILLDOWN_상세목차_v1.md",
+  "date": "2026-09-01",
+  "basis": [
+    "상호금융_정보계_아키텍처_발표스크립트_15분_CHATGPT (최종본).docx",
+    "PDMG_전체_아키텍처_정의서_작성_마스터프롬프트_VISUAL_FIRST_TOPDOWN_DRILLDOWN.md",
+    "NSIGHT_PDMG_아키텍처_정의서_발표스크립트_목차스타일_상세확장본_v2.md"
+  ],
+  "style": "Presentation Script Story + TEXT Architecture + Top-down Drill-down",
+  "chapters": 13,
+  "prompt_lines": 1870,
+  "toc_lines": 377,
+  "prompt_fences_balanced": true,
+  "toc_fences_balanced": true,
+  "prompt_sha256": "2e37de3c87c8dfe12b0467e3ff524b6fe16434c576fc981cae785c6e39445764",
+  "toc_sha256": "e80fd5a0b7862150f2bd7fa9594654840a9f127b2e6eda1402219ae130c27394"
+}

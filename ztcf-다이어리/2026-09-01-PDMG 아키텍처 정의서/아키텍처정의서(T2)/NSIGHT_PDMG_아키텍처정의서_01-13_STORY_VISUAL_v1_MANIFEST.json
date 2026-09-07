@@ -1,0 +1,121 @@
+{
+  "document_set": "NSIGHT PDMG Architecture Story Visual 01-13",
+  "date": "2026-09-01",
+  "chapter_count": 13,
+  "all_present": true,
+  "all_fences_balanced": true,
+  "total_lines": 6816,
+  "total_figures": 272,
+  "integrated_file": "NSIGHT_PDMG_아키텍처정의서_01-13_STORY_VISUAL_통합본_v1.md",
+  "integrated_lines": 6945,
+  "integrated_fences_balanced": true,
+  "chapters": [
+    {
+      "chapter": 1,
+      "file": "01_NSIGHT_PDMG_아키텍처정의서_왜_다시_짓는가_STORY_VISUAL_v1.md",
+      "lines": 1797,
+      "figures": 40,
+      "fences_balanced": true,
+      "sha256": "0a266a5d1fed95dd57a0024f8c6a7427805606927c7f919647d5a7972928ee30"
+    },
+    {
+      "chapter": 2,
+      "file": "02_NSIGHT_PDMG_아키텍처정의서_정보계_패러다임의_전환_STORY_VISUAL_v1.md",
+      "lines": 442,
+      "figures": 19,
+      "fences_balanced": true,
+      "sha256": "7e574e2b8e6d0a59f9bb54349d21f2a3c9afde07cc3750ae26e3513cf5ed69b2"
+    },
+    {
+      "chapter": 3,
+      "file": "03_NSIGHT_PDMG_아키텍처정의서_아키텍처_6단계_수립_방법론_STORY_VISUAL_v1.md",
+      "lines": 417,
+      "figures": 19,
+      "fences_balanced": true,
+      "sha256": "d2b814f3bbc6441ad2f6fde15620d9880c439a5d08e91881fbf43b5593177478"
+    },
+    {
+      "chapter": 4,
+      "file": "04_NSIGHT_PDMG_아키텍처정의서_BIG_PICTURE_STORY_VISUAL_v1.md",
+      "lines": 407,
+      "figures": 19,
+      "fences_balanced": true,
+      "sha256": "a0f3bf652db1c8cfc739881c71e725f86fbc0002c587dc369901c8fd0dd38df7"
+    },
+    {
+      "chapter": 5,
+      "file": "05_NSIGHT_PDMG_아키텍처정의서_논리_아키텍처_STORY_VISUAL_v1.md",
+      "lines": 399,
+      "figures": 19,
+      "fences_balanced": true,
+      "sha256": "101adddee8ece7002602d0d11485e1426d2221a7c881128e38ef65cf00277c4d"
+    },
+    {
+      "chapter": 6,
+      "file": "06_NSIGHT_PDMG_아키텍처정의서_물리_아키텍처_STORY_VISUAL_v1.md",
+      "lines": 422,
+      "figures": 19,
+      "fences_balanced": true,
+      "sha256": "525bd024f184903310c4a873ab58cb84e8b50951c4b444ca02175886bbd65dbb"
+    },
+    {
+      "chapter": 7,
+      "file": "07_NSIGHT_PDMG_아키텍처정의서_DR_센터_활용_전략_STORY_VISUAL_v1.md",
+      "lines": 396,
+      "figures": 19,
+      "fences_balanced": true,
+      "sha256": "e2453de5a581e4d2e00b66a5a94022794fb40979424bc92616431a4d81ffb3fe"
+    },
+    {
+      "chapter": 8,
+      "file": "08_NSIGHT_PDMG_아키텍처정의서_메커니즘_STORY_VISUAL_v1.md",
+      "lines": 441,
+      "figures": 20,
+      "fences_balanced": true,
+      "sha256": "6de1b895f764558d81a188822cc60239f2fe14190dcaec7905e0d0977a645605"
+    },
+    {
+      "chapter": 9,
+      "file": "09_NSIGHT_PDMG_아키텍처정의서_런타임_서비스_STORY_VISUAL_v1.md",
+      "lines": 435,
+      "figures": 20,
+      "fences_balanced": true,
+      "sha256": "7907261a654a043f1bb894de436f5fea090b24c728d64c8a6ff533da9771398a"
+    },
+    {
+      "chapter": 10,
+      "file": "10_NSIGHT_PDMG_아키텍처정의서_데이터플랫폼_STORY_VISUAL_v1.md",
+      "lines": 439,
+      "figures": 20,
+      "fences_balanced": true,
+      "sha256": "8301ee64f58e3fb0551b0879a1a69f59c793f1f620725f350790d7ae172dd29d"
+    },
+    {
+      "chapter": 11,
+      "file": "11_NSIGHT_PDMG_아키텍처정의서_마케팅플랫폼_STORY_VISUAL_v1.md",
+      "lines": 390,
+      "figures": 19,
+      "fences_balanced": true,
+      "sha256": "7218daf90896dae718c0ef09f0c8bae0573952bb4aa068c47808e65dc7eff8d5"
+    },
+    {
+      "chapter": 12,
+      "file": "12_NSIGHT_PDMG_아키텍처정의서_BI_포탈_STORY_VISUAL_v1.md",
+      "lines": 389,
+      "figures": 19,
+      "fences_balanced": true,
+      "sha256": "faa4ac10b8cfd50c88a31ef65d93e726515cb79ea93549856b261c1c1b62bfb4"
+    },
+    {
+      "chapter": 13,
+      "file": "13_NSIGHT_PDMG_아키텍처정의서_표준화와_10년_지속가능성_STORY_VISUAL_v1.md",
+      "lines": 442,
+      "figures": 20,
+      "fences_balanced": true,
+      "sha256": "cb8d2ff8cd043a35969de9cc30beb81259e805c333bc470f2276280a4a17aefc"
+    }
+  ],
+  "overall_architecture_definition": "CONDITIONAL PASS",
+  "current_pdmg_conformance": "PARTIAL / GAP",
+  "final_hg90": "OPEN"
+}

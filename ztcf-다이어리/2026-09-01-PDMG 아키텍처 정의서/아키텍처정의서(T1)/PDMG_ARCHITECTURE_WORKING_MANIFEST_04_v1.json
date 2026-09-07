@@ -1,0 +1,33 @@
+{
+  "project": "PDMG Architecture Definition",
+  "chapter": "04",
+  "title": "PDMG LOGICAL TECHNICAL ARCHITECTURE",
+  "version": "v1",
+  "date": "2026-09-01",
+  "status": "WORKING / ARCHITECTURE PASS",
+  "file": "04_PDMG_LOGICAL_TECHNICAL_ARCHITECTURE_상세정의서_v1.md",
+  "lines": 2616,
+  "figures_text_architecture": 65,
+  "diagramless_numbered_sections": 0,
+  "fences_balanced": true,
+  "sha256": "afa6ea69e18e6b90ad45594b939e562f1dc4a1aa58b5a9182e8f82c93f207072",
+  "architecture_definition": "PASS",
+  "current_pdmg_conformance": "PARTIAL / CONDITIONAL",
+  "runtime_evidence_coverage": "MEDIUM",
+  "logical_nodes": [
+    "LTN-PD-01 UI Delivery",
+    "LTN-PD-02 Authentication",
+    "LTN-PD-03 Application Runtime",
+    "LTN-PD-04 Data Service",
+    "LTN-PD-05 Integration [Conditional]",
+    "LTN-PD-06 Operations [Open]"
+  ],
+  "critical_gaps": [
+    "JWT runtime issuer/verifier/key consistency",
+    "Logical Node to Physical Host/VM/JVM/WAR mapping",
+    "PDMG external integration inventory",
+    "pdmg-om current technical role",
+    "RDW/ADW actual datasource mapping"
+  ],
+  "next_chapter": "05_PDMG_PHYSICAL_INFRASTRUCTURE_ARCHITECTURE.md"
+}

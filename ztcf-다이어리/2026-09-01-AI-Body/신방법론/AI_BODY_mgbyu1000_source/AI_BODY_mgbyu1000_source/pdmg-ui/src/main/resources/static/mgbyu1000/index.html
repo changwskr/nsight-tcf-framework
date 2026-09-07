@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ko"
+      data-program-id="mgbyu1000"
+      data-default-transaction-id="mgbyu1000S0">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>내 프로필</title>
+  <script src="/_shared/ui-context.js"></script>
+  <link rel="stylesheet" href="/_shared/online.css">
+  <style>
+    .profile-shell { max-width: 720px; margin: 0 auto; padding: 20px 16px 40px; }
+    .profile-card { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 18px; }
+    .profile-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+    .profile-field { display: grid; gap: 6px; }
+    .profile-field input { min-height: 44px; padding: 8px 10px; }
+    .profile-actions { display: flex; gap: 8px; margin-top: 18px; }
+    .profile-actions button { min-height: 44px; flex: 1; }
+    .profile-status { min-height: 24px; margin: 10px 0 14px; }
+    .profile-empty { padding: 20px 0; }
+    [hidden] { display: none !important; }
+    @media (min-width: 720px) {
+      .profile-grid { grid-template-columns: 1fr 1fr; }
+      .profile-field--wide { grid-column: 1 / -1; }
+      .profile-actions { justify-content: flex-end; }
+      .profile-actions button { flex: 0 0 auto; min-width: 120px; }
+    }
+  </style>
+</head>
+<body class="pdmg-page">
+<main id="profilePage" class="profile-shell">
+  <header>
+    <h1>내 프로필</h1>
+    <p>코칭의 기본 정보를 관리합니다.</p>
+  </header>
+
+  <section id="profileStatus"
+           class="profile-status"
+           role="status"
+           aria-live="polite"></section>
+
+  <section id="emptyState" class="profile-card profile-empty" hidden>
+    <h2>아직 프로필이 없습니다.</h2>
+    <p>운동 경력과 활동 수준을 등록하면 코칭을 개인화할 수 있습니다.</p>
+    <button id="createProfileButton" type="button">프로필 만들기</button>
+  </section>
+
+  <section id="profileCard" class="profile-card" hidden>
+    <form id="profileForm" novalidate>
+      <div class="profile-grid">
+        <div class="profile-field">
+          <label for="displayName">표시 이름</label>
+          <input id="displayName" name="displayName" type="text" maxlength="100" autocomplete="name">
+        </div>
+
+        <div class="profile-field">
+          <label for="birthDate">생년월일</label>
+          <input id="birthDate" name="birthDate" type="date">
+        </div>
+
+        <div class="profile-field">
+          <label for="genderCode">성별 코드</label>
+          <input id="genderCode" name="genderCode" type="text" maxlength="20"
+                 aria-describedby="codeSetNotice">
+        </div>
+
+        <div class="profile-field">
+          <label for="trainingExperienceCode">운동 경력 코드 *</label>
+          <input id="trainingExperienceCode" name="trainingExperienceCode"
+                 type="text" maxlength="20" required aria-required="true"
+                 aria-describedby="codeSetNotice">
+        </div>
+
+        <div class="profile-field profile-field--wide">
+          <label for="activityLevelCode">활동 수준 코드 *</label>
+          <input id="activityLevelCode" name="activityLevelCode"
+                 type="text" maxlength="20" required aria-required="true"
+                 aria-describedby="codeSetNotice">
+        </div>
+      </div>
+
+      <p id="codeSetNotice">
+        기준 코드 서비스가 확정되면 코드 입력은 선택형 컨트롤로 교체합니다.
+      </p>
+
+      <div class="profile-actions">
+        <button id="cancelProfileButton" type="button" hidden>취소</button>
+        <button id="editProfileButton" type="button" hidden>수정</button>
+        <button id="saveProfileButton" type="submit" hidden>저장</button>
+      </div>
+    </form>
+  </section>
+</main>
+
+<script src="/_shared/error-codes.js"></script>
+<script src="/_shared/error-popup.js"></script>
+<script src="/_shared/service-client.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const SERVICE = Object.freeze({
+    select: "mgbyu1000S0",
+    create: "mgbyu1000C0",
+    update: "mgbyu1000U0"
+  });
+
+  const state = {
+    mode: "LOADING",
+    targetBaseUrl: "http://localhost:8080",
+    timeoutMs: 10000,
+    profile: null
+  };
+
+  const elements = {
+    status: document.getElementById("profileStatus"),
+    empty: document.getElementById("emptyState"),
+    card: document.getElementById("profileCard"),
+    form: document.getElementById("profileForm"),
+    create: document.getElementById("createProfileButton"),
+    edit: document.getElementById("editProfileButton"),
+    save: document.getElementById("saveProfileButton"),
+    cancel: document.getElementById("cancelProfileButton"),
+    displayName: document.getElementById("displayName"),
+    birthDate: document.getElementById("birthDate"),
+    genderCode: document.getElementById("genderCode"),
+    trainingExperienceCode: document.getElementById("trainingExperienceCode"),
+    activityLevelCode: document.getElementById("activityLevelCode")
+  };
+
+  document.addEventListener("DOMContentLoaded", boot);
+
+  async function boot() {
+    bindEvents();
+    await loadRuntimeConfig();
+    await loadProfile();
+  }
+
+  function bindEvents() {
+    elements.create.addEventListener("click", function () {
+      state.profile = null;
+      clearForm();
+      setMode("EDIT_CREATE");
+    });
+
+    elements.edit.addEventListener("click", function () {
+      bindProfile(state.profile || {});
+      setMode("EDIT_UPDATE");
+    });
+
+    elements.cancel.addEventListener("click", function () {
+      if (state.profile && !isEmptyProfile(state.profile)) {
+        bindProfile(state.profile);
+        setMode("VIEW");
+      } else {
+        clearForm();
+        setMode("EMPTY");
+      }
+    });
+
+    elements.form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      if (!validateForm()) {
+        return;
+      }
+
+      const serviceId =
+        state.mode === "EDIT_CREATE" ? SERVICE.create : SERVICE.update;
+
+      setMode("SAVING");
+
+      try {
+        const response = await callService(serviceId, formDto());
+        const dto = unwrapDto(response);
+
+        if (!dto || Number(dto.processedCount) !== 1) {
+          throw new Error("PROFILE_SAVE_COUNT");
+        }
+
+        setStatus("프로필이 저장되었습니다.");
+        await loadProfile();
+      } catch (error) {
+        showError(error, "프로필 저장에 실패했습니다.");
+      }
+    });
+  }
+
+  async function loadRuntimeConfig() {
+    try {
+      const response = await fetch("/api/config", {
+        headers: { Accept: "application/json" }
+      });
+      if (!response.ok) {
+        return;
+      }
+      const config = await response.json();
+      if (config.targetBaseUrl) {
+        state.targetBaseUrl = String(config.targetBaseUrl);
+      }
+      if (Number(config.timeoutMs) > 0) {
+        state.timeoutMs = Number(config.timeoutMs);
+      }
+    } catch (_) {
+      // local default를 사용한다. Profile 데이터나 Token은 로그하지 않는다.
+    }
+  }
+
+  async function loadProfile() {
+    setMode("LOADING");
+
+    try {
+      const response = await callService(SERVICE.select, {});
+      const dto = unwrapDto(response);
+
+      if (isEmptyProfile(dto)) {
+        state.profile = null;
+        clearForm();
+        setMode("EMPTY");
+        return;
+      }
+
+      state.profile = dto;
+      bindProfile(dto);
+      setMode("VIEW");
+    } catch (error) {
+      showError(error, "프로필을 불러오지 못했습니다.");
+    }
+  }
+
+  function createEnvelope(serviceId, dto) {
+    return {
+      hdr_nhnis: {
+        sys_comm: {
+          rms_svc_c: serviceId,
+          scid: "mgbyu1000",
+          std_tgrm_rqr_rsp_dsc: "Q"
+        }
+      },
+      dto: dto || {}
+    };
+  }
+
+  async function callService(serviceId, dto) {
+    if (!window.PdmgServiceClient ||
+        typeof window.PdmgServiceClient.post !== "function") {
+      throw new Error("PDMG_SERVICE_CLIENT_UNAVAILABLE");
+    }
+
+    const base = state.targetBaseUrl.replace(/\/+$/, "");
+    const targetUrl = base + "/" + serviceId;
+    const requestBody = createEnvelope(serviceId, dto);
+
+    // 불변식: Action Service ID = URL = hdr_nhnis.sys_comm.rms_svc_c
+    if (requestBody.hdr_nhnis.sys_comm.rms_svc_c !== serviceId ||
+        !targetUrl.endsWith("/" + serviceId)) {
+      throw new Error("SERVICE_ID_CONTRACT_MISMATCH");
+    }
+
+    return window.PdmgServiceClient.post(
+      targetUrl,
+      requestBody,
+      state.timeoutMs
+    );
+  }
+
+  function unwrapDto(response) {
+    const body =
+      response && response.data !== undefined ? response.data : response;
+
+    if (!body) {
+      return null;
+    }
+
+    if (body.result) {
+      const error = new Error(
+        body.result.stdErrCode || "PDMG_BUSINESS_ERROR"
+      );
+      error.pdmgResult = body.result;
+      throw error;
+    }
+
+    return body.dto !== undefined ? body.dto : body;
+  }
+
+  function formDto() {
+    return {
+      displayName: nullIfBlank(elements.displayName.value),
+      birthDate: nullIfBlank(elements.birthDate.value),
+      genderCode: nullIfBlank(elements.genderCode.value),
+      trainingExperienceCode:
+        nullIfBlank(elements.trainingExperienceCode.value),
+      activityLevelCode:
+        nullIfBlank(elements.activityLevelCode.value)
+    };
+  }
+
+  function validateForm() {
+    const training = nullIfBlank(elements.trainingExperienceCode.value);
+    const activity = nullIfBlank(elements.activityLevelCode.value);
+
+    if (!training) {
+      setStatus("운동 경력 코드를 입력해주세요.", true);
+      elements.trainingExperienceCode.focus();
+      return false;
+    }
+
+    if (!activity) {
+      setStatus("활동 수준 코드를 입력해주세요.", true);
+      elements.activityLevelCode.focus();
+      return false;
+    }
+
+    const birthDate = nullIfBlank(elements.birthDate.value);
+    if (birthDate) {
+      const selected = new Date(birthDate + "T00:00:00");
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (Number.isNaN(selected.getTime()) || selected > today) {
+        setStatus("생년월일을 확인해주세요.", true);
+        elements.birthDate.focus();
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function isEmptyProfile(dto) {
+    if (!dto) {
+      return true;
+    }
+
+    return [
+      dto.displayName,
+      dto.birthDate,
+      dto.genderCode,
+      dto.trainingExperienceCode,
+      dto.activityLevelCode
+    ].every(function (value) {
+      return value === null || value === undefined || String(value).trim() === "";
+    });
+  }
+
+  function bindProfile(dto) {
+    elements.displayName.value = dto.displayName || "";
+    elements.birthDate.value = dto.birthDate || "";
+    elements.genderCode.value = dto.genderCode || "";
+    elements.trainingExperienceCode.value =
+      dto.trainingExperienceCode || "";
+    elements.activityLevelCode.value = dto.activityLevelCode || "";
+  }
+
+  function clearForm() {
+    elements.form.reset();
+  }
+
+  function setMode(mode) {
+    state.mode = mode;
+
+    const loading = mode === "LOADING";
+    const saving = mode === "SAVING";
+    const editing = mode === "EDIT_CREATE" || mode === "EDIT_UPDATE";
+
+    elements.empty.hidden = mode !== "EMPTY";
+    elements.card.hidden = mode === "EMPTY" || loading || mode === "ERROR";
+
+    setInputsDisabled(!editing || saving);
+
+    elements.create.disabled = loading || saving;
+    elements.edit.hidden = mode !== "VIEW";
+    elements.save.hidden = !editing && !saving;
+    elements.cancel.hidden = !editing && !saving;
+    elements.save.disabled = saving;
+    elements.cancel.disabled = saving;
+
+    if (loading) {
+      setStatus("프로필을 불러오는 중입니다.");
+    } else if (saving) {
+      setStatus("저장 중입니다.");
+    } else if (mode !== "SUCCESS") {
+      setStatus("");
+    }
+  }
+
+  function setInputsDisabled(disabled) {
+    [
+      elements.displayName,
+      elements.birthDate,
+      elements.genderCode,
+      elements.trainingExperienceCode,
+      elements.activityLevelCode
+    ].forEach(function (input) {
+      input.disabled = disabled;
+    });
+  }
+
+  function setStatus(message, isError) {
+    elements.status.textContent = message || "";
+    elements.status.setAttribute("data-error", isError ? "true" : "false");
+  }
+
+  function showError(error, fallbackMessage) {
+    state.mode = "ERROR";
+    const code =
+      error && error.pdmgResult
+        ? error.pdmgResult.stdErrCode
+        : null;
+
+    setStatus(
+      code ? fallbackMessage + " (" + code + ")" : fallbackMessage,
+      true
+    );
+
+    // 공통 Popup API는 저장소 버전에 따라 다를 수 있어 존재할 때만 사용한다.
+    if (window.PdmgErrorPopup &&
+        typeof window.PdmgErrorPopup.show === "function") {
+      window.PdmgErrorPopup.show({
+        title: "요청 처리 실패",
+        message: fallbackMessage,
+        code: code || undefined
+      });
+    }
+
+    elements.card.hidden = false;
+    elements.empty.hidden = true;
+    elements.edit.hidden = true;
+    elements.save.hidden = true;
+    elements.cancel.hidden = false;
+    elements.cancel.disabled = false;
+    setInputsDisabled(true);
+  }
+
+  function nullIfBlank(value) {
+    if (value === null || value === undefined) {
+      return null;
+    }
+    const text = String(value).trim();
+    return text ? text : null;
+  }
+})();
+</script>
+</body>
+</html>

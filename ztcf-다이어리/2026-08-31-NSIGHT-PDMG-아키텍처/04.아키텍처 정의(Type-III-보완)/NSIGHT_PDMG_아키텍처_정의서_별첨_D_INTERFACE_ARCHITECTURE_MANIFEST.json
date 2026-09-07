@@ -1,0 +1,53 @@
+{
+  "appendix": "D",
+  "title": "INTERFACE ARCHITECTURE DEFINITION",
+  "date": "2026-08-31",
+  "file": "NSIGHT_PDMG_아키텍처_정의서_별첨_D_INTERFACE_ARCHITECTURE_DEFINITION_VISUAL_FIRST.md",
+  "lines": 3352,
+  "figures_text_architecture": 113,
+  "diagramless_numbered_sections": 0,
+  "fences_balanced": true,
+  "sha256": "a66dc4282feaa7d3558592b6491c74274e45b496dd47c65bc966386092f6a1dd",
+  "source_basis": [
+    "인터페이스 원칙 수립.txt",
+    "05 MECHANISM",
+    "06 RUNTIME",
+    "11 DEVELOPMENT STANDARD"
+  ],
+  "scope": [
+    "Interface Principle",
+    "Classification",
+    "P2P",
+    "Service-to-Service",
+    "SYNC/ASYNC",
+    "Online/API/MCA/MCI",
+    "Event",
+    "CDC",
+    "ETL",
+    "File",
+    "GSE/External/Legacy",
+    "Contract",
+    "Header",
+    "GUID",
+    "Schema",
+    "Version",
+    "Timeout",
+    "Retry",
+    "Idempotency",
+    "Transaction/Compensation",
+    "Security",
+    "Observability",
+    "SLA",
+    "Capacity",
+    "Inventory",
+    "Traceability",
+    "Test",
+    "Exception/ADR",
+    "Go-Live Gate"
+  ],
+  "related_appendices": [
+    "A APPLICATION ARCHITECTURE",
+    "B TECHNICAL ARCHITECTURE",
+    "C INFRASTRUCTURE ARCHITECTURE"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "file_exists": true,
+  "sideLinks_defined": true,
+  "sideLinks_called": true,
+  "sideLinks_desktop_target": true,
+  "sideLinks_mobile_target": true,
+  "prev_button_exists": true,
+  "next_button_exists": true,
+  "prev_assignment": true,
+  "next_assignment": true,
+  "detail_grid_exists": true,
+  "doctype": true,
+  "ends_html": true
+}

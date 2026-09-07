@@ -1,0 +1,84 @@
+{
+  "root": "AI_BODY_PDMG_TASK_SPRINTS",
+  "sprints": {
+    "SPRINT-01_User_Body": [
+      {
+        "program": "mgbyu1000",
+        "name": "Profile",
+        "tasks": 12
+      },
+      {
+        "program": "mgbyu1100",
+        "name": "Goal",
+        "tasks": 12
+      },
+      {
+        "program": "mgbyb1000",
+        "name": "Body_Measurement",
+        "tasks": 12
+      },
+      {
+        "program": "mgbyb1100",
+        "name": "Body_Timeline",
+        "tasks": 12
+      }
+    ],
+    "SPRINT-02_Recovery_Assessment": [
+      {
+        "program": "mgbyr1000",
+        "name": "Daily_Checkin",
+        "tasks": 12
+      },
+      {
+        "program": "mgbyr1100",
+        "name": "Sleep_Recovery",
+        "tasks": 12
+      },
+      {
+        "program": "mgbya1000",
+        "name": "Initial_Assessment",
+        "tasks": 12
+      },
+      {
+        "program": "mgbya1200",
+        "name": "Readiness_Assessment",
+        "tasks": 12
+      },
+      {
+        "program": "mgbya1100",
+        "name": "Body_Status",
+        "tasks": 12
+      },
+      {
+        "program": "mgbyr1200",
+        "name": "Readiness_Trend",
+        "tasks": 12
+      }
+    ],
+    "SPRINT-03_Workout": [
+      {
+        "program": "mgbyw1000",
+        "name": "Workout_Program",
+        "tasks": 12
+      },
+      {
+        "program": "mgbyw1100",
+        "name": "Workout_Log",
+        "tasks": 12
+      },
+      {
+        "program": "mgbyw1200",
+        "name": "Workout_Analytics",
+        "tasks": 12
+      },
+      {
+        "program": "mgbyw1300",
+        "name": "Workout_Adjustment",
+        "tasks": 12
+      }
+    ]
+  },
+  "total_programs": 14,
+  "tasks_per_program": 12,
+  "total_task_files": 168
+}

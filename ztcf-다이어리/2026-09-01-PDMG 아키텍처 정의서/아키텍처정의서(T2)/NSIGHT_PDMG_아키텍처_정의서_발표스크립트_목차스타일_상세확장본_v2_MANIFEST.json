@@ -1,0 +1,26 @@
+{
+  "document": "NSIGHT_PDMG_아키텍처_정의서_발표스크립트_목차스타일_상세확장본_v2.md",
+  "date": "2026-09-01",
+  "basis_file": "NSIGHT_PDMG_아키텍처_정의서_발표스크립트_목차스타일_v1.md",
+  "basis_chapters": "PDMG 00-18",
+  "generated_story_chapters": 13,
+  "lines": 4278,
+  "figures": 158,
+  "decision_sections": 13,
+  "pass_gap_adr_sections": 13,
+  "source_trace_sections": 13,
+  "fences_balanced": true,
+  "required_structure": {
+    "representative_architecture": true,
+    "topdown_drilldown": true,
+    "runtime_flow": true,
+    "normal_forbidden_patterns": true,
+    "primary_alternative_decision_with_pros_cons": true,
+    "pass_gap_adr": true,
+    "source_00_18_trace": true
+  },
+  "overall_architecture_definition": "CONDITIONAL PASS",
+  "current_pdmg_conformance": "PARTIAL / GAP",
+  "final_hg90": "OPEN",
+  "sha256": "f225767375963d755669e1e3d176a03e047ed612747e27ebd1b3421c5314f1ea"
+}

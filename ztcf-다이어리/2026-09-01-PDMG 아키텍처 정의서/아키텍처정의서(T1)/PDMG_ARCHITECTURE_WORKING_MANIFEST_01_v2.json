@@ -1,0 +1,20 @@
+{
+  "project": "PDMG Architecture Definition",
+  "chapter": "01",
+  "title": "PDMG EXECUTIVE ARCHITECTURE OVERVIEW",
+  "version": "v2",
+  "date": "2026-09-01",
+  "status": "WORKING / CONDITIONAL PASS",
+  "file": "01_PDMG_EXECUTIVE_ARCHITECTURE_상세정의서_v2.md",
+  "lines": 1607,
+  "figures_text_architecture": 36,
+  "diagramless_numbered_sections": 0,
+  "fences_balanced": true,
+  "sha256": "b403c2d206035c869b4618b23feccf89b29c9d4553d217d83b22b88f9690a689",
+  "architecture_definition": "CONDITIONAL PASS",
+  "current_pdmg_conformance": "PARTIAL / GAP",
+  "runtime_evidence_coverage": "MEDIUM",
+  "critical_gap": "JWT RS256 issuer vs HMAC verifier path",
+  "next_chapter": "02_PDMG_SYSTEM_CONTEXT_BOUNDARY.md",
+  "validation_note": "Document chapter title excluded from internal numbered-section diagram coverage."
+}

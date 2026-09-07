@@ -1,0 +1,23 @@
+# mgbyu1000 Program Status
+
+```text
+State: BASELINE_CANDIDATE
+Release: BLOCKED
+Static Conformance: PASS
+Runtime Conformance: NOT PROVEN
+```
+
+| TASK | 상태 |
+|---|---|
+| 01 | COMPLETE |
+| 02 | COMPLETE |
+| 03 | NOT EXECUTED |
+| 04 | COMPLETE / Physical TBD |
+| 05 | COMPLETE |
+| 06 | COMPLETE |
+| 07 | COMPLETE |
+| 08 | PATCH_READY |
+| 09 | PATCH_READY |
+| 10 | PARTIAL_VERIFIED |
+| 11 | REVIEW_COMPLETE_WITH_RELEASE_BLOCKERS |
+| 12 | REVIEW_COMPLETE / RELEASE_BLOCKED |

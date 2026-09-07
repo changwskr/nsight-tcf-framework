@@ -1,0 +1,35 @@
+{
+  "project": "PDMG Architecture Definition",
+  "chapter": "03",
+  "title": "PDMG APPLICATION / MODULE ARCHITECTURE",
+  "version": "v1",
+  "date": "2026-09-01",
+  "status": "WORKING / ARCHITECTURE PASS",
+  "file": "03_PDMG_APPLICATION_MODULE_ARCHITECTURE_상세정의서_v1.md",
+  "lines": 2408,
+  "figures_text_architecture": 61,
+  "diagramless_numbered_sections": 0,
+  "fences_balanced": true,
+  "sha256": "504bd74cca0335dc390881a393424d80f9022dc285a6d232a9fcbfc43aa1a266",
+  "architecture_definition": "PASS",
+  "current_pdmg_conformance": "PARTIAL / CONDITIONAL",
+  "runtime_evidence_coverage": "MEDIUM",
+  "current_handler_registry": 13,
+  "key_current_facts": [
+    "pdmg-ui/pdmg-jwt/pdmg-fw/pdmg-service source/runtime evidence exists",
+    "pdmg-om current implementation remains unknown",
+    "pdmg-fw may run in same Spring ApplicationContext as pdmg-service",
+    "business root nhnis.mg.co.a",
+    "mapper root rdw.mg.co.a",
+    "TCF ON current handlers call facade",
+    "TCF OFF 5 of 6 controllers call service directly"
+  ],
+  "critical_gaps": [
+    "TCF OFF business core drift",
+    "UI catalog vs backend service registry automation",
+    "dispatcher serviceId vs transaction context consistency defense",
+    "module/artifact/process mapping",
+    "pdmg-om current scope"
+  ],
+  "next_chapter": "04_PDMG_LOGICAL_TECHNICAL_ARCHITECTURE.md"
+}

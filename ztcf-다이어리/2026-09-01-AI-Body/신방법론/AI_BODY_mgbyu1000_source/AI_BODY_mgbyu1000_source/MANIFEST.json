@@ -1,0 +1,113 @@
+{
+  "programId": "mgbyu1000",
+  "programName": "Profile",
+  "services": [
+    "mgbyu1000S0",
+    "mgbyu1000C0",
+    "mgbyu1000U0"
+  ],
+  "status": "PATCH_READY",
+  "fileCount": 20,
+  "files": [
+    {
+      "path": "README_SOURCE_PACKAGE.md",
+      "size": 1820,
+      "sha256": "92dc6f41407346f19960e9de1f2d47565c75707223874b2675eaed31fcd71618"
+    },
+    {
+      "path": "pdmg-service/src/main/java/nhnis/mg/by/config/ByRdwMapperScanConfig.java",
+      "size": 590,
+      "sha256": "3b434b76480d3db883e023779c1ecdaa4231867bd02b4d3291858a578b2c57a0"
+    },
+    {
+      "path": "pdmg-service/src/main/java/nhnis/mg/by/config/RDWMapper.java",
+      "size": 588,
+      "sha256": "79ad8c31a5b551fe222514c0059598e282c0a01acd3f7411647673f7d683e89e"
+    },
+    {
+      "path": "pdmg-service/src/main/java/nhnis/mg/by/u/application/facade/mgbyu1000Facade.java",
+      "size": 2132,
+      "sha256": "a6ee3b1b11c1a4db559e0573d173754963b87efa17b35f98ee32847f654fdb43"
+    },
+    {
+      "path": "pdmg-service/src/main/java/nhnis/mg/by/u/application/rule/ProfileValidationRule.java",
+      "size": 3739,
+      "sha256": "c4173eb61e8ae4ef8cc88d090ed35f7ae1ff7098c88538a7e1adf3a15996947b"
+    },
+    {
+      "path": "pdmg-service/src/main/java/nhnis/mg/by/u/application/service/mgbyu1000Service.java",
+      "size": 5691,
+      "sha256": "433ae956b3eeb188a9964e6ded617de38152fc7ef2c8a29d604418f012b1660f"
+    },
+    {
+      "path": "pdmg-service/src/main/java/nhnis/mg/by/u/dto/mgbyu1000C0DTOin.java",
+      "size": 1216,
+      "sha256": "a94fbe8fb98d13dde6ef6bc0527e6a8bcfc7086e77b93cde207a8caaed5047dd"
+    },
+    {
+      "path": "pdmg-service/src/main/java/nhnis/mg/by/u/dto/mgbyu1000C0DTOout.java",
+      "size": 322,
+      "sha256": "031f1c7b04e3bd75d5191b78797950bdb162b10630072e6a7d1cc0d3292fce9b"
+    },
+    {
+      "path": "pdmg-service/src/main/java/nhnis/mg/by/u/dto/mgbyu1000S0DTOin.java",
+      "size": 217,
+      "sha256": "f333a2bb91e2f2fc53da15102baf56cfe6939541eae85174f52b176f326a86da"
+    },
+    {
+      "path": "pdmg-service/src/main/java/nhnis/mg/by/u/dto/mgbyu1000S0DTOout.java",
+      "size": 1231,
+      "sha256": "ca22ec0a38b9ddfef0be602ec977550d9c8de195946dd300b8ba6c8392bac29e"
+    },
+    {
+      "path": "pdmg-service/src/main/java/nhnis/mg/by/u/dto/mgbyu1000U0DTOin.java",
+      "size": 1216,
+      "sha256": "dd1da62cfa5e5e07ae186cfc58a96a98e4cab8d22bfba8b2262ae9875559c271"
+    },
+    {
+      "path": "pdmg-service/src/main/java/nhnis/mg/by/u/dto/mgbyu1000U0DTOout.java",
+      "size": 322,
+      "sha256": "6c598030c1a74795997bf205e8452682cb636995f81f9e35907a677c8eb02de3"
+    },
+    {
+      "path": "pdmg-service/src/main/java/nhnis/mg/by/u/entry/handler/mgbyu1000Handler.java",
+      "size": 1584,
+      "sha256": "ce010a0197a364287f39d663f082f78bfd13e59bfb9d1f05a26461a40c72bba5"
+    },
+    {
+      "path": "pdmg-service/src/main/java/nhnis/mg/by/u/persistence/dao/mgbyu1000DAO.java",
+      "size": 585,
+      "sha256": "f492ae66e43b6e34fe574190b6f8ac3938d823500b6911f0b9547aca1dd8653a"
+    },
+    {
+      "path": "pdmg-service/src/main/java/nhnis/mg/by/u/support/AuthenticatedUserProvider.java",
+      "size": 327,
+      "sha256": "117d5c7bd808ae9376158285ac51141675219d1969104c9ae891915c96d28f9e"
+    },
+    {
+      "path": "pdmg-service/src/main/java/nhnis/mg/by/u/support/ServiceContextAuthenticatedUserProvider.java",
+      "size": 1842,
+      "sha256": "beef5506b60e31bcc7f38d8384961d9661d21ad251ec801b90a724c7e06e0df7"
+    },
+    {
+      "path": "pdmg-service/src/main/resources/rdw.mg.by.u/mgbyu1000-ORA.xml",
+      "size": 1939,
+      "sha256": "c8a3642ae19d81bc2491d27a8b9fc629e8a8da91754db38d3b4840ef110de7fc"
+    },
+    {
+      "path": "pdmg-service/src/test/java/nhnis/mg/by/u/application/rule/ProfileValidationRuleTest.java",
+      "size": 1511,
+      "sha256": "382005a490cede14194a02eb330387847819c87a6d7ac489e19f8958b4cc4091"
+    },
+    {
+      "path": "pdmg-service/src/test/java/nhnis/mg/by/u/application/service/mgbyu1000ServiceTest.java",
+      "size": 2104,
+      "sha256": "b831098c19bb81534d75977024f50dfece39263417332a4ee49cea90fa583bc1"
+    },
+    {
+      "path": "pdmg-ui/src/main/resources/static/mgbyu1000/index.html",
+      "size": 13353,
+      "sha256": "4bcaa8d34da1d9042c23000751eaf0459aa845767117fc23faaaa1564f500b1b"
+    }
+  ]
+}

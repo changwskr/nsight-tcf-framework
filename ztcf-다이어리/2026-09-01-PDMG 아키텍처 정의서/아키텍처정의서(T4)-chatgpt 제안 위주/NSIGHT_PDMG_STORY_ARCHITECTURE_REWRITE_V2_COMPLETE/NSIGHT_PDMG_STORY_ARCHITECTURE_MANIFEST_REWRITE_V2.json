@@ -1,0 +1,134 @@
+{
+  "date": "2026-09-01",
+  "version": "REWRITE_V2",
+  "chapters": 13,
+  "total_lines": 5255,
+  "total_figures": 221,
+  "all_fences_balanced": true,
+  "integrated_file": "NSIGHT_PDMG_STORY_ARCHITECTURE_FINAL_INTEGRATED_REWRITE_V2.md",
+  "integrated_lines": 5313,
+  "quality_report": "NSIGHT_PDMG_STORY_ARCHITECTURE_QUALITY_REPORT_REWRITE_V2.md",
+  "master_index": "00_NSIGHT_PDMG_STORY_ARCHITECTURE_MASTER_INDEX_REWRITE_V2.md",
+  "overall_architecture_definition": "CONDITIONAL PASS",
+  "current_pdmg_conformance": "PARTIAL / GAP",
+  "final_hg90": "OPEN",
+  "stats": [
+    {
+      "chapter": 1,
+      "title": "왜 다시 짓는가",
+      "file": "01_왜_다시_짓는가_STORY_REWRITE_V2.md",
+      "lines": 450,
+      "figures": 17,
+      "fences_balanced": true,
+      "sha256": "a4a7f5ffb2df92562ae5e8fd2cc1e2edf4528f70321084ed652faa6731c2ae2d"
+    },
+    {
+      "chapter": 2,
+      "title": "정보계 패러다임의 전환",
+      "file": "02_정보계_패러다임의_전환_STORY_REWRITE_V2.md",
+      "lines": 409,
+      "figures": 17,
+      "fences_balanced": true,
+      "sha256": "2fdc7ff068c510210eb266eeb7b0450928197fd6240fdd85e5ca41d2b167d058"
+    },
+    {
+      "chapter": 3,
+      "title": "아키텍처 6단계 수립 방법론",
+      "file": "03_아키텍처_6단계_수립_방법론_STORY_REWRITE_V2.md",
+      "lines": 390,
+      "figures": 17,
+      "fences_balanced": true,
+      "sha256": "33487b6edf72daafdd58e2dee2e2b23e02b40673c551a7404042374c53c43058"
+    },
+    {
+      "chapter": 4,
+      "title": "Big Picture",
+      "file": "04_Big_Picture_STORY_REWRITE_V2.md",
+      "lines": 397,
+      "figures": 17,
+      "fences_balanced": true,
+      "sha256": "6197ad2d4da57f62693aeae88c9b86eaef52e2009d6c42ddfd21dd47865109c4"
+    },
+    {
+      "chapter": 5,
+      "title": "논리 아키텍처",
+      "file": "05_논리_아키텍처_STORY_REWRITE_V2.md",
+      "lines": 370,
+      "figures": 17,
+      "fences_balanced": true,
+      "sha256": "40f9f73e2af67307d5fdfacd61d87bd7d356ddccd087a7fccc6ff604586a8ff3"
+    },
+    {
+      "chapter": 6,
+      "title": "물리 아키텍처",
+      "file": "06_물리_아키텍처_STORY_REWRITE_V2.md",
+      "lines": 401,
+      "figures": 17,
+      "fences_balanced": true,
+      "sha256": "d790cdf005118ed62ed2b570b03d0d289fa2d849c2a6415f6fd16460634d3cfd"
+    },
+    {
+      "chapter": 7,
+      "title": "DR 센터 활용 전략",
+      "file": "07_DR_센터_활용_전략_STORY_REWRITE_V2.md",
+      "lines": 395,
+      "figures": 17,
+      "fences_balanced": true,
+      "sha256": "aa4a6338a49baf9980a95ec3278923394acc51b06a13944847b979e503ca268a"
+    },
+    {
+      "chapter": 8,
+      "title": "메커니즘",
+      "file": "08_메커니즘_STORY_REWRITE_V2.md",
+      "lines": 420,
+      "figures": 17,
+      "fences_balanced": true,
+      "sha256": "7cee806194efaaea0412e76da1399b3af8cd14340a8980a320792a0a3f81181a"
+    },
+    {
+      "chapter": 9,
+      "title": "런타임 서비스",
+      "file": "09_런타임_서비스_STORY_REWRITE_V2.md",
+      "lines": 418,
+      "figures": 17,
+      "fences_balanced": true,
+      "sha256": "fdf5727bc56607f33cb690733b4a5d65fe22dddaf3d36d94b57dfe883590df29"
+    },
+    {
+      "chapter": 10,
+      "title": "데이터플랫폼",
+      "file": "10_데이터플랫폼_STORY_REWRITE_V2.md",
+      "lines": 397,
+      "figures": 17,
+      "fences_balanced": true,
+      "sha256": "0e3f7649d0af19708b1bd5496df6a4aac727291182b6547b11c8f478eb75b340"
+    },
+    {
+      "chapter": 11,
+      "title": "마케팅플랫폼",
+      "file": "11_마케팅플랫폼_STORY_REWRITE_V2.md",
+      "lines": 395,
+      "figures": 17,
+      "fences_balanced": true,
+      "sha256": "45de626c5c1c02ac13485117dedabc91c0633e1c4c43919e99e7d5ff000b3135"
+    },
+    {
+      "chapter": 12,
+      "title": "BI 포탈",
+      "file": "12_BI_포탈_STORY_REWRITE_V2.md",
+      "lines": 385,
+      "figures": 17,
+      "fences_balanced": true,
+      "sha256": "5fc2157ede0e5e5b42771cb11afaf8dd37f1e8b9dd2e71dd7519e34eb05330d2"
+    },
+    {
+      "chapter": 13,
+      "title": "표준화와 10년 지속 가능성",
+      "file": "13_표준화와_10년_지속_가능성_STORY_REWRITE_V2.md",
+      "lines": 428,
+      "figures": 17,
+      "fences_balanced": true,
+      "sha256": "5eede89b222c3fbdef2130295f0ef95a35a5c2b02944485d08ee815c982d721b"
+    }
+  ]
+}

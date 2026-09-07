@@ -1,0 +1,19 @@
+{
+  "document": "01_NSIGHT_PDMG_아키텍처정의서_왜_다시_짓는가_STORY_VISUAL_v1.md",
+  "chapter": 1,
+  "title": "왜 다시 짓는가",
+  "style": "Story-First / TEXT Architecture-First",
+  "date": "2026-09-01",
+  "basis": [
+    "NSIGHT_PDMG_아키텍처_정의서_발표스크립트_목차스타일_v1",
+    "NSIGHT_PDMG_아키텍처_정의서_발표스크립트_목차스타일_상세확장본_v2"
+  ],
+  "lines": 1797,
+  "sections": 42,
+  "text_figures": 40,
+  "fences_balanced": true,
+  "architecture_definition": "CONDITIONAL PASS",
+  "current_pdmg_conformance": "PARTIAL / GAP",
+  "next_chapter": "02 정보계 패러다임의 전환",
+  "sha256": "0a266a5d1fed95dd57a0024f8c6a7427805606927c7f919647d5a7972928ee30"
+}

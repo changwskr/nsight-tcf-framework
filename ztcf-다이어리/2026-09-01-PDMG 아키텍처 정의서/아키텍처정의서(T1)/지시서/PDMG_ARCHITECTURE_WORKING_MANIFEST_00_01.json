@@ -1,0 +1,29 @@
+{
+  "project": "PDMG Architecture Definition",
+  "date": "2026-09-01",
+  "status": "WORKING",
+  "master_prompt": "PDMG_전체_아키텍처_정의서_작성_마스터프롬프트_VISUAL_FIRST_TOPDOWN_DRILLDOWN(1).md",
+  "completed_chapters": [
+    {
+      "chapter": "00",
+      "file": "00_PDMG_ARCHITECTURE_MASTER_INDEX.md",
+      "lines": 908,
+      "figures": 21,
+      "fences_balanced": true
+    },
+    {
+      "chapter": "01",
+      "file": "01_PDMG_EXECUTIVE_ARCHITECTURE.md",
+      "lines": 1001,
+      "figures": 21,
+      "fences_balanced": true
+    }
+  ],
+  "next_chapter": "02_PDMG_SYSTEM_CONTEXT_BOUNDARY.md",
+  "quality_rules": {
+    "visual_first": true,
+    "topdown_l0_l5": true,
+    "as_is_target_separated": true,
+    "unknowns_not_invented": true
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "edition": "FINAL V4",
+  "date": "2026-09-01",
+  "architecture_book_structure": "Evidence embedded per chapter; raw appendices only",
+  "chapters": 13,
+  "raw_appendices": 10,
+  "integrated_file": "NSIGHT_PDMG_ARCHITECTURE_BOOK_FINAL_V4.md",
+  "integrated_lines": 6781,
+  "integrated_figures": 221,
+  "all_fences_balanced": true,
+  "architecture_definition": "CONDITIONAL PASS",
+  "current_pdmg": "PARTIAL / GAP",
+  "runtime_evidence": "MEDIUM",
+  "hg90": "OPEN",
+  "chapter_stats": [
+    {
+      "chapter": 1,
+      "title": "왜 다시 짓는가",
+      "file": "01_왜_다시_짓는가_FINAL_V4.md",
+      "lines": 531,
+      "figures": 17,
+      "fences": true,
+      "sha256": "58ab7b45fb4576b21c125f9a0cdcf58ef657f14319812a875ce7ee92622331e5"
+    },
+    {
+      "chapter": 2,
+      "title": "정보계 패러다임의 전환",
+      "file": "02_정보계_패러다임의_전환_FINAL_V4.md",
+      "lines": 483,
+      "figures": 17,
+      "fences": true,
+      "sha256": "6492d93078ec150e7f71ef54f4486fdf04378c011868f74aae63c88175c6e330"
+    },
+    {
+      "chapter": 3,
+      "title": "아키텍처 6단계 수립 방법론",
+      "file": "03_아키텍처_6단계_수립_방법론_FINAL_V4.md",
+      "lines": 463,
+      "figures": 17,
+      "fences": true,
+      "sha256": "c36efb6776d91753dcc9fc7f21e3a7488d28dc690ee0c0b519fac89520a6bd0a"
+    },
+    {
+      "chapter": 4,
+      "title": "Big Picture",
+      "file": "04_Big_Picture_FINAL_V4.md",
+      "lines": 472,
+      "figures": 17,
+      "fences": true,
+      "sha256": "58c800cc64cf68c3640d27ae17661764a9b58eccf9e25e0211e70f023654f610"
+    },
+    {
+      "chapter": 5,
+      "title": "논리 아키텍처",
+      "file": "05_논리_아키텍처_FINAL_V4.md",
+      "lines": 445,
+      "figures": 17,
+      "fences": true,
+      "sha256": "6af5a3a71e3aa1e94dcfe8cf65190c4dc353fad6fefa77ad848fbfc88531d8dc"
+    },
+    {
+      "chapter": 6,
+      "title": "물리 아키텍처",
+      "file": "06_물리_아키텍처_FINAL_V4.md",
+      "lines": 478,
+      "figures": 17,
+      "fences": true,
+      "sha256": "3207e54f009665bf6b87b1524403fd6cae24dd8a7a84024bcb9b8e90e94e0158"
+    },
+    {
+      "chapter": 7,
+      "title": "DR 센터 활용 전략",
+      "file": "07_DR_센터_활용_전략_FINAL_V4.md",
+      "lines": 471,
+      "figures": 17,
+      "fences": true,
+      "sha256": "3cbd441801e3967ba68a6c8927d1f8b217e54c1cbbc75cfea4cdf6945d9694b9"
+    },
+    {
+      "chapter": 8,
+      "title": "메커니즘",
+      "file": "08_메커니즘_FINAL_V4.md",
+      "lines": 502,
+      "figures": 17,
+      "fences": true,
+      "sha256": "056778a2f677c351af3736b455716030fb48ef881bd4a471bba420df6f5aca33"
+    },
+    {
+      "chapter": 9,
+      "title": "런타임 서비스",
+      "file": "09_런타임_서비스_FINAL_V4.md",
+      "lines": 497,
+      "figures": 17,
+      "fences": true,
+      "sha256": "b5efcd001f29bdba6ba93244cc474b63178ab15b9ec5ffe8b69e7c283531ca4c"
+    },
+    {
+      "chapter": 10,
+      "title": "데이터플랫폼",
+      "file": "10_데이터플랫폼_FINAL_V4.md",
+      "lines": 474,
+      "figures": 17,
+      "fences": true,
+      "sha256": "d2633c08ccd6cc55ebe798ab5710f1c5c8c480dccf7705ce241026fe4df4f11e"
+    },
+    {
+      "chapter": 11,
+      "title": "마케팅플랫폼",
+      "file": "11_마케팅플랫폼_FINAL_V4.md",
+      "lines": 474,
+      "figures": 17,
+      "fences": true,
+      "sha256": "090bc90d5d07379d1bcadba50bf7a70be270b729f83569e5a7186b12fac2210c"
+    },
+    {
+      "chapter": 12,
+      "title": "BI 포탈",
+      "file": "12_BI_포탈_FINAL_V4.md",
+      "lines": 460,
+      "figures": 17,
+      "fences": true,
+      "sha256": "5eebcecafe44e50ee562e3b974e3c27133e9bb898e7805ae1e43447cf4fd1238"
+    },
+    {
+      "chapter": 13,
+      "title": "표준화와 10년 지속 가능성",
+      "file": "13_표준화와_10년_지속_가능성_FINAL_V4.md",
+      "lines": 511,
+      "figures": 17,
+      "fences": true,
+      "sha256": "d3780efc048176dd8f1980268a606db5da4042ad775ad1692a25fef57d2af02e"
+    }
+  ]
+}

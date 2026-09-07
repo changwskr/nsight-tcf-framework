@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="nhnis.mg.by.u.persistence.dao.mgbyu1000DAO">
+
+    <!--
+      PHYSICAL MODEL STATUS: PROPOSED
+      운영 DBMS / Schema / Table Prefix 승인 후 SQL을 최종 확정한다.
+    -->
+
+    <select id="mgbyu1000S0_S0"
+            parameterType="map"
+            resultType="map">
+        SELECT
+            DISPLAY_NAME,
+            BIRTH_DATE,
+            GENDER_CD,
+            TRAIN_EXP_CD,
+            ACTIVITY_LEVEL_CD
+        FROM BY_USER_PROFILE
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <select id="mgbyu1000C0_exists"
+            parameterType="map"
+            resultType="int">
+        SELECT COUNT(1)
+        FROM BY_USER_PROFILE
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <insert id="mgbyu1000C0_C0"
+            parameterType="map">
+        INSERT INTO BY_USER_PROFILE (
+            USER_ID,
+            DISPLAY_NAME,
+            BIRTH_DATE,
+            GENDER_CD,
+            TRAIN_EXP_CD,
+            ACTIVITY_LEVEL_CD,
+            CREATED_AT,
+            UPDATED_AT
+        ) VALUES (
+            #{userId},
+            #{displayName},
+            TO_DATE(#{birthDate}, 'YYYY-MM-DD'),
+            #{genderCode},
+            #{trainingExperienceCode},
+            #{activityLevelCode},
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <update id="mgbyu1000U0_U0"
+            parameterType="map">
+        UPDATE BY_USER_PROFILE
+        SET DISPLAY_NAME = #{displayName},
+            BIRTH_DATE = TO_DATE(#{birthDate}, 'YYYY-MM-DD'),
+            GENDER_CD = #{genderCode},
+            TRAIN_EXP_CD = #{trainingExperienceCode},
+            ACTIVITY_LEVEL_CD = #{activityLevelCode},
+            UPDATED_AT = CURRENT_TIMESTAMP
+        WHERE USER_ID = #{userId}
+    </update>
+
+</mapper>

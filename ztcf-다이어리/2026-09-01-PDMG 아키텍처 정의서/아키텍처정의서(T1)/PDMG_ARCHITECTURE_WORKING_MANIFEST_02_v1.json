@@ -1,0 +1,25 @@
+{
+  "project": "PDMG Architecture Definition",
+  "chapter": "02",
+  "title": "PDMG SYSTEM CONTEXT & BOUNDARY ARCHITECTURE",
+  "version": "v1",
+  "date": "2026-09-01",
+  "status": "WORKING / ARCHITECTURE PASS",
+  "file": "02_PDMG_SYSTEM_CONTEXT_BOUNDARY_상세정의서_v1.md",
+  "lines": 2018,
+  "figures_text_architecture": 44,
+  "diagramless_numbered_sections": 0,
+  "fences_balanced": true,
+  "sha256": "7e84293ad5e8a3722b89e58ed0e9889d933f01312b01c57fb90d7967b93e43a0",
+  "architecture_definition": "PASS",
+  "current_pdmg_conformance": "PARTIAL / CONDITIONAL",
+  "runtime_evidence_coverage": "MEDIUM",
+  "critical_gaps": [
+    "JWT issuer/verifier mismatch",
+    "Identity binding",
+    "External interface inventory",
+    "Artifact to Host/JVM/WAR mapping",
+    "pdmg-om current scope"
+  ],
+  "next_chapter": "03_PDMG_APPLICATION_MODULE_ARCHITECTURE.md"
+}
